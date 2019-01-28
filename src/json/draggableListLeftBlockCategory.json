@@ -1,0 +1,39 @@
+[
+  {
+    "child": [
+      {
+        "child": [],
+        "cySysBlockCategoryId": "26",
+        "cySysBlockCategoryIsDelete": "0",
+        "cySysBlockCategoryName": "文本输入框",
+        "cySysBlockCategoryParentId": "1",
+        "index": -1
+      },
+      {
+        "child": [],
+        "cySysBlockCategoryId": "27",
+        "cySysBlockCategoryIsDelete": "0",
+        "cySysBlockCategoryName": "数字输入框",
+        "cySysBlockCategoryParentId": "1",
+        "index": -1
+      }
+    ],
+    "cySysBlockCategoryCreateTime": 1526691600000,
+    "cySysBlockCategoryId": "1",
+    "cySysBlockCategoryIsDelete": "0",
+    "cySysBlockCategoryName": "输入框",
+    "cySysBlockCategoryParentId": "-1",
+    "cySysBlockCategorySence": "0",
+    "index": 0
+  },
+  {
+    "child":[
+    ],
+    "cySysBlockCategoryId":"28",
+    "cySysBlockCategoryIsDelete":"0",
+    "cySysBlockCategoryName":"下拉选择",
+    "cySysBlockCategoryParentId":"-1",
+    "cySysBlockCategorySence":"0",
+    "index":2
+    }
+]

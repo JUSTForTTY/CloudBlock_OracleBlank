@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "name": "布局",
+      "id": "layout",
+      "index":0,
+      "child": [
+        {
+          "name": "一级布局1",
+          "id": "layout",
+          "child": [
+            {
+              "name": "二级布局1",
+              "id": "layout"
+            },
+            {
+              "name": "二级布局2",
+              "id": "button"
+            }
+          ]
+        },
+        {
+          "name": "一级布局2",
+          "id": "table",
+          "child": []
+        }
+      ]
+    },
+    {
+      "name": "表格",
+      "id": "tableCategory",
+      "index":1,
+      "child": [
+        {
+          "name": "轻量级表格",
+          "id": "table",
+          "child": []
+        }
+      ]
+    },
+    {
+      "name": "按钮",
+      "id": "buttonCategory",
+      "index":2,
+      "child": [
+        {
+          "name": "普通按钮",
+          "id": "button",
+          "child": []
+        }
+      ]
+    }
+  ]
+}

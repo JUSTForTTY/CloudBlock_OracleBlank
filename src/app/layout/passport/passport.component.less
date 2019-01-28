@@ -1,0 +1,71 @@
+@import '~@delon/theme/styles/default';
+
+:host {
+  ::ng-deep {
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      background: #f0f2f5;
+    }
+    .wrap {
+      padding: 32px 0;
+      flex: 1;
+    }
+    .ant-form-item {
+      margin-bottom: 24px;
+    }
+    .global-footer__links-item{
+      color: #f0f2f5;
+
+    }
+    .global-footer__copyright{
+      color: #f0f2f5;
+    }
+    
+      .container {
+        background-image: url('assets/img/login.svg');
+        background-repeat: no-repeat;
+        //background-position: center 110px;
+        background-size: cover;
+      }
+      .wrap {
+        padding: 112px 0 24px;
+      }
+    
+   
+
+   
+    .top {
+      text-align: center;
+    }
+    .header {
+      height: 44px;
+      line-height: 44px;
+      a {
+        text-decoration: none;
+      }
+    }
+    .logo {
+      height: 44px;
+      margin-right: 16px;
+    }
+    .title {
+      font-size: 33px;
+      //color: @heading-color;
+      color: #fff;
+      font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      position: relative;
+      vertical-align: middle;
+    }
+    .desc {
+      font-size: @font-size-base;
+      //color: @text-color-secondary;
+      color: #fff;
+      margin-top: 12px;
+      margin-bottom: 40px;
+    }
+     
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "SUCULAYCATEGORY20180523000002": [
+    {
+      "content": "布局1",
+      "effectAllowed": "move",
+      "disable": false,
+      "handle": false,
+      "htmlcode": "Layout1Component",
+      "righthtmlcode": "LayoutrightComponent",
+      "blocktype": "layout",
+      "blockPageCode": "<div nz-row><div nz-col nzSpan='24'>replace0</div></div>",
+      "layoutdata": "[[]]",
+      "sets": {
+        "nzSize": "large"
+      },
+      "id": "2001"
+    }
+  ],
+  "SUCULAYCATEGORY20180523000001": [],
+  "SUCULAYCATEGORY20180523000003": [
+    {
+      "content": "布局2",
+      "effectAllowed": "move",
+      "disable": false,
+      "handle": false,
+      "htmlcode": "Layout2Component",
+      "righthtmlcode": "LayoutrightComponent",
+      "blocktype": "layout",
+      "blockPageCode": "<div nz-row><div nz-col nzSpan='12'>replace0</div><div nz-col nzSpan='12'>replace1</div></div>",
+      "layoutdata":"[[],[]]",
+      "id": "2002"
+    }
+  ],
+  "SUCULAYCATEGORY20180523000004": [
+    {
+      "content": "布局3",
+      "effectAllowed": "move",
+      "disable": false,
+      "handle": false,
+      "htmlcode": "Layout3Component",
+      "righthtmlcode": "LayoutrightComponent",
+      "blocktype": "layout",
+      "blockPageCode": "<div nz-row><div nz-col nzSpan='8'>replace0</div><div nz-col nzSpan='8'>replace1</div><div nz-col nzSpan='8'>replace2</div></div>",
+      "layoutdata": "[[],[],[]]",
+      "id": "2003"
+    }
+  ]
+}

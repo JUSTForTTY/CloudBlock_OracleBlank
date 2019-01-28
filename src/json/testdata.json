@@ -1,0 +1,20 @@
+{
+    "result":
+    [{
+    "name":"小树",
+    "age":"12",
+    "street":"suzhou",
+    "building":"waibao",
+    "tel":"1382828347",
+    "email":"3231898@qq.com",
+    "qq":"89321321",
+    "like":"apple",
+    "page":10
+    }],
+    "pageIndex":"1",
+    "pageSize":"10",
+    "dataTotal":"200",
+    "columndata":[{
+        
+    }]
+}

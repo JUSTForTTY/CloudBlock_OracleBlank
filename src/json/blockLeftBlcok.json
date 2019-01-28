@@ -1,0 +1,145 @@
+{
+  "26": [
+    {
+      "content": "文本输入框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "27": [
+    {
+      "content": "数字输入框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "28": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "34": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "33": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],"32": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "31": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "30": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ],
+  "29": [
+    {
+      "content": "下拉选择框",
+      "cySysBlockCategoryId": "11",
+      "cySysBlockCode": "SUCU02FORM0010001",
+      "cySysBlockDateset": "",
+      "cySysBlockIsDelete": "0",
+      "disable": false,
+      "dragSet": "{ 'effectAllowed': 'move', 'disable': false, 'handle': false }",
+      "effectAllowed": "move",
+      "handle": false,
+      "icon": "/assets/img/blockicon/SUCU02FORM0010001.png",
+      "id": "sucublock7",
+      "sets": "{}"
+    }
+  ]
+}

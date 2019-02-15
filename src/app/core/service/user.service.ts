@@ -120,7 +120,7 @@ export class UserService {
       "csysUserId": user.csysUserId
     }
 
-    return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauth/tree', aclparams)
+    return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauthview/tree', aclparams)
       .pipe(map(
         data => {
           console.log("菜单数据", data.data)

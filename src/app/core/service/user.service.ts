@@ -14,9 +14,7 @@ const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
 const server_name = environment.SERVER_NAME;
 
 @Injectable()
-export class UserService {
-  private currentUserSubject = new BehaviorSubject<User>({} as User);
-  public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+export class UserService { 
 
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable();

@@ -10,7 +10,7 @@ import { MenuService } from '@delon/theme';
 import { ACLService } from '@delon/acl';
 
 
-const aclhttpurl = "" + environment.SERVER_URL + "/cysysbaseuserrole/condition";
+const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
 const server_name = environment.SERVER_NAME;
 
 @Injectable()
@@ -39,10 +39,10 @@ export class UserService {
 
     if (this.jwtService.getToken(server_name)['refresh_token']) {
       let credentials = {
-        cySysBaseUserRefreshToken: this.jwtService.getToken(server_name)['refresh_token']
+        csysUserRefreshToken: this.jwtService.getToken(server_name)['refresh_token']
       }
       console.log("原始数据", credentials)
-      this.httpService.postHttpAllUrl(this.cyhttp + '/cysysbaseuser/condition', credentials)
+      this.httpService.postHttpAllUrl(this.cyhttp + '/csysuser/condition', credentials)
         .subscribe(
           (data: any) => {
 
@@ -72,9 +72,9 @@ export class UserService {
     }
   }
 
-  setAuth(user: User) {
+  setAuth(user) {
     // Save JWT sent from server in localstorage
-    this.jwtService.saveToken(server_name, user.cySysBaseUserAccessToken, user.cySysBaseUserRefreshToken);
+    this.jwtService.saveToken(server_name, user.csysUserAccessToken, user.csysUserRefreshToken);
 
     this.cacheService.set('userdata' + server_name, user, { type: 's', expire: 24 * 60 * 60 });
 
@@ -113,14 +113,14 @@ export class UserService {
   }
 
 
-  loadMenu(user: User): Observable<boolean> {
+  loadMenu(user): Observable<boolean> {
 
-    console.log("用户编号",user.cySysBaseUserId)
+    console.log("用户编号",user.csysUserId)
     let aclparams = {
-      "cySysBaseUserId": user.cySysBaseUserId
+      "csysUserId": user.csysUserId
     }
 
-    return this.httpService.postHttpAllUrl(this.cyhttp + '/cysysbaseusermenuview/tree', aclparams)
+    return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauth/tree', aclparams)
       .pipe(map(
         data => {
           console.log("菜单数据", data.data)
@@ -160,10 +160,10 @@ export class UserService {
 
     if (this.jwtService.getToken(server_name)['refresh_token']) {
       let credentials = {
-        cySysBaseUserRefreshToken: this.jwtService.getToken(server_name)['refresh_token']
+        csysUserRefreshToken: this.jwtService.getToken(server_name)['refresh_token']
       }
       console.log("原始数据", credentials)
-      this.httpService.postHttpAllUrl(this.cyhttp + '/cysysbaseuser/condition', credentials)
+      this.httpService.postHttpAllUrl(this.cyhttp + '/csysuser/condition', credentials)
         .subscribe(
           (data: any) => {
 

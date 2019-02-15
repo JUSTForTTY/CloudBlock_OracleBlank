@@ -181,8 +181,8 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
             this.password.updateValueAndValidity();
             if (this.userName.invalid || this.password.invalid) return;
             params = {
-                "cySysBaseUserUsername": this.userName.value,
-                "cySysBaseUserPassword": this.password.value
+                "csysUserUsername": this.userName.value,
+                "csysUserPassword": this.password.value
             }
         } else {
             this.mobile.markAsDirty();
@@ -193,7 +193,7 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
             if (this.captcha.invalid || this.captcha.value != this.realcaptcha) return;
 
             params = {
-                "cySysBaseUserMobile": this.mobile.value
+                "csysUserMobile": this.mobile.value
             }
         }
 

@@ -107,7 +107,7 @@ export class UserService {
 
   }
 
-  getCurrentUser(): User {
+  getCurrentUser() {
 
     return this.cacheService.getNone('userdata' + server_name);
   }

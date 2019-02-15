@@ -1,10 +1,10 @@
 <div class="alain-default__aside-inner">
   <nz-dropdown nzTrigger="click" class="alain-default__aside-user">
     <div nz-dropdown class="user-block-dropdown">
-      <nz-avatar class="alain-default__aside-user-avatar" nzSize="large" [nzText]="userService.getCurrentUser().csysUserRealname" style="background-color:#87d068;"></nz-avatar>
+      <nz-avatar class="alain-default__aside-user-avatar" nzSize="large" [nzText]="userService.getCurrentUser()['csysUserRealname']" style="background-color:#87d068;"></nz-avatar>
       <div class="alain-default__aside-user-info" style="color:#fff">
-        <strong style="color:#fff">{{userService.getCurrentUser().csysUserUsername}} </strong>
-        <p class="text-truncate mb0">{{userService.getCurrentUser().csysUserMeno}} </p>
+        <strong style="color:#fff">{{userService.getCurrentUser()['csysUserUsername']}} </strong>
+        <p class="text-truncate mb0">{{userService.getCurrentUser()['csysUserMeno']}} </p>
       </div>
     </div>
     <ul nz-menu>

@@ -8,8 +8,8 @@ import { UserService } from '@core';
   template: `
   <nz-dropdown nzPlacement="bottomRight">
     <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
-      <nz-avatar nzSize="default" [nzText]="userService.getCurrentUser().csysUserRealname" style="background-color:#87d068;" class="mr-sm"></nz-avatar>
-      {{userService.getCurrentUser().csysUserUsername}}
+      <nz-avatar nzSize="default" [nzText]="userService.getCurrentUser()['csysUserRealname']" style="background-color:#87d068;" class="mr-sm"></nz-avatar>
+      {{userService.getCurrentUser()['csysUserUsername']}}
     </div>
     <div nz-menu class="width-sm">
       <div nz-menu-item routerLink="/pro/account/center"><i nz-icon type="user" class="mr-sm"></i>

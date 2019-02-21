@@ -9,7 +9,7 @@
   <router-outlet name="modal"></router-outlet>
 
   <ng-template #modalFooter>
-    <label *ngIf="needNextCheckBox" nz-checkbox [(ngModel)]="checked" (ngModelChange)="changeNeedNextCheckBox($event)">继续创建下一个</label>
+    <label *ngIf="setService.pageDatas['needNextCheckBox']" nz-checkbox [(ngModel)]="checked" (ngModelChange)="changeNeedNextCheckBox($event)">继续创建下一个</label>
       <!-- <button nz-button nzType="default" (click)="handleCancel()">Custom Callback</button>
       <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Custom Submit</button> -->
     </ng-template>

@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { updateHostClass } from '@delon/util';
 import { SettingsService } from '@delon/theme';
-import { LayoutService } from 'ngx-block-core';
+import { LayoutService,SetService } from 'ngx-block-core';
 import { environment } from '@env/environment';
 import { SettingDrawerComponent } from './setting-drawer/setting-drawer.component';
 
@@ -45,6 +45,8 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     private el: ElementRef,
     private renderer: Renderer2,
     public layoutService:LayoutService,
+
+    public setService: SetService,
     @Inject(DOCUMENT) private doc: any,
   ) {
     // scroll to top in change page
@@ -104,10 +106,36 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
     this.layoutService.isVisible = false;
   }
+  handleAfterClose(): void {
+
+    console.log("弹窗已经完全关闭");
+
+    console.log("table_modal", this.setService.pageDatas['table_modal']);
+    //查看是否需要执行额外事件
+    if (typeof this.setService.pageDatas['table_modal'] != 'undefined') {
+
+      console.log("查询数据")
+      //判断是否需要刷新
+      if(this.setService.pageDatas['table_modal']['isNeedRefresh']){
+        this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch")
+      }
+
+    }
+    delete this.setService.pageDatas['table_modal'];
+
+
+  }
 
   ngOnDestroy() {
     const { unsubscribe$ } = this;
     unsubscribe$.next();
     unsubscribe$.complete();
+  }
+
+  checked=false;
+  needNextCheckBox=false;
+  changeNeedNextCheckBox(value){
+    
+    this.setService.pageDatas['needNextCheckBox']=value
   }
 }

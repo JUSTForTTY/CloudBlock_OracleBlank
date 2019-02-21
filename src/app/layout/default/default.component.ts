@@ -100,10 +100,14 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
+
     //设置需要继续按钮
-    if(typeof this.setService.pageDatas['needNextCheckBox'] != 'undefined'){
-      this.needNextCheckBox=true;
-    }
+    setTimeout(() => {
+      if(typeof this.setService.pageDatas['needNextCheckBox'] != 'undefined'){
+        this.needNextCheckBox=true;
+      }
+    }, 100);
+    
   }
   handleCancel(): void {
      

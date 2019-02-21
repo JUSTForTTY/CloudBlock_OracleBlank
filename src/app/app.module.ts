@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { GeneralPipe,FormControlService,HttpService, SetService, JwtService,LayoutService } from 'ngx-block-core';
+import { GeneralPipe,FormControlService,HttpService, EventService,SetService, JwtService,LayoutService } from 'ngx-block-core';
 import { DecimalPipe } from '@angular/common';
 import { UserService } from '@core';
 
@@ -118,7 +118,7 @@ import { LayoutModule } from './layout/layout.module';
     ...FORM_MODULES,
   ],
   providers: [
-    HttpService, UserService,LayoutService,JwtService, GeneralPipe,DecimalPipe, SetService, FormControlService,
+    HttpService, EventService,UserService,LayoutService,JwtService, GeneralPipe,DecimalPipe, SetService, FormControlService,
     ...LANG_PROVIDES,
     ...INTERCEPTOR_PROVIDES,
     ...I18NSERVICE_PROVIDES,

@@ -1,3 +1,4 @@
+
 import {
   Component,
   ViewChild,
@@ -37,6 +38,21 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
   private settingHost: ViewContainerRef;
   isFetching = false;
 
+  links = [
+    {
+        title: '帮助',
+        href: ''
+    },
+    {
+        title: '隐私',
+        href: ''
+    },
+    {
+        title: '条款',
+        href: ''
+    }
+];
+isVisible = false;
   constructor(
     private router: Router,
     _message: NzMessageService,
@@ -101,17 +117,11 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
 
-    //设置需要继续按钮
-    setTimeout(() => {
-      if(typeof this.setService.pageDatas['needNextCheckBox'] != 'undefined'){
-        this.needNextCheckBox=true;
-      }
-    }, 100);
-    
   }
+
   handleCancel(): void {
-     
-    this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
+    console.log("关闭弹窗方法");
+    this.router.navigate(['/fullscreen',{ outlets: { modal: null }}]);
     this.layoutService.isVisible = false;
   }
   handleAfterClose(): void {
@@ -133,17 +143,14 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
   }
-
   ngOnDestroy() {
     const { unsubscribe$ } = this;
     unsubscribe$.next();
     unsubscribe$.complete();
   }
-
+  //
   checked=false;
-  needNextCheckBox=false;
   changeNeedNextCheckBox(value){
-    
-    this.setService.pageDatas['needNextCheckBox']=value
+    this.setService.pageDatas['needNextCheckBoxValue']=value
   }
 }

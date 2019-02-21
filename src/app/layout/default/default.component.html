@@ -5,7 +5,7 @@
   <router-outlet></router-outlet>
 </section>
 <ng-template #settingHost></ng-template>
-<nz-modal [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()">
+<nz-modal [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" (nzAfterClose)="handleAfterClose()">
   <router-outlet name="modal"></router-outlet>
 
   <ng-template #modalFooter>

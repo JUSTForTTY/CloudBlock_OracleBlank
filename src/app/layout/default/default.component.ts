@@ -121,7 +121,7 @@ isVisible = false;
 
   handleCancel(): void {
     console.log("关闭弹窗方法");
-    this.router.navigate(['/fullscreen',{ outlets: { modal: null }}]);
+    this.router.navigate(['/default',{ outlets: { modal: null }}]);
     this.layoutService.isVisible = false;
   }
   handleAfterClose(): void {

@@ -2,14 +2,23 @@
 <layout-header class="alain-default__header"></layout-header>
 <layout-sidebar class="alain-default__aside"></layout-sidebar>
 <section class="alain-default__content">
+    <reuse-tab mode="1"></reuse-tab>
   <router-outlet></router-outlet>
+
 </section>
 <ng-template #settingHost></ng-template>
-<nz-modal [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" (nzAfterClose)="handleAfterClose()">
+<global-footer [links]="links">
+  Copyright
+  <i class="anticon anticon-copyright"></i> 2017
+  <a href="//szcyerp.com" target="_blank">创游科技</a>出品
+</global-footer>
+<nz-modal [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth" [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" (nzAfterClose)="handleAfterClose()" >
   <router-outlet name="modal"></router-outlet>
 
   <ng-template #modalFooter>
-    <label *ngIf="setService.pageDatas['needNextCheckBox']" nz-checkbox [(ngModel)]="checked" (ngModelChange)="changeNeedNextCheckBox($event)">继续创建下一个</label>
+    <div style="text-align: left;">
+        <label *ngIf="setService.pageDatas['needNextCheckBox']" nz-checkbox [(ngModel)]="checked" (ngModelChange)="changeNeedNextCheckBox($event)">继续创建下一个</label>
+    </div>
       <!-- <button nz-button nzType="default" (click)="handleCancel()">Custom Callback</button>
       <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">Custom Submit</button> -->
     </ng-template>

@@ -126,6 +126,7 @@ isVisible = false;
   }
   handleAfterClose(): void {
 
+    this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
     console.log("弹窗已经完全关闭");
 
     console.log("table_modal", this.setService.pageDatas['table_modal']);

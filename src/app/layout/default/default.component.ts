@@ -122,11 +122,13 @@ isVisible = false;
   handleCancel(): void {
     console.log("关闭弹窗方法");
     this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
+    this.router.navigateByUrl(this.layoutService.nzRoutePath);
     this.layoutService.isVisible = false;
   }
   handleAfterClose(): void {
 
     this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
+    this.router.navigateByUrl(this.layoutService.nzRoutePath);
     console.log("弹窗已经完全关闭");
 
     console.log("table_modal", this.setService.pageDatas['table_modal']);

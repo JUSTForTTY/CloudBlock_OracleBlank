@@ -127,8 +127,12 @@ isVisible = false;
   }
   handleAfterClose(): void {
 
+
     this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
-    this.router.navigateByUrl(this.layoutService.nzRoutePath);
+    if(this.layoutService.nzRoutePath!=null&&this.layoutService.nzRoutePath!=""){
+      this.router.navigateByUrl(this.layoutService.nzRoutePath);
+    }
+     
     console.log("弹窗已经完全关闭");
 
     console.log("table_modal", this.setService.pageDatas['table_modal']);

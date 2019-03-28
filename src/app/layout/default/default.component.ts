@@ -127,9 +127,8 @@ isVisible = false;
   }
   handleAfterClose(): void {
 
-
-    this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
     if(this.layoutService.nzRoutePath!=null&&this.layoutService.nzRoutePath!=""){
+      this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
       this.router.navigateByUrl(this.layoutService.nzRoutePath);
     }
      
@@ -148,6 +147,8 @@ isVisible = false;
     }
     delete this.setService.pageDatas['table_modal'];
 
+    this.layoutService.nzRoutePath="";
+     
 
   }
   ngOnDestroy() {

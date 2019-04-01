@@ -61,6 +61,7 @@
     "@delon/theme": "^7.0.0-rc.4",
     "@delon/util": "^7.0.0-rc.4",
     "file-saver": "^2.0.0",
+
     "ng-zorro-antd": "^7.0.0-rc.3",
     "ngx-countdown": "^3.1.0",
     "ngx-tinymce": "^7.0.0",
@@ -68,7 +69,7 @@
     "screenfull": "^4.0.0",
     "qrious": "^4.0.2",
     "ngx-block": "^0.4.58",
-    "ngx-block-core": "^0.8.34",
+    "ngx-block-core": "^0.8.37",
     "ngx-color-picker": "^6.7.0",
     "ngx-drag-drop": "^2.0.0-rc.0",
     "ngx-infinite-scroll": "^0.8.4",

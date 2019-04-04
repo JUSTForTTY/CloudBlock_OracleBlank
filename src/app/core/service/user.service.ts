@@ -130,7 +130,7 @@ export class UserService {
         });
           this.menuService.add([
             {
-              text: '利华Mes系统-东南大学',
+              text: 'MES智能制造系统',
               group: true,
               children: data.data
             }]);

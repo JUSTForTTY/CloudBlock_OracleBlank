@@ -32,6 +32,15 @@ const routes: Routes = [
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
         ]
     },
+    {
+        path: '',
+        component: LayoutDefaultComponent,
+        children: [
+            { path: '', component: DashboardWorkplaceComponent,data: { title: '控制台' } }
+           
+            
+        ]
+    },
     // 全屏布局
     {
         path: 'fullscreen',
@@ -47,7 +56,7 @@ const routes: Routes = [
         path: '',
         component: LayoutPassportComponent,
         children: [
-            { path: '', redirectTo: 'login',pathMatch:'full' },
+           //{ path: '', redirectTo: 'login',pathMatch:'full' },
             { path: 'login', component: UserLoginComponent ,data: { title: '登录' }},
             { path: 'register', component: UserRegisterComponent },
             { path: 'register-result', component: UserRegisterResultComponent }

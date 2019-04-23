@@ -74,6 +74,8 @@ export class UserService {
     // Save JWT sent from server in localstorage
     this.jwtService.saveToken(server_name, user.csysUserAccessToken, user.csysUserRefreshToken);
 
+    this.jwtService.saveUserServerName(server_name);
+
     this.cacheService.set('userdata' + server_name, user, { type: 's', expire: 24 * 60 * 60 });
 
   }

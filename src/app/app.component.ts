@@ -38,6 +38,6 @@ export class AppComponent implements OnInit {
         this.titleSrv.setTitle();
         this.modalSrv.closeAll();
       });
-      this.userService.populate();
+      //this.userService.populate();
   }
 }

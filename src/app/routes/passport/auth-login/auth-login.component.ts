@@ -29,13 +29,16 @@ export class AuthLoginComponent implements OnInit {
 
 
     if (this.checkAuthOpenid()) {
+      console.log("校验成功");
       //进行登录操作
       let params = {
         "csysUserOpenId": this.authOpenid
 
       }
+      console.log("授权登录参数",params)
       this.userService.attemptAuth(params).subscribe(
         (data: any) => {
+          console.log("授权登录",this.redirect_uri)
           setTimeout(() => {
             this.router.navigate([this.redirect_uri]);
           }, 3000);
@@ -54,6 +57,10 @@ export class AuthLoginComponent implements OnInit {
   checkAuthOpenid() {
 
     this.currentAuthOpenid = this.jwtService.getUnionToken();
+
+    console.log("当前授权码",this.authOpenid)
+
+    console.log("统一授权码",this.currentAuthOpenid)
 
     //校验token码是否和授权对象一致
     if (this.authOpenid == this.currentAuthOpenid) {

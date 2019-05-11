@@ -40,7 +40,12 @@ export class AuthLoginComponent implements OnInit {
         (data: any) => {
           console.log("授权登录",this.redirect_uri)
           setTimeout(() => {
-            this.router.navigate([this.redirect_uri]);
+            this.userService.loadMenu(data).subscribe(
+              (data: any) => {
+                this.router.navigate([this.redirect_uri]);
+              });
+
+            
           }, 3000);
 
         }, (err) => {

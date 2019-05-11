@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JwtService } from 'ngx-block-core';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { UserService } from '@core';
 
 @Component({
   selector: 'app-auth-login',
@@ -10,12 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AuthLoginComponent implements OnInit {
 
-  constructor(private jwtService: JwtService, private activatedRoute: ActivatedRoute, private router: Router) { }
+  constructor(private jwtService: JwtService, private activatedRoute: ActivatedRoute, private router: Router,private userService: UserService) { }
 
   userId: string;;
   userName: string;
   authOpenid: string;
-  redirect_uri:string;
+  redirect_uri: string;
   currentAuthOpenid: string;
 
 
@@ -24,15 +24,26 @@ export class AuthLoginComponent implements OnInit {
       this.userId = queryParams['userId'];
       this.userName = queryParams['userName'];
       this.authOpenid = queryParams['authOpenid'];
-      this.redirect_uri=queryParams['redirect_uri'];
+      this.redirect_uri = queryParams['redirect_uri'];
     });
 
 
     if (this.checkAuthOpenid()) {
+      //进行登录操作
+      let params = {
+        "csysUserOpenId": this.authOpenid
 
-      setTimeout(() => {
-        this.router.navigate([this.redirect_uri]);
-      }, 3000);
+      }
+      this.userService.attemptAuth(params).subscribe(
+        (data: any) => {
+          setTimeout(() => {
+            this.router.navigate([this.redirect_uri]);
+          }, 3000);
+
+        }, (err) => {
+
+        });
+
 
 
     }

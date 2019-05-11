@@ -1,0 +1,44 @@
+<div nz-row nzGutter="16" [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'middle'">
+  <div nz-col [nzXs]="24" [nzSm]="8">
+    <nz-card class="ant-card__body-nopadding">
+      <div class="half-float half-float-md">
+        <img src="./assets/tmp/img/auth-login-bg-2.jpg" />
+        <div class="half-float-bottom rounded-circle bg-grey-lighter">
+          <img class="p-sm" src="./assets/img/icon-gong.png" />
+        </div>
+      </div>
+      <div class="text-center">
+        <h3 class="h3">{{userName}}</h3>
+        <div class="text-grey">
+          授权登录中
+          <ng-template #indicatorTemplate><i nz-icon type="loading" style="font-size: 24px;"></i> </ng-template>
+          <nz-spin nzSimple [nzIndicator]="indicatorTemplate"> </nz-spin>
+        </div>
+        <div class="p-sm">
+          <p>登录后该应用将获得以下权限</p>
+          <div class="text-grey">获得你的公开信息。</div>
+          <div class="text-grey">可配置产线页面。</div>
+          <div class="text-grey">账号权限管理。</div>
+
+
+        </div>
+      </div>
+      <div class="text-center bg-grey-darker text-white">
+        <div nz-row>
+          <div nz-col [nzSpan]="8" class="py-sm">
+
+            <div>联系我们</div>
+          </div>
+          <div nz-col [nzSpan]="8" class="py-sm">
+
+            <div>关于利华</div>
+          </div>
+          <div nz-col [nzSpan]="8" class="py-sm">
+
+            <div>智能制造2025</div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+</div>

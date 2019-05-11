@@ -15,6 +15,7 @@ import { Exception403Component } from './exception/403.component';
 import { Exception404Component } from './exception/404.component';
 import { Exception500Component } from './exception/500.component';
 import { IndexComponent } from './index/index.component';
+import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { IndexComponent } from './index/index.component';
         Exception404Component,
         Exception500Component,
         IndexComponent,
+        AuthLoginComponent,
      
     ]
 })

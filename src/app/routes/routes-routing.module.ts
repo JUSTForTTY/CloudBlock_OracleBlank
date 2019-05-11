@@ -13,20 +13,21 @@ import { DashboardWorkplaceComponent } from './workplace/workplace.component';
 import { UserLoginComponent } from './passport/login/login.component';
 import { UserRegisterComponent } from './passport/register/register.component';
 import { UserRegisterResultComponent } from './passport/register-result/register-result.component';
+import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
 // single pages
 import { CallbackComponent } from './callback/callback.component';
 import { Exception403Component } from './exception/403.component';
 import { Exception404Component } from './exception/404.component';
 import { Exception500Component } from './exception/500.component';
- 
+
 import { IndexComponent } from './index/index.component';
- 
+
 const routes: Routes = [
     {
         path: 'default',
         component: LayoutDefaultComponent,
         children: [
-            { path: 'workplace', component: DashboardWorkplaceComponent,data: { title: '控制台' } },
+            { path: 'workplace', component: DashboardWorkplaceComponent, data: { title: '控制台' } },
             { path: 'pages', loadChildren: './pages/pages.module#PagesModule' }//test测试页面
             // 业务子模块
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
@@ -36,9 +37,9 @@ const routes: Routes = [
         path: '',
         component: LayoutDefaultComponent,
         children: [
-            { path: '', component: DashboardWorkplaceComponent,data: { title: '控制台' } }
-           
-            
+            { path: '', component: DashboardWorkplaceComponent, data: { title: '控制台' } }
+
+
         ]
     },
     // 全屏布局
@@ -47,17 +48,17 @@ const routes: Routes = [
         component: LayoutFullScreenComponent,
         children: [
             { path: 'default/pages', loadChildren: './pages/pages.module#PagesModule' },
-           
+            { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },
-     
+
     // passport
     {
         path: '',
         component: LayoutPassportComponent,
         children: [
-           //{ path: '', redirectTo: 'login',pathMatch:'full' },
-            { path: 'login', component: UserLoginComponent ,data: { title: '登录' }},
+            //{ path: '', redirectTo: 'login',pathMatch:'full' },
+            { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
             { path: 'register', component: UserRegisterComponent },
             { path: 'register-result', component: UserRegisterResultComponent }
         ]
@@ -67,12 +68,12 @@ const routes: Routes = [
     { path: '403', component: Exception403Component },
     { path: '404', component: Exception404Component },
     { path: '500', component: Exception500Component },
-    { path: '**', redirectTo: 'dashboard'}
-    
+    { path: '**', redirectTo: 'dashboard' }
+
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { useHash: environment.useHash })],
     exports: [RouterModule]
-  })
+})
 export class RouteRoutingModule { }

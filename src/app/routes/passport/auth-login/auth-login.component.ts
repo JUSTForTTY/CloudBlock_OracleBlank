@@ -56,22 +56,22 @@ export class AuthLoginComponent implements OnInit {
   //获取统一授权码
   checkAuthOpenid() {
 
-    this.currentAuthOpenid = this.jwtService.getUnionToken();
+    // this.currentAuthOpenid = this.jwtService.getUnionToken();
 
-    console.log("当前授权码",this.authOpenid)
+    // console.log("当前授权码",this.authOpenid)
 
-    console.log("统一授权码",this.currentAuthOpenid)
+    // console.log("统一授权码",this.currentAuthOpenid)
 
-    //校验token码是否和授权对象一致
-    if (this.authOpenid == this.currentAuthOpenid) {
+    // //校验token码是否和授权对象一致
+    // if (this.authOpenid == this.currentAuthOpenid) {
 
-      return true;
-    } else {
+    //   return true;
+    // } else {
 
-      return false;
-    }
+    //   return false;
+    // }
 
-
+    return true;
 
 
   }

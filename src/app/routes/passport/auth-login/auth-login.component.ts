@@ -20,6 +20,8 @@ export class AuthLoginComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log("开始授权----------》");
+    
     this.activatedRoute.queryParams.subscribe(queryParams => {
       this.userId = queryParams['userId'];
       this.userName = queryParams['userName'];

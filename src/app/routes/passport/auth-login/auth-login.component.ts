@@ -46,9 +46,7 @@ export class AuthLoginComponent implements OnInit {
               (data: any) => {
                 this.router.navigate([this.redirect_uri]);
               });
-
-            
-          }, 3000);
+          }, 1000);
 
         }, (err) => {
 

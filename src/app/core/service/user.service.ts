@@ -140,9 +140,6 @@ export class UserService {
           return true;
         }
       ));
-
-
-
   }
   // Update the user on the server (email, pass, etc)
   // update(user): Observable<User> {

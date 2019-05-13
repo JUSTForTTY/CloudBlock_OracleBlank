@@ -14,7 +14,7 @@ const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
 const server_name = environment.SERVER_NAME;
 
 @Injectable()
-export class UserService { 
+export class UserService {
 
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable();
@@ -48,10 +48,10 @@ export class UserService {
 
               console.log("存在用户，无需重新登录", data.data);
               this.setAuth(data.data[0])
-               
+
               this.loadMenu(data.data[0]).subscribe(
                 (data: any) => {
-                    
+
                 });
 
             } else {
@@ -115,31 +115,36 @@ export class UserService {
 
   loadMenu(user): Observable<boolean> {
 
-    console.log("用户编号",user.csysUserId)
-    let aclparams = {
-      "csysUserId": user.csysUserId
+    if (user != null) {
+      console.log("用户编号", user)
+      let aclparams = {
+        "csysUserId": user.csysUserId
+      }
+
+      return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauthview/tree', aclparams)
+        .pipe(map(
+          data => {
+            console.log("菜单数据", data.data)
+
+            data.data.unshift({
+              text: '控制台',
+              icon: 'fa fa-home',
+              link: '/default/workplace',
+            });
+            this.menuService.add([
+              {
+                text: 'MES智能制造系统',
+                group: true,
+                children: data.data
+              }]);
+
+            return true;
+          }
+        ));
+    }else{
+      this.router.navigate(['/login']);
     }
 
-    return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauthview/tree', aclparams)
-      .pipe(map(
-        data => {
-          console.log("菜单数据", data.data)
-
-          data.data.unshift({
-            text: '控制台',
-            icon: 'fa fa-home',
-            link: '/default/workplace',
-        });
-          this.menuService.add([
-            {
-              text: 'MES智能制造系统',
-              group: true,
-              children: data.data
-            }]);
-
-          return true;
-        }
-      ));
   }
   // Update the user on the server (email, pass, etc)
   // update(user): Observable<User> {
@@ -170,7 +175,7 @@ export class UserService {
               this.setAuth(data.data[0])
               this.loadMenu(data.data[0]).subscribe(
                 (data: any) => {
-                    
+
                 });
 
               //跳转路由

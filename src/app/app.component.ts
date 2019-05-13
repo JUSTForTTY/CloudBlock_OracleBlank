@@ -38,8 +38,15 @@ export class AppComponent implements OnInit {
         this.titleSrv.setTitle();
         this.modalSrv.closeAll();
       });
+      console.log("加载菜单---->")
+      console.log("加载菜单---->用户",this.userService.getCurrentUser())
       //加载菜单
-      this.userService.loadMenu(this.userService.getCurrentUser())
+      //this.userService.loadMenu(this.userService.getCurrentUser())
+      this.userService.loadMenu(this.userService.getCurrentUser()).subscribe(
+        (data: any) => {
+            
+        });
+     // this.userService.populate();
        
   }
 }

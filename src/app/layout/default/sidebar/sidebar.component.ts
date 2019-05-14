@@ -13,7 +13,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
      
-    console.log("天天",this.userService.getCurrentUser()['csysUserRealname'])
+   
 
   }
 }

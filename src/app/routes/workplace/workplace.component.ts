@@ -68,6 +68,7 @@ const radarOriginData = [
 })
  
 export class DashboardWorkplaceComponent implements OnInit, OnDestroy {
+    userName="匿名";
     notice: any[] = [];
     activities: any[] = [];
     radarData: any[] = [];
@@ -157,6 +158,10 @@ export class DashboardWorkplaceComponent implements OnInit, OnDestroy {
 
     
     ngOnInit() {
+
+      if(this.userService.getCurrentUser()!=null){
+        this.userName=this.userService.getCurrentUser()['csysUserRealname'];
+      }
        
       radarOriginData.forEach(item => {
         Object.keys(item).forEach(key => {

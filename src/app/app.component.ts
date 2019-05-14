@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private titleSrv: TitleService,
     private modalSrv: NzModalService,
-    private userService:UserService
+    private userService: UserService
   ) {
     renderer.setAttribute(
       el.nativeElement,
@@ -38,15 +38,20 @@ export class AppComponent implements OnInit {
         this.titleSrv.setTitle();
         this.modalSrv.closeAll();
       });
-      console.log("加载菜单---->")
-      console.log("加载菜单---->用户",this.userService.getCurrentUser())
-      //加载菜单
-      //this.userService.loadMenu(this.userService.getCurrentUser())
-      this.userService.loadMenu(this.userService.getCurrentUser()).subscribe(
-        (data: any) => {
-            
-        });
-     // this.userService.populate();
-       
+    console.log("加载菜单---->")
+    console.log("加载菜单---->用户", this.userService.getCurrentUser())
+    //加载菜单
+    //this.userService.loadMenu(this.userService.getCurrentUser())
+    // try {
+    //   this.userService.loadMenu(this.userService.getCurrentUser()).subscribe(
+    //     (data: any) => {
+    //     });
+    // } catch (error) {
+    //  console.error("加载菜单失败")
+
+    // }
+
+    // this.userService.populate();
+
   }
 }

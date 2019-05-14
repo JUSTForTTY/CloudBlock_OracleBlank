@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
@@ -27,13 +27,25 @@ import { UserService } from '@core';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderUserComponent {
+export class HeaderUserComponent implements OnInit, DoCheck {
   constructor(
     public settings: SettingsService,
     private router: Router,
     public userService: UserService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
-  ) {}
+  ) { }
+
+  ngDoCheck(): void {   //触发变更检测机制就是调用DoCheck
+
+    if (this.userService.getCurrentUser() == null) {
+      this.router.navigateByUrl("/login");
+    }
+
+  }
+  ngOnInit() {
+
+    this.userService.populate();
+  }
 
   logout() {
     this.userService.purgeAuth();

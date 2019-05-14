@@ -142,7 +142,8 @@ export class UserService {
           }
         ));
     }else{
-      this.router.navigate(['/login']);
+     
+      
     }
 
   }

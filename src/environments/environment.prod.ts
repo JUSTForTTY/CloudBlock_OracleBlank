@@ -5,7 +5,7 @@ export const environment = {
     SERVER_URL: `http://172.16.8.107/cloudblock_lhoracle`,
     production: true,
     hmr: false,
-    useHash: true,
+    useHash: false,
     logger:{
         level:2
     }

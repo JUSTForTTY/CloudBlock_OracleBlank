@@ -68,7 +68,7 @@
     "screenfull": "^4.0.0",
     "qrious": "^4.0.2",
     "ngx-block": "^0.5.9",
-    "ngx-block-core": "^0.9.32",
+    "ngx-block-core": "^0.9.33",
     "ngx-color-picker": "^6.7.0",
     "ngx-drag-drop": "^2.0.0-rc.0",
     "ngx-infinite-scroll": "^0.8.4",

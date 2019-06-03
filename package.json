@@ -29,7 +29,8 @@
     "test-coverage": "ng test -sr -cc -sm=false",
     "debug-apk": "cordova build android --debug",
     "color-less": "node scripts/color-less.js",
-    "gc": "cd src/app/routes/pages && ng g c"
+    "gc": "cd src/app/routes/pages && ng g c",
+    "gclass": "cd src/app/routes/pages && ng g class"
   },
   "dependencies": {
     "@angular/animations": "~7.2.0",

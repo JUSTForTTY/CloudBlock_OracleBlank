@@ -160,6 +160,7 @@ export class DashboardWorkplaceComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
       if(this.userService.getCurrentUser()!=null){
+        console.log("用户信息",this.userService.getCurrentUser())
         this.userName=this.userService.getCurrentUser()['csysUserRealname'];
       }
        

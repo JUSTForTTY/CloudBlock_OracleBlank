@@ -6,17 +6,17 @@ import {
 import { ITokenService, DA_SERVICE_TOKEN } from '@delon/auth';
 import { Observable, of } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
-import { NzMessageService,NzNotificationService } from 'ng-zorro-antd';
+import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
 import { environment } from '@env/environment';
 import { HttpService, JwtService } from 'ngx-block-core';
 import { CacheService } from '@delon/cache';
 
-
 const loginHttpUrl = environment.SERVER_URL + "/v1/authlogin";
 const registerHttpUrl = environment.SERVER_URL + "/cloudblock/v1/register";
 const getCodeHttpUrl = environment.SERVER_URL + "/system/postMessage";
 const checkmobileHttpUrl = environment.SERVER_URL + "/cysysbaseuser/checkMobile";
+
 const server_name = environment.SERVER_NAME
 
 const CODEMESSAGE = {
@@ -42,7 +42,7 @@ const CODEMESSAGE = {
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
 
-    constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService,
+    constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService, private notification: NzNotificationService,
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService, private router: Router) { }
 
 
@@ -67,32 +67,36 @@ export class DefaultInterceptor implements HttpInterceptor {
     }
     private handleData(ev: HttpResponseBase): Observable<any> {
         // 可能会因为 `throw` 导出无法执行 `_HttpClient` 的 `end()` 操作
-
-        console.log("状态--------->",ev.status)
-
         if (ev.status > 0) {
             this.injector.get(_HttpClient).end();
         }
-        
         this.checkStatus(ev);
         // 业务处理：一些通用操作
+
+        console.log("回调处理", ev);
         switch (ev.status) {
             case 200:
-                const body: any = event instanceof HttpResponse && event.body;
+                const body: any = ev instanceof HttpResponse && ev.body;
 
+                console.log("回调处理body", body.code)
                 if (body.code == 401) {
                     console.log(event);
                     this.goTo('/login');
 
                 }
-                if (body.code == 200) {
+                else if (body.code == 200) {
 
                     //更新token信息
                     if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
                         console.log("过期，存储新的token：" + body.param.access_token)
                         this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
                     }
+                } else if (body.code == 500) {
+
+                    this.notification.create('error', '系统提示',
+                        '系统故障，请停止操作并联系管理员"。');
                 }
+
                 break;
             case 401: // 未登录状态码
                 // 请求错误 401: https://preview.pro.ant.design/api/401 用户没有权限（令牌、用户名、密码错误）。
@@ -107,7 +111,9 @@ export class DefaultInterceptor implements HttpInterceptor {
             default:
                 if (ev instanceof HttpErrorResponse) {
                     console.warn('未可知错误，大部分是由于后端不支持CORS或无效配置引起', ev);
-                    this.msg.error(ev.message);
+                    this.notification.create('error', '系统提示',
+                    ev.message);
+                    
                 }
                 break;
         }
@@ -157,6 +163,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                 url: url
             });
         }
+
         return next.handle(newReq).pipe(
             mergeMap((event: any) => {
                 // 允许统一对请求错误处理

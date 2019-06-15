@@ -189,7 +189,7 @@ export class FlowchartComponent implements OnInit {
     this.formInit();
     this.getOpData();
     this.getResource();
-    this.getSkill();
+    //this.getSkill();
     this.getPointDescList();
     this.initialConditionFrom();
     this.initOpForm();
@@ -427,15 +427,15 @@ export class FlowchartComponent implements OnInit {
         let autoValue = false;
         //获得超时管控的最长最短时间
         this.httpService.getHttp(this.transferNodeUrl + "/" + element.id).subscribe((timeData: any) => {
-          this.httpService.postHttp("/csystrspage/condition").subscribe((pageData: any) => {
-            pageDatai = [];
-            pageData = pageData.data;
-            for (let j = 0; j < pageData.length; j++) {
-              const elementpage = pageData[j];
-              if (elementpage.csysPointTrsId == element.id) {
-                pageDatai.push(elementpage.csysPageId);
-              }
-            }
+          // this.httpService.postHttp("/csystrspage/condition").subscribe((pageData: any) => {
+            // pageDatai = [];
+            // pageData = pageData.data;
+            // for (let j = 0; j < pageData.length; j++) {
+            //   const elementpage = pageData[j];
+            //   if (elementpage.csysPointTrsId == element.id) {
+            //     pageDatai.push(elementpage.csysPageId);
+            //   }
+            // }
             //判断最短最长时间是否为0，为0赋空值
             if (timeData.data.csysPotTrsLongestTime == 0) {
               timeData.data.csysPotTrsLongestTime = null
@@ -458,7 +458,8 @@ export class FlowchartComponent implements OnInit {
                   }
                 }
                 //查询目标节点类型
-                this.httpService.getHttp("csyspot/" + element.target).subscribe((potdata: any) => {
+                console.log("目标节点编号",element.target)
+                this.httpService.getHttp("/csyspot/" + element.target).subscribe((potdata: any) => {
                   console.log("目标节点数据", potdata)
                   console.log("auto", autoValue)
                   const control = {
@@ -497,7 +498,7 @@ export class FlowchartComponent implements OnInit {
               this.isSpinning = false;
             }
           })
-        });
+        // });
 
       });
     } else {

@@ -42,6 +42,12 @@ const routes: Routes = [
 
         ]
     },
+    //工作流
+    {
+        path: 'workflow', loadChildren: './workflow/workflow.module#WorkflowModule', data: { title: '工作流' },
+        component: LayoutDefaultComponent,
+
+    },
     // 全屏布局
     {
         path: 'fullscreen',

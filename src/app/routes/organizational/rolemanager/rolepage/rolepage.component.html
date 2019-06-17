@@ -1,0 +1,70 @@
+<page-header [home]="''"></page-header>
+<nz-card [nzBordered]="false">
+  <div nz-row>
+    <div nz-col [nzXs]="24" [nzSm]="8" class="header-info">
+      <span class="text-grey-dark">用户组 - {{roleName}} </span>
+      <span class="d-block display-2">权限分配</span>
+      <em></em>
+    </div>
+
+  </div>
+</nz-card>
+<nz-card [nzBordered]="false">
+  <div class="d-flex align-items-center mb-lg">
+    <h3 class="flex-1 text-lg">页面权限列表</h3>
+  </div>
+
+  <nz-list [nzDataSource]="pageList" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,preview,save]">
+        <ng-template #useredit>
+          <label nz-checkbox [(ngModel)]="item.checkedall" (ngModelChange)="checkall(item.checkedall,item.checkOptions)">全选</label>
+        </ng-template>
+        <ng-template #preview>
+          <a> <i class="anticon anticon-eye-o"></i>预览 </a>
+        </ng-template>
+        <ng-template #save>
+          <a nz-popconfirm nzTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPlacement="bottom"><i class="anticon anticon-check"></i>保存 </a>        
+        </ng-template>
+        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
+          <ng-template #nzTitle>
+            {{item.csysPageName}}
+          </ng-template>
+          <!-- <ng-template #nzAvatar>
+            <nz-avatar [nzSrc]="item.logo" nzSize="large" [nzShape]="'circle'"></nz-avatar>
+
+          </ng-template> -->
+        </nz-list-item-meta>
+        <ng-template #nzContent>
+
+
+          <nz-checkbox-group [(ngModel)]="item.checkOptions" (ngModelChange)="checkboxlog(item.checkOptions)"></nz-checkbox-group>
+
+
+
+
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template #pagination>
+      <nz-pagination [nzPageIndex]="pageId" [nzTotal]="pageNum" [nzPageSize]="5" (nzPageIndexChange)="getPageList($event)"></nz-pagination>
+    </ng-template>
+  </nz-list>
+</nz-card>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" nzTitle="用户分配" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+
+  <nz-transfer [nzDataSource]="transferlist" nzShowSearch [nzOperations]="['to right', 'to left']" [nzListStyle]="{ 'height.px': 300}"
+    [nzRender]="render" [nzFooter]="footer" (nzSelectChange)="transferselect($event)" (nzChange)="transferchange($event)">
+    <ng-template #render let-item>
+      {{ item.title }}-{{ item.description }}
+    </ng-template>
+    <ng-template #footer let-direction>
+      <button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">reload</button>
+    </ng-template>
+
+
+  </nz-transfer>
+
+</nz-modal>

@@ -48,6 +48,13 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
 
     },
+    //组织权限
+    {
+
+        path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' },
+        component: LayoutDefaultComponent,
+
+    },
     // 全屏布局
     {
         path: 'fullscreen',

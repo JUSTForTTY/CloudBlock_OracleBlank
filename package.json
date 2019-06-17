@@ -78,7 +78,8 @@
     "angular2-baidu-map": "^4.5.0",
     "@swimlane/ngx-graph": "^6.0.1",
     "font-awesome": "^4.7.0",
-    "simple-line-icons": "^2.4.1"
+    "simple-line-icons": "^2.4.1",
+    "ts-md5": "^1.2.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.12.0",

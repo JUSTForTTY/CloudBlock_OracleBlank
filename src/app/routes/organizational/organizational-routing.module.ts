@@ -12,10 +12,10 @@ const routes: Routes = [
   { path: 'organizationalmanager', component: OrganizationalmanagerComponent, data: { title: '组织架构' } },
   { path: 'organizationalchart', component: OrganizationalchartComponent, data: { title: '组织变更' } },
   { path: 'rolemanager', component: RolemanagerComponent, data: { title: '权限管理' } },
-  { path: 'rolemember/:roleId', component: RolememberComponent, data: { title: '用户组成员' } },
-  { path: 'rolepage/:roleId', component: RolepageComponent, data: { title: '用户组权限' } },
+  { path: 'rolemember', component: RolememberComponent, data: { title: '用户组成员' } },
+  { path: 'rolepage', component: RolepageComponent, data: { title: '用户组权限' } },
   { path: 'departmentmanager', component: DepartmentmanagerComponent, data: { title: '部门管理' } },
-  { path: 'organizationalchart/:organizeId', component: OrganizationalchartComponent, data: { title: '组织架构流图' } }
+  { path: 'organizationalchart', component: OrganizationalchartComponent, data: { title: '组织架构流图' } }
 ];
 
 @NgModule({

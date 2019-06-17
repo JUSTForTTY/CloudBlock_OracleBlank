@@ -14,7 +14,7 @@ import { Identifiers } from '@angular/compiler';
 import { STColumn, STChange } from '@delon/abc';
 import { Md5 } from "ts-md5/dist/md5";
 import { isThisISOWeek } from 'date-fns';
-
+ 
 @Component({
   selector: 'organizationalchart',
   templateUrl: './organizationalchart.component.html',
@@ -205,7 +205,10 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
   public ngOnInit(): void {
     this.getMenuList();
-    this.organizeId = this.route.snapshot.paramMap.get("organizeId");
+    this.route.queryParams.subscribe(queryParams => {
+      this.organizeId = queryParams['csysOrgStruceId'];
+    });
+    //this.organizeId = this.route.snapshot.paramMap.get("organizeId");
     this.initializeFromControl();
     this.form = this.fb.group({
       colorTheme: ['', [Validators.required]],

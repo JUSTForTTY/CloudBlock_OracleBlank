@@ -34,13 +34,13 @@
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit, pageedit,op]">
         <ng-template #useredit>
-          <a routerLink="/authority/rolemember/{{item.csysRoleId}}">用户组成员</a>
+          <a (click)= "navigatedetail(item)">用户组成员</a>
         </ng-template>
         <ng-template #menuedit>
           <a (click)="showModal(item.csysRoleId,item.csysRoleName)">用户组菜单</a>
         </ng-template>
         <ng-template #pageedit>
-          <a routerLink="/authority/rolepage/{{item.csysRoleId}}">用户组权限</a>
+          <a (click)= "navigatedetail1(item)">用户组权限</a>
         </ng-template>
         <ng-template #op>
 

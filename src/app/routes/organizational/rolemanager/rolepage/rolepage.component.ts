@@ -85,7 +85,10 @@ export class RolepageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.roleId = this.route.snapshot.paramMap.get('roleId')
+    this.route.queryParams.subscribe(queryParams => {
+      this.roleId = queryParams['roleId'];
+    });
+    //this.roleId = this.route.snapshot.paramMap.get('roleId')
     this.getPageList(1);
     this.getRoleName();
     this.getTransferData();

@@ -393,10 +393,17 @@ export class OrganizationalmanagerComponent implements OnInit {
   }
 
   navigatedetail(item): void {
-    this.router.navigate(['/authority/organizationalchart/' + item.csysOrgStruceId + '']);
+    let queryParams = {};
+    queryParams['csysOrgStruceId'] = item.csysOrgStruceId;
+
+    this.router.navigate(['/authority/organizationalchart/'], {
+      queryParams
+    });
+    //this.router.navigate(['/authority/organizationalchart/' + item.csysOrgStruceId + '']);
     console.log("zeq", item.csysOrgStruceId);
   }
 
+  
   searchOrganizationalList(): void {
     let temporayArray;
     let temporayArray1 = [];

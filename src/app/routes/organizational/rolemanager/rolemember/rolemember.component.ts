@@ -82,7 +82,10 @@ export class RolememberComponent implements OnInit {
     this.initializeFromControl();
     this.getMenuList();
     this.getTreeData();
-    this.roleId = this.route.snapshot.paramMap.get("roleId");
+    this.route.queryParams.subscribe(queryParams => {
+      this.roleId = queryParams['roleId'];
+    });
+    //this.roleId = this.route.snapshot.paramMap.get("roleId");
   }
 
 

@@ -18,17 +18,22 @@
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,preview,save]">
         <ng-template #useredit>
-          <label nz-checkbox [(ngModel)]="item.checkedall" (ngModelChange)="checkall(item.checkedall,item.checkOptions)">全选</label>
+          <label nz-checkbox [(ngModel)]="item.checkedall"
+            (ngModelChange)="checkall(item.checkedall,item.checkOptions)">全选</label>
         </ng-template>
         <ng-template #preview>
           <a> <i class="anticon anticon-eye-o"></i>预览 </a>
         </ng-template>
         <ng-template #save>
-          <a nz-popconfirm nzTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPlacement="bottom"><i class="anticon anticon-check"></i>保存 </a>        
+          <a nz-popconfirm nzTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPlacement="bottom"><i
+              class="anticon anticon-check"></i>保存 </a>
         </ng-template>
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
           <ng-template #nzTitle>
-            {{item.csysPageName}}
+            <!-- {{item.csysPageName}} -->
+            <p lines="1" style="width: 150px;" class="text-truncate" nz-tooltip [nzTitle]="item.csysPageName">
+              {{item.csysPageName}}
+            </p>
           </ng-template>
           <!-- <ng-template #nzAvatar>
             <nz-avatar [nzSrc]="item.logo" nzSize="large" [nzShape]="'circle'"></nz-avatar>
@@ -36,18 +41,17 @@
           </ng-template> -->
         </nz-list-item-meta>
         <ng-template #nzContent>
-
-
-          <nz-checkbox-group [(ngModel)]="item.checkOptions" (ngModelChange)="checkboxlog(item.checkOptions)"></nz-checkbox-group>
-
-
-
-
+          <div>
+            <!-- <div class="d-flex text-grey-dark"> -->
+            <nz-checkbox-group [(ngModel)]="item.checkOptions" (ngModelChange)="checkboxlog(item.checkOptions)">
+            </nz-checkbox-group>
+          </div>
         </ng-template>
       </nz-list-item>
     </ng-template>
     <ng-template #pagination>
-      <nz-pagination [nzPageIndex]="pageId" [nzTotal]="pageNum" [nzPageSize]="5" (nzPageIndexChange)="getPageList($event)"></nz-pagination>
+      <nz-pagination [nzPageIndex]="pageId" [nzTotal]="pageNum" [nzPageSize]="5"
+        (nzPageIndexChange)="getPageList($event)"></nz-pagination>
     </ng-template>
   </nz-list>
 </nz-card>
@@ -55,13 +59,15 @@
 <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" nzTitle="用户分配" (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
 
-  <nz-transfer [nzDataSource]="transferlist" nzShowSearch [nzOperations]="['to right', 'to left']" [nzListStyle]="{ 'height.px': 300}"
-    [nzRender]="render" [nzFooter]="footer" (nzSelectChange)="transferselect($event)" (nzChange)="transferchange($event)">
+  <nz-transfer [nzDataSource]="transferlist" nzShowSearch [nzOperations]="['to right', 'to left']"
+    [nzListStyle]="{ 'height.px': 300}" [nzRender]="render" [nzFooter]="footer"
+    (nzSelectChange)="transferselect($event)" (nzChange)="transferchange($event)">
     <ng-template #render let-item>
       {{ item.title }}-{{ item.description }}
     </ng-template>
     <ng-template #footer let-direction>
-      <button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">reload</button>
+      <button nz-button (click)="reload(direction)" [nzSize]="'small'"
+        style="float: right; margin: 5px;">reload</button>
     </ng-template>
 
 

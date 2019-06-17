@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation, KeyValueDiffers } from '@angular/
 import { NzMessageService, NzTreeNode } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { HttpService } from 'ngx-block-core';
+import { Router } from '@angular/router';
 import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -40,7 +41,7 @@ export class RolemanagerComponent implements OnInit {
   roleId;
   roleName;
   isSpinning = false;
-  constructor(private fb: FormBuilder, private msg: NzMessageService, private httpService: HttpService, ) {
+  constructor(private fb: FormBuilder, private msg: NzMessageService, private httpService: HttpService, private router: Router) {
 
   }
 
@@ -378,6 +379,22 @@ export class RolemanagerComponent implements OnInit {
       }
 
       this.defaultCheckedKeys = [...this.defaultCheckedKeys];
+    });
+  }
+
+  navigatedetail(item):void{
+    let queryParams = {};
+    queryParams['roleId'] = item.csysRoleId;
+
+    this.router.navigate(['/authority/rolemember/'], {
+      queryParams
+    });
+  }
+  navigatedetail1(item):void{
+    let queryParams = {};
+    queryParams['roleId'] = item.csysRoleId;
+    this.router.navigate(['/authority/rolepage/'], {
+      queryParams
     });
   }
 }

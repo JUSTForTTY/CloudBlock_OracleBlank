@@ -307,7 +307,13 @@ export class Myflow2Component implements OnInit {
   navigatedetail(item): void {
 
     console.log("内存信息", this.cacheService.getNone("domain"))
-    this.router.navigate(['/workflow/flowchart/' + item.csysWorkflowId + '']);
+    //this.router.navigate(['/workflow/flowchart/' + item.csysWorkflowId + '']);
+    let queryParams = {};
+    queryParams['workflowId'] = item.csysWorkflowId;
+
+    this.router.navigate(['/workflow/flowchart/'], {
+      queryParams
+    });
   }
 }
 

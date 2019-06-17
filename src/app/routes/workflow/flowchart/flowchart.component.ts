@@ -182,7 +182,10 @@ export class FlowchartComponent implements OnInit {
 
   ngOnInit() {
     this.isGraphSpinning = true;
-    this.workflowId = this.route.snapshot.paramMap.get("workFlowId");
+    //this.workflowId = this.route.snapshot.paramMap.get("workFlowId");
+    this.route.queryParams.subscribe(queryParams => {
+      this.workflowId = queryParams['workflowId'];
+    });
     this.getPageData();
     this.getChartData();
     this.getAutoExcute();

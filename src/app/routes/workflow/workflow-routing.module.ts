@@ -9,7 +9,7 @@ import { FlowtrsComponent } from './flowtrs/flowtrs.component';
 const routes: Routes = [
 
   { path: 'myflow', component: Myflow2Component, data: { title: '途程' } },
-  { path: 'flowchart/:workFlowId', component: FlowchartComponent, data: { title: '途程图' } },
+  { path: 'flowchart', component: FlowchartComponent, data: { title: '途程图' } },
   { path: 'flowsetting', component: WorkflowsettingComponent, data: { title: '途程管理' } },
   { path: 'publicworkflow', component: PublicworkflowComponent, data: { title: '公共工序' } },
   { path: 'publicflowstyle', component: PublicflowstyleComponent, data: { title: '公共工序样式' } },

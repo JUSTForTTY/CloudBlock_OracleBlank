@@ -42,6 +42,7 @@ export class FlowtrsComponent implements OnInit {
     this._getWorkFlowListData(this.currentPage);
     this.getFlowGroup();
     this.init();
+    this.getPot();
   }
 
   init() {
@@ -328,6 +329,34 @@ export class FlowtrsComponent implements OnInit {
       this.flowGroup = data.data;
       console.log("this.flowGroup", this.flowGroup)
     })
+  }
+  potData = [];
+  //获取公共工序
+  getPot():void{
+    this.httpService.postHttp("/csyspotpublic/condition").subscribe((data: any) => {
+      this.potData = data.data;
+      console.log("potData",this.potData)
+    })
+  }
+  potVisible = false;
+  potName = "查看工序";
+  showPotData = [];
+  showPot(item):void{
+    this.showPotData = [];
+    this.potName = item.csysPotGroupName;
+    for (let index = 0; index < this.potData.length; index++) {
+      const element = this.potData[index];
+      if(element.csysPotGroupId == item.csysPotGroupId){
+        this.showPotData.push(element);
+      }
+      if(index == this.potData.length-1){
+        this.potVisible = true;
+      }
+    }
+    console.log("this.showPotData",this.showPotData)
+  }
+  potCancel():void{
+    this.potVisible = false;
   }
 }
 

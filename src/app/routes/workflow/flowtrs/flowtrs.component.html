@@ -41,12 +41,12 @@
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
         <ng-template #edit>
+          <a (click)="showPot(item)">查看工序</a>
+          <nz-divider nzType="vertical"></nz-divider>
           <a (click)="editWorkflowInit(item.csysPotGroupId)">编辑</a>
           <nz-divider nzType="vertical"></nz-divider>
-          <a nz-popconfirm nzTitle="确认删除" (nzOnConfirm)="deleteWorkFlow(item.csysPotGroupId)" 
-            nzPlacement="top">删除</a>
+          <a nz-popconfirm nzTitle="确认删除" (nzOnConfirm)="deleteWorkFlow(item.csysPotGroupId)" nzPlacement="top">删除</a>
         </ng-template>
-
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.csysPotGroupDesc" [nzAvatar]="nzAvatar">
           <!-- <ng-template>
             {{item.cySysFlowpointPublicDesc}}
@@ -133,3 +133,25 @@
     </form>
   </nz-spin>
 </nz-modal>
+<nz-modal [(nzVisible)]="potVisible" nzWidth="40%" [nzTitle]="potName" (nzOnCancel)="potCancel()" (nzOnOk)="potOk()">
+    <nz-table #basicTable [nzData]="showPotData" nzPageSize = 5>
+        <thead>
+          <tr>
+            <th>工序名称</th>
+            <th>工序描述</th>
+            <th>创建时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.csysPotPublicName }}</td>
+            <td>{{ data.csysPotPublicDesc }}</td>
+            <td>
+                <!-- <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                [nzTitle]="data.csysPotPublicCreateTime">{{data.csysPotPublicCreateTime | _date}}</p> -->
+                {{data.csysPotPublicCreateTime | _date}}
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+  </nz-modal>

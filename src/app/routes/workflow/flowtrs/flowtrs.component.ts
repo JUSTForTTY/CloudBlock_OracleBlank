@@ -357,7 +357,7 @@ export class FlowtrsComponent implements OnInit {
   }
   potCancel():void{
     this.potVisible = false;
-  }
+  } 
   potOk():void{
     this.potVisible = false;
   }

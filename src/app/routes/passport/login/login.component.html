@@ -16,13 +16,11 @@
                         <input nz-input type="password" formControlName="password" (keyup.enter)="goPages($event)"
                             placeholder="tty123">
                     </nz-input-group>
-                    <nz-form-explain *ngIf="password.dirty && password.errors">
-                        密码由6-21字母和数字组成
-                    </nz-form-explain>
+                  
                 </nz-form-control>
             </nz-form-item>
         </nz-tab>
-        <nz-tab nzTitle="手机号登录">
+        <!-- <nz-tab nzTitle="手机号登录">
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
                     <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-user">
@@ -74,14 +72,14 @@
                     </nz-row>
                  
             </nz-form-item>
-        </nz-tab>
+        </nz-tab> -->
     </nz-tabset>
     <nz-form-item>
         <nz-col [nzSpan]="12">
             <label nz-checkbox formControlName="remember" class="auto-login">自动登录</label>
         </nz-col>
         <nz-col [nzSpan]="12" class="text-right">
-            <a class="forgot" (click)="msg.error('请找荣耀,联系电话18896806594')">忘记密码？</a>
+            <a class="forgot" (click)="msg.error('请联系管理员')">忘记密码？</a>
         </nz-col>
     </nz-form-item>
     <nz-form-item>
@@ -89,10 +87,10 @@
     </nz-form-item>
    
 </form>
-<div class="other">
+<!-- <div class="other">
     其他登录方式
     <i title="in fact Auth0 via window" class="anticon anticon-alipay-circle icon"></i>
     <i title="in fact Github via redirect" class="anticon anticon-taobao-circle icon"></i>
     <i title="真的是微博" class="anticon anticon-weibo-circle icon"></i>
     <a class="register" routerLink="/register">注册账户</a>
-</div>
+</div> -->

@@ -1,5 +1,5 @@
 <page-header [home]="''"></page-header>
-<nz-card [nzBordered]="false">
+<!-- <nz-card [nzBordered]="false">
   <div nz-row>
     <div nz-col [nzXs]="24" [nzSm]="8" class="header-info">
       <span class="text-grey-dark">成员与权限</span>
@@ -8,7 +8,7 @@
     </div>
 
   </div>
-</nz-card>
+</nz-card> -->
 <nz-card [nzBordered]="false">
   <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">用户组列表</h3>
@@ -31,6 +31,7 @@
   </button>
   <nz-spin [nzSpinning]="isSpinning">
   <nz-list [nzDataSource]="roleList" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+    
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit, pageedit,op]">
         <ng-template #useredit>
@@ -58,7 +59,7 @@
         </ng-template>
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.csysRoleDesc" [nzAvatar]="nzAvatar">
           <ng-template #nzTitle>
-            <h4>{{item.cySysRoleName}}</h4>
+            <h4>{{item.csysRoleName}}</h4>
           </ng-template>
           <ng-template #nzAvatar>
             <nz-avatar nzSize="large" style="background-color:#87d068;" nzText="{{item.csysRoleName}}"></nz-avatar>
@@ -114,7 +115,7 @@
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">用户组名称</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
         <input nz-input formControlName="name" id="name" placeholder="给用户组起个名称">
-        <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">请输入密码</nz-form-explain>
+        <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">请输入用户组名称</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>

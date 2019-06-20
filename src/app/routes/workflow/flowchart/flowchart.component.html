@@ -1,15 +1,17 @@
 <page-header [home]="''"></page-header>
 <div nz-row [nzGutter]="24" class="pt-lg">
+
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+    <!-- <nz-affix [nzTarget]="target"> -->
     <nz-card nzTitle="途程" [nzBordered]="false" class="mb-lg"
       [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
 
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
         <ngx-graph class="chart-container" [layout]="layout"
           [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight,'margin-left':'-25px','width':'400px'}"
-          [view]="view" [center$]="center$" minZoomLevel=0.3  maxZoomLevel=2  panningEnabled=false autoZoom=true  [legend]="showLegend" [links]="hierarchialGraph.links" 
-          (legendLabelClick)="onLegendLabelClick($event)" [nodes]="hierarchialGraph.nodes" 
-            [curve]="curve" (select)="clickNode($event)">
+          [view]="view" [center$]="center$" minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false autoZoom=true
+          [legend]="showLegend" [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
+          [nodes]="hierarchialGraph.nodes" [curve]="curve" (select)="clickNode($event)">
 
           <ng-template #defsTemplate>
             <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
@@ -22,15 +24,15 @@
           <ng-template #nodeTemplate let-node>
 
 
-            <svg:g  class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
+            <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
               [tooltipTitle]="node.label">
 
-               
+
               <!-- 矩形构造  *ngIf="node.style.csysPotStyleDesc == '矩形'" -->
               <ng-container *ngIf="node.shape == 'rect'||node.shape == '矩形'">
-                 
-                <svg:rect  [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.color"
-                  style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
+
+                <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                  [attr.fill]="node.color" style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
                   [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
               </ng-container>
               <!-- 多边形构造 -->
@@ -42,9 +44,11 @@
                   [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
               </ng-container>
               <ng-container *ngIf="node.shape == 'circle'||node.shape == '圆形'">
-              <!-- 圆形椭圆 -->
-                <svg:ellipse [attr.cx]="node.dimension.width/2" [attr.cy]="node.dimension.height/2" [attr.rx]="node.dimension.height*0.618" [attr.ry]="node.dimension.height*0.618"  [attr.fill]="node.color" style="animation: rot 3s linear infinite;"
-              [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" /> 
+                <!-- 圆形椭圆 -->
+                <svg:ellipse [attr.cx]="node.dimension.width/2" [attr.cy]="node.dimension.height/2"
+                  [attr.rx]="node.dimension.height*0.618" [attr.ry]="node.dimension.height*0.618"
+                  [attr.fill]="node.color" style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
+                  [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
 
               </ng-container>
               <!-- <svg:polygon [attr.width]="node.width" [attr.height]="node.height" [attr.fill]="node.options.color" style="animation: rot 3s linear infinite;"
@@ -55,10 +59,11 @@
 
 
 
-              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}</svg:text>
+              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}
+              </svg:text>
             </svg:g>
 
-          
+
 
           </ng-template>
 
@@ -79,7 +84,9 @@
         </ngx-graph>
       </nz-spin>
     </nz-card>
+    <!-- </nz-affix> -->
   </div>
+
 
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
     <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
@@ -151,7 +158,7 @@
               <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">请选择工序</nz-form-explain>
             </nz-form-control>
           </nz-form-item> -->
-          <nz-form-item>
+          <!-- <nz-form-item>
             <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
               <nz-select formControlName="addNodeName2" nzAllowClear>
@@ -162,7 +169,10 @@
               <nz-form-explain *ngIf="insertForm.get('addNodeName2').dirty && insertForm.get('addNodeName2').errors">
                 请选择工序</nz-form-explain>
             </nz-form-control>
-          </nz-form-item>
+          </nz-form-item> -->
+          <nz-form-control>
+            <input nz-input type="hidden" formControlName="addNodeName2">
+          </nz-form-control>
           <nz-form-item>
             <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName1">工序名称</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
@@ -305,7 +315,7 @@
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item>
-                      <!-- 工序资源暂且隐藏不需要 -->
+                    <!-- 工序资源暂且隐藏不需要 -->
                     <!-- <nz-form-item>
                       <nz-form-label nzXs="24" nzSm="7" nzFor="resource">资源选择</nz-form-label>
                       <nz-form-control nzXs="24" nzSm="17" nzMd="17">
@@ -341,7 +351,7 @@
               </nz-form-control>
             </nz-form-item>
             <ng-container *ngIf="formEditEnabled">
-              <nz-form-item>
+              <!-- <nz-form-item>
                 <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
                 <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                   <nz-select formControlName="addNodeName2" nzAllowClear>
@@ -353,10 +363,13 @@
                     *ngIf="insertForm.get('addNodeName2').dirty && insertForm.get('addNodeName2').errors">
                     请选择工序</nz-form-explain>
                 </nz-form-control>
-              </nz-form-item>
+              </nz-form-item> -->
+              
+                <input nz-input type="hidden" formControlName="addNodeName2">
+            
             </ng-container>
             <nz-form-item *ngFor="let control of controlArray;let i = index">
-               
+
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标工序</nz-form-label>
               <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
                 <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
@@ -395,7 +408,7 @@
                     </nz-select>
 
                   </div>
-                </div> 
+                </div>
                 <!-- <div nz-row>
                     <div nz-col nzSpan="5">页面:</div>
                   <div nz-col nzSpan="19">
@@ -432,10 +445,10 @@
                     <i nz-icon type="filter" theme="outline"></i>
                   </button>
                   <ng-container *ngIf="control.potType=='tty'">
-                  <button nz-button nzTitle="回流设置" (click)="addCondition(control,$event)" type="button"
-                    nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                    <i nz-icon type="undo" theme="outline"></i>
-                  </button>
+                    <button nz-button nzTitle="回流设置" (click)="addCondition(control,$event)" type="button"
+                      nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
+                      <i nz-icon type="undo" theme="outline"></i>
+                    </button>
                   </ng-container>
                   <!-- <button nz-button nzTitle="增加迁移页面" (click)="setTransferPage(control,$event)" type="button"
                   nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">

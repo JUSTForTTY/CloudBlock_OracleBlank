@@ -279,6 +279,7 @@ export class PublicworkflowComponent implements OnInit {
             }
           }
         }
+        console.log("this.data",this.data)
       })
     })
   }

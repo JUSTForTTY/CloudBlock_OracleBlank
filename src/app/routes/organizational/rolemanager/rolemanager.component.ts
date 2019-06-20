@@ -59,7 +59,7 @@ export class RolemanagerComponent implements OnInit {
   getRoleList(event: number): void {
     this.pageId = event;
     this.httpService.postHttp("/csysrole/listCondition" + '?page=' + event + '&size=5').subscribe((data: any) => {
-      console.log("用户组数据",data.data.list)
+      console.log("用户组数据", data.data.list)
       this.roleList = data.data.list;
       this.pagenum = data.data.total;
       this.isSpinning = false;
@@ -101,7 +101,7 @@ export class RolemanagerComponent implements OnInit {
     this.isVisible = false;
     //删除原来的权限
     //初始化userMenu将页面选中的checkbox覆盖原来的usermenu
-   
+
     if (this.userMenuDemo.length != 0) {
 
       this.httpService.getHttp("/csysmenuauth").subscribe((data: any) => {
@@ -153,31 +153,31 @@ export class RolemanagerComponent implements OnInit {
           }
         }
         //第三种情况，子菜单未全部选中
-      if (this.userMenuDemo[i].children.length == 0 && this.userMenuDemo[i].parentNode != null) {
-        let num = 0;
-        for(let k = 0;k< this.userMenu.length;k++){
-       
-          if(this.userMenu[k].cySysMenuId == this.userMenuDemo[i].parentNode.key){
-            num++;
+        if (this.userMenuDemo[i].children.length == 0 && this.userMenuDemo[i].parentNode != null) {
+          let num = 0;
+          for (let k = 0; k < this.userMenu.length; k++) {
+
+            if (this.userMenu[k].cySysMenuId == this.userMenuDemo[i].parentNode.key) {
+              num++;
+            }
           }
-        }
-        if(num == 0){
-          let data = {
-            "csysMenuId": this.userMenuDemo[i].parentNode.key,
-            "csysMenuName": this.userMenuDemo[i].parentNode.title,
+          if (num == 0) {
+            let data = {
+              "csysMenuId": this.userMenuDemo[i].parentNode.key,
+              "csysMenuName": this.userMenuDemo[i].parentNode.title,
+              "csysRoleId": this.roleId,
+              "csysRoleName": this.roleName,
+              "csysMenuAuthHaschild": "1"
+            }
+            this.userMenu.push(data);
+          }
+          let data1 = {
+            "csysMenuId": this.userMenuDemo[i].key,
+            "csysMenuName": this.userMenuDemo[i].title,
             "csysRoleId": this.roleId,
-            "csysRoleName": this.roleName,
-            "csysMenuAuthHaschild": "1"
+            "csysRoleName": this.roleName
           }
-          this.userMenu.push(data);
-        }     
-        let data1 = {
-          "csysMenuId": this.userMenuDemo[i].key,
-          "csysMenuName": this.userMenuDemo[i].title,
-          "csysRoleId": this.roleId,
-          "csysRoleName": this.roleName
-        }
-        this.userMenu.push(data1);
+          this.userMenu.push(data1);
         }
         //判断是否存在父
         // if (this.userMenuDemo[i].parentNode != null) {
@@ -260,47 +260,57 @@ export class RolemanagerComponent implements OnInit {
   }
   //创建编辑用户组，根据title的名称来识别是编辑还是新增
   handleUsergroupOk(): void {
-    this.isOkLoadingUsergroup = true;
-    if (this.roleListTitle == "添加用户组") {
-      for (const i in this.form.controls) {
-        this.form.controls[i].markAsDirty();
-        this.form.controls[i].updateValueAndValidity();
-      }
-      if (this.form.controls.name.invalid) return;
-      let roleContent = {
-        "csysRoleName": this.form.controls.name.value,
-        "csysRoleDesc": this.form.controls.comment.value
-      };
-      this.httpService.postHttp("/csysrole", roleContent).subscribe((data: any) => {
-        this.form = this.fb.group({
-          name: [null, [Validators.required]],
-          comment: [null]
+    this.httpService.postHttp("/csysrole/condition").subscribe((roledata: any) => {
+     for (let index = 0; index < roledata.data.length; index++) {
+       const element = roledata.data[index];
+       if(element.csysRoleName == this.form.controls.name.value){
+         this.msg.error("用户组已存在")
+         return;
+       }
+     }
+      this.isOkLoadingUsergroup = true;
+      if (this.roleListTitle == "添加用户组") {
+        for (const i in this.form.controls) {
+          this.form.controls[i].markAsDirty();
+          this.form.controls[i].updateValueAndValidity();
+        }
+        if (this.form.controls.name.invalid) return;
+        let roleContent = {
+          "csysRoleName": this.form.controls.name.value,
+          "csysRoleDesc": this.form.controls.comment.value
+        };
+        this.httpService.postHttp("/csysrole", roleContent).subscribe((data: any) => {
+          this.form = this.fb.group({
+            name: [null, [Validators.required]],
+            comment: [null]
+          });
+          this.getRoleList(this.pageId);
+          this.msg.create('success', '创建成功');
         });
-        this.getRoleList(this.pageId);
-        this.msg.create('success', '创建成功');
-      });
 
-    } else if (this.roleListTitle == "编辑用户组") {
-      for (const i in this.form.controls) {
-        this.form.controls[i].markAsDirty();
-        this.form.controls[i].updateValueAndValidity();
-      }
-      if (this.form.controls.name.invalid) return;
-      let roleContent = {
-        "csysRoleId": this.roleMainId,
-        "csysRoleName": this.form.controls.name.value,
-        "csysRoleDesc": this.form.controls.comment.value
-      };
-      this.httpService.putHttp("/csysrole", roleContent).subscribe((data: any) => {
-        this.form = this.fb.group({
-          name: [null, [Validators.required]],
-          comment: [null]
+      } else if (this.roleListTitle == "编辑用户组") {
+        for (const i in this.form.controls) {
+          this.form.controls[i].markAsDirty();
+          this.form.controls[i].updateValueAndValidity();
+        }
+        if (this.form.controls.name.invalid) return;
+        let roleContent = {
+          "csysRoleId": this.roleMainId,
+          "csysRoleName": this.form.controls.name.value,
+          "csysRoleDesc": this.form.controls.comment.value
+        };
+        this.httpService.putHttp("/csysrole", roleContent).subscribe((data: any) => {
+          this.form = this.fb.group({
+            name: [null, [Validators.required]],
+            comment: [null]
+          });
+          this.getRoleList(this.pageId);
+          this.msg.create('success', '修改成功');
         });
-        this.getRoleList(this.pageId);
-        this.msg.create('success', '修改成功');
-      });
-    }
-    this.isVisibleUsergroup = false;
+      }
+      this.isVisibleUsergroup = false;
+    });
+  
   }
   //查询
   serachRoleList(): void {
@@ -382,7 +392,7 @@ export class RolemanagerComponent implements OnInit {
     });
   }
 
-  navigatedetail(item):void{
+  navigatedetail(item): void {
     let queryParams = {};
     queryParams['roleId'] = item.csysRoleId;
 
@@ -390,7 +400,7 @@ export class RolemanagerComponent implements OnInit {
       queryParams
     });
   }
-  navigatedetail1(item):void{
+  navigatedetail1(item): void {
     let queryParams = {};
     queryParams['roleId'] = item.csysRoleId;
     this.router.navigate(['/authority/rolepage/'], {

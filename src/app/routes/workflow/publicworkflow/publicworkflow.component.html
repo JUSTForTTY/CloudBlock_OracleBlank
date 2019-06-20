@@ -151,7 +151,7 @@
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowGroup">工序防呆组</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
-        <nz-select formControlName="workFlowGroup" nzAllowClear nzPlaceHolder="请选择防呆组">
+        <nz-select formControlName="workFlowGroup" nzAllowClear nzShowSearch nzPlaceHolder="请选择防呆组">
           <nz-option *ngFor="let item of flowGroup" [nzValue]="item.csysPotGroupId" [nzLabel]="item.csysPotGroupName">
           </nz-option>
         </nz-select>
@@ -160,7 +160,7 @@
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowPage">工序页面</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
-        <nz-select formControlName="workFlowPage" nzAllowClear  nzPlaceHolder="请选择工序页面 ">
+        <nz-select formControlName="workFlowPage" nzAllowClear nzShowSearch nzPlaceHolder="请选择工序页面 ">
           <nz-option *ngFor="let item of pageList" [nzValue]="item.csysPageId" [nzLabel]="item.csysPageName">
           </nz-option>
         </nz-select>

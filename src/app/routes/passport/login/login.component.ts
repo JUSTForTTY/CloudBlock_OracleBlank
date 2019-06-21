@@ -52,10 +52,10 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
         @Optional() @Inject(ReuseTabService) private reuseTabService: ReuseTabService,
         @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService) {
         this.form = fb.group({
-            userName: [null, [Validators.required, Validators.minLength(5)]],
-            password: [null, [Validators.required, Validators.minLength(6), Validators.pattern(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/)]],
-            mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)], [this.mobilesyncValidator]],
-            captcha: [null, [Validators.required], [this.captchasyncValidator]],
+            userName: [null, [Validators.required]],
+            password: [null, [Validators.required]],
+            // mobile: [null, [Validators.required, Validators.pattern(/^1\d{10}$/)], [this.mobilesyncValidator]],
+            // captcha: [null, [Validators.required], [this.captchasyncValidator]],
             remember: [true]
         });
 

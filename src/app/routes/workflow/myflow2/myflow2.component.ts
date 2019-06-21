@@ -295,6 +295,20 @@ export class Myflow2Component implements OnInit {
     }  
     //保存途程
     this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
+      let delData = {
+        "csysWorkflowId":this.deleteId,
+      }
+      this.httpService.postHttp("csyspot/condition",delData).subscribe((potdata: any) => {
+        potdata = potdata.data;
+        for (let index = 0; index < potdata.length; index++) {
+          const element = potdata[index];
+          let delpot = {
+            "csysPotId": element.csysPotId,
+            "csysPotIsDelete": "1"
+          }
+          this.httpService.putHttp("csyspot", delpot).subscribe((data: any) => {})
+        }
+      })
       //关闭弹窗
       resolve();
       this.msg.create('success', `删除成功！`);

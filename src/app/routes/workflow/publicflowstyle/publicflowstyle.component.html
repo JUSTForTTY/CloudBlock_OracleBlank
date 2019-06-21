@@ -17,7 +17,7 @@
             <input type="text" nz-input placeholder="请输入" [(ngModel)]="q.q" name="q">
           </nz-input-group> -->
           <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-              <input type="text" nz-input placeholder="公共工序样式" [(ngModel)]="searchContent">
+              <input type="text" nz-input placeholder="公共工序功能" [(ngModel)]="searchContent">
             </nz-input-group>
             <ng-template #suffixButton>
               <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
@@ -96,10 +96,10 @@
   (nzOnCancel)="handleCancel()" (nzOnOk)="saveWorkFlow()" [nzFooter]="modalFooter">
   <form nz-form [formGroup]="form">
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowStyleName">样式名称</nz-form-label>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowStyleName">功能名称</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('workFlowStyleName')">
         <input nz-input formControlName="workFlowStyleName" id="workFlowStyleName" placeholder="请输入公共工序名称">
-        <nz-form-explain *ngIf="form.get('workFlowStyleName').dirty && form.get('workFlowStyleName').errors">请输入样式名称
+        <nz-form-explain *ngIf="form.get('workFlowStyleName').dirty && form.get('workFlowStyleName').errors">请输入功能名称
         </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
@@ -112,7 +112,7 @@
     </nz-form-item>
  
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowStyle">样式选择</nz-form-label>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowStyle">功能选择</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
         <nz-select style="width: 120px;" formControlName="workFlowStyle" nzAllowClear nzPlaceHolder="请选择形状">
           <nz-option nzValue="rect" nzLabel="矩形"></nz-option>

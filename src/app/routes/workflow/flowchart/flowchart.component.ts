@@ -1011,7 +1011,7 @@ export class FlowchartComponent implements OnInit {
         //初始化
         this.initAfterSave(workFlowData);
         this.deleting = false;
-        this.msg.success(`保存成功！`);
+        // this.msg.success(`保存成功了！`);
         this.isGraphSpinning = false;
       });
     });

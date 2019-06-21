@@ -348,8 +348,9 @@ export class PublicworkflowComponent implements OnInit {
     }
   }
   insetPotPage(pfId): void {
+    console.log("page",this.form.value.workFlowPage)
     let potPage = this.form.value.workFlowPage;
-    if (potPage.length != 0) {
+    if (potPage) {
       for (let index = 0; index < potPage.length; index++) {
         const element = potPage[index];
         let potPageData = {

@@ -62,7 +62,7 @@
                   <div nz-col class="gutter-row" nzSpan="6">
                     <div class="gutter-box">
                       <div class="gutter-box">
-                        样式
+                        功能
                         <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="titleTemplate">
                           <ng-template #titleTemplate>
                             <span>颜色:</span>
@@ -99,7 +99,7 @@
           <!-- <div class="width-xl">
             <div class="d-flex text-grey-dark">
               <div class="gutter-row" nzSpan="8">
-                样式
+                功能
                 <p>波峰焊</p>
               </div>
               <div class="gutter-row" nzSpan="8">
@@ -139,9 +139,9 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowStyle">工序样式</nz-form-label>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowStyle">工序功能</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
-        <nz-select formControlName="workFlowStyle" nzAllowClear nzPlaceHolder="请选择工序样式">
+        <nz-select formControlName="workFlowStyle" nzAllowClear nzPlaceHolder="请选择工序功能">
           <nz-option *ngFor="let item1 of flowStyle" [nzValue]="item1.csysPotStyleId"
             [nzLabel]="item1.csysPotStyleName">
           </nz-option>

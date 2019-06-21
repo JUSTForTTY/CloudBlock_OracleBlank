@@ -122,11 +122,11 @@ export class FlowtrsComponent implements OnInit {
       "csysPotGroupDesc": this.form.controls.workFlowDesc.value
     }
     let workGroupValue = this.form.controls.workFlowGroup.value
-    console.log("this log1",workGroupValue)
+    console.log("this log1", workGroupValue)
     this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
       //循环所选工序组 -----首先不为空在执行
       if (workGroupValue != null) {
-        console.log("this log",workGroupValue)
+        console.log("this log", workGroupValue)
         for (let i = 0; i < workGroupValue.length; i++) {
           const element = workGroupValue[i];
           let groupData = {
@@ -296,32 +296,42 @@ export class FlowtrsComponent implements OnInit {
   deleteWorkFlow(resolve) {
     this.loading = true;
     let preData = [];
-    this.httpService.deleteHttp(this.workflowUrl + "/" + resolve).subscribe((data: any) => {
-      this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
-        data1 = data1.data.list
-        for (let i = 0; i < data1.length; i++) {
-          if (data1[i].csysPotGroupFromId == resolve) {
-            preData.push(data1[i].csysPotGroPreId)
-          }
-        }
-        if (preData.length != 0) {
-          for (let index = 0; index < preData.length; index++) {
-            const element = preData[index];
-            this.httpService.deleteHttp("/csyspotgropre/" + element).subscribe((data2: any) => {
-              if (index == preData.length - 1) {
-                this.msg.create('success', `删除成功！`);
-                this._getWorkFlowListData(this.pageId);
+    //再删除之前先判断该组下面是否有公共工序
+    let potBody = {
+      "csysPotGroupId": resolve
+    }
+    this.httpService.postHttp("csyspotpublic/condition", potBody).subscribe((publicPot: any) => {
+      if (publicPot.data.length != 0) {
+        this.loading = false;
+        this.msg.error("该防呆组下存在公共工序，请先接触绑定");
+        return;
+      } else {
+        this.httpService.deleteHttp(this.workflowUrl + "/" + resolve).subscribe((data: any) => {
+          this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
+            data1 = data1.data.list
+            for (let i = 0; i < data1.length; i++) {
+              if (data1[i].csysPotGroupFromId == resolve) {
+                preData.push(data1[i].csysPotGroPreId)
               }
-            })
-          }
-        } else {
-          this.msg.create('success', `删除成功！`);
-          this._getWorkFlowListData(this.pageId);
-        }
-      })
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
-    });
+            }
+            if (preData.length != 0) {
+              for (let index = 0; index < preData.length; index++) {
+                const element = preData[index];
+                this.httpService.deleteHttp("/csyspotgropre/" + element).subscribe((data2: any) => {
+                  if (index == preData.length - 1) {
+                    this.msg.create('success', `删除成功！`);
+                    this._getWorkFlowListData(this.pageId);
+                  }
+                })
+              }
+            } else {
+              this.msg.create('success', `删除成功！`);
+              this._getWorkFlowListData(this.pageId);
+            }
+          })
+        })
+      }
+    })
   }
   flowGroup
   getFlowGroup(): void {
@@ -332,33 +342,33 @@ export class FlowtrsComponent implements OnInit {
   }
   potData = [];
   //获取公共工序
-  getPot():void{
+  getPot(): void {
     this.httpService.postHttp("/csyspotpublic/condition").subscribe((data: any) => {
       this.potData = data.data;
-      console.log("potData",this.potData)
+      console.log("potData", this.potData)
     })
   }
   potVisible = false;
   potName = "查看工序";
   showPotData = [];
-  showPot(item):void{
+  showPot(item): void {
     this.showPotData = [];
     this.potName = item.csysPotGroupName;
     for (let index = 0; index < this.potData.length; index++) {
       const element = this.potData[index];
-      if(element.csysPotGroupId == item.csysPotGroupId){
+      if (element.csysPotGroupId == item.csysPotGroupId) {
         this.showPotData.push(element);
       }
-      if(index == this.potData.length-1){
+      if (index == this.potData.length - 1) {
         this.potVisible = true;
       }
     }
-    console.log("this.showPotData",this.showPotData)
+    console.log("this.showPotData", this.showPotData)
   }
-  potCancel():void{
+  potCancel(): void {
     this.potVisible = false;
   }
-  potOk():void{
+  potOk(): void {
     this.potVisible = false;
   }
 }

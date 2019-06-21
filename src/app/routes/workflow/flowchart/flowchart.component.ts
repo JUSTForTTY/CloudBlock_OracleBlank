@@ -2776,8 +2776,8 @@ export class FlowchartComponent implements OnInit {
         "csysPotTrsConContrastData": this.conditionForm.value.contrastData,
         "csysPotTrsConInfo": this.conditionForm.value.tips,
       }
-      console.log("conditionData", conditionData)
-      this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+      console.log("conditionData", JSON.stringify(conditionData) )
+      this.httpService.postHttp("cssypottrscon", conditionData).subscribe((data: any) => {
         this.msg.create("success", "创建成功");
         this.getTableData()
         this.tableShow = "table";

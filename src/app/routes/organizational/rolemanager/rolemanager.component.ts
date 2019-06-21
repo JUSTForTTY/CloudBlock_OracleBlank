@@ -98,7 +98,7 @@ export class RolemanagerComponent implements OnInit {
 
   //确认
   handleOk(): void {
-    this.isVisible = false;
+    this.isOkLoading = true;
     //删除原来的权限
     //初始化userMenu将页面选中的checkbox覆盖原来的usermenu
 
@@ -191,8 +191,12 @@ export class RolemanagerComponent implements OnInit {
         //   this.userMenu.push(data1);
         // }
       }
-      for (const key in this.userMenu) {
-        this.httpService.postHttp("/csysmenuauth", this.userMenu[key]).subscribe((data: any) => {
+      // for (const key in this.userMenu) {
+        for (let index = 0; index < this.userMenu.length; index++) {
+          const element = this.userMenu[index];
+          
+        // }
+        this.httpService.postHttp("/csysmenuauth", element).subscribe((data: any) => {
           // this.httpService.postHttp("/cysysbaseusermenu/condition").subscribe((data1: any) => {
           //   let menuUser = [];
           //   let str: string;
@@ -226,9 +230,14 @@ export class RolemanagerComponent implements OnInit {
           //   });
           //   this._logger.info("data123", str);
           // });
+          if(index == this.userMenu.length - 1){
+            this.isOkLoading = false;
+            this.isVisible = false;
+            this.msg.create('success', `保存成功！`);
+          }
         });
       }
-      this.msg.create('success', `保存成功！`);
+     
     } else {
 
     }
@@ -395,7 +404,6 @@ export class RolemanagerComponent implements OnInit {
   navigatedetail(item): void {
     let queryParams = {};
     queryParams['roleId'] = item.csysRoleId;
-
     this.router.navigate(['/authority/rolemember/'], {
       queryParams
     });

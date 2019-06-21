@@ -157,7 +157,7 @@ export class PublicworkflowComponent implements OnInit {
     this.init();
     this.getResource();
     let potrs = [];
-    let potPage;
+    let potPage = [];
     this.cySysFlowpointPublicId = cySysFlowpointPublicId;
     this.title = "编辑途程";
     this.isVisible = true;
@@ -181,8 +181,7 @@ export class PublicworkflowComponent implements OnInit {
           for (let index = 0; index < pageData.length; index++) {
             const element = pageData[index];
             if (element.csysPotPublicId == cySysFlowpointPublicId) {
-              potPage = element.csysPageId;
-              break;
+              potPage.push(element.csysPageId);
             }
 
           }
@@ -240,14 +239,27 @@ export class PublicworkflowComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
-    this.httpService.deleteHttp(this.workflowUrl + "/" + resolve).subscribe((data: any) => {
-      this.deletePotPage(resolve);
-      this.deletePotRs(resolve);
-      this.msg.create('success', `删除成功！`);
-      this._getWorkFlowListData(this.pageId);
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
+    let postBody = { "csysPotPublicId": resolve };
+    this.httpService.postHttp("csyspot/condition", postBody).subscribe((potdata: any) => {
+      if (potdata.data.length != 0) {
+        this.msg.error("改工序在途程中被使用，请先解除改工序");
+        return;
+      } else {
+        let deleteData = {
+          "csysPotPublicId": resolve,
+          "csysPotPublicIsDelete": "1"
+        }
+        this.httpService.putHttp(this.workflowUrl, deleteData).subscribe((data: any) => {
+          this.deletePotPage(resolve);
+          this.deletePotRs(resolve);
+          this.msg.create('success', `删除成功！`);
+          this._getWorkFlowListData(this.pageId);
+        }, (err) => {
+          this.msg.create("error", "发生错误，请稍后重试！");
+        });
+      }
     });
+
   }
   flowStyle;
   flowGroup;
@@ -259,8 +271,12 @@ export class PublicworkflowComponent implements OnInit {
         this.flowGroup = data.data;
         for (let index = 0; index < this.data.length; index++) {
           const element = this.data[index];
-          this.data[index]["style"] = null;
-          this.data[index]["group"] = null;
+          this.data[index]["style"] = {
+            "csysPotStyleName": "",
+            "csysPotStyleColor": "",
+            "csysPotStyleDesc": ""
+          };
+          this.data[index]["group"] = { "csysPotGroupName": "" };
           //获取当前公共工序的样式
           for (let index1 = 0; index1 < this.flowStyle.length; index1++) {
             const element1 = this.flowStyle[index1];
@@ -279,7 +295,7 @@ export class PublicworkflowComponent implements OnInit {
             }
           }
         }
-        console.log("this.data",this.data)
+        console.log("this.data", this.data)
       })
     })
   }
@@ -333,13 +349,18 @@ export class PublicworkflowComponent implements OnInit {
   }
   insetPotPage(pfId): void {
     let potPage = this.form.value.workFlowPage;
-    if (potPage) {
-      let potPageData = {
-        "csysPotPublicId": pfId,
-        "csysPageId": potPage
+    if (potPage.length != 0) {
+      for (let index = 0; index < potPage.length; index++) {
+        const element = potPage[index];
+        let potPageData = {
+          "csysPotPublicId": pfId,
+          "csysPageId": element
+        }
+        this.httpService.postHttp(this.potPageUrl, potPageData).subscribe((data: any) => { });
       }
+
       //console.log("potPageData新增", potPage[0])
-      this.httpService.postHttp(this.potPageUrl, potPageData).subscribe((data: any) => { })
+
     }
 
   }
@@ -392,7 +413,11 @@ export class PublicworkflowComponent implements OnInit {
       if (deleteData.length > 0) {
         for (let index = 0; index < deleteData.length; index++) {
           const element = deleteData[index];
-          this.httpService.deleteHttp(this.potPageUrl + "/" + element).subscribe((data: any) => {
+          let deleteBody = {
+            "csysPotPubPageId": element,
+            "csysPotPubPageIsDelete": "1"
+          }
+          this.httpService.putHttp(this.potPageUrl, deleteBody).subscribe((data: any) => {
             if (index == deleteData.length - 1) {
               this.insetPotPage(pfId);
             }
@@ -408,6 +433,8 @@ export class PublicworkflowComponent implements OnInit {
   }
   deletePotPage(pfId): void {
     let deleteData = [];
+    //删除之前先校验这个工序是否被途程使用
+
     this.httpService.postHttp(this.potPageUrl + "/condition").subscribe((data: any) => {
       data = data.data;
       for (let index = 0; index < data.length; index++) {
@@ -415,16 +442,21 @@ export class PublicworkflowComponent implements OnInit {
         if (element.csysPotPublicId == pfId) {
           deleteData.push(element.csysPotPubPageId)
           //console.log("deleteData", deleteData);
-
         }
       }
       if (deleteData.length > 0) {
         for (let index = 0; index < deleteData.length; index++) {
           const element = deleteData[index];
-          this.httpService.deleteHttp(this.potPageUrl + "/" + element).subscribe((data: any) => { })
+          let deleteBody = {
+            "csysPotPubPageId": element,
+            "csysPotPubPageIsDelete": "1"
+          }
+          this.httpService.putHttp(this.potPageUrl, deleteBody).subscribe((data: any) => { })
         }
       }
     })
+
+
   }
   deletePotRs(pfId): void {
     let deleteData = [];

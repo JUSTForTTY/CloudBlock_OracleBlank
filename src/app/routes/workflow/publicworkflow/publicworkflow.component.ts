@@ -115,6 +115,7 @@ export class PublicworkflowComponent implements OnInit {
     this.title = "新增公共工序";
     this.init();
     this.getResource();
+    this.getFlowStyle();
     this.isVisible = true;
   }
 

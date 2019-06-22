@@ -101,7 +101,9 @@ export class Myflow2Component implements OnInit {
       this.loading = false;
     });
   }
-
+  clickPot(item):void{
+    this._getWorkFlowListData(this.currentPage);
+  }
   //搜索途程
   serchWorkFlow(): void {
     let temporayArray1 = [];

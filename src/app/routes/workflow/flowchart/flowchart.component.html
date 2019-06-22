@@ -290,7 +290,7 @@
       <ng-template #extraTemplate>
         <a (click)="addPoint()">新建工序</a>
       </ng-template>
-      <nz-spin [nzSpinning]="isSpinning">
+      <!-- <nz-spin [nzSpinning]="isSpinning"> -->
         <div class="active-chart">
           <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
             <nz-form-item hidden="true">
@@ -488,7 +488,7 @@
 
           </form>
         </div>
-      </nz-spin>
+      <!-- </nz-spin> -->
     </nz-card>
 
     <nz-card nzTitle="通用配置" [nzBordered]="false" [nzBodyStyle]="{'text-align': 'center'}" class="mb-lg">

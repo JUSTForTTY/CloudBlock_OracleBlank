@@ -393,7 +393,7 @@ export class FlowchartComponent implements OnInit {
     let pageDatai = [];
     this.clickNodeData = data;
     console.log("daat", data);
-    this.isSpinning = true;
+    //this.isSpinning = true;
     //开启修改工序
     this.formEditStatus = true;
     //清空目标区域
@@ -2329,7 +2329,7 @@ export class FlowchartComponent implements OnInit {
     let params = {
       "csysPointTrsId": transferId,
     };
-    this.httpService.postHttpAllUrl(this.authorityUrl + "/listCondition", params).subscribe((data: any) => {
+    this.httpService.postHttpAllUrl(this.authorityUrl + "/condition", params).subscribe((data: any) => {
       //console.log("需删除工序迁移权限：", data.data.list);
       //循环获取权限数据
       data.data.list.forEach(element => {
@@ -2760,11 +2760,14 @@ export class FlowchartComponent implements OnInit {
     this.isSpinning = false;
     this.tableShow = 'table'
   }
+  isConfirmLoading = false;
   //权限弹框确认
   conditionOk(): void {
+    this.isConfirmLoading = true;
     //当不是新增或者编辑的时候，点击确认关闭窗口
     if (this.tableShow == "table") {
       this.conditionisVisible = false;
+      this.isConfirmLoading = false;
       //新增时候
     } else if (this.nzTitle == "新增迁移条件") {
       this.tableLodding = true;
@@ -2779,6 +2782,7 @@ export class FlowchartComponent implements OnInit {
       console.log("conditionData", JSON.stringify(conditionData) )
       this.httpService.postHttp("csyspottrscon", conditionData).subscribe((data: any) => {
         this.msg.create("success", "创建成功");
+        this.isConfirmLoading = false;
         this.getTableData()
         this.tableShow = "table";
         this.tableLodding = false;
@@ -2786,7 +2790,7 @@ export class FlowchartComponent implements OnInit {
         (err) => {
           this.msg.create("error", "发生错误，请稍后重试！");
           this.tableLodding = false;
-        })
+        }) 
       console.log(conditionData)
       //编辑时候
     } else if (this.nzTitle == "编辑迁移条件") {
@@ -2801,6 +2805,7 @@ export class FlowchartComponent implements OnInit {
         this.msg.create("success", "编辑成功");
         //返回表格界面
         this.tableShow = "table";
+        this.isConfirmLoading = false;
         this.nzTitle = "迁移条件列表";
         //关闭加载
         this.tableLodding = false;
@@ -2810,6 +2815,7 @@ export class FlowchartComponent implements OnInit {
         (err) => {
           this.msg.create("error", "发生错误，请稍后重试！");
           this.tableLodding = false;
+          this.isConfirmLoading = false;
         })
     }
 
@@ -2898,7 +2904,6 @@ export class FlowchartComponent implements OnInit {
 
   //获取工序描述代码
   getPointDescList() {
-
     this.httpService.postHttp("/csyscodemaster/condition").subscribe((data: any) => {
       this.pointDescList = data.data;
     })

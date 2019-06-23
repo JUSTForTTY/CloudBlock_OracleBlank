@@ -277,7 +277,7 @@ export class Myflow2Component implements OnInit {
       nzCancelText: '取消',
       //确认删除
       nzOnOk: () => new Promise((resolve, reject) => {
-        this.deleteWorkFlow(resolve);
+        this.deleteWorkFlow(resolve); 
       }).catch(() => console.log('Oops errors!'))
     });
   }

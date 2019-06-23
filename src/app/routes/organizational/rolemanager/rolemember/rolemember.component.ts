@@ -78,7 +78,7 @@ export class RolememberComponent implements OnInit {
     // this.getData();
     this.getUsersList();
     this.getRoleList();
-    this.getResource();
+    //this.getResource();
     this.initializeFromControl();
     this.getMenuList();
     this.getTreeData();
@@ -236,7 +236,7 @@ export class RolememberComponent implements OnInit {
     if (this.addUserForm.controls.email.invalid) return;
     this.editOrginzation(userId);
     this.editUserRole(userId);
-    this.editUserRs(userId);
+    //this.//editUserRs(userId);
     console.log("当前密码", this.password)
     //判断密码是否修改
 
@@ -385,58 +385,58 @@ export class RolememberComponent implements OnInit {
       }
     });
   }
-  editUserRs(userId): void {
-    /**
-     * 编辑用户资源
-     * author:zeq - 190408
-     * remark:用户资源是不必填字段，考虑存在表格中可能不存在改用户所属的用户资源，划分两种操作.
-     */
-    let position = this.addUserForm.value.accountResource;
-    console.log("position", this.addUserForm)
-    let rsData = [];
-    if (position.length != 0) {
-      this.httpService.postHttp("/userrs/condition").subscribe((data: any) => {
-        for (let index = 0; index < data.data.length; index++) {
-          const element = data.data[index];
-          if (element.csysUserId == userId) {
-            rsData.push(element.userRsId);
-          }
-        }
-        //存在该用户的用户资源则先删除,不存在直接新增
-        if (rsData.length != 0) {
-          //删除
-          for (let index = 0; index < rsData.length; index++) {
-            const element = rsData[index];
-            this.httpService.deleteHttp("/userrs/" + element).subscribe((data: any) => {
-              //删除完成之后新增
-              if (index == rsData.length - 1) {
-                for (let index1 = 0; index1 < position.length; index1++) {
-                  const element1 = position[index1];
-                  let rsData = {
-                    "tResourceId": element1,
-                    "csysUserId": userId
-                  }
-                  this.httpService.postHttp("/userrs", rsData).subscribe((data: any) => { })
-                }
-              }
-            })
-          }
-        } else {
-          //新增
-          for (let index = 0; index < position.length; index++) {
-            const element = position[index];
-            let rsData = {
-              "tResourceId": element,
-              "csysUserId": userId
-            }
-            this.httpService.postHttp("/userrs", rsData).subscribe((data: any) => { })
-          }
-        }
-      })
-    } else {
-      this.deleteUserRs(userId);
-    }
-  }
+  // editUserRs(userId): void {
+  //   /**
+  //    * 编辑用户资源
+  //    * author:zeq - 190408
+  //    * remark:用户资源是不必填字段，考虑存在表格中可能不存在改用户所属的用户资源，划分两种操作.
+  //    */
+  //   let position = this.addUserForm.value.accountResource;
+  //   console.log("position", this.addUserForm)
+  //   let rsData = [];
+  //   if (position.length != 0) {
+  //     this.httpService.postHttp("userrs/condition").subscribe((data: any) => {
+  //       for (let index = 0; index < data.data.length; index++) {
+  //         const element = data.data[index];
+  //         if (element.csysUserId == userId) {
+  //           rsData.push(element.userRsId);
+  //         }
+  //       }
+  //       //存在该用户的用户资源则先删除,不存在直接新增
+  //       if (rsData.length != 0) {
+  //         //删除
+  //         for (let index = 0; index < rsData.length; index++) {
+  //           const element = rsData[index];
+  //           this.httpService.deleteHttp("/userrs/" + element).subscribe((data: any) => {
+  //             //删除完成之后新增
+  //             if (index == rsData.length - 1) {
+  //               for (let index1 = 0; index1 < position.length; index1++) {
+  //                 const element1 = position[index1];
+  //                 let rsData = {
+  //                   "tResourceId": element1,
+  //                   "csysUserId": userId
+  //                 }
+  //                 this.httpService.postHttp("/userrs", rsData).subscribe((data: any) => { })
+  //               }
+  //             }
+  //           })
+  //         }
+  //       } else {
+  //         //新增
+  //         for (let index = 0; index < position.length; index++) {
+  //           const element = position[index];
+  //           let rsData = {
+  //             "tResourceId": element,
+  //             "csysUserId": userId
+  //           }
+  //           this.httpService.postHttp("/userrs", rsData).subscribe((data: any) => { })
+  //         }
+  //       }
+  //     })
+  //   } else {
+  //     this.deleteUserRs(userId);
+  //   }
+  // }
 
   insertTimer;
   insertNum = 0;
@@ -459,7 +459,7 @@ export class RolememberComponent implements OnInit {
       let userId = data.data;
       this.insertUserRole(userId);
       this.insertUserOr(userId);
-      this.insertUserRs(userId);
+      //this.insertUserRs(userId);
     });
     this.insertTimer = setInterval(() => {
       if (this.insertNum == 3) {
@@ -506,21 +506,21 @@ export class RolememberComponent implements OnInit {
     }
   }
 
-  insertUserRs(userId): void {
-    //添加用户资源
-    let userRs = this.addUserForm.value.accountResource
-    for (let index = 0; index < userRs.length; index++) {
-      const element = userRs[index];
-      let data = {
-        "tResourceId": element,
-        "csysUserId": userId,
-      }
-      console.log("datadatadata", data);
-      this.httpService.postHttp("/userrs", data).subscribe((data: any) => {
+  // insertUserRs(userId): void {
+  //   //添加用户资源
+  //   let userRs = this.addUserForm.value.accountResource
+  //   for (let index = 0; index < userRs.length; index++) {
+  //     const element = userRs[index];
+  //     let data = {
+  //       "tResourceId": element,
+  //       "csysUserId": userId,
+  //     }
+  //     console.log("datadatadata", data);
+  //     this.httpService.postHttp("/userrs", data).subscribe((data: any) => {
 
-      })
-    }
-  }
+  //     })
+  //   }
+  // }
 
   mouseAction(name: string, e: any): void {
     console.log(name, e);
@@ -666,19 +666,13 @@ export class RolememberComponent implements OnInit {
       }
     }
     this.password = userData.csysUserPassword;
-    this.httpService.postHttp("/userrs/condition").subscribe((data: any) => {
-      for (let index = 0; index < data.data.length; index++) {
-        const element = data.data[index];
-        if (element.csysUserId == userId) {
-          rsData.push(element.tResourceId)
-        }
-      }
+
       this.addUserForm = this.fb.group({
         name: [userData.csysUserRealname, [Validators.required]],
         username: [userData.csysUserUsername, [Validators.required]],
         password: [userData.csysUserPassword, [Validators.required]],
         confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
-        accountResource: [rsData],
+        //accountResource: [rsData],
         age: [userData.csysUserAge],
         gender: [userData.csysUserGender],
         position: [userData.userRoleId, [Validators.required]],//userData.userRoleId
@@ -688,9 +682,6 @@ export class RolememberComponent implements OnInit {
         address: [userData.csysUserAddress],
         employeeId: [userData.csysUserNumber]
       });
-    })
-
-
   }
   //初始化表单控件
   initializeFromControl(): void {
@@ -698,7 +689,7 @@ export class RolememberComponent implements OnInit {
       name: [null, [Validators.required]],
       username: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      accountResource: [null],
+      //accountResource: [null],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
       age: [null],
       gender: ["男"],

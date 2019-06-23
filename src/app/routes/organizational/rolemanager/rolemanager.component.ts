@@ -41,6 +41,7 @@ export class RolemanagerComponent implements OnInit {
   roleId;
   roleName;
   isSpinning = false;
+  roleMainName: any;
   constructor(private fb: FormBuilder, private msg: NzMessageService, private httpService: HttpService, private router: Router) {
 
   }
@@ -68,6 +69,7 @@ export class RolemanagerComponent implements OnInit {
   //编辑用户组
   editRole(id, name, desc): void {
     this.roleMainId = id;
+    this.roleMainName = name;
     this.roleListTitle = "编辑用户组";
     this.isVisibleUsergroup = true;
     this.form = this.fb.group({
@@ -77,11 +79,26 @@ export class RolemanagerComponent implements OnInit {
   }
   //删除用户组
   deleteRole(id): void {
-    this.httpService.deleteHttp("/csysrole/" + id).subscribe((data: any) => {
+    let delRole = {
+      "csysRoleId": id,
+      "csysRoleIsDelete": "1"
+    }
+    this.httpService.putHttp("csysrole",delRole).subscribe((data: any) => {
       //判断当前页是否还有数据，没有返回上一步
       if (this.roleList.length == 1 && this.pagenum > 5) {
         this.pageId = this.pageId - 1;
       }
+      this.httpService.postHttp("csysmenuauth/condition",{"csysRoleId": id}).subscribe((deldata: any) => {
+        deldata = deldata.data;
+        for (let index = 0; index < deldata.length; index++) {
+          const element = deldata[index];
+          let delelteData = {
+            "csysMenuAuthId": element.csysMenuAuthId,
+            "csysMenuAuthIsDelete": "1",
+          }
+          this.httpService.putHttp("csysmenuauth",delelteData).subscribe((deldata: any) => {})
+        }
+      })
       this.getRoleList(this.pageId);
     });
   }
@@ -104,7 +121,7 @@ export class RolemanagerComponent implements OnInit {
 
     if (this.userMenuDemo.length != 0) {
 
-      this.httpService.getHttp("/csysmenuauth").subscribe((data: any) => {
+      this.httpService.getHttp("csysmenuauth").subscribe((data: any) => {
         let userMenu = data.data.list;
         let userMenuId = [];
         for (const key in userMenu) {
@@ -115,7 +132,7 @@ export class RolemanagerComponent implements OnInit {
         }
         //  this._logger.info("试试", userMenuId);
         for (const key in userMenuId) {
-          this.httpService.deleteHttp("/csysmenuauth/" + userMenuId[key]).subscribe((data: any) => {
+          this.httpService.deleteHttp("csysmenuauth/" + userMenuId[key]).subscribe((data: any) => {
             // this._logger.info("试试", userMenuId[key]);
           });
         }
@@ -239,20 +256,15 @@ export class RolemanagerComponent implements OnInit {
       }
      
     } else {
-
+      this.isOkLoading = false;
+      this.isVisible = false;
     }
-
-
-    // window.setTimeout(() => {
-
-    //   this.isOkLoading = false;
-
-    // }, 3000);
   }
   //取消
   handleCancel(): void {
     this.userMenuDemo = [];
     this.isVisible = false;
+    this.isOkLoading = false;
     this.msg.create('success', `取消成功！`);
   }
   mouseAction(name: string, e: any): void {
@@ -270,13 +282,7 @@ export class RolemanagerComponent implements OnInit {
   //创建编辑用户组，根据title的名称来识别是编辑还是新增
   handleUsergroupOk(): void {
     this.httpService.postHttp("/csysrole/condition").subscribe((roledata: any) => {
-     for (let index = 0; index < roledata.data.length; index++) {
-       const element = roledata.data[index];
-       if(element.csysRoleName == this.form.controls.name.value){
-         this.msg.error("用户组已存在")
-         return;
-       }
-     }
+
       this.isOkLoadingUsergroup = true;
       if (this.roleListTitle == "添加用户组") {
         for (const i in this.form.controls) {
@@ -284,6 +290,13 @@ export class RolemanagerComponent implements OnInit {
           this.form.controls[i].updateValueAndValidity();
         }
         if (this.form.controls.name.invalid) return;
+        for (let index = 0; index < roledata.data.length; index++) {
+          const element = roledata.data[index];
+          if(element.csysRoleName == this.form.controls.name.value){
+            this.msg.error("用户组已存在")
+            return;
+          }
+        }
         let roleContent = {
           "csysRoleName": this.form.controls.name.value,
           "csysRoleDesc": this.form.controls.comment.value
@@ -303,6 +316,14 @@ export class RolemanagerComponent implements OnInit {
           this.form.controls[i].updateValueAndValidity();
         }
         if (this.form.controls.name.invalid) return;
+        for (let index = 0; index < roledata.data.length; index++) {
+          const element = roledata.data[index];
+
+          if(element.csysRoleName == this.form.controls.name.value && this.form.controls.name.value != this.roleMainName){     
+            this.msg.error("用户组已存在")
+            return;
+          }
+        }
         let roleContent = {
           "csysRoleId": this.roleMainId,
           "csysRoleName": this.form.controls.name.value,

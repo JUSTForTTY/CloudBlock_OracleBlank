@@ -350,6 +350,18 @@ export class OrganizationalmanagerComponent implements OnInit {
           }
         } else this.msg.create('success', `删除成功！`);
       });
+      //删除架构下节点
+      this.httpService.postHttp("csysorgpot/condition", { "csysOrgStruceId": this.organizeId}).subscribe((struceData: any) => {
+        struceData = struceData.data; 
+        for (let index = 0; index < struceData.length; index++) {
+          const element = struceData[index];
+          let deleteData = {
+            "csysOrgPotId": element.csysOrgPotId,
+            "csysOrgPotIsDelete": "1",
+          }
+          this.httpService.putHttp("csysorgpot/condition",deleteData).subscribe((data: any) => {})
+        }
+      })
       this.isDeleteVisible = false;
       //重新获取工作流
       this.getOrganize(1);

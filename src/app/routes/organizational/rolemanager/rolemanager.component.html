@@ -33,18 +33,17 @@
   <nz-list [nzDataSource]="roleList" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
     
     <ng-template #item let-item>
-      <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit, pageedit,op]">
+      <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit,op]">
         <ng-template #useredit>
           <a (click)= "navigatedetail(item)">用户组成员</a>
         </ng-template>
         <ng-template #menuedit>
           <a (click)="showModal(item.csysRoleId,item.csysRoleName)">用户组菜单</a>
         </ng-template>
-        <ng-template #pageedit>
+        <!-- <ng-template #pageedit>
           <a (click)= "navigatedetail1(item)">用户组权限</a>
-        </ng-template>
+        </ng-template> -->
         <ng-template #op>
-
           <nz-dropdown>
             <a class="ant-dropdown-link" nz-dropdown>
               更多

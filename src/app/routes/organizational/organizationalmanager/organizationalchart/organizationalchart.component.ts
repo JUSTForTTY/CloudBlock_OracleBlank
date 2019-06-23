@@ -553,54 +553,54 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     } else {
       //若无迁移数据则先获取用户信息
       const userArray = [];
-      this.httpService.postHttp(this.userUrl + "/listCondition", {}).subscribe((data: any) => {
-        data = data.data.list;
-        console.log("this is a", data);
-        data.forEach(element => {
-          userArray.push({
-            key: element.csysUserId,//用户编号
-            title: element.csysUserUsername,//用户名称
-            //description: `description of content${i + 1}`,
-            direction: 'right',//默认右边
-            authorityId: ''//节点编号
-          });
-        });
-        console.log("this is b", userArray);
-        //判断当前状态是否为新增
-        if (this.formEditStatus == false) {
-          this.userList = JSON.parse(JSON.stringify(userArray));
-          this.userCurrentList = JSON.parse(JSON.stringify(userArray));
-          this.userChangeList = JSON.parse(JSON.stringify(userArray));
-          this.isVisible = true;
-        } else {
-          //若为修改，则需查询当前迁移权限的原有数据
-          //根据当前迁移编号，查询迁移权限数据
-          let params = {
-            "csysOrgPotId": this.editForm.value.id,
-          };
-          this.httpService.postHttp(this.authorityUrl + "/listCondition", params).subscribe((data: any) => {
-            console.log("当前用户权限权限数据：", data.data.list);
-            data.data.list.forEach(element => {
-              try {
-                userArray.forEach(user => {
-                  //若权限表中的用户编号和用户表中的编号相等，则将用户中的位置标记为left即已设置
-                  if (element.csysUserId == user.key) {
-                    user.direction = "left";
-                    user.authorityId = element.csysOrgPotAuthId//用户权限权限编号
-                    //抛出异常跳出循环
-                    throw new Error("error");
-                  }
-                })
-              } catch (e) {
-              }
-            });
-            this.userList = JSON.parse(JSON.stringify(userArray));
-            this.userCurrentList = JSON.parse(JSON.stringify(userArray));
-            this.userChangeList = JSON.parse(JSON.stringify(userArray));
+      // this.httpService.postHttp(this.userUrl + "/listCondition", {}).subscribe((data: any) => {
+      //   data = data.data.list;
+      //   console.log("this is a", data);
+      //   data.forEach(element => {
+      //     userArray.push({
+      //       key: element.csysUserId,//用户编号
+      //       title: element.csysUserUsername,//用户名称
+      //       //description: `description of content${i + 1}`,
+      //       direction: 'right',//默认右边
+      //       authorityId: ''//节点编号
+      //     });
+      //   });
+      //   console.log("this is b", userArray);
+      //   //判断当前状态是否为新增
+      //   if (this.formEditStatus == false) {
+      //     this.userList = JSON.parse(JSON.stringify(userArray));
+      //     this.userCurrentList = JSON.parse(JSON.stringify(userArray));
+      //     this.userChangeList = JSON.parse(JSON.stringify(userArray));
+      //     this.isVisible = true;
+      //   } else {
+      //     //若为修改，则需查询当前迁移权限的原有数据
+      //     //根据当前迁移编号，查询迁移权限数据
+      //     let params = {
+      //       "csysOrgPotId": this.editForm.value.id,
+      //     };
+      //     this.httpService.postHttp(this.authorityUrl + "/listCondition", params).subscribe((data: any) => {
+      //       console.log("当前用户权限权限数据：", data.data.list);
+      //       data.data.list.forEach(element => {
+      //         try {
+      //           userArray.forEach(user => {
+      //             //若权限表中的用户编号和用户表中的编号相等，则将用户中的位置标记为left即已设置
+      //             if (element.csysUserId == user.key) {
+      //               user.direction = "left";
+      //               user.authorityId = element.csysOrgPotAuthId//用户权限权限编号
+      //               //抛出异常跳出循环
+      //               throw new Error("error");
+      //             }
+      //           })
+      //         } catch (e) {
+      //         }
+      //       });
+      //       this.userList = JSON.parse(JSON.stringify(userArray));
+      //       this.userCurrentList = JSON.parse(JSON.stringify(userArray));
+      //       this.userChangeList = JSON.parse(JSON.stringify(userArray));
 
-          });
-        }
-      })
+      //     });
+      //   }
+      // })
     }
   }
 

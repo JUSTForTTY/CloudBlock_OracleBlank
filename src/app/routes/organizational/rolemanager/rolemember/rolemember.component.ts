@@ -736,7 +736,7 @@ export class RolememberComponent implements OnInit {
         "csysOrgStruceId": organizeId
       };
       console.log("body体", body);
-      this.httpService.postHttp("/csysorgpot/tree", body).subscribe((data: any) => {
+      this.httpService.postHttp("/csysorgpot/tree").subscribe((data: any) => {
         this.nodes1 = data.data;
       });
       this.nodes1 = data.data;

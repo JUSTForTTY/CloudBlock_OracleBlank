@@ -236,6 +236,7 @@
         <tr>
           <!-- <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th> -->
           <th>序号</th>
+          <th>账号</th>
           <th>姓名</th>
           <th>性别</th>
           <th>组织</th>
@@ -249,6 +250,7 @@
         <tr *ngFor="let data of basicTable.data;let i = index">
           <!-- <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td> -->
           <td>{{i+1}}</td>
+          <td>{{data.csysUserUsername}}</td>
           <td>{{data.csysUserRealname}}</td>
           <td>{{data.csysUserGender}}</td>
           <td>

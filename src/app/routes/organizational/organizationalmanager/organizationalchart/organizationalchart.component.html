@@ -275,7 +275,7 @@
         <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">用户名</nz-form-label>
         <nz-form-control nzSpan="10">
           <input nz-input formControlName="username" placeholder="请输入用户名">
-          <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">请输入用户名</nz-form-explain>
+          <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">用户名不能存在中文或者特殊字符</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

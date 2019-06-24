@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import {Component, Directive, OnInit, ViewContainerRef, Input, NgModule, OnDestroy } from "@angular/core";
 import { NzMessageService, NzModalService, NzTreeNode } from 'ng-zorro-antd';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
@@ -233,18 +233,18 @@ export class RolememberComponent implements OnInit {
     if (this.addUserForm.controls.confitmPassword.invalid) return;
     if (this.addUserForm.controls.department.invalid) return;
     if (this.addUserForm.controls.position.invalid) return;
-    if (this.addUserForm.controls.email.invalid) return;
     this.editOrginzation(userId);
     this.editUserRole(userId);
     //this.//editUserRs(userId);
-    console.log("当前密码", this.password)
+    let abc = "SSSfffss123_"
+    console.log("当前密码", abc.toLowerCase())
     //判断密码是否修改
 
     if (this.addUserForm.controls.password.value == this.password && this.addUserForm.controls.confitmPassword.value == this.password) {
 
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -256,7 +256,7 @@ export class RolememberComponent implements OnInit {
     } else {
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
         "csysUserPassword": this.addUserForm.controls.password.value,//密码
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -443,7 +443,7 @@ export class RolememberComponent implements OnInit {
   insertUser(): void {
     this.insertNum = 0;
     let userData = {
-      "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+      "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -669,7 +669,7 @@ export class RolememberComponent implements OnInit {
 
       this.addUserForm = this.fb.group({
         name: [userData.csysUserRealname, [Validators.required]],
-        username: [userData.csysUserUsername, [Validators.required]],
+        username: [userData.csysUserUsername, [Validators.required,Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
         password: [userData.csysUserPassword, [Validators.required]],
         confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
         //accountResource: [rsData],
@@ -677,7 +677,7 @@ export class RolememberComponent implements OnInit {
         gender: [userData.csysUserGender],
         position: [userData.userRoleId, [Validators.required]],//userData.userRoleId
         department: [userData.csysOrgPotId, [Validators.required]],
-        phone: [userData.csysUserPhone, [Validators.required]],
+        phone: [userData.csysUserPhone],
         email: [userData.csysUserEmail, [Validators.email]],
         address: [userData.csysUserAddress],
         employeeId: [userData.csysUserNumber]
@@ -687,7 +687,7 @@ export class RolememberComponent implements OnInit {
   initializeFromControl(): void {
     this.addUserForm = this.fb.group({
       name: [null, [Validators.required]],
-      username: [null, [Validators.required]],
+      username: [null, [Validators.required,Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],//Validators.pattern(/[\u4E00-\u9FA5]/g])],
       password: [null, [Validators.required]],
       //accountResource: [null],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
@@ -695,8 +695,8 @@ export class RolememberComponent implements OnInit {
       gender: ["男"],
       position: [null, [Validators.required]],
       department: [null, [Validators.required]],
-      phone: [null, [Validators.required]],
-      email: [null, [Validators.email]],
+      phone: [null],
+      email: [null,[Validators.email]],
       address: [null],
       employeeId: [null]
     });

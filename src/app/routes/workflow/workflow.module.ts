@@ -12,6 +12,7 @@ import { PublicworkflowComponent } from './publicworkflow/publicworkflow.compone
 import { PublicflowstyleComponent } from './publicflowstyle/publicflowstyle.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { FlowtrsComponent } from './flowtrs/flowtrs.component';
+import { TasktimeComponent } from './tasktime/tasktime.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,6 +26,7 @@ import { FlowtrsComponent } from './flowtrs/flowtrs.component';
     WorkflowsettingComponent,
     PublicworkflowComponent,
     PublicflowstyleComponent,
-    FlowtrsComponent]
+    FlowtrsComponent,
+    TasktimeComponent]
 })
 export class WorkflowModule { }

@@ -14,7 +14,7 @@ import { Identifiers } from '@angular/compiler';
 import { STColumn, STChange } from '@delon/abc';
 import { Md5 } from "ts-md5/dist/md5";
 import { isThisISOWeek } from 'date-fns';
- 
+
 @Component({
   selector: 'organizationalchart',
   templateUrl: './organizationalchart.component.html',
@@ -117,7 +117,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
   orientation: string = 'TB'; // LR, RL, TB, BT
 
-  layout="";
+  layout = "";
   users: any[] = [];
 
 
@@ -140,7 +140,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
       value: 'BT'
     }
   ];
-  workflowlayout=[
+  workflowlayout = [
     {
       label: '风格1',
       value: 'dagre'
@@ -426,7 +426,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
     //清空目标区域
     this.controlArray = [];
- 
+
     //获取值
     this.editForm = this.fb.group({
       id: [data.id, [Validators.required]],
@@ -437,11 +437,11 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     let targetjson = [];
     //查询是否有目标节点
 
-    console.log("links昌都",this.hierarchialGraph.links.length)
-    for (let i=0; i < this.hierarchialGraph.links.length;i++) {
+    console.log("links昌都", this.hierarchialGraph.links.length)
+    for (let i = 0; i < this.hierarchialGraph.links.length; i++) {
       let element = this.hierarchialGraph.links[i];
 
-      console.log("当前值",element);      
+      console.log("当前值", element);
       if (element != null) {
         if (data.id == element.source) {
           let control = {
@@ -453,20 +453,20 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
             authority: []//编辑初始化时设置用户为空
           };
           console.log("存放数据节点", control)
-          this.controlArray=[... this.controlArray];
-          
+          this.controlArray = [... this.controlArray];
+
           console.log("存放数据节点-未处理", control)
 
           console.log("存放数据节点-处理后", JSON.stringify(control))
 
           console.log("存放数据节点-处理后", JSON.parse(JSON.stringify(control)))
-           
-           
+
+
           this.controlArray.push(JSON.parse(JSON.stringify(control)));
-        
+
 
           console.log("存放数据节点", this.controlArray)
- 
+
 
           this.editForm.addControl(element.target, new FormControl(element.target, Validators.required));
           try {
@@ -519,7 +519,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     //     }
     //   }
     // });
-   
+
     console.log("最终节点数据", this.controlArray);
 
   }
@@ -1007,7 +1007,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
 
   formInit() {
- 
+
     //清空目标区域
     this.controlArray = [];
     this.controlDeleteArray = [];
@@ -1036,20 +1036,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
   //新增用户
   addUser(): void {
-    this.addUserForm = this.fb.group({
-      name: [null, [Validators.required]],
-      username: [null, [Validators.required]],
-      password: [null, [Validators.required]],
-      confitmPassword: [null, [Validators.required, this.confirmationValidator]],
-      age: [null],
-      gender: ["男"],
-      position: [null, [Validators.required]],
-      department: [this.clickOrganizationId, [Validators.required]],
-      phone: [null, [Validators.required]],
-      email: [null, [Validators.email]],
-      address: [null],
-      employeeId: [null]
-    });
+    this.initializeFromControl();
     this.windowShow = "adduser";
     this.nzTitle = "添加成员";
     //这里是点击某个组织架构的图标得到的-id this.organizationData.id;
@@ -1285,7 +1272,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     let position = this.addUserForm.controls.position.value;//用户组
     let department = this.addUserForm.controls.department.value;//组织（部门）
     let userData = {
-      "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+      "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -1378,14 +1365,14 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     console.log("1", userData.csysorgpotauth);
     this.addUserForm = this.fb.group({
       name: [userData.csysUserRealname, [Validators.required]],
-      username: [userData.csysUserUsername, [Validators.required]],
+      username: [userData.csysUserUsername, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
       password: [userData.csysUserPassword, [Validators.required]],
       confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
       age: [userData.csysUserAge],
       gender: [userData.csysUserGender],
       position: [userData.userRoleId, [Validators.required]],//userData.userRoleId
       department: [userData.csysOrgPotId, [Validators.required]],
-      phone: [userData.csysUserPhone, [Validators.required]],
+      phone: [userData.csysUserPhone],
       email: [userData.csysUserEmail, [Validators.email]],
       address: [userData.csysUserAddress],
       employeeId: [userData.csysUserNumber]
@@ -1419,7 +1406,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -1431,7 +1418,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     } else {
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value,//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
         "csysUserPassword": this.addUserForm.controls.password.value,//密码
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -1616,7 +1603,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   initializeFromControl(): void {
     this.addUserForm = this.fb.group({
       name: [null, [Validators.required]],
-      username: [null, [Validators.required]],
+      username: [null, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
       password: [null, [Validators.required]],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
       age: [null],

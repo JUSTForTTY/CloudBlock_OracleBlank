@@ -6,6 +6,7 @@ import { PublicworkflowComponent } from './publicworkflow/publicworkflow.compone
 import { PublicflowstyleComponent } from './publicflowstyle/publicflowstyle.component';
 import { FlowchartComponent } from './flowchart/flowchart.component';
 import { FlowtrsComponent } from './flowtrs/flowtrs.component';
+import { TasktimeComponent } from './tasktime/tasktime.component';
 const routes: Routes = [
 
   { path: 'myflow', component: Myflow2Component, data: { title: '途程' } },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'flowsetting', component: WorkflowsettingComponent, data: { title: '途程管理' } },
   { path: 'publicworkflow', component: PublicworkflowComponent, data: { title: '公共工序' } },
   { path: 'publicflowstyle', component: PublicflowstyleComponent, data: { title: '公共工序样式' } },
-  { path: 'flowtrs', component: FlowtrsComponent, data: { title: '防呆工序组' } }
+  { path: 'flowtrs', component: FlowtrsComponent, data: { title: '防呆工序组' } },
+  { path: 'tasktime', component: TasktimeComponent, data: { title: '定时任务' } }
   
   
 

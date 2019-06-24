@@ -11,6 +11,7 @@ export class TasktimeComponent implements OnInit {
   total: any;
   currentPage: number = 1;
   ttLoading: boolean;
+  statu;
   constructor(private httpService: HttpService) { }
 
   ngOnInit() {

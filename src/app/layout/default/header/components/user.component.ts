@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { UserService } from '@core';
+import { ReuseTabService } from '@delon/abc/reuse-tab';
 @Component({
   selector: 'header-user',
   template: `
@@ -32,6 +33,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     public settings: SettingsService,
     private router: Router,
     public userService: UserService,
+    private reuseTabService: ReuseTabService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
 
@@ -48,7 +50,10 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   }
 
   logout() {
+    //清理用户信息
     this.userService.purgeAuth();
+    //清理reuse
+    this.reuseTabService.clear();
     this.router.navigateByUrl("/login");
   }
 }

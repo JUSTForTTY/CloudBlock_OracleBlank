@@ -180,8 +180,9 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
             this.password.markAsDirty();
             this.password.updateValueAndValidity();
             if (this.userName.invalid || this.password.invalid) return;
+            //账户不需要大小写区分（特殊处理）
             params = {
-                "csysUserUsername": this.userName.value,
+                "csysUserUsername": this.userName.value.toLowerCase(),
                 "csysUserPassword": this.password.value
             }
         } else {

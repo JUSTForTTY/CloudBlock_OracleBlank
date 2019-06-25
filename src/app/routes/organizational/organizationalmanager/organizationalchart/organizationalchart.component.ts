@@ -1272,7 +1272,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     let position = this.addUserForm.controls.position.value;//用户组
     let department = this.addUserForm.controls.department.value;//组织（部门）
     let userData = {
-      "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+      "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -1406,7 +1406,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -1418,7 +1418,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     } else {
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
         "csysUserPassword": this.addUserForm.controls.password.value,//密码
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名

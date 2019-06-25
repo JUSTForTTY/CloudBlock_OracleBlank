@@ -1,7 +1,7 @@
 <page-header [home]="''"></page-header>
 <div nz-row [nzGutter]="24" class="pt-lg">
 
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
     <!-- <nz-affix [nzTarget]="target"> -->
     <nz-card nzTitle="途程" [nzBordered]="false" class="mb-lg"
       [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
@@ -88,7 +88,7 @@
   </div>
 
 
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
     <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
       <div class="active-chart">
         <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">

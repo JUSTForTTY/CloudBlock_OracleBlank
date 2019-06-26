@@ -136,6 +136,10 @@ export class PublicflowstyleComponent implements OnInit {
   cySysFlowpointPublicId;
   //编辑初始化
   editWorkflowInit(csysPotStyleId): void {
+    if(csysPotStyleId == "LHCsysPotStyle20190620042709661000002"){
+      this.msg.error("系统功能禁止编辑！");
+      return;
+    }
     this.cySysFlowpointPublicId = csysPotStyleId;
     this.title = "编辑途程";
     this.isVisible = true;
@@ -179,14 +183,31 @@ export class PublicflowstyleComponent implements OnInit {
     else this.editWorkflow();
   }
 
-  //确认删除途程
+  //确认删除途程功能
   deleteWorkFlow(csysPotStyleId) {
-    this.httpService.deleteHttp("/csyspotstyle" + "/" + csysPotStyleId).subscribe((data: any) => {
-      this.msg.create('success', `删除成功！`);
-      this._getWorkFlowListData(this.pageId);
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
-    });
+    if(csysPotStyleId == "LHCsysPotStyle20190620042709661000002"){
+      this.msg.error("系统功能禁止删除！");
+      return;
+    }
+    this.httpService.postHttp("csyspotpublic/condition", { "csysPotStyleId": csysPotStyleId }).subscribe((potdata: any) => { 
+      potdata = potdata.data;
+      if(potdata.length == 0){
+        this.msg.error("该公共样式被公共工序占用,请先改绑或者删除");
+        return;
+      } else{
+        let deleteData = {
+          "csysPotStyleId": csysPotStyleId,
+          "csysPotStyleIsDelete": "1"
+        }
+        this.httpService.putHttp("/csyspotstyle", deleteData).subscribe((data: any) => {
+          this.msg.create('success', `删除成功！`);
+          this._getWorkFlowListData(this.pageId);
+        }, (err) => {
+          this.msg.create("error", "发生错误，请稍后重试！");
+        });
+      }
+    })
+
   }
   //选择器颜色变化
   colorChange(event): void {

@@ -1,7 +1,7 @@
 <page-header [home]="''"></page-header>
 <div nz-row [nzGutter]="24" class="pt-lg">
 
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
     <!-- <nz-affix [nzTarget]="target"> -->
     <nz-card nzTitle="途程" [nzBordered]="false" class="mb-lg"
       [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
@@ -88,7 +88,7 @@
   </div>
 
 
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
     <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
       <div class="active-chart">
         <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
@@ -625,7 +625,7 @@
   </ng-container>
   <!-- 新增 -->
   <ng-container *ngIf="tableShow == 'addTable'">
-    <form nz-form [formGroup]="conditionForm" (ngSubmit)="_saveConfigure()">
+    <form nz-form [formGroup]="conditionForm">
       <nz-form-item>
         <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dataSource">源数据</nz-form-label>
         <nz-form-control [nzSm]="14" [nzXs]="24">

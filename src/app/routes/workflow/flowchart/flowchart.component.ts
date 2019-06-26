@@ -106,10 +106,11 @@ export class FlowchartComponent implements OnInit {
   opName;
   resourceData = [];
   skillData = [];
-
+  operationShow = true;
+  nzLg = 18;
   //工序描述list
   pointDescList = [];
-
+  workflowType;
   //定义途程图数据
   hierarchialGraph = { nodes: [], links: [] };
   curve = shape.curveBundle.beta(1);
@@ -185,7 +186,12 @@ export class FlowchartComponent implements OnInit {
     //this.workflowId = this.route.snapshot.paramMap.get("workFlowId");
     this.route.queryParams.subscribe(queryParams => {
       this.workflowId = queryParams['workflowId'];
+      this.workflowType = queryParams['workflowType'];
     });
+    if (this.workflowType == "inoperation") { 
+      this.nzLg = 24;
+       this.operationShow = false; 
+    }
     this.getPageData();
     this.getChartData();
     this.getAutoExcute();
@@ -431,76 +437,76 @@ export class FlowchartComponent implements OnInit {
         //获得超时管控的最长最短时间
         this.httpService.getHttp(this.transferNodeUrl + "/" + element.id).subscribe((timeData: any) => {
           // this.httpService.postHttp("/csystrspage/condition").subscribe((pageData: any) => {
-            // pageDatai = [];
-            // pageData = pageData.data;
-            // for (let j = 0; j < pageData.length; j++) {
-            //   const elementpage = pageData[j];
-            //   if (elementpage.csysPointTrsId == element.id) {
-            //     pageDatai.push(elementpage.csysPageId);
-            //   }
-            // }
-            //判断最短最长时间是否为0，为0赋空值
-            if (timeData.data.csysPotTrsLongestTime == 0) {
-              timeData.data.csysPotTrsLongestTime = null
-            }
-            if (timeData.data.csysPotTrsLeastTime == 0) {
-              timeData.data.csysPotTrsLeastTime = null
-            }
-            //若当前工序编号和连接数据的源点相同，则存在目标工序
-            if (element != null) {
-              if (data.id == element.source) {
-                for (let i = 0; i < this.autoExcute.length; i++) {
-                  if (element.id == this.autoExcute[i].csysPotTrsId) {
-                    if (this.autoExcute[i].csysPotTrsAutoExe == 0) {
-                      autoValue = false
-                    } else {
-                      autoValue = true
-                    }
-                    console.log("aaa", element.id);
-                    break;
+          // pageDatai = [];
+          // pageData = pageData.data;
+          // for (let j = 0; j < pageData.length; j++) {
+          //   const elementpage = pageData[j];
+          //   if (elementpage.csysPointTrsId == element.id) {
+          //     pageDatai.push(elementpage.csysPageId);
+          //   }
+          // }
+          //判断最短最长时间是否为0，为0赋空值
+          if (timeData.data.csysPotTrsLongestTime == 0) {
+            timeData.data.csysPotTrsLongestTime = null
+          }
+          if (timeData.data.csysPotTrsLeastTime == 0) {
+            timeData.data.csysPotTrsLeastTime = null
+          }
+          //若当前工序编号和连接数据的源点相同，则存在目标工序
+          if (element != null) {
+            if (data.id == element.source) {
+              for (let i = 0; i < this.autoExcute.length; i++) {
+                if (element.id == this.autoExcute[i].csysPotTrsId) {
+                  if (this.autoExcute[i].csysPotTrsAutoExe == 0) {
+                    autoValue = false
+                  } else {
+                    autoValue = true
                   }
+                  console.log("aaa", element.id);
+                  break;
                 }
-                //查询目标节点类型
-                console.log("目标节点编号",element.target)
-                this.httpService.getHttp("/csyspot/" + element.target).subscribe((potdata: any) => {
-                  console.log("目标节点数据", potdata)
-                  console.log("auto", autoValue)
-                  const control = {
-                    id: element.id,//工序迁移编号
-                    controlInstance: element.id,//`passenger${element.id}`,//工序迁移编号
-                    value: element.target,
-                    label: "",
-                    potType: potdata.data.csysPotStyleId,
-                    autoExcuteControl: element.id + "auto",
-                    autoExcute: autoValue,//自动完成的权限
-                    longTime: element.id + "longTime",
-                    lastTime: element.id + "lastTime",
-                    desc: element.id + "desc",
-                    pageIds: element.id + "pageId",
-                    flag: "update",
-                    authority: [],//编辑初始化时迁移权限为空
-                    pageData: { transferPageId: "", oldPageId: "", currentPageId: "" }
-                  };
-                  console.log("数据control", control);
-                  this.controlArray.push(control);
-                  console.log("control", this.controlArray)
-                  this.editForm.addControl(element.id, new FormControl(element.target, Validators.required));
-                  this.editForm.addControl(element.id + "auto", new FormControl(autoValue, Validators.required));
-                  this.editForm.addControl(element.id + "longTime", new FormControl(timeData.data.csysPotTrsLongestTime));
-                  this.editForm.addControl(element.id + "lastTime", new FormControl(timeData.data.csysPotTrsLeastTime));
-                  this.editForm.addControl(element.id + "desc", new FormControl(timeData.data.csysPotTrsDesc));
-                  this.editForm.addControl(element.id + "pageId", new FormControl(pageDatai));
-                  this.getAutoExcute();//重新获取自动执行的
-                });
-
-
               }
+              //查询目标节点类型
+              console.log("目标节点编号", element.target)
+              this.httpService.getHttp("/csyspot/" + element.target).subscribe((potdata: any) => {
+                console.log("目标节点数据", potdata)
+                console.log("auto", autoValue)
+                const control = {
+                  id: element.id,//工序迁移编号
+                  controlInstance: element.id,//`passenger${element.id}`,//工序迁移编号
+                  value: element.target,
+                  label: "",
+                  potType: potdata.data.csysPotStyleId,
+                  autoExcuteControl: element.id + "auto",
+                  autoExcute: autoValue,//自动完成的权限
+                  longTime: element.id + "longTime",
+                  lastTime: element.id + "lastTime",
+                  desc: element.id + "desc",
+                  pageIds: element.id + "pageId",
+                  flag: "update",
+                  authority: [],//编辑初始化时迁移权限为空
+                  pageData: { transferPageId: "", oldPageId: "", currentPageId: "" }
+                };
+                console.log("数据control", control);
+                this.controlArray.push(control);
+                console.log("control", this.controlArray)
+                this.editForm.addControl(element.id, new FormControl(element.target, Validators.required));
+                this.editForm.addControl(element.id + "auto", new FormControl(autoValue, Validators.required));
+                this.editForm.addControl(element.id + "longTime", new FormControl(timeData.data.csysPotTrsLongestTime));
+                this.editForm.addControl(element.id + "lastTime", new FormControl(timeData.data.csysPotTrsLeastTime));
+                this.editForm.addControl(element.id + "desc", new FormControl(timeData.data.csysPotTrsDesc));
+                this.editForm.addControl(element.id + "pageId", new FormControl(pageDatai));
+                this.getAutoExcute();//重新获取自动执行的
+              });
+
+
             }
-            index++;
-            if (index == this.hierarchialGraph.links.length) {
-              this.isSpinning = false;
-            }
-          })
+          }
+          index++;
+          if (index == this.hierarchialGraph.links.length) {
+            this.isSpinning = false;
+          }
+        })
         // });
 
       });
@@ -2779,7 +2785,7 @@ export class FlowchartComponent implements OnInit {
         "csysPotTrsConContrastData": this.conditionForm.value.contrastData,
         "csysPotTrsConInfo": this.conditionForm.value.tips,
       }
-      console.log("conditionData", JSON.stringify(conditionData) )
+      console.log("conditionData", JSON.stringify(conditionData))
       this.httpService.postHttp("csyspottrscon", conditionData).subscribe((data: any) => {
         this.msg.create("success", "创建成功");
         this.isConfirmLoading = false;
@@ -2790,7 +2796,7 @@ export class FlowchartComponent implements OnInit {
         (err) => {
           this.msg.create("error", "发生错误，请稍后重试！");
           this.tableLodding = false;
-        }) 
+        })
       console.log(conditionData)
       //编辑时候
     } else if (this.nzTitle == "编辑迁移条件") {
@@ -2851,7 +2857,8 @@ export class FlowchartComponent implements OnInit {
       tips: [tips, [Validators.required]]
     });
     this.tableShow = "addTable";
-    this.tableLodding = true;
+    //this.tableLodding = true;
+    console.log("addtable正在执行")
   }
   deleteCondition(id): void {
     this.httpService.deleteHttp("/csyspottrscon/" + id).subscribe((data: any) => {
@@ -2936,7 +2943,7 @@ export class FlowchartComponent implements OnInit {
   //
   opCancel(): void {
     this.opVisible = false;
-    this.isOpLoding = false;
+    //this.isOpLoding = false;
     this.opDiv = "list";
     //关闭初始化
     this.initOpForm();
@@ -3029,6 +3036,7 @@ export class FlowchartComponent implements OnInit {
   opBack(): void {
     this.opDiv = "list";
     this.opListTitle = "工序组列表";
+    console.log("执行了op取消")
   }
   opDelete(id): void {
     this.httpService.deleteHttp("/op/" + id).subscribe((data: any) => {

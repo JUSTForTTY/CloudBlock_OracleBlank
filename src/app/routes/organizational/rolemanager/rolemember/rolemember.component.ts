@@ -237,14 +237,14 @@ export class RolememberComponent implements OnInit {
     this.editUserRole(userId);
     //this.//editUserRs(userId);
     let abc = "SSSfffss123_"
-    console.log("当前密码", abc.toLowerCase())
+    console.log("当前密码", abc.toUpperCase())
     //判断密码是否修改
 
     if (this.addUserForm.controls.password.value == this.password && this.addUserForm.controls.confitmPassword.value == this.password) {
 
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -256,7 +256,7 @@ export class RolememberComponent implements OnInit {
     } else {
       userData = {
         "csysUserId": userId,
-        "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+        "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
         "csysUserPassword": this.addUserForm.controls.password.value,//密码
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
@@ -443,7 +443,7 @@ export class RolememberComponent implements OnInit {
   insertUser(): void {
     this.insertNum = 0;
     let userData = {
-      "csysUserUsername": this.addUserForm.controls.username.value.toLowerCase(),//用户名
+      "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名

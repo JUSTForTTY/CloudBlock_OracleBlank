@@ -1,5 +1,4 @@
-  <!--
-<button nz-button (click)="iTaskTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+<!-- <button nz-button (click)="iTaskTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
     <i class="anticon anticon-plus"></i>
     <span>添加</span>
   </button>
@@ -43,7 +42,6 @@
               </div>
             </div>
           </div>
- 
         </ng-template>
       </nz-list-item>
     </ng-template>
@@ -52,7 +50,7 @@
         (nzPageIndexChange)="getTTData($event)"></nz-pagination>
     </ng-template>
   </nz-list>
-<div *ngIf="statu == 'add' || statu == 'edit'">
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="定时任务" (nzOnCancel)="ttCancel()" (nzOnOk)="ttOk()" [nzOkLoading]="isConfirmLoading" nzWidth="50%">
   <form nz-form [formGroup]="form">
     <nz-form-item>
       <nz-form-label [nzSm]="9" [nzXs]="24" nzRequired nzFor="taskName">任务名称</nz-form-label>
@@ -85,5 +83,4 @@
       </nz-form-control>
     </nz-form-item>
   </form>
-</div>
--->
+</nz-modal> -->

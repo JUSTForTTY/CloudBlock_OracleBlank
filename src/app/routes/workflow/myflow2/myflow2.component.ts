@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { equalSegments } from '@angular/router/src/url_tree';
 import { NzModalService } from 'ng-zorro-antd';
 import { CacheService } from '@delon/cache';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -20,7 +21,7 @@ import { CacheService } from '@delon/cache';
 
 export class Myflow2Component implements OnInit {
 
-  constructor(private fb: FormBuilder, private http: _HttpClient, public msg: NzMessageService, private httpService: HttpService,
+  constructor(private fb: FormBuilder,private route: ActivatedRoute,public msg: NzMessageService, private httpService: HttpService,
     private router: Router, private modalService: NzModalService, private cacheService: CacheService) { }
 
   form: FormGroup;
@@ -51,7 +52,11 @@ export class Myflow2Component implements OnInit {
   workflowType="0";
   searchContent = "";
   searchData;
+  workflowType1 = "operation";
   public ngOnInit(): void {
+    this.route.queryParams.subscribe(queryParams => {
+      if(queryParams['workflowType']) this.workflowType1 = queryParams['workflowType'];   
+    });
     this.init();
     this._getWorkFlowListData(this.currentPage);
   }
@@ -326,7 +331,7 @@ export class Myflow2Component implements OnInit {
     //this.router.navigate(['/workflow/flowchart/' + item.csysWorkflowId + '']);
     let queryParams = {};
     queryParams['workflowId'] = item.csysWorkflowId;
-
+    queryParams['workflowType'] = this.workflowType1;
     this.router.navigate(['/workflow/flowchart/'], {
       queryParams
     });

@@ -162,6 +162,10 @@ export class FlowtrsComponent implements OnInit {
   cySysFlowpointPublicId;
   //编辑途程初始化
   editWorkflowInit(csysPotGroupId): void {
+    if( csysPotGroupId ==  "LHCsysPotGroup20190620031149595000001"){
+      this.msg.error("系统防呆组禁止编辑！")
+      return;
+    }
     //目标权限
     this.isSpinning = true;
     let preData = []
@@ -294,6 +298,10 @@ export class FlowtrsComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
+    if( resolve ==  "LHCsysPotGroup20190620031149595000001"){
+      this.msg.error("系统防呆组禁止删除！")
+      return;
+    }
     this.loading = true;
     let preData = [];
     //再删除之前先判断该组下面是否有公共工序
@@ -306,18 +314,21 @@ export class FlowtrsComponent implements OnInit {
         this.msg.error("该防呆组下存在公共工序，请先接触绑定");
         return;
       } else {
-        this.httpService.deleteHttp(this.workflowUrl + "/" + resolve).subscribe((data: any) => {
-          this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
-            data1 = data1.data.list
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i].csysPotGroupFromId == resolve) {
-                preData.push(data1[i].csysPotGroPreId)
-              }
-            }
+        let deleteData = {
+          "csysPotGroupId": resolve,
+          "csysPotGroupIsDelete": "1",
+        }
+        this.httpService.putHttp(this.workflowUrl,deleteData).subscribe((data: any) => {
+          this.httpService.postHttp("/csyspotgropre/condition",{"csysPotGroupFromId":resolve}).subscribe((data1: any) => {
+            preData = data1.data
             if (preData.length != 0) {
               for (let index = 0; index < preData.length; index++) {
                 const element = preData[index];
-                this.httpService.deleteHttp("/csyspotgropre/" + element).subscribe((data2: any) => {
+                let preDeleteData = {
+                  "csysPotGroPreId": element,
+                  "csysPotGroPreIsDelete": "1",
+                }
+                this.httpService.putHttp("/csyspotgropre",preDeleteData).subscribe((data2: any) => {
                   if (index == preData.length - 1) {
                     this.msg.create('success', `删除成功！`);
                     this._getWorkFlowListData(this.pageId);

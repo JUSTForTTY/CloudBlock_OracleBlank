@@ -47,7 +47,7 @@ export class PublicworkflowComponent implements OnInit {
     this._getWorkFlowListData(this.currentPage);
     this.init();
     this.getPageData();
-   // this.getResource();
+    // this.getResource();
   }
 
   init() {
@@ -155,6 +155,10 @@ export class PublicworkflowComponent implements OnInit {
 
   //编辑途程初始化
   editWorkflowInit(cySysFlowpointPublicId): void {
+    if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010") {
+      this.msg.error("系统工序禁止编辑！");
+      return;
+    }
     this.spinning = true;
     this.init();
     this.getResource();
@@ -241,6 +245,10 @@ export class PublicworkflowComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
+    if (resolve == "LHCsysPotPublic20190620043043486000010") {
+      this.msg.error("系统工序禁止删除！");
+      return;
+    }
     let postBody = { "csysPotPublicId": resolve };
     this.httpService.postHttp("csyspot/condition", postBody).subscribe((potdata: any) => {
       if (potdata.data.length != 0) {
@@ -321,9 +329,40 @@ export class PublicworkflowComponent implements OnInit {
 
   getPageData(): void {
     //获取页面
-    this.httpService.postHttp("/csyssimplepage/condition").subscribe((data: any) => {
-      this.pageList = data.data;
-    })
+    // this.httpService.postHttp("/csyssimplepage/condition").subscribe((data: any) => {
+    //   this.pageList = data.data;
+    // });
+    this.pageList = [
+      {
+        "csysPageId": "SUCUCsysPage20190222000045",
+        "csysPageName": "良品不良品采集"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190517000245",
+        "csysPageName": "集成备料"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190516000241",
+        "csysPageName": "KeyPart备料"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190530000274",
+        "csysPageName": "Keyparts上料"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190528000263",
+        "csysPageName": "集成上料"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190410000177",
+        "csysPageName": "归属工单采集（内页）"
+      },
+      {
+        "csysPageId": "SUCUCsysPage20190403000171",
+        "csysPageName": "批量归属工单"
+      }
+
+    ]
   }
   /*由原来的资源和公共工序多对多，变成一个资源对应一个工序，一个工序可以对应多个资源
     注释掉之前多对多，需要的话可以开放
@@ -350,7 +389,7 @@ export class PublicworkflowComponent implements OnInit {
     }
   }
   insetPotPage(pfId): void {
-    console.log("page",this.form.value.workFlowPage)
+    console.log("page", this.form.value.workFlowPage)
     let potPage = this.form.value.workFlowPage;
     if (potPage) {
       for (let index = 0; index < potPage.length; index++) {

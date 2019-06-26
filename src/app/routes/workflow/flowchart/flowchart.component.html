@@ -625,7 +625,7 @@
   </ng-container>
   <!-- 新增 -->
   <ng-container *ngIf="tableShow == 'addTable'">
-    <form nz-form [formGroup]="conditionForm" (ngSubmit)="_saveConfigure()">
+    <form nz-form [formGroup]="conditionForm">
       <nz-form-item>
         <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dataSource">源数据</nz-form-label>
         <nz-form-control [nzSm]="14" [nzXs]="24">

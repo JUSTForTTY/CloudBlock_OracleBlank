@@ -47,7 +47,7 @@ export class PublicworkflowComponent implements OnInit {
     this._getWorkFlowListData(this.currentPage);
     this.init();
     this.getPageData();
-    //this.getResource();
+   // this.getResource();
   }
 
   init() {
@@ -115,6 +115,7 @@ export class PublicworkflowComponent implements OnInit {
     this.title = "新增公共工序";
     this.init();
     this.getResource();
+    this.getPageData();
     this.getFlowStyle();
     this.isVisible = true;
   }

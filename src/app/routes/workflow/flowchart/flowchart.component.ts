@@ -2857,7 +2857,8 @@ export class FlowchartComponent implements OnInit {
       tips: [tips, [Validators.required]]
     });
     this.tableShow = "addTable";
-    this.tableLodding = true;
+    //this.tableLodding = true;
+    console.log("addtable正在执行")
   }
   deleteCondition(id): void {
     this.httpService.deleteHttp("/csyspottrscon/" + id).subscribe((data: any) => {
@@ -2942,7 +2943,7 @@ export class FlowchartComponent implements OnInit {
   //
   opCancel(): void {
     this.opVisible = false;
-    this.isOpLoding = false;
+    //this.isOpLoding = false;
     this.opDiv = "list";
     //关闭初始化
     this.initOpForm();
@@ -3035,6 +3036,7 @@ export class FlowchartComponent implements OnInit {
   opBack(): void {
     this.opDiv = "list";
     this.opListTitle = "工序组列表";
+    console.log("执行了op取消")
   }
   opDelete(id): void {
     this.httpService.deleteHttp("/op/" + id).subscribe((data: any) => {

@@ -1,3 +1,11 @@
+<script>
+window.onload = function(){
+  document.getElementById("btn").onclick = function(){
+       window.close()
+     };
+}
+</script>
+<a id="btn" (click)="closea($event)">faadf</a>
 <page-header [home]="''"></page-header>
 <!-- <nz-card [nzBordered]="false">
   <div nz-row>
@@ -35,7 +43,7 @@
       <button nz-button nzType="primary" nzSearch (click)="restingSearch()">重置</button>
     </div>
   </div>
-  <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+  <button nz-button id="btn" [nzType]="'dashed'" (click)="insertWorkFlowInit()" class="ant-btn__block mb-sm">
     <i class="anticon anticon-plus"></i>
     <span>添加</span>
   </button>

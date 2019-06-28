@@ -1,9 +1,11 @@
 import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck } from '@angular/core';
 import { Router } from '@angular/router';
+import { NzMessageService} from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { UserService } from '@core';
 import { ReuseTabService } from '@delon/abc/reuse-tab';
+import { HttpService } from 'ngx-block-core';
 @Component({
   selector: 'header-user',
   template: `
@@ -13,7 +15,7 @@ import { ReuseTabService } from '@delon/abc/reuse-tab';
       {{userService.getCurrentUser()['csysUserUsername']}}
     </div>
     <div nz-menu class="width-sm">
-      <div nz-menu-item routerLink="/pro/account/center"><i nz-icon type="user" class="mr-sm"></i>
+      <div nz-menu-item (click)="resetting()"><i nz-icon type="user" class="mr-sm"></i>
         {{ 'menu.account.center' | translate }}
       </div>
       <div nz-menu-item routerLink="/pro/account/settings"><i nz-icon type="setting" class="mr-sm"></i>
@@ -25,6 +27,23 @@ import { ReuseTabService } from '@delon/abc/reuse-tab';
       </div>
     </div>
   </nz-dropdown>
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="更新密码" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <div nz-row>
+    <div nz-col nzSpan="4"></div>
+    <div nz-col nzSpan="16">
+    <input nz-input type="password" placeholder="输入密码" [(ngModel)]="password1" />
+    </div>
+    <div nz-col nzSpan="4"></div>
+  </div>
+  <div nz-row style="margin-top:20px">
+    <div nz-col nzSpan="4"></div>
+    <div nz-col nzSpan="16">
+    <input nz-input type="password" placeholder="确认密码" [(ngModel)]="password2" />
+    </div>
+    <div nz-col nzSpan="4"></div>
+  </div>
+
+  </nz-modal>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -34,6 +53,8 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     private router: Router,
     public userService: UserService,
     private reuseTabService: ReuseTabService,
+    private msg:NzMessageService,
+    private httpService: HttpService,    
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
 
@@ -45,7 +66,6 @@ export class HeaderUserComponent implements OnInit, DoCheck {
 
   }
   ngOnInit() {
-
     this.userService.populate();
   }
 
@@ -55,5 +75,45 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     //清理reuse
     this.reuseTabService.clear();
     this.router.navigateByUrl("/login");
+  }
+  isVisible = false;
+  password1;
+  password2;
+  content = "请重新输入";
+  userid = this.userService.getCurrentUser()['csysUserId'];
+  handleCancel(): void {
+    this.isVisible = false;
+    this.password1 = null;
+    this.password2 = null;
+  }
+  handleOk(): void {
+   
+    
+    if(this.password1 != this.password2){
+      this.msg.error("密码不相同请重新输入")
+      return;
+    }else{
+  
+        let pData = {
+          "csysUserId": this.userid,
+          "csysUserPassword": this.password1
+        }
+        this.httpService.putHttp("/csysuser",pData).subscribe((data: any) => {
+          this.msg.success("修改成功");
+          this.isVisible = false;
+          this.password1 = null;
+          this.password2 = null;         
+          this.userService.purgeAuth();
+          //清理reuse
+          this.reuseTabService.clear();
+          this.router.navigateByUrl("/login");
+        })
+      
+    }
+    this.isVisible = false;
+  }
+  //点击
+  resetting(): void {
+    this.isVisible = true;
   }
 }

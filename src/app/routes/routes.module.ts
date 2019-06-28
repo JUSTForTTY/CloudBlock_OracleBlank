@@ -33,7 +33,7 @@ import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
         Exception404Component,
         Exception500Component,
         IndexComponent,
-        AuthLoginComponent,
+        AuthLoginComponent
      
     ]
 })

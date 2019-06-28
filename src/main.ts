@@ -11,7 +11,9 @@ import { hmrBootstrap } from './hmr';
 
 if (environment.production) {
   enableProdMode();
+  disableConsole();
 }
+
 
 const bootstrap = () => {
   return platformBrowserDynamic()
@@ -36,4 +38,10 @@ if (environment.hmr) {
   }
 } else {
   bootstrap();
+}
+
+function disableConsole() {
+  Object.keys(window.console).forEach(v => {
+    window.console[v] = function() { };
+  });
 }

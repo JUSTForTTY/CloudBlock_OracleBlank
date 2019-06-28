@@ -113,6 +113,9 @@ export class FlowchartComponent implements OnInit {
   workflowType;
   //定义途程图数据
   hierarchialGraph = { nodes: [], links: [] };
+
+  hierarchialGraphSimple = { nodes: [], links: [] };
+
   curve = shape.curveBundle.beta(1);
 
   // curve = shape.curveLinear;
@@ -188,16 +191,14 @@ export class FlowchartComponent implements OnInit {
       this.workflowId = queryParams['workflowId'];
       this.workflowType = queryParams['workflowType'];
     });
-    if (this.workflowType == "inoperation") { 
+    if (this.workflowType == "inoperation") {
       this.nzLg = 24;
-       this.operationShow = false; 
+      this.operationShow = false;
     }
-    this.getPageData();
     this.getChartData();
-    this.getAutoExcute();
     this.formInit();
     this.getOpData();
-    this.getResource();
+    //this.getResource();
     //this.getSkill();
     this.getPointDescList();
     this.initialConditionFrom();
@@ -207,7 +208,7 @@ export class FlowchartComponent implements OnInit {
       lineStyle: ['', [Validators.required]],
       orientation: ['', [Validators.required]]
     });
-    this.getFlowTargetNodes();
+    //this.getFlowTargetNodes();
     //设置主题
     //this.setColorScheme('picnic');
 
@@ -250,12 +251,9 @@ export class FlowchartComponent implements OnInit {
         this.insertForm.value.addNodeName = "SUCUCsysPotPublic20190412000031"
         this.insertForm.value.addNodeName1 = "开始";
         this.insertForm.value.addNodeName2 = "3";
-
         this.insertFlowPoint();
 
       }
-
-
 
     })
 
@@ -309,7 +307,6 @@ export class FlowchartComponent implements OnInit {
     this.colorScheme = this.colorSchemes.find(s => s.name === name);
   }
 
-
   //设置线风格
   setLineStyle(lineStyle) {
     this.lineStyle = lineStyle;
@@ -349,34 +346,12 @@ export class FlowchartComponent implements OnInit {
     //console.log('Legend clicked', entry);
   }
 
-  //获取工序类型
-  getFlowpointType(data1): void {
-    let typeValue = 2;
-    // this.httpService.postHttp("/cysysflowpoint/condition").subscribe((data: any) => {
-    console.log("工序类型", data1.id)
-    console.log("工序类型", this.flowPointType)
-    for (let index = 0; index < this.flowPointType.length; index++) {
-      const element = this.flowPointType[index];
-      if (element.csysPotId == data1.id) {
-        console.log("工序类型", element.csysWorkflowId)
-        typeValue = element.csysPotType;
-        let formdata = {
-          "addNodeName2": typeValue
-        }
-        this.editForm.patchValue(formdata);
-        this.editForm.updateValueAndValidity()
-        break;
-      }
-
-    }
-
-
-    //});
-  }
   isSpinning = false;
   clickNodeData;
   //工序点击事件
   clickNode(data) {
+
+  
     console.log("点击数据", data)
 
     let params = {
@@ -418,8 +393,7 @@ export class FlowchartComponent implements OnInit {
       // nodeEditName1: [data.label, [Validators.required]]
     });
     //获取工序组
-
-    this.getFlowpointType(data);
+    //this.getFlowpointType(data);
     //获取目标工序组
     this.getToGroupFlow(data.id)
     //目标工序数组
@@ -427,62 +401,42 @@ export class FlowchartComponent implements OnInit {
     //获取目标工序
     this.getFlowTargetNodes();
     //获取自动完成
-    //查询是否有目标工序
-    let index = 0;
-    if (this.hierarchialGraph.links.length > 0) {
-      this.hierarchialGraph.links.forEach(element => {
-        console.log("element1", this.autoExcute);
-        console.log("element", element);
+    //查询目标节点
+    let targetparams = {
+      csysPotCurrentId: data.id
+    };
+
+    this.httpService.postHttp("/csyspottrs/condition", targetparams).subscribe((taretData: any) => {
+
+      taretData.data.forEach(timeData => {
         let autoValue = false;
-        //获得超时管控的最长最短时间
-        this.httpService.getHttp(this.transferNodeUrl + "/" + element.id).subscribe((timeData: any) => {
-          // this.httpService.postHttp("/csystrspage/condition").subscribe((pageData: any) => {
-          // pageDatai = [];
-          // pageData = pageData.data;
-          // for (let j = 0; j < pageData.length; j++) {
-          //   const elementpage = pageData[j];
-          //   if (elementpage.csysPointTrsId == element.id) {
-          //     pageDatai.push(elementpage.csysPageId);
-          //   }
-          // }
+      
           //判断最短最长时间是否为0，为0赋空值
-          if (timeData.data.csysPotTrsLongestTime == 0) {
-            timeData.data.csysPotTrsLongestTime = null
+          if (timeData.csysPotTrsLongestTime == 0) {
+            timeData.csysPotTrsLongestTime = null
           }
-          if (timeData.data.csysPotTrsLeastTime == 0) {
-            timeData.data.csysPotTrsLeastTime = null
+          if (timeData.csysPotTrsLeastTime == 0) {
+            timeData.csysPotTrsLeastTime = null
           }
-          //若当前工序编号和连接数据的源点相同，则存在目标工序
-          if (element != null) {
-            if (data.id == element.source) {
-              for (let i = 0; i < this.autoExcute.length; i++) {
-                if (element.id == this.autoExcute[i].csysPotTrsId) {
-                  if (this.autoExcute[i].csysPotTrsAutoExe == 0) {
-                    autoValue = false
-                  } else {
-                    autoValue = true
-                  }
-                  console.log("aaa", element.id);
-                  break;
-                }
-              }
+          if(timeData.csysPotTrsAutoExe==1){
+            autoValue=true;
+          } 
               //查询目标节点类型
-              console.log("目标节点编号", element.target)
-              this.httpService.getHttp("/csyspot/" + element.target).subscribe((potdata: any) => {
+              this.httpService.getHttp("/csyspot/" + timeData.csysPotTrsPointId).subscribe((potdata: any) => {
                 console.log("目标节点数据", potdata)
                 console.log("auto", autoValue)
                 const control = {
-                  id: element.id,//工序迁移编号
-                  controlInstance: element.id,//`passenger${element.id}`,//工序迁移编号
-                  value: element.target,
+                  id: timeData.csysPotTrsId,//工序迁移编号
+                  controlInstance: timeData.csysPotTrsId,//`passenger${element.id}`,//工序迁移编号
+                  value: timeData.csysPotTrsPointId,
                   label: "",
                   potType: potdata.data.csysPotStyleId,
-                  autoExcuteControl: element.id + "auto",
+                  autoExcuteControl: timeData.csysPotTrsId + "auto",
                   autoExcute: autoValue,//自动完成的权限
-                  longTime: element.id + "longTime",
-                  lastTime: element.id + "lastTime",
-                  desc: element.id + "desc",
-                  pageIds: element.id + "pageId",
+                  longTime: timeData.csysPotTrsId + "longTime",
+                  lastTime: timeData.csysPotTrsId + "lastTime",
+                  desc: timeData.csysPotTrsId + "desc",
+                  pageIds: timeData.csysPotTrsId + "pageId",
                   flag: "update",
                   authority: [],//编辑初始化时迁移权限为空
                   pageData: { transferPageId: "", oldPageId: "", currentPageId: "" }
@@ -490,30 +444,19 @@ export class FlowchartComponent implements OnInit {
                 console.log("数据control", control);
                 this.controlArray.push(control);
                 console.log("control", this.controlArray)
-                this.editForm.addControl(element.id, new FormControl(element.target, Validators.required));
-                this.editForm.addControl(element.id + "auto", new FormControl(autoValue, Validators.required));
-                this.editForm.addControl(element.id + "longTime", new FormControl(timeData.data.csysPotTrsLongestTime));
-                this.editForm.addControl(element.id + "lastTime", new FormControl(timeData.data.csysPotTrsLeastTime));
-                this.editForm.addControl(element.id + "desc", new FormControl(timeData.data.csysPotTrsDesc));
-                this.editForm.addControl(element.id + "pageId", new FormControl(pageDatai));
-                this.getAutoExcute();//重新获取自动执行的
+                this.editForm.addControl(timeData.csysPotTrsId, new FormControl(timeData.csysPotTrsPointId, Validators.required));
+                this.editForm.addControl(timeData.csysPotTrsId + "auto", new FormControl(autoValue, Validators.required));
+                this.editForm.addControl(timeData.csysPotTrsId + "longTime", new FormControl(timeData.csysPotTrsLongestTime));
+                this.editForm.addControl(timeData.csysPotTrsId + "lastTime", new FormControl(timeData.csysPotTrsLeastTime));
+                this.editForm.addControl(timeData.csysPotTrsId + "desc", new FormControl(timeData.csysPotTrsDesc));
+                this.editForm.addControl(timeData.csysPotTrsId + "pageId", new FormControl(pageDatai));
+                ////重新获取自动执行的
               });
-
-
-            }
-          }
-          index++;
-          if (index == this.hierarchialGraph.links.length) {
-            this.isSpinning = false;
-          }
-        })
-        // });
-
+   
       });
-    } else {
       this.isSpinning = false;
-    }
 
+    });
 
     //调整工序形状，防止变形
     this.drawWorkFlow();
@@ -526,33 +469,32 @@ export class FlowchartComponent implements OnInit {
     this.httpService.getHttp(this.nodeUrl + "/" + potid).subscribe((potdata: any) => {
       let groupToId = []
       //用工序组id去工序组权限表中拿取目标工序组id
-      this.httpService.getHttp("/csyspotgropre").subscribe((data: any) => {
+      let gropreparams={
+        csysPotGroupFromId:potdata.data.csysPotGroupId
+      }
+      this.httpService.postHttp("/csyspotgropre/condition",gropreparams).subscribe((data: any) => {
 
-        data = data.data.list;
-        console.log(data)
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          if (element.csysPotGroupFromId == potdata.data.csysPotGroupId) {
-            groupToId.push(element.csysPotGroupToId)
+        console.log("组信息",data.data)
+        data.data.forEach(potgroup => {
+          let potparam={
+            csysWorkflowId:this.workflowId,
+            csysPotGroupId:potgroup.csysPotGroupToId
           }
-        }
-        console.log("groupToId", groupToId)
-        if (groupToId.length != 0) {
-          for (let index = 0; index < this.targetNodeList.length; index++) {
-            const element = this.targetNodeList[index];
-            for (let index1 = 0; index1 < groupToId.length; index1++) {
-              const element1 = groupToId[index1];
-              if (element.group == element1) {
-                this.targetNodeList1.push(element);
-                break;
-              }
-            }
-          }
-        }
-        console.log(this.targetNodeList1)
+          console.log("权限组参数",potparam)
+          this.httpService.postHttp("/csyspot/condition",potparam).subscribe((potgroData: any) => {
+ 
+            console.log("权限组数据",potgroData.data)
+            this.targetNodeList1 =[...potgroData.data,...this.targetNodeList1];
+            console.log("可选工序节点",this.targetNodeList1);
+          });
 
-      })
-    })
+        });
+       
+      
+
+      });
+    });
+     
   }
 
   //点击新建工序
@@ -717,9 +659,7 @@ export class FlowchartComponent implements OnInit {
 
         //   });
         // }
-
-
-
+ 
         //重新获取目标工序
         //this.getFlowTargetNodes();
         //新增途程工序
@@ -1080,39 +1020,36 @@ export class FlowchartComponent implements OnInit {
       //工序
       console.log("工序信息", workFolowData.csysWorkflowNodes);
       this.hierarchialGraph.nodes = workFolowData.csysWorkflowNodes != null && workFolowData.csysWorkflowNodes != "" ? JSON.parse(workFolowData.csysWorkflowNodes) : [];
+
+      this.hierarchialGraphSimple.nodes = workFolowData.csysWorkflowNodes != null && workFolowData.csysWorkflowNodes != "" ? JSON.parse(workFolowData.csysWorkflowNodes) : [];
+
       console.log("工序信息2", this.hierarchialGraph.nodes);
-      //连接
-      //循环连接的工序
-      // for (let index = 0; index < this.hierarchialGraph.nodes.length; index++) {
-      //   this.hierarchialGraph.nodes[index]["style"] = null;
-      //   //匹配相应的工序
-      //   for (let index1 = 0; index1 < potData.data.list.length; index1++) {
-      //     const element = potData.data.list[index1];
-      //     if (this.hierarchialGraph.nodes[index].id == element.csysPotId) {
-      //       for (let index2 = 0; index2 < styData.data.list.length; index2++) {
-      //         const element2 = styData.data.list[index2];
-      //         if (element.csysPotStyleId == element2.csysPotStyleId) {
 
-      //           this.hierarchialGraph.nodes[index]["style"] = element2;
-      //           console.log("styId", this.hierarchialGraph.nodes);
-      //           break;
-      //         }
-      //       }
-      //       break;
-      //     }
-      //     //匹配工序样式
 
-      //   }
-      //   // const element = this.hierarchialGraph.nodes[index];
-      //   // this.httpService.getHttp(this.nodeUrl + "/" + element.id).subscribe((potData: any) => {
-      //   //   console.log("potId", potData.data.csysPotId)
-      //   //   this.httpService.getHttp("/csyspotstyle" + "/" + potData.csysPotStyleId).subscribe((styData: any) => {
-      //   //     console.log("styId", styData);
-      //   //   })
-      //   // })
-
-      // }
       this.hierarchialGraph.links = workFolowData.csysWorkflowLinks != null && workFolowData.csysWorkflowLinks != "" ? JSON.parse(workFolowData.csysWorkflowLinks) : [];
+
+      this.hierarchialGraphSimple.links = workFolowData.csysWorkflowLinks != null && workFolowData.csysWorkflowLinks != "" ? JSON.parse(workFolowData.csysWorkflowLinks) : [];
+
+      //this.hierarchialGraphSimple.links=this.hierarchialGraph.links.filter(x => x.sourceId != 'LHCsysPotStyle20190620042709661000002');
+
+      this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
+        x => {
+
+          if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+            //过滤连线
+            console.log("过滤节点", x.id)
+            this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+
+
+            return false;
+          } else {
+
+            return true;
+          }
+
+        }
+      );
+      console.log("工序links信息", this.hierarchialGraphSimple.links);
 
       //this.hierarchialGraph.links=[{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""}{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000052","label":"","id":"SUCUCsysPotTrs20190225000048","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000052","target":"SUCUCsysPot20190225000053","label":"","id":"SUCUCsysPotTrs20190225000049","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000053","target":"SUCUCsysPot20190225000054","label":"","id":"SUCUCsysPotTrs20190225000050","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000054","target":"SUCUCsysPot20190225000055","label":"","id":"SUCUCsysPotTrs20190225000051","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000056","label":"","id":"SUCUCsysPotTrs20190225000052","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000057","label":"","id":"SUCUCsysPotTrs20190225000053","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000058","label":"","id":"SUCUCsysPotTrs20190225000054","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000055","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000056","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000057","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000058","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190226000067","target":"SUCUCsysPot20190225000050","label":"","id":"SUCUCsysPotTrs20190226000068","stroke":"","strokeWidth":"","strokeDash":""}];
       //工序数据
@@ -1132,35 +1069,38 @@ export class FlowchartComponent implements OnInit {
   }
   //获取目标工序
   getFlowTargetNodes() {
-    let params = {
-      "csysWorkflowId": this.workflowId
-    }
+    // let params = {
+    //   "csysWorkflowId": this.workflowId
+    // }
 
-    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
-      let targetNodedata = data.data;
-      //目标工序赋值
-      const children = [];
-      // autoExcuteControl: `passenger${id}auto`,
-      // autoExcute:
-      for (let i = 0; i < targetNodedata.length; i++) {
-        children.push({ label: targetNodedata[i].csysPotName, value: targetNodedata[i].csysPotId, group: targetNodedata[i].csysPotGroupId, public: targetNodedata[i].csysPotPublicId });
-        this.targetNodeArray[targetNodedata[i].csysPotId] = targetNodedata[i].csysPotName;
-      }
-      this.targetNodeList = children;
-    })
+    // this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
+    //   let targetNodedata = data.data;
+    //   //目标工序赋值
+    //   const children = [];
+    //   // autoExcuteControl: `passenger${id}auto`,
+    //   // autoExcute:
+    //   for (let i = 0; i < targetNodedata.length; i++) {
+    //     children.push({ label: targetNodedata[i].csysPotName, value: targetNodedata[i].csysPotId, group: targetNodedata[i].csysPotGroupId, public: targetNodedata[i].csysPotPublicId });
+    //     this.targetNodeArray[targetNodedata[i].csysPotId] = targetNodedata[i].csysPotName;
+    //   }
+    //   this.targetNodeList = children;
+    // })
   }
   autoExcute = []
   flowPointType = []
   //获取工序自动完成和工序信息  
   getAutoExcute(): void {
-    this.httpService.postHttp("/csyspottrs/condition").subscribe((data: any) => {
-      this.autoExcute = data.data;
+    // let params = {
+    //   csysWorkflowId: this.workflowId
+    // }
+    // this.httpService.postHttp("/csyspottrs/condition", params).subscribe((data: any) => {
+    //   this.autoExcute = data.data;
 
-    })
-    this.httpService.postHttp("/csyspot/condition").subscribe((data: any) => {
-      this.flowPointType = data.data;
-      console.log("data.data", this.flowPointType)
-    });
+    // })
+    // this.httpService.postHttp("/csyspot/condition", params).subscribe((data: any) => {
+    //   this.flowPointType = data.data;
+    //   console.log("data.data", this.flowPointType)
+    // });
   }
 
   //查询工序迁移（参数：源工序编号）
@@ -1173,6 +1113,7 @@ export class FlowchartComponent implements OnInit {
   //添加途程工序连接（参数：源工序编号，目标工序编号，工序迁移编号）
   insertLinks(nodeId, targetId, transferId, auto) {
     console.log("auto值", auto)
+    //查询当前节点、目标节点数据
     if (auto == 1) {
       this.hierarchialGraph.links.push({
         source: nodeId,
@@ -1264,9 +1205,11 @@ export class FlowchartComponent implements OnInit {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
           label: this.insertForm.value.addNodeName1,
-          position: 'x' + nodeId,
+          position: { "x": 20, "y": 20 },
           color: data.data.csysPotStyleColor,
           shape: data.data.csysPotStyleDesc,
+          styleId: data.data.csysPotStyleId,
+          publicPotId: this.insertForm.value.addNodeName,
           op: opId,
           opName: this.opName,
           resource: rId,
@@ -1276,9 +1219,11 @@ export class FlowchartComponent implements OnInit {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
           label: this.insertForm.value.addNodeName1,
-          position: 'x' + nodeId,
+          position: { "x": 20, "y": 20 },
           color: data.data.csysPotStyleColor,
           shape: data.data.csysPotStyleDesc,
+          styleId: data.data.csysPotStyleId,
+          publicPotId: this.insertForm.value.addNodeName,
           op: opId,
           opName: this.opName,
           resource: rId,
@@ -1291,7 +1236,7 @@ export class FlowchartComponent implements OnInit {
       //第二步：保存工序迁移
       this.saveFlowpointTransfer(nodeId);
 
-      this.getAutoExcute();
+      
 
     });
 
@@ -1350,19 +1295,10 @@ export class FlowchartComponent implements OnInit {
       if (type == 0) {
         if (this.hierarchialGraph.nodes[key].id == nodeId) {
           this.hierarchialGraph.nodes[key].label = nodeName;
-          // if (this.hierarchialGraph.nodes[key].op) {
-          //   this.hierarchialGraph.nodes[key].op = opid;
-          //   this.hierarchialGraph.nodes[key].opName = this.opName
-          // }else{
           this.hierarchialGraph.nodes[key]["op"] = opid;
           this.hierarchialGraph.nodes[key]["opName"] = this.opName
-          //}
-          // if (this.hierarchialGraph.nodes[key].resource) {
-          //   this.hierarchialGraph.nodes[key].resource = rId;
-          // }else{
           this.hierarchialGraph.nodes[key]["resource"] = rId;
-          this.hierarchialGraph.nodes[key]["skillIds"] = skillIds;
-          //}
+
           break;
 
         }
@@ -1379,7 +1315,7 @@ export class FlowchartComponent implements OnInit {
       }
 
     }
-    this.getAutoExcute();
+    
   }
   //修改工序组
   updateOpPot(newId): void {
@@ -1642,7 +1578,7 @@ export class FlowchartComponent implements OnInit {
               //新增迁移权限页面
               //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
               //重新获取工序迁移表
-              this.getAutoExcute();
+              
               //工序迁移全部操作完后保存途程
               if (i == length) {
                 console.log("更新途程信息");
@@ -1669,7 +1605,7 @@ export class FlowchartComponent implements OnInit {
             //新增迁移权限页面
             //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
             //重新获取工序迁移表
-            this.getAutoExcute();
+            
             //工序迁移全部操作完后保存途程
             if (i == length) {
               console.log("更新途程信息");
@@ -1807,7 +1743,7 @@ export class FlowchartComponent implements OnInit {
             //新增迁移权限页面
             //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
             //重新获取工序迁移表
-            this.getAutoExcute();
+            
             //工序迁移全部操作完后保存途程
             if (i == length) {
               console.log("更新途程信息");
@@ -1834,7 +1770,7 @@ export class FlowchartComponent implements OnInit {
           //新增迁移权限页面
           //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
           //重新获取工序迁移表
-          this.getAutoExcute();
+          
           //工序迁移全部操作完后保存途程
           if (i == length) {
             console.log("更新途程信息");
@@ -1861,8 +1797,6 @@ export class FlowchartComponent implements OnInit {
           }
 
         });
-
-
 
         /*-------end------  若当前节点有后续节点，设置为普通节点。---------end---------*/
 
@@ -1892,12 +1826,6 @@ export class FlowchartComponent implements OnInit {
       }
 
     }
-
-
-
-
-
-
 
   }
 
@@ -1974,7 +1902,7 @@ export class FlowchartComponent implements OnInit {
 
             console.log("更新工序", targetParams)
             this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
-              this.getAutoExcute()
+              
               //console.log("工序迁移修改成功", data);
               //更新途程连接
               this.updateLinks(transferId, control.value, control.autoExcute);
@@ -1984,7 +1912,7 @@ export class FlowchartComponent implements OnInit {
               this.updateTsrPage(transferId, pageId)
               //保存工序迁移权限页面
               //this.saveTransferPage(transferId, control.pageData);
-              this.getAutoExcute();
+              
               //工序迁移全部操作完后保存途程
               if (i == length) {
                 this.saveWorkFlow();
@@ -1998,7 +1926,7 @@ export class FlowchartComponent implements OnInit {
 
           console.log("更新工序1", targetParams)
           this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
-            this.getAutoExcute()
+            
             //console.log("工序迁移修改成功", data);
             //更新途程连接
             this.updateLinks(transferId, control.value, control.autoExcute);
@@ -2008,7 +1936,7 @@ export class FlowchartComponent implements OnInit {
             //this.saveTransferPage(transferId, control.pageData);
             //更新页面
             this.updateTsrPage(transferId, pageId)
-            this.getAutoExcute();
+            
             //工序迁移全部操作完后保存途程
             if (i == length) {
               this.saveWorkFlow();
@@ -2117,7 +2045,7 @@ export class FlowchartComponent implements OnInit {
 
           console.log("更新工序2", targetParams)
           this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
-            this.getAutoExcute()
+            
             console.log("工序迁移修改成功", data);
             //更新途程连接
             this.updateLinks(transferId, control.value, control.autoExcute);
@@ -2127,7 +2055,7 @@ export class FlowchartComponent implements OnInit {
             //更新页面
             this.updateTsrPage(transferId, pageId)
             //this.saveTransferPage(transferId, control.pageData);
-            this.getAutoExcute();
+            
             //工序迁移全部操作完后保存途程
             if (i == length) {
               this.saveWorkFlow();
@@ -2141,7 +2069,7 @@ export class FlowchartComponent implements OnInit {
 
         console.log("更新工序3", targetParams)
         this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
-          this.getAutoExcute()
+          
           //console.log("工序迁移修改成功", data);
           //更新途程连接
           this.updateLinks(transferId, control.value, control.autoExcute);
@@ -2151,7 +2079,7 @@ export class FlowchartComponent implements OnInit {
           //this.saveTransferPage(transferId, control.pageData);
           //更新页面
           this.updateTsrPage(transferId, pageId)
-          this.getAutoExcute();
+          
           //工序迁移全部操作完后保存途程
           if (i == length) {
             this.saveWorkFlow();
@@ -2440,6 +2368,8 @@ export class FlowchartComponent implements OnInit {
     // this.hierarchialGraph.links = link;
     this.hierarchialGraph.links = [...this.hierarchialGraph.links];
     this.hierarchialGraph.nodes = [...this.hierarchialGraph.nodes];
+    this.hierarchialGraphSimple.links = [...this.hierarchialGraphSimple.links];
+    this.hierarchialGraphSimple.nodes = [...this.hierarchialGraphSimple.nodes];
   }
 
 
@@ -2870,16 +2800,11 @@ export class FlowchartComponent implements OnInit {
   //获取工序组
   getOpData() {
     this.opData = [];
-    this.httpService.postHttp("/op/condition").subscribe((data: any) => {
-      console.log("opData", data);
-      console.log("this.workflowId", this.workflowId)
-      for (let index = 0; index < data.data.length; index++) {
-        const element = data.data[index];
-        if (element.csysWorkflowId == this.workflowId) {
-          this.opData.push(element);
-          this.opData = [...this.opData]
-        }
-      }
+    let opparam={
+      csysWorkflowId:this.workflowId
+    }
+    this.httpService.postHttp("/op/condition",opparam).subscribe((data: any) => {
+      this.opData=data.data;
     })
   }
   //获取当前点击工序组名称

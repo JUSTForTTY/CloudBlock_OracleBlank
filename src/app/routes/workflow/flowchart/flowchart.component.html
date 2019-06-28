@@ -189,7 +189,7 @@
               <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
                 (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
                 [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标工序'" [nzShowSearch]="true">
-                <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.label" [nzValue]="option.value">
+                <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
                 </nz-option>
               </nz-select>
               <div nz-row>
@@ -375,7 +375,7 @@
                 <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
                   (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
                   [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标工序'" [nzShowSearch]="true">
-                  <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.label" [nzValue]="option.value">
+                  <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
                   </nz-option>
                 </nz-select>
                 <div nz-row>

@@ -29,6 +29,7 @@
       <nz-radio-group [(ngModel)]="workflowType">
         <label nz-radio-button (click)="clickPot(0)" nzValue="0">标准途程</label>
         <label nz-radio-button (click)="clickPot(1)" nzValue="1">实例途程</label>
+        <label nz-radio-button (click)="clickPot(2)" nzValue="2">模板途程</label>
       </nz-radio-group>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
         <input type="text" nz-input placeholder="途程名称" [(ngModel)]="searchContent">
@@ -86,6 +87,11 @@
                 <nz-tag [nzColor]="'#f50'">实例途程</nz-tag>
               </ng-container>
               
+              <ng-container *ngIf="item.csysWorkflowType=='2'">
+
+                <nz-tag [nzColor]="'lime'">模板途程</nz-tag>
+              </ng-container>
+
             </a>
           </ng-template>
           <ng-template #nzAvatar>
@@ -140,7 +146,8 @@
       <nz-form-control [nzSm]="14" [nzXs]="24">
 
         <nz-radio-group id="workFlowType" formControlName="workFlowType">
-          <label nz-radio nzValue="0" selected nzDisabled="disabled">标准</label>
+          <label nz-radio nzValue="0" selected >标准流程</label>
+          <label nz-radio nzValue="2"  >模板流程</label>
           <!-- <label nz-radio nzValue="1" nzDisabled="disabled">实例</label> -->
         </nz-radio-group>
         <!-- <nz-form-explain *ngIf="form.get('workFlowType').dirty && form.get('workFlowType').errors"></nz-form-explain> -->

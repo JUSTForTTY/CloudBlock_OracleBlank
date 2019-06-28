@@ -124,9 +124,34 @@ export class UserService {
       return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauthview/tree', aclparams)
         .pipe(map(
           data => {
-            console.log("菜单数据", data.data)
 
-            data.data.unshift({
+
+            let menuData = data.data;
+            menuData.forEach(element => {
+              if (element.children.length > 0) {
+
+                element.children.forEach(childrenElement => {
+                  if (childrenElement.csysMenuIsOutline == 2) {
+                    console.log("子流程外部链接")
+                    childrenElement.externalLink = childrenElement.link
+                  }
+
+                });
+
+
+              } else {
+                if (element.csysMenuIsOutline == 2) {
+                  console.log("外部链接")
+                  element['externalLink'] = element.link
+                }
+              }
+
+
+            });
+
+            console.log("菜单数据", menuData)
+
+            menuData.unshift({
               text: '控制台',
               icon: 'fa fa-home',
               link: '/default/workplace',
@@ -135,15 +160,15 @@ export class UserService {
               {
                 text: 'MES智能制造系统',
                 group: true,
-                children: data.data
+                children: menuData
               }]);
 
             return true;
           }
         ));
-    }else{
-     
-      
+    } else {
+
+
     }
 
   }

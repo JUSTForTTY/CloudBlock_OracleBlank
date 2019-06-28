@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import * as shape from 'd3-shape';
@@ -97,15 +97,19 @@ export class PublicflowstyleComponent implements OnInit {
     this.isVisible = false;
     this.init();
   }
-
+ 
   //新增途程初始化
   insertWorkFlowInit(): void {
     this.title = "新增公共工序";
     this.init();
     this.isVisible = true;
+
   }
-
-
+  @HostListener('window:close',['$event'])
+closea(event){
+  console.log(event)
+  window.close();
+}
   //新增保存途程
   insertWorkFlow(): void {
     // for (const i in this.form.controls) {

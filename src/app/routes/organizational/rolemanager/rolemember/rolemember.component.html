@@ -1,18 +1,19 @@
 <page-header [home]="''"></page-header>
 <nz-card [nzBordered]="false">
-  <!-- <div style="float: right">
+  <div style="float: right">
     <div style="float: left">
-      <nz-input-group nzSearch [nzSuffix]="suffixIconButton" style="width: 300px">
-        <input type="text" [(ngModel)]="searchContent" nz-input placeholder="请输入姓名">
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" (click)="serachUserList()" nzSearch style="margin-right:0px">查询</button>
-      </ng-template>
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+            <input type="text" nz-input placeholder="用户名" [(ngModel)]="searchContent">
+          </nz-input-group>
+          <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSearch (click)="serchUserList()">查询</button>
+          </ng-template>
     </div>
     <div style="float: left;margin-left: 8px">
       <button nz-button nzType="primary" nzSearch (click)="resetingUserList()">重置</button>
     </div>
-  </div> -->
+  </div>
+  
   <div style="margin-top:20px;margin-bottom: 30px">
     <button nz-button (click)="showModal()" [nzType]="'primary'">
       <i class="anticon anticon-plus"></i>

@@ -1,4 +1,4 @@
-import {Component, Directive, OnInit, ViewContainerRef, Input, NgModule, OnDestroy } from "@angular/core";
+import { Component, Directive, OnInit, ViewContainerRef, Input, NgModule, OnDestroy } from "@angular/core";
 import { NzMessageService, NzModalService, NzTreeNode } from 'ng-zorro-antd';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
@@ -124,6 +124,7 @@ export class RolememberComponent implements OnInit {
     }
 
     this.usersData = [...this.usersData]
+    this.happenUser = this.usersData;
 
   }
 
@@ -291,15 +292,16 @@ export class RolememberComponent implements OnInit {
     //编辑组织架构
     let department = this.addUserForm.controls.department.value;//组织（部门）
     let organizationArray = [];//组织权限
-    this.httpService.postHttp("/csysorgpotauth/condition").subscribe((data: any) => {
-      let organization = data.data;
-      for (let i = 0; i < organization.length; i++) {
-        if (organization[i].csysUserId == userId) organizationArray.push(organization[i].csysOrgPotAuthId);
-      }
+    this.httpService.postHttp("/csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
+      organizationArray = data.data
       console.log("organizationArray", organizationArray);
       //当存在组织架构时候先删除在添加
       for (let i = 0; i < organizationArray.length; i++) {
-        this.httpService.deleteHttp("/csysorgpotauth/" + organizationArray[i]).subscribe((data: any) => {
+        let delData = {
+          "csysOrgPotAuthId": organizationArray[i].csysOrgPotAuthId,
+          "csysOrgPotAuthIsDelete": "1",
+        }
+        this.httpService.putHttp("/csysorgpotauth", delData).subscribe((data: any) => {
           //添加组织架构
           if (i == organizationArray.length - 1) {
             console.log("department", department);
@@ -337,26 +339,29 @@ export class RolememberComponent implements OnInit {
   }
   //编辑用户组
   editUserRole(userId): void {
+    console.log("帅气", userId)
     let position = this.addUserForm.controls.position.value;//用户组
+    console.log("position", position)
     let deleteArray = [];
-    this.httpService.postHttp("/csysuserrole/condition").subscribe((data: any) => {
-      let userRoleData = data.data;
-      console.log("userRoleData", userRoleData);
-      //获得role id
-      for (let i = 0; i < userRoleData.length; i++) {
-        if (userRoleData[i].csysUserId == userId) deleteArray.push(userRoleData[i].csysUserRoleId);
-      }
-      console.log("deleteArray", deleteArray);
+    this.httpService.postHttp("csysuserrole/condition", { "csysUserId": userId }).subscribe((data: any) => {
+      deleteArray = data.data;
+      console.log("deleteArray", deleteArray)
       //循环删除role表
       for (let i = 0; i < deleteArray.length; i++) {
-        this.httpService.deleteHttp("/csysuserrole/" + deleteArray[i]).subscribe((data: any) => {
+        let delData = {
+          "csysUserRoleId": deleteArray[i].csysUserRoleId,
+          "csysUserRoleIsDelete": "1"
+        }
+        console.log("delData", delData);
+
+        this.httpService.putHttp("/csysuserrole", delData).subscribe((data: any) => {
           if (i == deleteArray.length - 1) {
             for (let i = 0; i < position.length; i++) {
               let userRole = {
                 "csysRoleId": position[i],
                 "csysUserId": userId
               }
-              console.log("userRole", userRole);
+              console.log("userRole1", userRole);
               this.httpService.postHttp("/csysuserrole", userRole).subscribe((data: any) => {
                 if (i == position.length - 1) {
                   this.submitNum++;
@@ -368,20 +373,18 @@ export class RolememberComponent implements OnInit {
       }
       //当userRole表中不存在改用户角色执行
       if (deleteArray.length == 0) {
-        this.httpService.deleteHttp("/csysuser/" + userId).subscribe((data: any) => {
-          for (let i = 0; i < position.length; i++) {
-            let userRole = {
-              "csysRoleId": position[i],
-              "csysUserId": userId
-            }
-            console.log("userRole", userRole);
-            this.httpService.postHttp("/csysuserrole", userRole).subscribe((data: any) => {
-              if (i == position.length - 1) {
-                this.submitNum++;
-              }
-            });
+        for (let i = 0; i < position.length; i++) {
+          let userRole = {
+            "csysRoleId": position[i],
+            "csysUserId": userId
           }
-        });
+          console.log("userRole", userRole);
+          this.httpService.postHttp("/csysuserrole", userRole).subscribe((data: any) => {
+            if (i == position.length - 1) {
+              this.submitNum++;
+            }
+          });
+        }
       }
     });
   }
@@ -532,6 +535,7 @@ export class RolememberComponent implements OnInit {
   timer
   nzLoading = false;
   usersData;
+  happenUser;
   getUsersList(): void {
     this.usersData = []
     this.num = 0;
@@ -558,7 +562,7 @@ export class RolememberComponent implements OnInit {
               }
             }
           }
-          this.usersData = [...this.usersData]
+          this.usersData = [...this.usersData];
           this.changeCategory(this.roleId);
           clearInterval(this.timer);
         }
@@ -574,17 +578,16 @@ export class RolememberComponent implements OnInit {
     let Organization = [];
     let OrganizationId = [];
     let userIdOrganization;
-    this.httpService.getHttp("/csysorgpotauth").subscribe((data: any) => {
+    this.httpService.postHttp("csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
       this.httpService.getHttp("/csysorgpot").subscribe((data1: any) => {
-        this.userOrganization = data.data.list;
+        this.userOrganization = data.data;
         userOrganization = data1.data.list;
         for (let key = 0; key < this.userOrganization.length; key++) {
-          if (this.userOrganization[key].csysUserId == userId) {
-            for (const i in userOrganization) {
-              if (userOrganization[i].csysOrgPotId == this.userOrganization[key].csysOrgPotId) {
-                Organization.push(userOrganization[i].csysOrgPotName);
-                OrganizationId.push(userOrganization[i].csysOrgPotId);
-              }
+          for (const i in userOrganization) {
+            if (userOrganization[i].csysOrgPotId == this.userOrganization[key].csysOrgPotId) {
+              Organization.push(userOrganization[i].csysOrgPotName);
+              OrganizationId.push(userOrganization[i].csysOrgPotId);
+              break;
             }
           }
         }
@@ -607,17 +610,17 @@ export class RolememberComponent implements OnInit {
     let role = [];
     let userIdRole;
     let roleId = [];
-    this.httpService.getHttp("/csysuserrole").subscribe((data: any) => {
+    this.httpService.postHttp("/csysuserrole/condition", { "csysUserId": userId }).subscribe((data: any) => {
       this.httpService.getHttp("/csysrole").subscribe((data1: any) => {
         role = data1.data.list;
-        this.userRole = data.data.list;
+        this.userRole = data.data;
         for (let key = 0; key < this.userRole.length; key++) {
-          if (this.userRole[key].csysUserId == userId) {
-            for (const i in role) {
-              if (role[i].csysRoleId == this.userRole[key].csysRoleId) {
-                userRoleList.push(role[i].csysRoleName);
-                roleId.push(role[i].csysRoleId);
-              }
+          console.log("userRole11", this.userRole[key])
+          for (const i in role) {
+            if (role[i].csysRoleId == this.userRole[key].csysRoleId) {
+              userRoleList.push(role[i].csysRoleName);
+              roleId.push(role[i].csysRoleId);
+              break;
             }
           }
         }
@@ -665,29 +668,30 @@ export class RolememberComponent implements OnInit {
         break;
       }
     }
+    console.log("userData", userData)
     this.password = userData.csysUserPassword;
 
-      this.addUserForm = this.fb.group({
-        name: [userData.csysUserRealname, [Validators.required]],
-        username: [userData.csysUserUsername, [Validators.required,Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
-        password: [userData.csysUserPassword, [Validators.required]],
-        confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
-        //accountResource: [rsData],
-        age: [userData.csysUserAge],
-        gender: [userData.csysUserGender],
-        position: [userData.userRoleId, [Validators.required]],//userData.userRoleId
-        department: [userData.csysOrgPotId, [Validators.required]],
-        phone: [userData.csysUserPhone],
-        email: [userData.csysUserEmail, [Validators.email]],
-        address: [userData.csysUserAddress],
-        employeeId: [userData.csysUserNumber]
-      });
+    this.addUserForm = this.fb.group({
+      name: [userData.csysUserRealname, [Validators.required]],
+      username: [userData.csysUserUsername, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
+      password: [userData.csysUserPassword, [Validators.required]],
+      confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
+      //accountResource: [rsData],
+      age: [userData.csysUserAge],
+      gender: [userData.csysUserGender],
+      position: [userData.userRoleId, [Validators.required]],//userData.userRoleId
+      department: [userData.csysOrgPotId, [Validators.required]],
+      phone: [userData.csysUserPhone],
+      email: [userData.csysUserEmail, [Validators.email]],
+      address: [userData.csysUserAddress],
+      employeeId: [userData.csysUserNumber]
+    });
   }
   //初始化表单控件
   initializeFromControl(): void {
     this.addUserForm = this.fb.group({
       name: [null, [Validators.required]],
-      username: [null, [Validators.required,Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],//Validators.pattern(/[\u4E00-\u9FA5]/g])],
+      username: [null, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],//Validators.pattern(/[\u4E00-\u9FA5]/g])],
       password: [null, [Validators.required]],
       //accountResource: [null],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
@@ -696,7 +700,7 @@ export class RolememberComponent implements OnInit {
       position: [null, [Validators.required]],
       department: [null, [Validators.required]],
       phone: [null],
-      email: [null,[Validators.email]],
+      email: [null, [Validators.email]],
       address: [null],
       employeeId: [null]
     });
@@ -749,32 +753,34 @@ export class RolememberComponent implements OnInit {
     console.log(userId);
     this.deleteUserRs(userId);
     //获得组织的id
-    this.httpService.postHttp("/csysorgpotauth/condition").subscribe((data: any) => {
-      let organization = data.data;
-      for (let i = 0; i < organization.length; i++) {
-        if (organization[i].csysUserId == userId) organizationArray.push(organization[i].csysOrgPotAuthId);
-      }
-      console.log("userRoleData", organizationArray);
+    this.httpService.postHttp("/csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
+      organizationArray = data.data;
       for (let i = 0; i < organizationArray.length; i++) {
-        this.httpService.deleteHttp("/csysorgpotauth/" + organizationArray[i]).subscribe((data: any) => {
+        let delData = {
+          "csysOrgPotAuthId": organizationArray[i].csysOrgPotAuthId,
+          "csysOrgPotAuthIsDelete": "1",
+        }
+        this.httpService.putHttp("/csysorgpotauth", delData).subscribe((data: any) => {
         });
       }
     });
     //并删除该用户组
-    this.httpService.postHttp("/csysuserrole/condition").subscribe((data: any) => {
-      let userRoleData = data.data;
-      console.log("userRoleData", userRoleData);
-      //获得role id
-      for (let i = 0; i < userRoleData.length; i++) {
-        if (userRoleData[i].csysUserId == userId) deleteArray.push(userRoleData[i].csysRoleId);
-      }
-      console.log("deleteArray", deleteArray);
+    this.httpService.postHttp("/csysuserrole/condition", { "csysUserId": userId }).subscribe((data: any) => {
+      deleteArray = data.data;
       //循环删除role表
       for (let i = 0; i < deleteArray.length; i++) {
-        this.httpService.deleteHttp("/csysuserrole/" + deleteArray[i]).subscribe((data: any) => {
+        let delData1 = {
+          "csysUserRoleId": deleteArray[i].csysUserRoleId,
+          "csysUserRoleIsDelete": "1"
+        }
+        this.httpService.putHttp("/csysuserrole", delData1).subscribe((data: any) => {
           //外键存在，异步操作，放在里面
           if (i == deleteArray.length - 1) {
-            this.httpService.deleteHttp("/csysuser/" + userId).subscribe((data: any) => {
+            let delData2 = {
+              "csysUserId": userId,
+              "csysUserIsDelete": "1"
+            }
+            this.httpService.putHttp("/csysuser", delData2).subscribe((data1: any) => {
               if (data.code == "200") {
                 this.msg.create("success", "");
               }
@@ -785,7 +791,11 @@ export class RolememberComponent implements OnInit {
       }
       //当userRole表中不存在改用户角色执行
       if (deleteArray.length == 0) {
-        this.httpService.deleteHttp("/csysuser/" + userId).subscribe((data: any) => {
+        let delData2 = {
+          "csysUserId": userId,
+          "csysUserIsDelete": "1"
+        }
+        this.httpService.putHttp("/csysuser", delData2).subscribe((data: any) => {
           if (data.code == "200") {
             this.msg.create("success", "");
           }
@@ -800,7 +810,7 @@ export class RolememberComponent implements OnInit {
         const element = data.data[index];
         //该用户的资源删除
         if (element.csysUserId == userId) {
-          this.httpService.deleteHttp("/userrs/" +element.userRsId).subscribe((data: any) => {})
+          this.httpService.deleteHttp("/userrs/" + element.userRsId).subscribe((data: any) => { })
         }
       }
     });
@@ -811,5 +821,23 @@ export class RolememberComponent implements OnInit {
     this.httpService.postHttp("/tresource/condition").subscribe((data: any) => {
       this.resourceData = data.data;
     })
+  }
+  searchData = []
+  serchUserList(): void {
+    this.searchData = [];
+    if (this.searchContent) {
+      for (let index = 0; index < this.happenUser.length; index++) {
+        const element = this.happenUser[index];
+        if ((element.csysUserUsername).indexOf(this.searchContent) != -1) {
+          this.searchData.push(element);
+        }
+      }
+      this.usersData = this.searchData;
+    } else {
+      this.usersData = this.happenUser;
+    }
+  }
+  resetingUserList():void{
+    this.usersData = this.happenUser;
   }
 }

@@ -25,10 +25,10 @@ export class TasktimeComponent implements OnInit {
         this.init();
     }
     getTTData(currentPage: number): void {
-        this.httpService.getHttpAllUrl(environment.SERVER_URL + "quartz/job").subscribe((jobData: any) => {
+        this.httpService.getHttpAllUrl(environment.DATA_SERVER_URL + "quartz/job").subscribe((jobData: any) => {
             jobData = jobData.data;
-            this.httpService.postHttpAllUrl(environment.SERVER_URL + "csysschedule/listCondition?size=5" + "&page=" + currentPage).subscribe((data: any) => {
-                this.httpService.postHttpAllUrl(environment.SERVER_URL + "csystransport/condition").subscribe((sportData: any) => {
+            this.httpService.postHttpAllUrl(environment.DATA_SERVER_URL + "csysschedule/listCondition?size=5" + "&page=" + currentPage).subscribe((data: any) => {
+                this.httpService.postHttpAllUrl(environment.DATA_SERVER_URL + "csystransport/condition").subscribe((sportData: any) => {
                     sportData = sportData.data;
                     console.log("sportData", sportData);
                     this.ttData = data.data.list;
@@ -85,7 +85,7 @@ export class TasktimeComponent implements OnInit {
         });
     }
     deleteTT(id): void {
-        this.httpService.deleteHttpAllUrl(environment.SERVER_URL + "csysschedule/" + id).subscribe((data: any) => {
+        this.httpService.deleteHttpAllUrl(environment.DATA_SERVER_URL + "csysschedule/" + id).subscribe((data: any) => {
             if (data.code == "200") {
                 this.msg.success("删除成功");
                 this.getTTData(this.currentPage);
@@ -101,7 +101,7 @@ export class TasktimeComponent implements OnInit {
         };
         console.log("测试1", ttData);
 
-        this.httpService.postHttpAllUrl(environment.SERVER_URL + "quartz/job", ttData).subscribe((data: any) => {
+        this.httpService.postHttpAllUrl(environment.DATA_SERVER_URL + "quartz/job", ttData).subscribe((data: any) => {
             if (data.code == "200") {
                 this.msg.success("开启成功");
                 this.getTTData(this.currentPage);
@@ -111,13 +111,13 @@ export class TasktimeComponent implements OnInit {
         })
     }
     closeTT(item): void {
-        console.log(environment.SERVER_URL + "quartz/job/" + item.csysScheduleId)
+        console.log(environment.DATA_SERVER_URL + "quartz/job/" + item.csysScheduleId)
         let tranData = {
             "csysTransportId": item.csysScheduleName,
             "transportStauts": "0",
         }
-        this.httpService.putHttpAllUrl(environment.SERVER_URL + "csystransport", tranData).subscribe((data: any) => { })
-        this.httpService.deleteHttpAllUrl(environment.SERVER_URL + "quartz/job/" + item.csysScheduleId).subscribe((data: any) => {
+        this.httpService.putHttpAllUrl(environment.DATA_SERVER_URL + "csystransport", tranData).subscribe((data: any) => { })
+        this.httpService.deleteHttpAllUrl(environment.DATA_SERVER_URL + "quartz/job/" + item.csysScheduleId).subscribe((data: any) => {
             if (data.code == "200") {
                 this.msg.success("关闭成功");
                 this.getTTData(this.currentPage);
@@ -136,7 +136,7 @@ export class TasktimeComponent implements OnInit {
             "csysScheduleExpression": this.form.value.timeExpress,
             "csysScheduleDesc": this.form.value.remark
         };
-        this.httpService.putHttpAllUrl(environment.SERVER_URL + "csysschedule", ttdata).subscribe((data: any) => {
+        this.httpService.putHttpAllUrl(environment.DATA_SERVER_URL + "csysschedule", ttdata).subscribe((data: any) => {
             this.isConfirmLoading = false;
             if (data.code == "200") {
                 this.msg.success("编辑成功");

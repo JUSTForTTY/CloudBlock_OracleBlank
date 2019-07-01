@@ -80,14 +80,14 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   password1;
   password2;
   content = "请重新输入";
-  userid = this.userService.getCurrentUser()['csysUserId'];
+  userid;
   handleCancel(): void {
     this.isVisible = false;
     this.password1 = null;
     this.password2 = null;
   }
   handleOk(): void {
-   
+    this.userid = this.userService.getCurrentUser()['csysUserId'];
     
     if(this.password1 != this.password2){
       this.msg.error("密码不相同请重新输入")

@@ -133,7 +133,7 @@ export class RolememberComponent implements OnInit {
     this.nzTitle = "添加成员";
     this.initializeFromControl();
     this.isRoleVisible = true;
-
+    this.addUserForm.get("username").enable();
   }
   nzBtnLoding = false;
   handleOk(): void {
@@ -443,6 +443,7 @@ export class RolememberComponent implements OnInit {
 
   insertTimer;
   insertNum = 0;
+  ustarus = false;
   insertUser(): void {
     this.insertNum = 0;
     let userData = {
@@ -457,22 +458,30 @@ export class RolememberComponent implements OnInit {
       "csysUserAddress": this.addUserForm.controls.address.value//地址
     }
     //添加用户
-    this.httpService.postHttp("/csysuser", userData).subscribe((data: any) => {
-      this.insertNum++;
-      let userId = data.data;
-      this.insertUserRole(userId);
-      this.insertUserOr(userId);
-      //this.insertUserRs(userId);
-    });
-    this.insertTimer = setInterval(() => {
-      if (this.insertNum == 3) {
+    this.httpService.postHttp("/csysuser/condition", { "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase()}).subscribe((udata: any) => {
+      if(udata.data.length != 0){
         this.nzBtnLoding = false;
-        this.msg.create("success", "创建成功");
-        this.isRoleVisible = false;
-        this.getUsersList();
-        clearInterval(this.insertTimer);
+        this.msg.error("该账号已存在");
+        return;
+      }else{
+        this.httpService.postHttp("/csysuser", userData).subscribe((data: any) => {
+          this.insertNum++;
+          let userId = data.data;
+          this.insertUserRole(userId);
+          this.insertUserOr(userId);
+          //this.insertUserRs(userId);
+        });
+        this.insertTimer = setInterval(() => {
+          if (this.insertNum == 3) {
+            this.nzBtnLoding = false;
+            this.msg.create("success", "创建成功");
+            this.isRoleVisible = false;
+            this.getUsersList();
+            clearInterval(this.insertTimer);
+          }
+        }, 500);
       }
-    }, 500);
+  })
   }
 
   insertUserRole(userId): void {
@@ -686,6 +695,7 @@ export class RolememberComponent implements OnInit {
       address: [userData.csysUserAddress],
       employeeId: [userData.csysUserNumber]
     });
+    //this.addUserForm.get("username").disable();
   }
   //初始化表单控件
   initializeFromControl(): void {
@@ -704,6 +714,7 @@ export class RolememberComponent implements OnInit {
       address: [null],
       employeeId: [null]
     });
+
   }
   //校验两次密码是否相同
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
@@ -751,7 +762,7 @@ export class RolememberComponent implements OnInit {
     let deleteArray = [];
     let organizationArray = [];
     console.log(userId);
-    this.deleteUserRs(userId);
+    //this.deleteUserRs(userId);
     //获得组织的id
     this.httpService.postHttp("/csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
       organizationArray = data.data;
@@ -804,24 +815,24 @@ export class RolememberComponent implements OnInit {
       }
     });
   }
-  deleteUserRs(userId): void {
-    this.httpService.postHttp("/userrs/condition").subscribe((data: any) => {
-      for (let index = 0; index < data.data.length; index++) {
-        const element = data.data[index];
-        //该用户的资源删除
-        if (element.csysUserId == userId) {
-          this.httpService.deleteHttp("/userrs/" + element.userRsId).subscribe((data: any) => { })
-        }
-      }
-    });
-  }
-  resourceData;
-  getResource(): void {
-    //获取资源数据
-    this.httpService.postHttp("/tresource/condition").subscribe((data: any) => {
-      this.resourceData = data.data;
-    })
-  }
+  // deleteUserRs(userId): void {
+  //   this.httpService.postHttp("/userrs/condition").subscribe((data: any) => {
+  //     for (let index = 0; index < data.data.length; index++) {
+  //       const element = data.data[index];
+  //       //该用户的资源删除
+  //       if (element.csysUserId == userId) {
+  //         this.httpService.deleteHttp("/userrs/" + element.userRsId).subscribe((data: any) => { })
+  //       }
+  //     }
+  //   });
+  // }
+  // resourceData;
+  // getResource(): void {
+  //   //获取资源数据
+  //   this.httpService.postHttp("/tresource/condition").subscribe((data: any) => {
+  //     this.resourceData = data.data;
+  //   })
+  // }
   searchData = []
   serchUserList(): void {
     this.searchData = [];

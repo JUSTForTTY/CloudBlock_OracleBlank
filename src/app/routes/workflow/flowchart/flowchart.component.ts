@@ -2969,5 +2969,28 @@ export class FlowchartComponent implements OnInit {
       this.getOpData();
     })
   }
+  styleVisible = false;
+  styleCancel():void{
+    this.styleVisible = false;
+  }
+  styleOk():void{
+    let params = {
+      "csysWorkflowId": this.workflowId,
+      "csysWorkflowColortheme": this.colorTheme,
+      "csysWorkflowLinestyle": this.lineStyle,
+      "csysWorkflowOrientation": this.layout,
+    }
+    //更改途程工序和连接数据
+    this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
+      //console.log("通用配置保存成功", data);
+      this.saveStyling = false;
+      this.styleVisible = false;
+      this.msg.success(`保存成功！`);
+    });
+  }
+  styleSetting():void{
+    this.styleVisible = true;
+  }
+
 }
 

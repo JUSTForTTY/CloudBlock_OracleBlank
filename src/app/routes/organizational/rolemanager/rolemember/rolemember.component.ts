@@ -246,6 +246,7 @@ export class RolememberComponent implements OnInit {
       userData = {
         "csysUserId": userId,
         "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
+        "csysUserHp": this.addUserForm.controls.numType.value,
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -259,6 +260,7 @@ export class RolememberComponent implements OnInit {
         "csysUserId": userId,
         "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
         "csysUserPassword": this.addUserForm.controls.password.value,//密码
+        "csysUserHp": this.addUserForm.controls.numType.value,
         "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -449,6 +451,7 @@ export class RolememberComponent implements OnInit {
     let userData = {
       "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
+      "csysUserHp": this.addUserForm.controls.numType.value,
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
       "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -684,6 +687,7 @@ export class RolememberComponent implements OnInit {
       name: [userData.csysUserRealname, [Validators.required]],
       username: [userData.csysUserUsername, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
       password: [userData.csysUserPassword, [Validators.required]],
+      numType:[userData.csysUserHp],
       confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
       //accountResource: [rsData],
       age: [userData.csysUserAge],
@@ -705,6 +709,7 @@ export class RolememberComponent implements OnInit {
       password: [null, [Validators.required]],
       //accountResource: [null],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
+      numType:["0"],
       age: [null],
       gender: ["男"],
       position: [null, [Validators.required]],
@@ -793,7 +798,7 @@ export class RolememberComponent implements OnInit {
             }
             this.httpService.putHttp("/csysuser", delData2).subscribe((data1: any) => {
               if (data.code == "200") {
-                this.msg.create("success", "");
+                this.msg.create("success", "删除成功");
               }
               this.getUsersList();
             });
@@ -808,7 +813,7 @@ export class RolememberComponent implements OnInit {
         }
         this.httpService.putHttp("/csysuser", delData2).subscribe((data: any) => {
           if (data.code == "200") {
-            this.msg.create("success", "");
+            this.msg.create("success", "删除成功");
           }
           this.getUsersList();
         });

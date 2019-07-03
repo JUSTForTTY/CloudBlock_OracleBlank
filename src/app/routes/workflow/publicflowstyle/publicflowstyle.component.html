@@ -1,11 +1,3 @@
-<script>
-window.onload = function(){
-  document.getElementById("btn").onclick = function(){
-       window.close()
-     };
-}
-</script>
-<a id="btn" (click)="closea($event)">faadf</a>
 <page-header [home]="''"></page-header>
 <!-- <nz-card [nzBordered]="false">
   <div nz-row>
@@ -20,28 +12,17 @@ window.onload = function(){
 <nz-card [nzBordered]="false">
   <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">公共工序类别列表</h3>
-    <div>
-      <!-- <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
-            <input type="text" nz-input placeholder="请输入" [(ngModel)]="q.q" name="q">
-          </nz-input-group> -->
+    <!-- <div>
           <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
               <input type="text" nz-input placeholder="公共工序功能" [(ngModel)]="searchContent">
             </nz-input-group>
             <ng-template #suffixButton>
               <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
             </ng-template>
-          
-      <!-- <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-        <input type="text" nz-input placeholder="公共工序名称" [(ngModel)]="searchContent">
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
-      </ng-template> -->
-
-    </div>
-    <div style="margin-left:8px;margin-right: 20px">
+    </div> -->
+    <!-- <div style="margin-left:8px;margin-right: 20px">
       <button nz-button nzType="primary" nzSearch (click)="restingSearch()">重置</button>
-    </div>
+    </div> -->
   </div>
   <button nz-button id="btn" [nzType]="'dashed'" (click)="insertWorkFlowInit()" class="ant-btn__block mb-sm">
     <i class="anticon anticon-plus"></i>

@@ -386,7 +386,6 @@ export class FlowchartComponent implements OnInit {
 
     let pageDatai = [];
     this.clickNodeData = data;
-    console.log("daat", data);
     //this.isSpinning = true;
     //开启修改工序
     this.formEditStatus = true;
@@ -404,12 +403,24 @@ export class FlowchartComponent implements OnInit {
     this.getFlowTargetNodes();
     //获取自动完成
     //查询目标节点
+    
     let targetparams = {
-      csysPotCurrentId: data.id
+      csysPotCurrentId:data.id
     };
+    let pottrsurl="";
+    if(data.publicPotId=='SUCUCsysPotPublic20190412000031'){
+      targetparams['csysWorkflowId']=this.workflowId;
+      pottrsurl="/csyspottrs/initcondition";
+    }else{
+     
+      pottrsurl="/csyspottrs/condition";
 
-    this.httpService.postHttp("/csyspottrs/condition", targetparams).subscribe((taretData: any) => {
-
+    }
+     
+    console.log("pottrsurl",pottrsurl);
+    console.log("目标迁移参数",targetparams);
+    this.httpService.postHttp(pottrsurl, targetparams).subscribe((taretData: any) => {
+      
       taretData.data.forEach(timeData => {
         let autoValue = false;
       

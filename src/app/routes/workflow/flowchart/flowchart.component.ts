@@ -357,10 +357,10 @@ export class FlowchartComponent implements OnInit {
     let params = {
       csysPotId: data.id,
     }
-    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
+    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
 
-      console.log("点击节点参数数据", data.data[0])
-      if (data.data[0].csysPotType == '3') {
+      console.log("点击节点参数数据", potdata.data[0])
+      if (potdata.data[0].csysPotType == '3') {
         //初始化节点禁止维护。
         this.formEditEnabled = false;
 
@@ -368,30 +368,31 @@ export class FlowchartComponent implements OnInit {
         this.formEditEnabled = true;
       }
 
-
-    });
-
-    let pageDatai = [];
-    this.clickNodeData = data;
-    console.log("daat", data);
-    //this.isSpinning = true;
-    //开启修改工序
-    this.formEditStatus = true;
-    //清空目标区域
-    this.controlArray = [];
-    this.controlDeleteArray = [];
-    //初始化
+       //初始化
     this.editForm = this.fb.group({
       //addNodeName: [null, [Validators.required]],
       id: [data.id, [Validators.required]],
       nodeEditName: [data.label, [Validators.required]],
-      addNodeName2: [2],
+      addNodeName2: [potdata.data[0].csysPotType],
       opPot: [data.op],
       resource: [data.resource],
       potSkill: [data.skillIds],
 
       // nodeEditName1: [data.label, [Validators.required]]
     });
+
+
+    });
+
+    let pageDatai = [];
+    this.clickNodeData = data;
+    //this.isSpinning = true;
+    //开启修改工序
+    this.formEditStatus = true;
+    //清空目标区域
+    this.controlArray = [];
+    this.controlDeleteArray = [];
+    
     //获取工序组
     //this.getFlowpointType(data);
     //获取目标工序组
@@ -402,12 +403,24 @@ export class FlowchartComponent implements OnInit {
     this.getFlowTargetNodes();
     //获取自动完成
     //查询目标节点
+    
     let targetparams = {
-      csysPotCurrentId: data.id
+      csysPotCurrentId:data.id
     };
+    let pottrsurl="";
+    if(data.publicPotId=='SUCUCsysPotPublic20190412000031'){
+      targetparams['csysWorkflowId']=this.workflowId;
+      pottrsurl="/csyspottrs/initcondition";
+    }else{
+     
+      pottrsurl="/csyspottrs/condition";
 
-    this.httpService.postHttp("/csyspottrs/condition", targetparams).subscribe((taretData: any) => {
-
+    }
+     
+    console.log("pottrsurl",pottrsurl);
+    console.log("目标迁移参数",targetparams);
+    this.httpService.postHttp(pottrsurl, targetparams).subscribe((taretData: any) => {
+      
       taretData.data.forEach(timeData => {
         let autoValue = false;
       
@@ -860,9 +873,9 @@ export class FlowchartComponent implements OnInit {
       //删除途程工序
       this.deleteNodes(nodeId);
       //删除工序组权限
-      this.deleteOpPot(nodeId)
+     //this.deleteOpPot(nodeId)
       //删除oprs和potrs
-      this.deleteRs(nodeId)
+      //this.deleteRs(nodeId)
       //开启第三步：保存途程
       this.saveWorkFlow();
     });
@@ -1620,7 +1633,7 @@ export class FlowchartComponent implements OnInit {
 
           this.httpService.getHttp("/csyspot/" + nodeId).subscribe((data: any) => {
 
-            if (data.data.csysPotType != '0') {
+            if (data.data.csysPotType != '0'&&data.data.csysPotType != '3') {
               //更改节点类型
               let uppotparams = {
                 csysPotId: nodeId,
@@ -1953,7 +1966,7 @@ export class FlowchartComponent implements OnInit {
             console.log("检测历史节点是否有后续节点", data)
             this.httpService.getHttp("/csyspot/" + data.data.csysPotCurrentId).subscribe((data: any) => {
 
-              if (data.data.csysPotType != '0') {
+              if (data.data.csysPotType != '0'&&data.data.csysPotType != '3') {
                 //更改节点类型
                 let uppotparams = {
                   csysPotId: data.data.csysPotId,
@@ -2153,9 +2166,9 @@ export class FlowchartComponent implements OnInit {
         //第二步：删除目标工序 
         this.deleteLinks(transferId);
         //删除迁移权限下的页面
-        this.deleteTrsPage(transferId);
+       //this.deleteTrsPage(transferId);
         //删除工序迁移权限数据，和下面的保存途程先后保存顺序没有影响
-        this.deleteAuthorityByTransferId(transferId);
+        //this.deleteAuthorityByTransferId(transferId);
         //删除迁移权限页面
         //this.deleteTransferPageByTransferId(transferId);
 

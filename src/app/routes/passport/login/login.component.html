@@ -5,7 +5,7 @@
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
                     <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-user">
-                        <input nz-input formControlName="userName" (keyup.enter)="goPages($event)" placeholder="admin" autofocus="autofocus">
+                        <input nz-input formControlName="userName" (keyup.enter)="goPages($event)" placeholder="请输入账号" autofocus="autofocus">
                     </nz-input-group>
                     <nz-form-explain *ngIf="userName.dirty && userName.errors">请输入账户名且至少五个字符！</nz-form-explain>
                 </nz-form-control>
@@ -14,7 +14,7 @@
                 <nz-form-control nzHasFeedback>
                     <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-lock">
                         <input nz-input type="password" formControlName="password" (keyup.enter)="goPages($event)"
-                            placeholder="tty123">
+                            placeholder="请输入密码">
                     </nz-input-group>
                   
                 </nz-form-control>

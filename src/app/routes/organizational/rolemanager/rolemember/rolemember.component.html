@@ -147,6 +147,24 @@
       </nz-form-control>
     </nz-form-item>
     <!-- <nz-form-item>
+      <nz-form-label nzSpan="5" nzFor="numType" [nzOffset]="2">员工号</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <nz-radio-group formControlName="numType">
+          <label nz-radio nzValue="0">私人账号</label>
+          <label nz-radio nzValue="1">公共账号</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item> -->
+    <nz-form-item>
+      <nz-form-label nzSpan="5" nzFor="numType" [nzOffset]="2">账号类别</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <nz-radio-group formControlName="numType">
+          <label nz-radio nzValue="0">私人账号</label>
+          <label nz-radio nzValue="1">公共账号</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- <nz-form-item>
     <nz-form-label nzSpan="5" nzFor="accountResource" [nzOffset]="2">账号资源</nz-form-label>
       <nz-form-control nzSpan="10">
         <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择账号资源" formControlName="accountResource">
@@ -216,7 +234,7 @@
     <nz-form-item>
       <nz-form-label nzSpan="5" nzFor="email" [nzOffset]="2">邮箱</nz-form-label>
       <nz-form-control nzSpan="10" [nzValidateStatus]="addUserForm.get('email')">
-        <input nz-input formControlName="email" id="email" placeholder="请输入邮箱">
+        <input nz-input formControlName="email" placeholder="请输入邮箱">
         <nz-form-explain *ngIf="addUserForm.get('email').dirty && addUserForm.get('email').errors">请输入正确的邮箱!
         </nz-form-explain>
       </nz-form-control>

@@ -64,10 +64,13 @@ export class PublicworkflowComponent implements OnInit {
   pageId = 1;
   //获取途程数据
   _getWorkFlowListData(currentPage: number) {
+    this.searchShow = false;
     this.pageId = currentPage;
     this.loading = true;
-
-    this.httpService.postHttp(this.url + "&page=" + currentPage).subscribe((data: any) => {
+    let searchData = {
+      "csysPotPublicName": this.searchContent
+    }
+    this.httpService.postHttp("/csyspotpublic/listSearchCondition?size=5&page=" + currentPage).subscribe((data: any) => {
       ////console.log(data)
       this.totalRecords = data.data.total;
       this.total = data.data.total;
@@ -79,30 +82,29 @@ export class PublicworkflowComponent implements OnInit {
       //console.log("pagedata", this.data);
     });
   }
-
+  searchShow = false;
   //搜索途程
-  serchWorkFlow(): void {
-    let temporayArray1 = [];
-    if (this.searchContent != "") {
-      for (let i = 0; i < this.searchData.length; i++) {
-        if ((this.searchData[i].csysPotPublicName).indexOf(this.searchContent) != -1) {
-          temporayArray1.push(this.searchData[i]);
-        }
-      }
-      this.data = temporayArray1;
-
-      if (temporayArray1.length == 0) {
-        this.totalRecords = 1;
-      } else {
-        this.totalRecords = temporayArray1.length;
-      }
+  serchWorkFlow(currentPage): void {
+    if (this.searchContent) {
+      this.searchShow = true;
+      this.httpService.postHttp("/csyspotpublic/listSearchCondition?size=5&page=" + currentPage, { "csysPotPublicName": this.searchContent }).subscribe((data: any) => {
+        ////console.log(data)
+        this.totalRecords = data.data.total;
+        this.total = data.data.total;
+        this.currentPage = currentPage;
+        this.data = data.data.list;
+        this.searchData = data.data.list;//用于搜索列表
+        this.loading = false;
+        this.getFlowStyle();
+        console.log("pagedata", this.data);
+      });
     } else {
-      this._getWorkFlowListData(this.pageId);
+      this._getWorkFlowListData(1);
     }
   }
   //重置
   restingSearch(): void {
-    this._getWorkFlowListData(this.currentPage);
+    this._getWorkFlowListData(1);
   }
   handleCancel(): void {
     this.isVisible = false;
@@ -135,24 +137,30 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value
     }
-    this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
-      this.isOkLoading = false;
-      //新增公共节点再新增资源
-      this.insetPotPubRs(data.data);
-      //新增功能页面
-      this.insetPotPage(data.data);
-      this.msg.create("success", "创建成功");
-      this.isVisible = false;
-      this._getWorkFlowListData(this.pageId);
+    this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
+      if (wdata.data.length > 0) {
+        this.msg.error("该工序已存在!");
+        this.isOkLoading = false;
+        return;
+      }
+      this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
+        this.isOkLoading = false;
+        //新增公共节点再新增资源
+        this.insetPotPubRs(data.data);
+        //新增功能页面
+        this.insetPotPage(data.data);
+        this.msg.create("success", "创建成功");
+        this.isVisible = false;
+        this._getWorkFlowListData(this.pageId);
 
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
+      }, (err) => {
+        this.msg.create("error", "发生错误，请稍后重试！");
+      })
     })
-
   }
   cySysFlowpointPublicId;
   spinning = false;
-
+  PublicName;
   //编辑途程初始化
   editWorkflowInit(cySysFlowpointPublicId): void {
     if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010") {
@@ -192,6 +200,7 @@ export class PublicworkflowComponent implements OnInit {
 
           }
           data = data.data;
+          this.PublicName = data.csysPotPublicName;
           this.form = this.fb.group({
             workFlowName: [data.csysPotPublicName, [Validators.required]],
             workFlowDesc: [data.csysPotPublicDesc, []],
@@ -225,15 +234,22 @@ export class PublicworkflowComponent implements OnInit {
     }
     //console.log("123", params);
     //编辑保存途程
-    this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
-      this.editPotPage(this.cySysFlowpointPublicId);
-      this.editPotPubRs(this.cySysFlowpointPublicId);
-      this.isOkLoading = false;
-      this.msg.create("success", "编辑成功");
-      this.isVisible = false;
-      this._getWorkFlowListData(this.pageId);
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
+    this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
+      if (wdata.data.length > 0 && params.csysPotPublicName != this.PublicName) {
+        this.msg.error("该工序已存在!");
+        this.isOkLoading = false;
+        return;
+      }
+      this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
+        this.editPotPage(this.cySysFlowpointPublicId);
+        this.editPotPubRs(this.cySysFlowpointPublicId);
+        this.isOkLoading = false;
+        this.msg.create("success", "编辑成功");
+        this.isVisible = false;
+        this._getWorkFlowListData(this.pageId);
+      }, (err) => {
+        this.msg.create("error", "发生错误，请稍后重试！");
+      });
     });
   }
 

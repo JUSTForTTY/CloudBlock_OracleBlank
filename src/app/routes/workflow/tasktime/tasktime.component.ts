@@ -16,7 +16,7 @@ export class TasktimeComponent implements OnInit {
     form;
     editId;
     statu;
-    isVisiblesV = false;
+    isVisible = false;
     isConfirmLoading = false;
     constructor(private httpService: HttpService,public msg: NzMessageService, private fb: FormBuilder) { }
 
@@ -147,12 +147,21 @@ export class TasktimeComponent implements OnInit {
                 this.msg.success("编辑成功");
                 this.init();
                 this.getTTData(this.currentPage);
-                this.isVisiblesV = false;
+                this.isVisible = false;
             }
 
         });
     }
     iTaskTime(): void {
-       this.isVisiblesV = true;
+       this.isVisible = true;
+    }
+    taskTimeV = true;
+    ttCancel(): void {
+        this.taskTimeV = false;
+        this.init();
+        this.statu = "list";
+    }
+    ttOk(): void {
+        this.taskTimeV = false;
     }
 }

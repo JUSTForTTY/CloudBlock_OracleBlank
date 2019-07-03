@@ -123,46 +123,54 @@ export class FlowtrsComponent implements OnInit {
     }
     let workGroupValue = this.form.controls.workFlowGroup.value
     console.log("this log1", workGroupValue)
-    this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
-      //循环所选工序组 -----首先不为空在执行
-      if (workGroupValue != null) {
-        console.log("this log", workGroupValue)
-        for (let i = 0; i < workGroupValue.length; i++) {
-          const element = workGroupValue[i];
-          let groupData = {
-            "csysPotGroupFromId": data.data,
-            "csysPotGroupToId": element
-          }
-          this.httpService.postHttp("/csyspotgropre", groupData).subscribe((data1: any) => {
-            //计数
-            //当执行完之后
-            if (i == workGroupValue.length - 1) {
-              this.isOkLoading = false;
-              this.msg.create("success", "创建成功");
-              this.isVisible = false;
-              this._getWorkFlowListData(this.pageId);
-              this.getFlowGroup()
-              this.init();
-            }
-          })
-        }
-      } else {
+    this.httpService.postHttp(this.workflowUrl+"/condition", {"csysPotGroupName": this.form.controls.flowGrpupName.value}).subscribe((cdata: any) => {
+      if(cdata.data.length > 0){
+        this.msg.error("该防呆组已存在!");
         this.isOkLoading = false;
-        this.msg.create("success", "创建成功");
-        this.isVisible = false;
-        this._getWorkFlowListData(this.pageId);
-        this.getFlowGroup()
-        this.init();
+        return;
       }
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
-      this.isOkLoading = false;
+      this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
+        //循环所选工序组 -----首先不为空在执行
+        if (workGroupValue != null) {
+          console.log("this log", workGroupValue)
+          for (let i = 0; i < workGroupValue.length; i++) {
+            const element = workGroupValue[i];
+            let groupData = {
+              "csysPotGroupFromId": data.data,
+              "csysPotGroupToId": element
+            }
+            this.httpService.postHttp("/csyspotgropre", groupData).subscribe((data1: any) => {
+              //计数
+              //当执行完之后
+              if (i == workGroupValue.length - 1) {
+                this.isOkLoading = false;
+                this.msg.create("success", "创建成功");
+                this.isVisible = false;
+                this._getWorkFlowListData(this.pageId);
+                this.getFlowGroup()
+                this.init();
+              }
+            })
+          }
+        } else {
+          this.isOkLoading = false;
+          this.msg.create("success", "创建成功");
+          this.isVisible = false;
+          this._getWorkFlowListData(this.pageId);
+          this.getFlowGroup()
+          this.init();
+        }
+      }, (err) => {
+        this.msg.create("error", "发生错误，请稍后重试！");
+        this.isOkLoading = false;
+      })
     })
   }
   cySysFlowpointPublicId;
+  trsName;
   //编辑途程初始化
   editWorkflowInit(csysPotGroupId): void {
-    if( csysPotGroupId ==  "LHCsysPotGroup20190620031149595000001"){
+    if (csysPotGroupId == "LHCsysPotGroup20190620031149595000001") {
       this.msg.error("系统防呆组禁止编辑！")
       return;
     }
@@ -181,6 +189,7 @@ export class FlowtrsComponent implements OnInit {
             preData.push(data1[i].csysPotGroupToId);
           }
         }
+        this.trsName = data.csysPotGroupName;
         this.form = this.fb.group({
           flowGrpupName: [data.csysPotGroupName, [Validators.required]],
           workFlowDesc: [data.csysPotGroupDesc, []],
@@ -210,6 +219,12 @@ export class FlowtrsComponent implements OnInit {
       "csysPotGroupDesc": this.form.controls.workFlowDesc.value
     }
     //先删除原先权限表中的数据
+    this.httpService.postHttp(this.workflowUrl+"/condition", {"csysPotGroupName": this.form.controls.flowGrpupName.value}).subscribe((cdata: any) => {
+      if(cdata.data.length > 0 && params.csysPotGroupName != this.trsName){
+        this.msg.error("改工序组已存在!");
+        this.isOkLoading = false;
+        return;
+      }
     this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
       data1 = data1.data.list
       //现获取条件符合的权限数据，并获取数量
@@ -286,6 +301,7 @@ export class FlowtrsComponent implements OnInit {
       }
 
     })
+  })
 
   }
 
@@ -298,7 +314,7 @@ export class FlowtrsComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
-    if( resolve ==  "LHCsysPotGroup20190620031149595000001"){
+    if (resolve == "LHCsysPotGroup20190620031149595000001") {
       this.msg.error("系统防呆组禁止删除！")
       return;
     }
@@ -308,6 +324,8 @@ export class FlowtrsComponent implements OnInit {
     let potBody = {
       "csysPotGroupId": resolve
     }
+    console.log("11aa");
+    
     this.httpService.postHttp("csyspotpublic/condition", potBody).subscribe((publicPot: any) => {
       if (publicPot.data.length != 0) {
         this.loading = false;
@@ -318,8 +336,8 @@ export class FlowtrsComponent implements OnInit {
           "csysPotGroupId": resolve,
           "csysPotGroupIsDelete": "1",
         }
-        this.httpService.putHttp(this.workflowUrl,deleteData).subscribe((data: any) => {
-          this.httpService.postHttp("/csyspotgropre/condition",{"csysPotGroupFromId":resolve}).subscribe((data1: any) => {
+        this.httpService.putHttp(this.workflowUrl, deleteData).subscribe((data: any) => {
+          this.httpService.postHttp("/csyspotgropre/condition", { "csysPotGroupFromId": resolve }).subscribe((data1: any) => {
             preData = data1.data
             if (preData.length != 0) {
               for (let index = 0; index < preData.length; index++) {
@@ -328,7 +346,7 @@ export class FlowtrsComponent implements OnInit {
                   "csysPotGroPreId": element,
                   "csysPotGroPreIsDelete": "1",
                 }
-                this.httpService.putHttp("/csyspotgropre",preDeleteData).subscribe((data2: any) => {
+                this.httpService.putHttp("/csyspotgropre", preDeleteData).subscribe((data2: any) => {
                   if (index == preData.length - 1) {
                     this.msg.create('success', `删除成功！`);
                     this._getWorkFlowListData(this.pageId);
@@ -337,6 +355,7 @@ export class FlowtrsComponent implements OnInit {
               }
             } else {
               this.msg.create('success', `删除成功！`);
+              console.log("22aa");
               this._getWorkFlowListData(this.pageId);
             }
           })

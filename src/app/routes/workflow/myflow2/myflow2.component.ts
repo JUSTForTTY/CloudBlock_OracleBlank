@@ -92,11 +92,12 @@ export class Myflow2Component implements OnInit {
 
   //获取途程数据
   _getWorkFlowListData(currentPage: number) {
+    this.searchShow = false;
     this.loading = true;
     let params = {
       csysWorkflowType:this.workflowType
     };
-    this.httpService.postHttp(this.url + "&page=" + currentPage, params).subscribe((data: any) => {
+    this.httpService.postHttp("csysworkflow/listSearchCondition?size=5&page=" + currentPage, params).subscribe((data: any) => {
       //console.log(data)
       this.totalRecords = data.data.total;
       this.total = data.data.total;
@@ -109,24 +110,25 @@ export class Myflow2Component implements OnInit {
   clickPot(item):void{
     this._getWorkFlowListData(this.currentPage);
   }
+  searchShow = false;
   //搜索途程
-  serchWorkFlow(): void {
-    let temporayArray1 = [];
+  serchWorkFlow(page): void {
+    this.searchShow = true;
     if (this.searchContent != "") {
-      for (let i = 0; i < this.searchData.length; i++) {
-        if ((this.searchData[i].csysWorkflowName).indexOf(this.searchContent) != -1) {
-          temporayArray1.push(this.searchData[i]);
-        }
-      }
-      this.data = temporayArray1;
-
-      if (temporayArray1.length == 0) {
-        this.totalRecords = 1;
-      } else {
-        this.totalRecords = temporayArray1.length;
-      }
+      let params = {
+        "csysWorkflowName":this.searchContent,
+        "csysWorkflowType":this.workflowType
+      };
+      this.httpService.postHttp("csysworkflow/listSearchCondition?size=5&page=" + page, params).subscribe((data: any) => {
+        //console.log(data)
+        this.totalRecords = data.data.total;
+        this.total = data.data.total;
+        this.data = data.data.list;
+        this.searchData = data.data.list;
+        this.loading = false;
+      });
     } else {
-      this._getWorkFlowListData(this.currentPage);
+      this._getWorkFlowListData(1);
     }
   }
   //重置
@@ -177,15 +179,15 @@ export class Myflow2Component implements OnInit {
   //新增保存途程
   insertWorkFlow(){
     let data = this.form.value;
-    this.httpService.postHttp(this.workflowUrl+"/condition").subscribe((workData: any) => {
-      workData = workData.data;
-      for (let index = 0; index < workData.length; index++) {
-        const element = workData[index];
-        if(element.csysWorkflowName == data.workFlowName){
+    this.httpService.postHttp(this.workflowUrl+"/condition",{"csysWorkflowName": data.workFlowName}).subscribe((workData: any) => {
+      // workData = workData.data;
+      // for (let index = 0; index < workData.length; index++) {
+      //   const element = workData[index];
+        if(workData.data.length != 0){
           this.msg.error("途程已经存在")
           return;
         }
-      }
+      //}
       this.isOkLoading = true;
       let params = {
         "csysWorkflowType": data.workFlowType,
@@ -211,7 +213,7 @@ export class Myflow2Component implements OnInit {
     })
     
   }
-
+  workFlowName
   //编辑途程初始化
   editWorkflowInit(item): void {
     this.title = "编辑途程";
@@ -220,6 +222,7 @@ export class Myflow2Component implements OnInit {
     this.getParentList();
     this.httpService.getHttp(this.workflowUrl + "/" + item.csysWorkflowId).subscribe((data: any) => {
       data = data.data;
+      this.workFlowName = data.csysWorkflowName;
       this.form = this.fb.group({
         workFlowName: [data.csysWorkflowName, [Validators.required]],
         workFlowType: [data.csysWorkflowType, []],
@@ -234,15 +237,12 @@ export class Myflow2Component implements OnInit {
   //编辑保存途程
   editWorkflow(): void { 
     let editData = this.form.value;
-    this.httpService.postHttp(this.workflowUrl+"/condition").subscribe((workData: any) => {
-      workData = workData.data;
-      for (let index = 0; index < workData.length; index++) {
-        const element = workData[index];
-        if(element.csysWorkflowName == editData.workFlowName){
+    this.httpService.postHttp(this.workflowUrl+"/condition",{"csysWorkflowName": editData.workFlowName}).subscribe((workData: any) => {
+        if(workData.data.length >= 1 && editData.workFlowName != this.workFlowName){
           this.msg.error("途程已经存在")
           return;
         }
-      }
+      
       this.isOkLoading = true;
     //新写入数据
     let params = {

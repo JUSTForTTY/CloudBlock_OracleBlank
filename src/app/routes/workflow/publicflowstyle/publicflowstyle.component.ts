@@ -48,8 +48,7 @@ export class PublicflowstyleComponent implements OnInit {
   init() {
     this.form = this.fb.group({
       workFlowStyleName: [null, [Validators.required]],
-      workFlowStyle: ["矩形", [Validators.required]],
-
+      workFlowStyle: ["rect", [Validators.required]],
     });
   }
 
@@ -97,7 +96,7 @@ export class PublicflowstyleComponent implements OnInit {
     this.isVisible = false;
     this.init();
   }
- 
+
   //新增途程初始化
   insertWorkFlowInit(): void {
     this.title = "新增公共工序";
@@ -105,11 +104,11 @@ export class PublicflowstyleComponent implements OnInit {
     this.isVisible = true;
 
   }
-  @HostListener('window:close',['$event'])
-closea(event){
-  console.log(event)
-  window.close();
-}
+  @HostListener('window:close', ['$event'])
+  closea(event) {
+    console.log(event)
+    window.close();
+  }
   //新增保存途程
   insertWorkFlow(): void {
     // for (const i in this.form.controls) {
@@ -123,24 +122,32 @@ closea(event){
       "csysPotStyleColor": this.color,
       "csysPotStyleDesc": this.form.controls.workFlowStyle.value
     }
+    this.httpService.postHttp("/csyspotstyle/condition", { "csysPotStyleName": this.form.controls.workFlowStyleName.value }).subscribe((pdata: any) => {
+      if (pdata.data.length != 0) {
+        this.msg.error("该功能已存在!");
+        this.isOkLoading = false;
+        return;
+      } else {
+        console.log("workflowdata", workflowdata)
+        this.httpService.postHttp("/csyspotstyle", workflowdata).subscribe((data: any) => {
+          this.isOkLoading = false;
+          this.msg.create("success", "创建成功");
+          this.isVisible = false;
+          this._getWorkFlowListData(this.pageId);
+          this.init();
 
-    console.log("workflowdata", workflowdata)
-    this.httpService.postHttp("/csyspotstyle", workflowdata).subscribe((data: any) => {
-      this.isOkLoading = false;
-      this.msg.create("success", "创建成功");
-      this.isVisible = false;
-      this._getWorkFlowListData(this.pageId);
-      this.init();
-
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
+        }, (err) => {
+          this.msg.create("error", "发生错误，请稍后重试！");
+        })
+      }
     })
 
   }
   cySysFlowpointPublicId;
+  styleName;
   //编辑初始化
   editWorkflowInit(csysPotStyleId): void {
-    if(csysPotStyleId == "LHCsysPotStyle20190620042709661000002"){
+    if (csysPotStyleId == "LHCsysPotStyle20190620042709661000002") {
       this.msg.error("系统功能禁止编辑！");
       return;
     }
@@ -151,6 +158,7 @@ closea(event){
       data = data.data;
       console.log(data)
       this.color = data.csysPotStyleColor;
+      this.styleName = data.csysPotStyleName
       this.form = this.fb.group({
         workFlowStyleName: [data.csysPotStyleName, [Validators.required]],
         workFlowStyle: [data.csysPotStyleDesc, []],
@@ -170,14 +178,22 @@ closea(event){
     }
     console.log("123", workflowdata);
     //编辑保存途程
-    this.httpService.putHttp("/csyspotstyle", workflowdata).subscribe((data: any) => {
-      this.isOkLoading = false;
-      this.msg.create("success", "编辑成功");
-      this.isVisible = false;
-      this._getWorkFlowListData(this.pageId);
-      this.init();
-    }, (err) => {
-      this.msg.create("error", "发生错误，请稍后重试！");
+    this.httpService.postHttp("/csyspotstyle/condition", { "csysPotStyleName": this.form.controls.workFlowStyleName.value }).subscribe((pdata: any) => {
+      console.log("123345",pdata)
+      if (pdata.data.length >= 1 && this.styleName != workflowdata.csysPotStyleName) {
+          this.msg.error("该功能已存在!")
+          this.isOkLoading = false;
+          return;       
+      }
+      this.httpService.putHttp("/csyspotstyle", workflowdata).subscribe((data: any) => {
+        this.isOkLoading = false;
+        this.msg.create("success", "编辑成功");
+        this.isVisible = false;
+        this._getWorkFlowListData(this.pageId);
+        this.init();
+      }, (err) => {
+        this.msg.create("error", "发生错误，请稍后重试！");
+      });
     });
   }
 
@@ -189,16 +205,16 @@ closea(event){
 
   //确认删除途程功能
   deleteWorkFlow(csysPotStyleId) {
-    if(csysPotStyleId == "LHCsysPotStyle20190620042709661000002"){
+    if (csysPotStyleId == "LHCsysPotStyle20190620042709661000002") {
       this.msg.error("系统功能禁止删除！");
       return;
     }
-    this.httpService.postHttp("csyspotpublic/condition", { "csysPotStyleId": csysPotStyleId }).subscribe((potdata: any) => { 
+    this.httpService.postHttp("csyspotpublic/condition", { "csysPotStyleId": csysPotStyleId }).subscribe((potdata: any) => {
       potdata = potdata.data;
-      if(potdata.length == 0){
+      if (potdata.length != 0) {
         this.msg.error("该公共样式被公共工序占用,请先改绑或者删除");
         return;
-      } else{
+      } else {
         let deleteData = {
           "csysPotStyleId": csysPotStyleId,
           "csysPotStyleIsDelete": "1"

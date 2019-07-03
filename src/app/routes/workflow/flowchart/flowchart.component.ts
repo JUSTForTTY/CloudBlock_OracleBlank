@@ -208,7 +208,7 @@ export class FlowchartComponent implements OnInit {
       lineStyle: ['', [Validators.required]],
       orientation: ['', [Validators.required]]
     });
-    //this.getFlowTargetNodes();
+    this.getFlowTargetNodes();
     //设置主题
     //this.setColorScheme('picnic');
 
@@ -674,7 +674,7 @@ export class FlowchartComponent implements OnInit {
         // }
  
         //重新获取目标工序
-        //this.getFlowTargetNodes();
+        this.getFlowTargetNodes();
         //新增途程工序
         this.insertNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, rId, skillIds);
         //新增工序组 
@@ -869,7 +869,7 @@ export class FlowchartComponent implements OnInit {
     this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
       //console.log("工序删除成功," + data);
       //重新获取工序
-      //this.getFlowTargetNodes();
+      this.getFlowTargetNodes();
       //删除途程工序
       this.deleteNodes(nodeId);
       //删除工序组权限
@@ -1082,22 +1082,22 @@ export class FlowchartComponent implements OnInit {
   }
   //获取目标工序
   getFlowTargetNodes() {
-    // let params = {
-    //   "csysWorkflowId": this.workflowId
-    // }
+    let params = {
+      "csysWorkflowId": this.workflowId
+    }
 
-    // this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
-    //   let targetNodedata = data.data;
-    //   //目标工序赋值
-    //   const children = [];
-    //   // autoExcuteControl: `passenger${id}auto`,
-    //   // autoExcute:
-    //   for (let i = 0; i < targetNodedata.length; i++) {
-    //     children.push({ label: targetNodedata[i].csysPotName, value: targetNodedata[i].csysPotId, group: targetNodedata[i].csysPotGroupId, public: targetNodedata[i].csysPotPublicId });
-    //     this.targetNodeArray[targetNodedata[i].csysPotId] = targetNodedata[i].csysPotName;
-    //   }
-    //   this.targetNodeList = children;
-    // })
+    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
+      let targetNodedata = data.data;
+      //目标工序赋值
+      const children = [];
+      // autoExcuteControl: `passenger${id}auto`,
+      // autoExcute:
+      for (let i = 0; i < targetNodedata.length; i++) {
+        children.push({ label: targetNodedata[i].csysPotName, value: targetNodedata[i].csysPotId, group: targetNodedata[i].csysPotGroupId, public: targetNodedata[i].csysPotPublicId });
+        this.targetNodeArray[targetNodedata[i].csysPotId] = targetNodedata[i].csysPotName;
+      }
+      this.targetNodeList = children;
+    })
   }
   autoExcute = []
   flowPointType = []

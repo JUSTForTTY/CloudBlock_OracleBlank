@@ -2155,9 +2155,9 @@ export class FlowchartComponent implements OnInit {
         //第二步：删除目标工序 
         this.deleteLinks(transferId);
         //删除迁移权限下的页面
-        this.deleteTrsPage(transferId);
+       //this.deleteTrsPage(transferId);
         //删除工序迁移权限数据，和下面的保存途程先后保存顺序没有影响
-        this.deleteAuthorityByTransferId(transferId);
+        //this.deleteAuthorityByTransferId(transferId);
         //删除迁移权限页面
         //this.deleteTransferPageByTransferId(transferId);
 

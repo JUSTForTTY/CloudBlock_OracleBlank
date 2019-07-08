@@ -11,7 +11,7 @@ import { hmrBootstrap } from './hmr';
 
 if (environment.production) {
   enableProdMode();
-  disableConsole();
+  //disableConsole();
 }
 
 

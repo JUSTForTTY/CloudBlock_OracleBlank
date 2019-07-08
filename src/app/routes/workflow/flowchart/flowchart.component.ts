@@ -1498,27 +1498,28 @@ export class FlowchartComponent implements OnInit {
     let leastime;
     let auto;
     let pages = [];
+    let formData;
     //判断最短时间不能小于最长时间
 
     if (!this.formEditStatus) {
-      longestime = this.insertForm.value[control.longTime];
-      leastime = this.insertForm.value[control.lastTime];
-      auto = this.insertForm.value[autocontrol];
-      pages = this.insertForm.value[control.pageIds]
+      formData = this.insertForm.value;
+      longestime = formData[control.longTime];
+      leastime = formData[control.lastTime];
+      auto = formData[autocontrol];
+      pages = formData[control.pageIds]
     } else {
-      longestime = this.editForm.value[control.longTime];
-      leastime = this.editForm.value[control.lastTime];
-      auto = this.editForm.value[autocontrol];
-      pages = this.editForm.value[control.pageIds]
+      formData = this.editForm.value;
+      longestime = formData[control.longTime];
+      leastime = formData[control.lastTime];
+      auto = formData[autocontrol];
+      pages = formData[control.pageIds]
     }
 
     /*查询目标节点信息 */
     this.httpService.getHttp("/csyspot/" + control.value).subscribe((targetPot: any) => {
 
-      console.log("目标节点信息", targetPot);
-
       /*查询源节点信息 */
-      this.httpService.getHttp("/csyspot/" +nodeId ).subscribe((sourcePot: any) => {
+      this.httpService.getHttp("/csyspot/" + nodeId).subscribe((sourcePot: any) => {
 
 
         // if (longestime > leastime) {
@@ -1542,12 +1543,12 @@ export class FlowchartComponent implements OnInit {
                 //"cySysWorkflowName": "生产2 ",
                 "csysPotCurrentId": nodeId,//新增工序编号
                 "csysPotTrsAutoExe": control.autoExcute,
-                "csysPotCurrentName": this.insertForm.value.addNodeName1,
+                "csysPotCurrentName": formData.addNodeName1,
                 "csysPotTrsPointId": control.value,//迁移目标
                 "csysPotTrsPointName": targetPot.data.csysPotName,
-                "csysPotTrsLongestTime": this.insertForm.value[control.longTime],//最长时间
-                "csysPotTrsLeastTime": this.insertForm.value[control.lastTime],//最短时间
-                "csysPotTrsDesc": this.insertForm.value[control.desc]
+                "csysPotTrsLongestTime": formData[control.longTime],//最长时间
+                "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
+                "csysPotTrsDesc": formData[control.desc]
               };
 
             } else {
@@ -1557,12 +1558,12 @@ export class FlowchartComponent implements OnInit {
                 //"cySysWorkflowName": "生产2 ",
                 "csysPotCurrentId": nodeId,//新增工序编号
                 "csysPotTrsAutoExe": control.autoExcute,
-                "csysPotCurrentName": this.editForm.value.nodeEditName,
+                "csysPotCurrentName": formData.nodeEditName,
                 "csysPotTrsPointId": control.value,//迁移目标
                 "csysPotTrsPointName": targetPot.data.csysPotName,
-                "csysPotTrsLongestTime": this.editForm.value[control.longTime],//最长时间
-                "csysPotTrsLeastTime": this.editForm.value[control.lastTime],//最短时间
-                "csysPotTrsDesc": this.editForm.value[control.desc]
+                "csysPotTrsLongestTime": formData[control.longTime],//最长时间
+                "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
+                "csysPotTrsDesc": formData[control.desc]
               };
 
             }
@@ -1591,7 +1592,7 @@ export class FlowchartComponent implements OnInit {
                 //重新获取工序迁移表
 
                 //新增迁移规则
-                this.potTransferRule(sourcePot, targetPot);
+                this.potTransferRule(sourcePot, targetPot, transferId);
 
                 //工序迁移全部操作完后保存途程
                 if (i == length) {
@@ -1619,7 +1620,7 @@ export class FlowchartComponent implements OnInit {
                 //重新获取工序迁移表
 
                 //新增迁移规则
-                this.potTransferRule(sourcePot, targetPot);
+                this.potTransferRule(sourcePot, targetPot, transferId);
 
                 //工序迁移全部操作完后保存途程
                 if (i == length) {
@@ -1656,14 +1657,14 @@ export class FlowchartComponent implements OnInit {
               //"cySysWorkflowName": "生产2 ",
               "csysPotCurrentId": nodeId,//新增工序编号
               "csysPotTrsAutoExe": control.autoExcute,
-              "csysPotCurrentName": this.insertForm.value.addNodeName1,
+              "csysPotCurrentName": formData.addNodeName1,
               "csysPotTrsPointId": control.value,//迁移目标
               "csysPotTrsPointName": targetPot.data.csysPotName,
-              "csysPotTrsLongestTime": this.insertForm.value[control.longTime],//最长时间
-              "csysPotTrsLeastTime": this.insertForm.value[control.lastTime],//最短时间
-              "csysPotTrsDesc": this.insertForm.value[control.desc]
+              "csysPotTrsLongestTime": formData[control.longTime],//最长时间
+              "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
+              "csysPotTrsDesc": formData[control.desc]
             };
-            potType = this.insertForm.value.addNodeName2;
+            potType = formData.addNodeName2;
 
           } else {
             targetParams = {
@@ -1678,7 +1679,7 @@ export class FlowchartComponent implements OnInit {
               "csysPotTrsLeastTime": this.editForm.value[control.lastTime],//最短时间
               "csysPotTrsDesc": this.editForm.value[control.desc]
             };
-            potType = this.editForm.value.addNodeName2;
+            potType = formData.addNodeName2;
           }
           console.log("targetParams", targetParams)
           console.log("新增工序类型检测-当前工序", potType);
@@ -1707,7 +1708,7 @@ export class FlowchartComponent implements OnInit {
               //重新获取工序迁移表
 
               //新增迁移规则
-              this.potTransferRule(sourcePot, targetPot);
+              this.potTransferRule(sourcePot, targetPot, transferId);
 
               //工序迁移全部操作完后保存途程
               if (i == length) {
@@ -1734,7 +1735,7 @@ export class FlowchartComponent implements OnInit {
               //重新获取工序迁移表
 
               //新增迁移规则
-              this.potTransferRule(sourcePot, targetPot);
+              this.potTransferRule(sourcePot, targetPot, transferId);
 
               //工序迁移全部操作完后保存途程
               if (i == length) {
@@ -1743,13 +1744,11 @@ export class FlowchartComponent implements OnInit {
               }
             });
 
-
           }
           /*自动判断节点类型*/
 
           this.potAutoChangeType(sourcePot, targetPot);
           /*自动判断节点类型 */
-
 
         }
 
@@ -1854,7 +1853,7 @@ export class FlowchartComponent implements OnInit {
                   //this.saveTransferPage(transferId, control.pageData);
 
                   //新增迁移规则
-                  this.potTransferRule(sourcePot, targetPot);
+                  this.potTransferRule(sourcePot, targetPot, transferId);
 
                   //工序迁移全部操作完后保存途程
                   if (i == length) {
@@ -1880,7 +1879,7 @@ export class FlowchartComponent implements OnInit {
                   //this.updateTsrPage(transferId, pageId)
 
                   //新增迁移规则
-                  this.potTransferRule(sourcePot, targetPot);
+                  this.potTransferRule(sourcePot, targetPot, transferId);
 
                   //工序迁移全部操作完后保存途程
                   if (i == length) {
@@ -1953,7 +1952,7 @@ export class FlowchartComponent implements OnInit {
                 //this.updateTsrPage(transferId, pageId)
                 //this.saveTransferPage(transferId, control.pageData);
 
-                this.potTransferRule(sourcePot, targetPot);
+                this.potTransferRule(sourcePot, targetPot, transferId);
 
                 //工序迁移全部操作完后保存途程
                 if (i == length) {
@@ -1977,7 +1976,7 @@ export class FlowchartComponent implements OnInit {
                 //更新页面
                 //this.updateTsrPage(transferId, pageId)
 
-                this.potTransferRule(sourcePot, targetPot);
+                this.potTransferRule(sourcePot, targetPot, transferId);
 
                 //工序迁移全部操作完后保存途程
                 if (i == length) {
@@ -2851,7 +2850,7 @@ export class FlowchartComponent implements OnInit {
         csysPotType: "0"
       }
       this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
-
+        console.log("节点类型智能识别-自动变更目标节点为头节点");
 
       });
       /*-------end------  若当前节点为初始化节点，设置目标为头节点。---------end---------*/
@@ -2868,6 +2867,7 @@ export class FlowchartComponent implements OnInit {
           csysPotType: "1"
         }
         this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+          console.log("节点类型智能识别-自动当前节点为普通节点")
         });
 
       }
@@ -2881,6 +2881,7 @@ export class FlowchartComponent implements OnInit {
         "csysWorkflowId": this.workflowId,
         "csysPotCurrentId": targetPot.data.csysPotId
       }
+      console.log("节点类型智能识别-判断目标节点包装参数", checkNextPot)
       this.httpService.postHttp("/csyspottrs/condition", checkNextPot).subscribe((data: any) => {
         console.log("检测当前节点是否有后续节点", data.data)
         if (data.data.length == 0) {
@@ -2888,13 +2889,15 @@ export class FlowchartComponent implements OnInit {
 
           //更改节点类型
           let uppotparams = {
-            csysPotId: targetPot.data.value,
+            csysPotId: targetPot.data.csysPotId,
             csysPotType: "2"
           }
           this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+            console.log("节点类型智能识别-自动目标节点为尾节点");
           });
         } else {
 
+          console.log("节点类型智能识别-目标节点有后续节点");
 
         }
 
@@ -2907,13 +2910,13 @@ export class FlowchartComponent implements OnInit {
   }
 
   /*节点迁移规则 */
-  potTransferRule(sourcePot, targetPot) {
+  potTransferRule(sourcePot, targetPot, transferId) {
 
     /*新增工作流迁移条件*/
 
     //1、查询是否存在规则设定
 
-    if (null != sourcePot.data.csysTrsRuleId) {
+    if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
 
       //如果设置了规则，自动添加迁移条件
 
@@ -2922,9 +2925,65 @@ export class FlowchartComponent implements OnInit {
         csysTrsRuledlCurStyleid: sourcePot.data.csysPotStyleId,
         csysTrsRuledlTargetStyleid: targetPot.data.csysPotStyleId
       }
+      console.log("规则包装参数", ruleparam);
       this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
 
         console.log("规则信息", ruleData);
+        let ruleDataCurrent=ruleData.data;
+ 
+        //查询当前规则是否是原规则
+        let checkParam={
+          "csysPotTrsConType":"1",
+          "csysTrsRuleId":ruleDataCurrent[0].csysTrsRuleId,
+
+        }
+        this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
+ 
+
+            //清空规则条件数据，进行新增
+            trsconData.data.forEach(trsElement => {
+              
+              this.httpService.deleteHttp("/csyspottrscon/"+ trsElement.csysPotTrsConId).subscribe((data: any) => {
+
+                console.log("删除成功",trsElement.csysPotTrsConId);
+              });
+
+            });
+
+
+
+            ruleDataCurrent.forEach(currentElement => {
+           
+              let conditionData = {
+                "csysWorkflowId": this.workflowId,
+                "csysPotTrsId": transferId,
+                "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
+                "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
+                "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
+                "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
+                "csysPotTrsConType":"1",
+                "csysTrsRuleId":currentElement.csysTrsRuleId,
+                "csysTrsRuledlId":currentElement.csysTrsRuledlId,
+                "csysTrsRulesqlId":currentElement.csysTrsRulesqlId
+              }
+              console.log("conditionData", JSON.stringify(conditionData))
+              this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+                //this.msg.create("success", "创建成功");
+      
+              },
+                (err) => {
+                  this.msg.create("error", "发生错误，请稍后重试！");
+      
+                });
+      
+              });
+ 
+
+        });
+
+        
+        
+         
 
       });
     }

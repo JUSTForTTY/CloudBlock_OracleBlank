@@ -47,6 +47,7 @@ export class PublicworkflowComponent implements OnInit {
     this._getWorkFlowListData(this.currentPage);
     this.init();
     this.getPageData();
+    this.getPageGroup();
     // this.getResource();
   }
 
@@ -171,33 +172,32 @@ export class PublicworkflowComponent implements OnInit {
     this.init();
     this.getResource();
     let potrs = [];
-    let potPage = [];
+    let potPage = null;
     this.cySysFlowpointPublicId = cySysFlowpointPublicId;
     this.title = "编辑途程";
     this.isVisible = true;
     //获取点击的这条数据
     this.httpService.getHttp(this.workflowUrl + "/" + cySysFlowpointPublicId).subscribe((data: any) => {
       //获取这个工序下的资源
-      this.httpService.postHttp(this.resourceUrl + "/condition").subscribe((potRsData: any) => {
+      this.httpService.postHttp(this.resourceUrl + "/condition", { "csysPotPublicId": cySysFlowpointPublicId }).subscribe((potRsData: any) => {
         //获取这个工序下的功能页面
-        this.httpService.postHttp(this.potPageUrl + "/condition").subscribe((pageData: any) => {
+        this.httpService.postHttp(this.potPageUrl + "/condition", { "csysPotPublicId": cySysFlowpointPublicId }).subscribe((pageData: any) => {
           //获取资源
-          potRsData = potRsData.data;
-          pageData = pageData.data;
-          for (let index = 0; index < potRsData.length; index++) {
-            const element = potRsData[index];
-            if (element.csysPotPublicId == cySysFlowpointPublicId) {
-              potrs.push(element.tResourceId);
-              this.resourceData.push(element);
-            }
-          }
+          potrs = potRsData.data;
+          // pageData = pageData.data;
+          // for (let index = 0; index < potRsData.length; index++) {
+          //   const element = potRsData[index];
+          //   if (element.csysPotPublicId == cySysFlowpointPublicId) {
+          //     potrs.push(element.tResourceId);
+          //     this.resourceData.push(element);
+          //   }
+          // }
           //获取功能页面
-          for (let index = 0; index < pageData.length; index++) {
-            const element = pageData[index];
-            if (element.csysPotPublicId == cySysFlowpointPublicId) {
-              potPage.push(element.csysPageId);
+          if (pageData.data.length > 0) {
+            if (pageData.data[0].csysPotPubPageDesc != "") {
+              potPage = pageData.data[0].csysPotPubPageDesc;
             }
-
+            console.log("pageDatal", potPage);
           }
           data = data.data;
           this.PublicName = data.csysPotPublicName;
@@ -405,22 +405,28 @@ export class PublicworkflowComponent implements OnInit {
     }
   }
   insetPotPage(pfId): void {
-    console.log("page", this.form.value.workFlowPage)
-    let potPage = this.form.value.workFlowPage;
-    if (potPage) {
-      for (let index = 0; index < potPage.length; index++) {
-        const element = potPage[index];
-        let potPageData = {
-          "csysPotPublicId": pfId,
-          "csysPageId": element
+    let pageData = this.form.value.workFlowPage;
+
+    if (pageData) {
+      this.httpService.postHttp("csyspagegroup/condition", { "csysPageGroupCode": pageData }).subscribe((pdata: any) => {
+        let potPage = pdata.data;
+        console.log("potPageData新增", potPage)
+        for (let index = 0; index < potPage.length; index++) {
+          const element = potPage[index];
+          let potPageData = {
+            "csysPotPublicId": pfId,
+            "csysPageId": element.csysPageId,
+            "csysPotPubPageDesc": pageData
+          }
+          console.log("potPageData", potPageData)
+          this.httpService.postHttp(this.potPageUrl, potPageData).subscribe((data: any) => { });
         }
-        this.httpService.postHttp(this.potPageUrl, potPageData).subscribe((data: any) => { });
-      }
 
-      //console.log("potPageData新增", potPage[0])
+        //console.log("potPageData新增", potPage[0])
 
+
+      });
     }
-
   }
   //编辑工序资源
   editPotPubRs(pfId): void {
@@ -537,6 +543,32 @@ export class PublicworkflowComponent implements OnInit {
           //this.httpService.deleteHttp(this.potpubrsUrl + "/" + element).subscribe((data: any) => { })
         }
       }
+    })
+  }
+  groupData = [];
+  getPageGroup(): void {
+    this.httpService.postHttp("csyspagegroup/condition").subscribe((data: any) => {
+      data = data.data;
+      this.groupData.push({
+        csysPageGroupCode: data[0].csysPageGroupCode,
+        csysPageGroupDesc: data[0].csysPageGroupDesc
+      })
+      for (let index = 1; index < data.length; index++) {
+        const element = data[index];
+        for (let index1 = 0; index1 < this.groupData.length; index1++) {
+          const element1 = this.groupData[index1];
+          if (element.csysPageGroupCode == element1.csysPageGroupCode) {
+            break;
+          } else if (index1 == this.groupData.length - 1) {
+            console.log("lenth", this.groupData)
+            this.groupData.push({
+              csysPageGroupCode: element.csysPageGroupCode,
+              csysPageGroupDesc: element.csysPageGroupDesc
+            })
+          }
+        }
+      }
+      console.log("test1a", this.groupData);
     })
   }
 }

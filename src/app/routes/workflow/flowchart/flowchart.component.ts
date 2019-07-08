@@ -235,13 +235,13 @@ export class FlowchartComponent implements OnInit {
       });
 
 
-    //判断工作流是否有初始化节点，如果没有进行初始化操作。
+    /*判断工作流是否有初始化节点，如果没有进行初始化操作。start*/
 
-    let params = {
+    let paramsinit = {
       csysWorkflowId: this.workflowId,
       csysPotType: "3"
     }
-    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((data: any) => {
+    this.httpService.postHttp(this.nodeTargertUrl, paramsinit).subscribe((data: any) => {
 
       console.log("初始化节点数据", data.data.length);
       if (data.data.length == 0) {
@@ -255,7 +255,36 @@ export class FlowchartComponent implements OnInit {
 
       }
 
-    })
+    });
+    /*判断工作流是否有初始化节点，如果没有进行初始化操作。end*/
+
+
+    /*判断工作流是否有结束节点，如果没有进行初始化操作。start*/
+    
+
+    let paramsend = {
+      csysWorkflowId: this.workflowId,
+      csysPotPublicId: "LHCsysPotPublic20190625092513130000031"
+    }
+    this.httpService.postHttp(this.nodeTargertUrl, paramsend).subscribe((data: any) => {
+
+      console.log("结束节点数据", data.data.length);
+      if (data.data.length == 0) {
+        this.spinningText = "途程初始化中......";
+        this.isGraphSpinning = true;
+
+        this.insertForm.value.addNodeName = "LHCsysPotPublic20190625092513130000031"
+        this.insertForm.value.addNodeName1 = "结束";
+        this.insertForm.value.addNodeName2 = "2";
+        this.insertFlowPoint();
+
+      }
+
+    });
+
+
+    /*判断工作流是否有结束节点，如果没有进行初始化操作。end*/
+
 
   }
 

@@ -288,9 +288,9 @@
     </nz-card>
 
     <!-- 编辑 -->
-    <div class="inner">
+    <div class="inner" *ngIf="formEditStatus" >
       <div class="innerbox">
-        <nz-card *ngIf="formEditStatus" nzTitle="修改工序" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
+        <nz-card nzTitle="修改工序" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
           <ng-template #extraTemplate>
             <a (click)="addPoint()">新建工序</a>
           </ng-template>

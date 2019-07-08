@@ -355,6 +355,15 @@
                   </nz-form-explain>
                 </nz-form-control>
               </nz-form-item>
+              <nz-form-item>
+                <nz-form-label nzXs="24" nzSm="7" nzFor="rule">规则设定</nz-form-label>
+                <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                  <nz-select formControlName="rule" nzAllowClear nzPlaceHolder="请选择规则">
+                    <nz-option *ngFor="let ruleOption of ruleData" [nzValue]="ruleOption.csysTrsRuleId" [nzLabel]="ruleOption.csysTrsRuleName"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              
               <ng-container *ngIf="formEditEnabled">
                 <nz-form-item>
                 <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
@@ -374,6 +383,8 @@
                 <input nz-input type="hidden" formControlName="addNodeName2">
 
               </ng-container>
+
+
               <nz-form-item *ngFor="let control of controlArray;let i = index">
 
                 <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标工序

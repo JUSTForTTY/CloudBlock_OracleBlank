@@ -203,6 +203,7 @@ export class FlowchartComponent implements OnInit {
     this.getPointDescList();
     this.initialConditionFrom();
     this.initOpForm();
+    this.getRuleData();
     this.form = this.fb.group({
       colorTheme: ['', [Validators.required]],
       lineStyle: ['', [Validators.required]],
@@ -317,7 +318,8 @@ export class FlowchartComponent implements OnInit {
         addNodeName2: [null],
         resource: [null],
         opPot: [null],
-        potSkill: [null]
+        potSkill: [null],
+        rule:[null]
       })
     }
     this.pageForm = this.fb.group({
@@ -406,7 +408,7 @@ export class FlowchartComponent implements OnInit {
         opPot: [data.op],
         resource: [data.resource],
         potSkill: [data.skillIds],
-
+        rule:[potdata.data[0].csysTrsRuleId]
         // nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -787,9 +789,11 @@ export class FlowchartComponent implements OnInit {
     let nodeId = this.editForm.value.id;
     let nodeName = this.editForm.value.nodeEditName;
     let nodeType = this.editForm.value.addNodeName2;
+    let nodeRule = this.editForm.value.rule;
     let opPotId = this.editForm.value.opPot;
     let rId = this.editForm.value.resource;
     let skillIds = this.editForm.value.potSkill;
+    console.log('nodeRule',this.editForm)
     if (rId && !opPotId) {
       this.msg.error("选择资源，必须选工序");
       this.submitting = false;
@@ -799,7 +803,8 @@ export class FlowchartComponent implements OnInit {
     let params = {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
-      "csysPotType": nodeType
+      "csysPotType": nodeType,
+      "csysTrsRuleId": nodeRule
     };
     //第一步：修改工序信息
     this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
@@ -2317,6 +2322,7 @@ export class FlowchartComponent implements OnInit {
       opPot: [null],
       resource: [null],
       potSkill: [null],
+      rule:[null]
     })
 
     this.pageForm = this.fb.group({
@@ -3051,7 +3057,12 @@ export class FlowchartComponent implements OnInit {
     }
 
   }
-
-
+  ruleData;
+  //获取规则信息
+  getRuleData():void{
+    this.httpService.postHttp("csystrsrule/condition").subscribe((data: any) => {
+      this.ruleData = data.data;
+    })
+  }
 }
 

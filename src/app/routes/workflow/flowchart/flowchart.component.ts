@@ -3019,14 +3019,9 @@ export class FlowchartComponent implements OnInit {
 
         //查询当前规则是否是原规则
         let checkParam = {
-<<<<<<< HEAD
-          "csysPotTrsConType": "1",
-          "csysTrsRuleId": ruleDataCurrent[0].csysTrsRuleId,
-=======
           "csysWorkflowId":this.workflowId,
           "csysPotTrsId":transferId,
           "csysPotTrsConType": "1"
->>>>>>> 66bc33edbf33879a8bdf9a2d2be256e19321f28d
 
         }
         this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
@@ -3034,15 +3029,9 @@ export class FlowchartComponent implements OnInit {
 
           //清空规则条件数据，进行新增
           trsconData.data.forEach(trsElement => {
-<<<<<<< HEAD
 
             this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
 
-=======
-
-            this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
-
->>>>>>> 66bc33edbf33879a8bdf9a2d2be256e19321f28d
               console.log("删除成功", trsElement.csysPotTrsConId);
             });
 

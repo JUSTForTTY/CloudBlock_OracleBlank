@@ -8,6 +8,7 @@ import { environment } from '@env/environment';
 import { CacheService } from '@delon/cache';
 import { MenuService } from '@delon/theme';
 import { ACLService } from '@delon/acl';
+import { ReuseTabService } from '@delon/abc/reuse-tab';
 
 
 const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
@@ -27,6 +28,7 @@ export class UserService {
     private aclService: ACLService,
     private cacheService: CacheService,
     private router: Router,
+    private reuseTabService: ReuseTabService,
   ) { }
 
   cyhttp = environment.SERVER_URL;
@@ -47,6 +49,11 @@ export class UserService {
             if (data.data.length > 0) {
 
               console.log("存在用户，无需重新登录", data.data);
+              
+              //清空reuseTabService;
+
+              this.reuseTabService.clear();
+              
               this.setAuth(data.data[0])
 
               this.loadMenu(data.data[0]).subscribe(

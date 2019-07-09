@@ -183,7 +183,13 @@ export class PublicworkflowComponent implements OnInit {
         //获取这个工序下的功能页面
         this.httpService.postHttp(this.potPageUrl + "/condition", { "csysPotPublicId": cySysFlowpointPublicId }).subscribe((pageData: any) => {
           //获取资源
-          potrs = potRsData.data;
+          potRsData = potRsData.data;
+          for (const key in potRsData) {
+            potrs.push(potRsData[key].tResourceId);
+            this.resourceData.push(potRsData[key])
+            // console.log(potRsData[key])
+            }
+          console.log(potrs)
           // pageData = pageData.data;
           // for (let index = 0; index < potRsData.length; index++) {
           //   const element = potRsData[index];

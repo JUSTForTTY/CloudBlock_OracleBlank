@@ -47,6 +47,7 @@ export class FlowchartComponent implements OnInit {
   insertForm: FormGroup;
   pageForm: FormGroup;
   editForm: FormGroup;
+  timeForm: FormGroup;
   opForm: FormGroup;
   conditionForm: FormGroup;
   //目标工序数据，flag为标记（包含了insert：新增）
@@ -290,7 +291,7 @@ export class FlowchartComponent implements OnInit {
         resource: [null],
         opPot: [null],
         potSkill: [null],
-        rule:[null]
+        rule: [null]
       })
     }
     this.pageForm = this.fb.group({
@@ -370,9 +371,9 @@ export class FlowchartComponent implements OnInit {
       } else {
         this.formEditEnabled = true;
       }
-      if(!potdata.data[0].csysTrsRuleId){
-        console.log("potdata",potdata.data[0].csysTrsRuleId);
-        
+      if (!potdata.data[0].csysTrsRuleId) {
+        console.log("potdata", potdata.data[0].csysTrsRuleId);
+
         potdata.data[0].csysTrsRuleId = null;
       }
       //初始化
@@ -384,7 +385,7 @@ export class FlowchartComponent implements OnInit {
         opPot: [data.op],
         resource: [data.resource],
         potSkill: [data.skillIds],
-        rule:[potdata.data[0].csysTrsRuleId]
+        rule: [potdata.data[0].csysTrsRuleId]
         // nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -741,7 +742,7 @@ export class FlowchartComponent implements OnInit {
     let opPotId = this.editForm.value.opPot;
     let rId = this.editForm.value.resource;
     let skillIds = this.editForm.value.potSkill;
-    console.log('nodeRule',this.editForm)
+    console.log('nodeRule', this.editForm)
     if (rId && !opPotId) {
       this.msg.error("选择资源，必须选工序");
       this.submitting = false;
@@ -2266,7 +2267,7 @@ export class FlowchartComponent implements OnInit {
       opPot: [null],
       resource: [null],
       potSkill: [null],
-      rule:[null]
+      rule: [null]
     })
 
     this.pageForm = this.fb.group({
@@ -2940,61 +2941,61 @@ export class FlowchartComponent implements OnInit {
       this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
 
         console.log("规则信息", ruleData);
-        let ruleDataCurrent=ruleData.data;
- 
+        let ruleDataCurrent = ruleData.data;
+
         //查询当前规则是否是原规则
-        let checkParam={
-          "csysPotTrsConType":"1",
-          "csysTrsRuleId":ruleDataCurrent[0].csysTrsRuleId,
+        let checkParam = {
+          "csysPotTrsConType": "1",
+          "csysTrsRuleId": ruleDataCurrent[0].csysTrsRuleId,
 
         }
         this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
- 
 
-            //清空规则条件数据，进行新增
-            trsconData.data.forEach(trsElement => {
-              
-              this.httpService.deleteHttp("/csyspottrscon/"+ trsElement.csysPotTrsConId).subscribe((data: any) => {
 
-                console.log("删除成功",trsElement.csysPotTrsConId);
-              });
+          //清空规则条件数据，进行新增
+          trsconData.data.forEach(trsElement => {
 
+            this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
+
+              console.log("删除成功", trsElement.csysPotTrsConId);
             });
 
+          });
 
 
-            ruleDataCurrent.forEach(currentElement => {
-           
-              let conditionData = {
-                "csysWorkflowId": this.workflowId,
-                "csysPotTrsId": transferId,
-                "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
-                "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
-                "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
-                "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
-                "csysPotTrsConType":"1",
-                "csysTrsRuleId":currentElement.csysTrsRuleId,
-                "csysTrsRuledlId":currentElement.csysTrsRuledlId,
-                "csysTrsRulesqlId":currentElement.csysTrsRulesqlId
-              }
-              console.log("conditionData", JSON.stringify(conditionData))
-              this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
-                //this.msg.create("success", "创建成功");
-      
-              },
-                (err) => {
-                  this.msg.create("error", "发生错误，请稍后重试！");
-      
-                });
-      
+
+          ruleDataCurrent.forEach(currentElement => {
+
+            let conditionData = {
+              "csysWorkflowId": this.workflowId,
+              "csysPotTrsId": transferId,
+              "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
+              "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
+              "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
+              "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
+              "csysPotTrsConType": "1",
+              "csysTrsRuleId": currentElement.csysTrsRuleId,
+              "csysTrsRuledlId": currentElement.csysTrsRuledlId,
+              "csysTrsRulesqlId": currentElement.csysTrsRulesqlId
+            }
+            console.log("conditionData", JSON.stringify(conditionData))
+            this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+              //this.msg.create("success", "创建成功");
+
+            },
+              (err) => {
+                this.msg.create("error", "发生错误，请稍后重试！");
+
               });
- 
+
+          });
+
 
         });
 
-        
-        
-         
+
+
+
 
       });
     }
@@ -3002,9 +3003,152 @@ export class FlowchartComponent implements OnInit {
   }
   ruleData;
   //获取规则信息
-  getRuleData():void{
+  getRuleData(): void {
     this.httpService.postHttp("csystrsrule/condition").subscribe((data: any) => {
       this.ruleData = data.data;
+    })
+  }
+  timeVisible = false
+  //打开事件管控窗口
+  timeManger(): void {
+    if (!this.formEditStatus) {
+      console.log("测试log",this.hierarchialGraph.nodes)
+      this.getTimeMage();
+      this.timeVisible = true;
+    }
+  }
+  timeData;
+  timeSpin = false;
+  shiftTime = false;
+  status = false;
+  getTimeMage(): void {
+    this.httpService.postHttp("csyspotcontime/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      this.timeData = data.data;
+      this.timeSpin = false;
+    })
+  }
+  //取消
+  timeCancel(): void {
+    console.log("表单打印",this.timeForm)
+    this.timeVisible = false;
+    this.timeSpin = false;
+    this.shiftTime = false;
+    this.initTimeForm();
+  }
+//确定
+  timeOk(): void {
+    if(!this.status){
+      //新增
+      this.insertTimeMag(false);
+    } else {
+      this.insertTimeMag(true);
+    }
+
+  }
+  insertTime():void{
+    this.initTimeForm()
+    this.shiftTime = true;
+    this.status = false;
+  }
+  initTimeForm():void{
+    this.timeForm = this.fb.group({
+      potCurrentName: [null, [Validators.required]],
+      potPointName: [null, [Validators.required]],
+      potLeastTime: [null, [Validators.required]],
+      potLongestTime: [null, [Validators.required]],
+      potConTimeDesc: [null]
+    })
+  }
+  insertTimeMag(item):void{
+    //检验为空
+    for (const i in this.timeForm.controls) {
+      this.timeForm.controls[i].markAsDirty();
+      this.timeForm.controls[i].updateValueAndValidity();
+    }
+    if (this.timeForm.controls.potCurrentName.invalid) return;
+    if (this.timeForm.controls.potPointName.invalid) return;
+    if (this.timeForm.controls.potLeastTime.invalid) return;
+    if (this.timeForm.controls.potLongestTime.invalid) return;
+    if(this.timeForm.value.potLeastTime>=this.timeForm.value.potLongestTime){
+      this.msg.error("时间输入有误，请重新输入")
+      return;
+    }
+    this.timeSpin = true;
+    let currentName;
+    let pointName; 
+    for (const key in this.hierarchialGraph.nodes) {
+      if (this.hierarchialGraph.nodes[key].id == this.timeForm.value.potCurrentName) {
+        currentName = this.hierarchialGraph.nodes[key].label;
+        break;        
+      }
+    }
+    for (const key in this.hierarchialGraph.nodes) {
+      if (this.hierarchialGraph.nodes[key].id == this.timeForm.value.potPointName) {
+        pointName = this.hierarchialGraph.nodes[key].label;
+        break;        
+      }
+    }
+    //新增数据
+    if(!item){
+      let insertData = {     
+        "csysWorkflowId": this.workflowId,
+        "csysPotCurrentId": this.timeForm.value.potCurrentName,
+        "csysPotPointId": this.timeForm.value.potPointName,
+        "csysPotCurrentName":currentName,
+        "csysPotPointName": pointName,
+        "csysPotLeastTime": this.timeForm.value.potLeastTime,
+        "csysPotLongestTime": this.timeForm.value.potLongestTime,
+        "csysPotConTimeDesc":this.timeForm.value.potConTimeDesc  
+    }
+    this.httpService.postHttp("csyspotcontime",insertData).subscribe((data: any) => {
+      this.initTimeForm();
+      this.shiftTime = false;
+      this.getTimeMage();
+      this.msg.success("创建成功");
+    })
+    }else{
+    //编辑
+      let insertData = {
+        "csysPotConTimeId": this.editTimeId,     
+        "csysWorkflowId": this.workflowId,
+        "csysPotCurrentId": this.timeForm.value.potCurrentName,
+        "csysPotPointId": this.timeForm.value.potPointName,
+        "csysPotCurrentName":currentName,
+        "csysPotPointName": pointName,
+        "csysPotLeastTime": this.timeForm.value.potLeastTime,
+        "csysPotLongestTime": this.timeForm.value.potLongestTime,
+        "csysPotConTimeDesc":this.timeForm.value.potConTimeDesc  
+    }
+    this.httpService.putHttp("csyspotcontime",insertData).subscribe((data: any) => {
+      this.initTimeForm();
+      this.shiftTime = false;
+      this.getTimeMage();
+      this.msg.success("创建成功");
+    })
+    }
+ 
+  }
+  editTimeId;
+  editInit(item):void{
+    this.timeForm = this.fb.group({
+      potCurrentName: [item.csysPotCurrentId, [Validators.required]],
+      potPointName: [item.csysPotPointId, [Validators.required]],
+      potLeastTime: [item.csysPotLeastTime, [Validators.required]],
+      potLongestTime: [item.csysPotLongestTime, [Validators.required]],
+      potConTimeDesc: [item.csysPotConTimeDesc]
+    })
+    this.editTimeId = item.csysPotConTimeId;
+    this.shiftTime = true;
+    this.status = true;
+  }
+  deleteTime(item):void{
+    let delteData = {
+      "csysPotConTimeId": item.csysPotConTimeId,
+      "csysPotConTimeIsDelete": "1"   
+    }
+    this.httpService.putHttp("csyspotcontime",delteData).subscribe((data: any) => {
+      this.msg.success("删除成功");
+      this.getTimeMage();
     })
   }
 }

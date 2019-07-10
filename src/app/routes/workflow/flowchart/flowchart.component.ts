@@ -322,26 +322,25 @@ export class FlowchartComponent implements OnInit {
     this.controlArray = [];
     this.controlDeleteArray = [];
     //根据状态初始化对应表单
-    if (!this.formEditStatus) {
+
       this.insertForm = this.fb.group({
-        resource: [null],
         opPot: [null],
         potSkill: [null],
+        excrete: [false],
         addNodeName: [null, [Validators.required]],
         addNodeName1: [null, [Validators.required]],
         addNodeName2: ["1", [Validators.required]],
       })
-    } else {
       this.editForm = this.fb.group({
         id: [null, [Validators.required]],
         nodeEditName: [null, [Validators.required]],
         addNodeName2: [null],
-        resource: [null],
+        excrete: [false],
         opPot: [null],
         potSkill: [null],
         rule: [null]
       })
-    }
+    
     this.pageForm = this.fb.group({
       pageId: ["", [Validators.required]]
     })
@@ -424,6 +423,11 @@ export class FlowchartComponent implements OnInit {
 
         potdata.data[0].csysTrsRuleId = null;
       }
+      if(potdata.data[0].csysPotIsExcrete == 1){
+        potdata.data[0].csysPotIsExcrete = true;
+      }else{
+        potdata.data[0].csysPotIsExcrete = false;
+      }
       //初始化
       this.editForm = this.fb.group({
         //addNodeName: [null, [Validators.required]],
@@ -433,7 +437,8 @@ export class FlowchartComponent implements OnInit {
         opPot: [data.op],
         resource: [data.resource],
         potSkill: [data.skillIds],
-        rule: [potdata.data[0].csysTrsRuleId]
+        rule: [potdata.data[0].csysTrsRuleId],
+        excrete:[potdata.data[0].csysPotIsExcrete]
         // nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -680,6 +685,7 @@ export class FlowchartComponent implements OnInit {
     let opId = this.insertForm.value.opPot;
     let rId = this.insertForm.value.resource;
     let skillIds = this.insertForm.value.potSkill;
+    let isExcrete = this.insertForm.value.excrete;
     //当选择资源的时候必须选择工序
     if (rId && !opId) {
       this.msg.error("选择资源，必须选工序");
@@ -687,7 +693,7 @@ export class FlowchartComponent implements OnInit {
       this.isGraphSpinning = false;
       return;
     }
-
+    if (isExcrete) isExcrete = 1; else isExcrete = 0;
     //第一步从公共工序获取样式名称
     this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
       let ruleparam = {
@@ -708,7 +714,8 @@ export class FlowchartComponent implements OnInit {
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
-            "csysTrsRuleId": ruleData.data[0].csysTrsRuleId
+            "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
+            "csysPotIsExcrete": isExcrete
           }
         } else {
           params = {
@@ -718,6 +725,7 @@ export class FlowchartComponent implements OnInit {
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
+            "csysPotIsExcrete": isExcrete
           }
         }
 
@@ -798,6 +806,7 @@ export class FlowchartComponent implements OnInit {
     let opPotId = this.editForm.value.opPot;
     let rId = this.editForm.value.resource;
     let skillIds = this.editForm.value.potSkill;
+    let isExcrete = this.editForm.value.excrete;
     console.log('nodeRule', this.editForm)
     if (rId && !opPotId) {
       this.msg.error("选择资源，必须选工序");
@@ -805,11 +814,14 @@ export class FlowchartComponent implements OnInit {
       this.isGraphSpinning = false;
       return;
     }
+    if (isExcrete) isExcrete = 1; else isExcrete = 0;
+    console.log("isExcrete",isExcrete);
     let params = {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
       "csysPotType": nodeType,
-      "csysTrsRuleId": nodeRule
+      "csysTrsRuleId": nodeRule,
+      "csysPotIsExcrete": isExcrete
     };
     //第一步：修改工序信息
     this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
@@ -2288,6 +2300,7 @@ export class FlowchartComponent implements OnInit {
       addNodeName: [null, [Validators.required]],
       addNodeName1: [null, [Validators.required]],
       addNodeName2: ["1", [Validators.required]],
+      excrete: [false],
       opPot: [null],
       resource: [null],
       potSkill: [null],
@@ -2298,6 +2311,7 @@ export class FlowchartComponent implements OnInit {
       id: [null, [Validators.required]],
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
+      excrete: [false],
       opPot: [null],
       resource: [null],
       potSkill: [null],
@@ -3107,8 +3121,8 @@ export class FlowchartComponent implements OnInit {
     if (this.timeForm.controls.potPointName.invalid) return;
     /**  ------------------------   检验时间 ---------------------------------------      */
     //判读其中一个必须有值
-    console.log("1123",this.timeForm.value.potLeastTime);
-    console.log("1123",this.timeForm.value.potLongestTime);
+    console.log("1123", this.timeForm.value.potLeastTime);
+    console.log("1123", this.timeForm.value.potLongestTime);
     if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
       this.msg.error("必须输入一个时间!")
       return;
@@ -3120,7 +3134,17 @@ export class FlowchartComponent implements OnInit {
         }
       }
     }
-
+    //进行时间计算
+    if (this.timeForm.value.potLeastTime) {
+      if (this.timeForm.value.potTimeType == "h") {
+        this.timeForm.value.potLeastTime = this.timeForm.value.potLeastTime * 60
+      }
+    }
+    if (this.timeForm.value.potLongestTime) {
+      if (this.timeForm.value.potTimeType1 == "h") {
+        this.timeForm.value.potLongestTime = this.timeForm.value.potLongestTime * 60
+      }
+    }
     this.timeSpin = true;
     let currentName;
     let pointName;

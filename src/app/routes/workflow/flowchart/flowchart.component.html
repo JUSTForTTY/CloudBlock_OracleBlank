@@ -198,24 +198,6 @@
                 </nz-option>
               </nz-select>
               <div nz-row>
-                <div nz-col nzSpan="9">最短时间:</div>
-                <div nz-col nzSpan="15">
-                  <nz-input-group nzAddOnAfter="min">
-                    <nz-input-number [nzMin]="1" [nzStep]="1" nz-input placeholder="请输入时间"
-                      [formControlName]="control.lastTime"></nz-input-number>
-                  </nz-input-group>
-                </div>
-              </div>
-              <div nz-row>
-                <div nz-col nzSpan="9">最长时间:</div>
-                <div nz-col nzSpan="15">
-                  <nz-input-group nzAddOnAfter="min">
-                    <nz-input-number [nzMin]="1" [nzStep]="1" nz-input placeholder="请输入时间"
-                      [formControlName]="control.longTime"></nz-input-number>
-                  </nz-input-group>
-                </div>
-              </div>
-              <div nz-row>
                 <div nz-col nzSpan="9">工序描述:</div>
                 <div nz-col nzSpan="15">
                   <nz-select style=" margin-right:8px;" [formControlName]="control.desc" [nzPlaceHolder]="'请选择工序描述'"
@@ -400,25 +382,6 @@
                       [nzValue]="option.csysPotId">
                     </nz-option>
                   </nz-select>
-                  <div nz-row>
-                    <div nz-col nzSpan="9">最短时间:</div>
-                    <div nz-col nzSpan="15">
-                      <nz-input-group nzAddOnAfter="min">
-                        <nz-input-number [nzMin]="1" [nzStep]="1" nz-input [formControlName]="control.lastTime"
-                          placeholder="请输入时间">
-                        </nz-input-number>
-                      </nz-input-group>
-                    </div>
-                  </div>
-                  <div nz-row>
-                    <div nz-col nzSpan="9">最长时间:</div>
-                    <div nz-col nzSpan="15">
-                      <nz-input-group nzAddOnAfter="min">
-                        <nz-input-number [nzMin]="1" [nzStep]="1" nz-input placeholder="请输入时间"
-                          [formControlName]="control.longTime"></nz-input-number>
-                      </nz-input-group>
-                    </div>
-                  </div>
                   <div nz-row>
                     <div nz-col nzSpan="9">工序描述:</div>
                     <div nz-col nzSpan="15">
@@ -795,7 +758,7 @@
     </nz-form-item>
   </form>
 </nz-modal> -->
-<nz-modal nzWrapClassName="vertical-center-modal" nzWidth="50%"[(nzVisible)]="timeVisible" nzTitle="回流设置"
+<nz-modal nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible" nzTitle="回流设置"
   (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()">
   <nz-spin [nzSpinning]="timeSpin">
     <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
@@ -811,7 +774,7 @@
             <th>最短时间</th>
             <th>最长时间</th>
             <th>描述</th>
-            <th>操作</th> 
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -831,50 +794,67 @@
       </nz-table>
     </ng-container>
     <ng-container *ngIf="shiftTime">
-        <div nz-row>
-            <div nz-col nzSpan="4"></div>
-            <div nz-col nzSpan="16">
-                <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始节点</nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24">
-                        <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始节点">
-                          <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id" [nzLabel]="timedata.label">
-                          </nz-option>
-                        </nz-select>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标节点</nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="16">
-                        <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标节点">
-                          <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id" [nzLabel]="timedata.label">
-                          </nz-option>
-                        </nz-select>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workflowname">最短时间</nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="16">
-                          <nz-input-number  formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1"></nz-input-number>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workflowname">最长时间</nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="16">
-                          <nz-input-number  formControlName="potLongestTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1"></nz-input-number>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">描述</nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="16">
-                        <input nz-input placeholder="描述" formControlName="potConTimeDesc">
-                      </nz-form-control>
-                    </nz-form-item>
-                  </form>
-            </div>
-            <div nz-col nzSpan="4"></div>
-          </div>
+      <div nz-row>
+        <div nz-col nzSpan="4"></div>
+        <div nz-col nzSpan="16">
+          <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始节点</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始节点">
+                  <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
+                    [nzLabel]="timedata.label">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标节点</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="16">
+                <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标节点">
+                  <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
+                    [nzLabel]="timedata.label">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">最短时间</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="16">
+               
+                <nz-input-group nzCompact>
+                  <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
+                  </nz-input-number>
+                  <nz-select formControlName="potTimeType" style="width: 50px">
+                    <nz-option nzLabel="分" nzValue="min"></nz-option>
+                    <nz-option nzLabel="时" nzValue="h"></nz-option>
+                  </nz-select>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">最长时间</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-input-group nzCompact>
+                  <nz-input-number formControlName="potLongestTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
+                  </nz-input-number>
+                  <nz-select formControlName="potTimeType1" style="width: 50px">
+                    <nz-option nzLabel="分" nzValue="min"></nz-option>
+                    <nz-option nzLabel="时" nzValue="h"></nz-option>
+                  </nz-select>
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">描述</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="16">
+                <input nz-input placeholder="描述" formControlName="potConTimeDesc">
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </div>
+        <div nz-col nzSpan="4"></div>
+      </div>
     </ng-container>
   </nz-spin>
 </nz-modal>

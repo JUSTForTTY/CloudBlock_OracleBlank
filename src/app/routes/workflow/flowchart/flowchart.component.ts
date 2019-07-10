@@ -1954,88 +1954,88 @@ export class FlowchartComponent implements OnInit {
           //     this.msg.create("error", "最短时间大于最长时间，请重新输入")
           //   }
           // } else {
-            console.log("超级更新", formData.value)
-            let autocontrol = control.autoExcuteControl;
-            if (formData[autocontrol] == false) {
-              control.autoExcute = 0
-            } else {
-              control.autoExcute = 1
-            }
-            console.log("thistime", control.autoExcute)
-            let targetParams = {
-              "csysPotTrsId": transferId,
-              "csysPotCurrentName": formData.nodeEditName,
-              "csysPotTrsAutoExe": control.autoExcute,
-              "csysPotTrsPointId": control.value,//迁移目标
-              "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
-              "csysPotTrsDesc": formData[control.desc]
-            };
-            console.log("targetParams", targetParams)
-            console.log("工序类型检测-当前工序", formData.addNodeName2);
-            console.log("工序类型检测-迁移工序", control)
-            //如果当前是初始化节点，将指向的节点设置为头结点
-            if (formData.addNodeName2 == '3') {
+          console.log("超级更新", formData.value)
+          let autocontrol = control.autoExcuteControl;
+          if (formData[autocontrol] == false) {
+            control.autoExcute = 0
+          } else {
+            control.autoExcute = 1
+          }
+          console.log("thistime", control.autoExcute)
+          let targetParams = {
+            "csysPotTrsId": transferId,
+            "csysPotCurrentName": formData.nodeEditName,
+            "csysPotTrsAutoExe": control.autoExcute,
+            "csysPotTrsPointId": control.value,//迁移目标
+            "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
+            "csysPotTrsDesc": formData[control.desc]
+          };
+          console.log("targetParams", targetParams)
+          console.log("工序类型检测-当前工序", formData.addNodeName2);
+          console.log("工序类型检测-迁移工序", control)
+          //如果当前是初始化节点，将指向的节点设置为头结点
+          if (formData.addNodeName2 == '3') {
 
-              console.log("初始化节点操作-更新操作");
-
-
-
-              targetParams['csysPotCurrentId'] = "";
-              targetParams['csysPotCurrentName'] = "";
+            console.log("初始化节点操作-更新操作");
 
 
-              console.log("更新工序2", targetParams)
-              this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
 
-                console.log("工序迁移修改成功", data);
-                //更新途程连接
-                this.updateLinks(transferId, control.value, control.autoExcute);
-                //保存工序迁移权限
-                //this.saveAuthority(transferId, control.authority);
-                //保存工序迁移权限页面
-                //更新页面
-                //this.updateTsrPage(transferId, pageId)
-                //this.saveTransferPage(transferId, control.pageData);
-
-                this.potTransferRule(sourcePot, targetPot, transferId);
-
-                //工序迁移全部操作完后保存途程
-                if (i == length) {
-                  this.saveWorkFlow();
-                }
-              });
+            targetParams['csysPotCurrentId'] = "";
+            targetParams['csysPotCurrentName'] = "";
 
 
-            } else {
+            console.log("更新工序2", targetParams)
+            this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
 
-              console.log("更新工序3", targetParams)
-              this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+              console.log("工序迁移修改成功", data);
+              //更新途程连接
+              this.updateLinks(transferId, control.value, control.autoExcute);
+              //保存工序迁移权限
+              //this.saveAuthority(transferId, control.authority);
+              //保存工序迁移权限页面
+              //更新页面
+              //this.updateTsrPage(transferId, pageId)
+              //this.saveTransferPage(transferId, control.pageData);
 
-                //console.log("工序迁移修改成功", data);
-                //更新途程连接
-                this.updateLinks(transferId, control.value, control.autoExcute);
-                //保存工序迁移权限
-                //this.saveAuthority(transferId, control.authority);
-                //保存工序迁移权限页面
-                //this.saveTransferPage(transferId, control.pageData);
-                //更新页面
-                //this.updateTsrPage(transferId, pageId)
+              this.potTransferRule(sourcePot, targetPot, transferId);
 
-                this.potTransferRule(sourcePot, targetPot, transferId);
-
-                //工序迁移全部操作完后保存途程
-                if (i == length) {
-                  this.saveWorkFlow();
-                }
-              });
+              //工序迁移全部操作完后保存途程
+              if (i == length) {
+                this.saveWorkFlow();
+              }
+            });
 
 
-            }
+          } else {
 
-            /*自动判断节点类型*/
-            this.potAutoChangeType(sourcePot, targetPot);
-            /*自动判断节点类型 */
-          
+            console.log("更新工序3", targetParams)
+            this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+              //console.log("工序迁移修改成功", data);
+              //更新途程连接
+              this.updateLinks(transferId, control.value, control.autoExcute);
+              //保存工序迁移权限
+              //this.saveAuthority(transferId, control.authority);
+              //保存工序迁移权限页面
+              //this.saveTransferPage(transferId, control.pageData);
+              //更新页面
+              //this.updateTsrPage(transferId, pageId)
+
+              this.potTransferRule(sourcePot, targetPot, transferId);
+
+              //工序迁移全部操作完后保存途程
+              if (i == length) {
+                this.saveWorkFlow();
+              }
+            });
+
+
+          }
+
+          /*自动判断节点类型*/
+          this.potAutoChangeType(sourcePot, targetPot);
+          /*自动判断节点类型 */
+
 
         });
       });
@@ -2979,8 +2979,8 @@ export class FlowchartComponent implements OnInit {
 
         //查询当前规则是否是原规则
         let checkParam = {
-          "csysWorkflowId":this.workflowId,
-          "csysPotTrsId":transferId,
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": transferId,
           "csysPotTrsConType": "1"
 
         }
@@ -3047,7 +3047,7 @@ export class FlowchartComponent implements OnInit {
   //打开事件管控窗口
   timeManger(): void {
     if (!this.formEditStatus) {
-      console.log("测试log",this.hierarchialGraph.nodes)
+      console.log("测试log", this.hierarchialGraph.nodes)
       this.getTimeMage();
       this.timeVisible = true;
     }
@@ -3064,15 +3064,16 @@ export class FlowchartComponent implements OnInit {
   }
   //取消
   timeCancel(): void {
-    console.log("表单打印",this.timeForm)
+    console.log("表单打印", this.timeForm)
     this.timeVisible = false;
     this.timeSpin = false;
     this.shiftTime = false;
+    console.log(this.timeType)
     this.initTimeForm();
   }
-//确定
+  //确定
   timeOk(): void {
-    if(!this.status){
+    if (!this.status) {
       //新增
       this.insertTimeMag(false);
     } else {
@@ -3080,21 +3081,23 @@ export class FlowchartComponent implements OnInit {
     }
 
   }
-  insertTime():void{
+  insertTime(): void {
     this.initTimeForm()
     this.shiftTime = true;
     this.status = false;
   }
-  initTimeForm():void{
+  initTimeForm(): void {
     this.timeForm = this.fb.group({
       potCurrentName: [null, [Validators.required]],
       potPointName: [null, [Validators.required]],
-      potLeastTime: [null, [Validators.required]],
-      potLongestTime: [null, [Validators.required]],
+      potLeastTime: [null],
+      potLongestTime: [null],
+      potTimeType: ["min"],
+      potTimeType1: ["min"],
       potConTimeDesc: [null]
     })
   }
-  insertTimeMag(item):void{
+  insertTimeMag(item): void {
     //检验为空
     for (const i in this.timeForm.controls) {
       this.timeForm.controls[i].markAsDirty();
@@ -3102,69 +3105,79 @@ export class FlowchartComponent implements OnInit {
     }
     if (this.timeForm.controls.potCurrentName.invalid) return;
     if (this.timeForm.controls.potPointName.invalid) return;
-    if (this.timeForm.controls.potLeastTime.invalid) return;
-    if (this.timeForm.controls.potLongestTime.invalid) return;
-    if(this.timeForm.value.potLeastTime>=this.timeForm.value.potLongestTime){
-      this.msg.error("时间输入有误，请重新输入")
+    /**  ------------------------   检验时间 ---------------------------------------      */
+    //判读其中一个必须有值
+    console.log("1123",this.timeForm.value.potLeastTime);
+    console.log("1123",this.timeForm.value.potLongestTime);
+    if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
+      this.msg.error("必须输入一个时间!")
       return;
+    } else {
+      if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
+        if (this.timeForm.value.potLeastTime >= this.timeForm.value.potLongestTime) {
+          this.msg.error("最短时间必须小于最长时间!")
+          return;
+        }
+      }
     }
+
     this.timeSpin = true;
     let currentName;
-    let pointName; 
+    let pointName;
     for (const key in this.hierarchialGraph.nodes) {
       if (this.hierarchialGraph.nodes[key].id == this.timeForm.value.potCurrentName) {
         currentName = this.hierarchialGraph.nodes[key].label;
-        break;        
+        break;
       }
     }
     for (const key in this.hierarchialGraph.nodes) {
       if (this.hierarchialGraph.nodes[key].id == this.timeForm.value.potPointName) {
         pointName = this.hierarchialGraph.nodes[key].label;
-        break;        
+        break;
       }
     }
     //新增数据
-    if(!item){
-      let insertData = {     
-        "csysWorkflowId": this.workflowId,
-        "csysPotCurrentId": this.timeForm.value.potCurrentName,
-        "csysPotPointId": this.timeForm.value.potPointName,
-        "csysPotCurrentName":currentName,
-        "csysPotPointName": pointName,
-        "csysPotLeastTime": this.timeForm.value.potLeastTime,
-        "csysPotLongestTime": this.timeForm.value.potLongestTime,
-        "csysPotConTimeDesc":this.timeForm.value.potConTimeDesc  
-    }
-    this.httpService.postHttp("csyspotcontime",insertData).subscribe((data: any) => {
-      this.initTimeForm();
-      this.shiftTime = false;
-      this.getTimeMage();
-      this.msg.success("创建成功");
-    })
-    }else{
-    //编辑
+    if (!item) {
       let insertData = {
-        "csysPotConTimeId": this.editTimeId,     
         "csysWorkflowId": this.workflowId,
         "csysPotCurrentId": this.timeForm.value.potCurrentName,
         "csysPotPointId": this.timeForm.value.potPointName,
-        "csysPotCurrentName":currentName,
+        "csysPotCurrentName": currentName,
         "csysPotPointName": pointName,
         "csysPotLeastTime": this.timeForm.value.potLeastTime,
         "csysPotLongestTime": this.timeForm.value.potLongestTime,
-        "csysPotConTimeDesc":this.timeForm.value.potConTimeDesc  
+        "csysPotConTimeDesc": this.timeForm.value.potConTimeDesc
+      }
+      this.httpService.postHttp("csyspotcontime", insertData).subscribe((data: any) => {
+        this.initTimeForm();
+        this.shiftTime = false;
+        this.getTimeMage();
+        this.msg.success("创建成功");
+      })
+    } else {
+      //编辑
+      let insertData = {
+        "csysPotConTimeId": this.editTimeId,
+        "csysWorkflowId": this.workflowId,
+        "csysPotCurrentId": this.timeForm.value.potCurrentName,
+        "csysPotPointId": this.timeForm.value.potPointName,
+        "csysPotCurrentName": currentName,
+        "csysPotPointName": pointName,
+        "csysPotLeastTime": this.timeForm.value.potLeastTime,
+        "csysPotLongestTime": this.timeForm.value.potLongestTime,
+        "csysPotConTimeDesc": this.timeForm.value.potConTimeDesc
+      }
+      this.httpService.putHttp("csyspotcontime", insertData).subscribe((data: any) => {
+        this.initTimeForm();
+        this.shiftTime = false;
+        this.getTimeMage();
+        this.msg.success("创建成功");
+      })
     }
-    this.httpService.putHttp("csyspotcontime",insertData).subscribe((data: any) => {
-      this.initTimeForm();
-      this.shiftTime = false;
-      this.getTimeMage();
-      this.msg.success("创建成功");
-    })
-    }
- 
+
   }
   editTimeId;
-  editInit(item):void{
+  editInit(item): void {
     this.timeForm = this.fb.group({
       potCurrentName: [item.csysPotCurrentId, [Validators.required]],
       potPointName: [item.csysPotPointId, [Validators.required]],
@@ -3176,15 +3189,16 @@ export class FlowchartComponent implements OnInit {
     this.shiftTime = true;
     this.status = true;
   }
-  deleteTime(item):void{
+  deleteTime(item): void {
     let delteData = {
       "csysPotConTimeId": item.csysPotConTimeId,
-      "csysPotConTimeIsDelete": "1"   
+      "csysPotConTimeIsDelete": "1"
     }
-    this.httpService.putHttp("csyspotcontime",delteData).subscribe((data: any) => {
+    this.httpService.putHttp("csyspotcontime", delteData).subscribe((data: any) => {
       this.msg.success("删除成功");
       this.getTimeMage();
     })
   }
+  timeType = "min"
 }
 

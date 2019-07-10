@@ -123,8 +123,8 @@ export class FlowtrsComponent implements OnInit {
     }
     let workGroupValue = this.form.controls.workFlowGroup.value
     console.log("this log1", workGroupValue)
-    this.httpService.postHttp(this.workflowUrl+"/condition", {"csysPotGroupName": this.form.controls.flowGrpupName.value}).subscribe((cdata: any) => {
-      if(cdata.data.length > 0){
+    this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotGroupName": this.form.controls.flowGrpupName.value }).subscribe((cdata: any) => {
+      if (cdata.data.length > 0) {
         this.msg.error("该防呆组已存在!");
         this.isOkLoading = false;
         return;
@@ -219,89 +219,89 @@ export class FlowtrsComponent implements OnInit {
       "csysPotGroupDesc": this.form.controls.workFlowDesc.value
     }
     //先删除原先权限表中的数据
-    this.httpService.postHttp(this.workflowUrl+"/condition", {"csysPotGroupName": this.form.controls.flowGrpupName.value}).subscribe((cdata: any) => {
-      if(cdata.data.length > 0 && params.csysPotGroupName != this.trsName){
+    this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotGroupName": this.form.controls.flowGrpupName.value }).subscribe((cdata: any) => {
+      if (cdata.data.length > 0 && params.csysPotGroupName != this.trsName) {
         this.msg.error("改工序组已存在!");
         this.isOkLoading = false;
         return;
       }
-    this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
-      data1 = data1.data.list
-      //现获取条件符合的权限数据，并获取数量
-      for (let i = 0; i < data1.length; i++) {
-        if (data1[i].csysPotGroupFromId == this.cySysFlowpointPublicId) {
-          preData.push(data1[i].csysPotGroPreId)
+      this.httpService.getHttp("/csyspotgropre").subscribe((data1: any) => {
+        data1 = data1.data.list
+        //现获取条件符合的权限数据，并获取数量
+        for (let i = 0; i < data1.length; i++) {
+          if (data1[i].csysPotGroupFromId == this.cySysFlowpointPublicId) {
+            preData.push(data1[i].csysPotGroPreId)
+          }
         }
-      }
-      console.log("preData", preData);
-      //当该工序组存在目标工序组时候
-      if (preData.length != 0) {
-        for (let index = 0; index < preData.length; index++) {
-          const element = preData[index];
-          this.httpService.deleteHttp("/csyspotgropre/" + element).subscribe((data2: any) => {
-            //当删除最后一个工序的时候，新增新的数据
-            if (index == preData.length - 1) {
-              if (workGroupValue.length != 0) {
-                for (let index1 = 0; index1 < workGroupValue.length; index1++) {
-                  const element1 = workGroupValue[index1];
-                  let preData = {
-                    "csysPotGroupFromId": this.cySysFlowpointPublicId,
-                    "csysPotGroupToId": element1,
-                  }
-                  console.log("帅气与美貌")
-                  this.httpService.postHttp("/csyspotgropre", preData).subscribe((data3: any) => {
-                    if (index1 == workGroupValue.length - 1) {
-                      //编辑保存途程
-                      this.httpService.putHttp(this.workflowUrl, params).subscribe((data4: any) => {
-                        this.isOkLoading = false;
-                        this.msg.create("success", "编辑成功");
-                        this.isVisible = false;
-                        this._getWorkFlowListData(this.pageId);
-                        this.getFlowGroup()
-                        this.init();
-                      }, (err) => {
-                        this.msg.create("error", "发生错误，请稍后重试！");
-                        this.isOkLoading = false;
-                      });
+        console.log("preData", preData);
+        //当该工序组存在目标工序组时候
+        if (preData.length != 0) {
+          for (let index = 0; index < preData.length; index++) {
+            const element = preData[index];
+            this.httpService.deleteHttp("/csyspotgropre/" + element).subscribe((data2: any) => {
+              //当删除最后一个工序的时候，新增新的数据
+              if (index == preData.length - 1) {
+                if (workGroupValue.length != 0) {
+                  for (let index1 = 0; index1 < workGroupValue.length; index1++) {
+                    const element1 = workGroupValue[index1];
+                    let preData = {
+                      "csysPotGroupFromId": this.cySysFlowpointPublicId,
+                      "csysPotGroupToId": element1,
                     }
-                  })
+                    console.log("帅气与美貌")
+                    this.httpService.postHttp("/csyspotgropre", preData).subscribe((data3: any) => {
+                      if (index1 == workGroupValue.length - 1) {
+                        //编辑保存途程
+                        this.httpService.putHttp(this.workflowUrl, params).subscribe((data4: any) => {
+                          this.isOkLoading = false;
+                          this.msg.create("success", "编辑成功");
+                          this.isVisible = false;
+                          this._getWorkFlowListData(this.pageId);
+                          this.getFlowGroup()
+                          this.init();
+                        }, (err) => {
+                          this.msg.create("error", "发生错误，请稍后重试！");
+                          this.isOkLoading = false;
+                        });
+                      }
+                    })
+                  }
                 }
-              }
-            }
-          })
-        }
-        //当不存在布标工序组时候
-      } else {
-        //编辑保存途程
-        if (workGroupValue.length != 0) {
-          for (let index1 = 0; index1 < workGroupValue.length; index1++) {
-            const element1 = workGroupValue[index1];
-            let preData = {
-              "csysPotGroupFromId": this.cySysFlowpointPublicId,
-              "csysPotGroupToId": element1,
-            }
-            this.httpService.postHttp("/csyspotgropre", preData).subscribe((data3: any) => {
-              if (index1 == workGroupValue.length - 1) {
-                //编辑保存途程
-                this.httpService.putHttp(this.workflowUrl, params).subscribe((data4: any) => {
-                  this.isOkLoading = false;
-                  this.msg.create("success", "编辑成功");
-                  this.isVisible = false;
-                  this._getWorkFlowListData(this.pageId);
-                  this.getFlowGroup()
-                  this.init();
-                }, (err) => {
-                  this.msg.create("error", "发生错误，请稍后重试！");
-                  this.isOkLoading = false;
-                });
               }
             })
           }
+          //当不存在布标工序组时候
+        } else {
+          //编辑保存途程
+          if (workGroupValue.length != 0) {
+            for (let index1 = 0; index1 < workGroupValue.length; index1++) {
+              const element1 = workGroupValue[index1];
+              let preData = {
+                "csysPotGroupFromId": this.cySysFlowpointPublicId,
+                "csysPotGroupToId": element1,
+              }
+              this.httpService.postHttp("/csyspotgropre", preData).subscribe((data3: any) => {
+                if (index1 == workGroupValue.length - 1) {
+                  //编辑保存途程
+                  this.httpService.putHttp(this.workflowUrl, params).subscribe((data4: any) => {
+                    this.isOkLoading = false;
+                    this.msg.create("success", "编辑成功");
+                    this.isVisible = false;
+                    this._getWorkFlowListData(this.pageId);
+                    this.getFlowGroup()
+                    this.init();
+                  }, (err) => {
+                    this.msg.create("error", "发生错误，请稍后重试！");
+                    this.isOkLoading = false;
+                  });
+                }
+              })
+            }
+          }
         }
-      }
 
+      })
     })
-  })
 
   }
 
@@ -325,7 +325,7 @@ export class FlowtrsComponent implements OnInit {
       "csysPotGroupId": resolve
     }
     console.log("11aa");
-    
+
     this.httpService.postHttp("csyspotpublic/condition", potBody).subscribe((publicPot: any) => {
       if (publicPot.data.length != 0) {
         this.loading = false;

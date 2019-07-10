@@ -53,11 +53,11 @@ export class FlowchartComponent implements OnInit {
   conditionForm: FormGroup;
   //目标工序数据，flag为标记（包含了insert：新增）
 
-  controlArray: Array<{ id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, longTime, lastTime, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }> = [];
+  controlArray: Array<{ id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }> = [];
   //已删除的目标工序
   controlDeleteArray: Array<{ id: string, controlInstance: string, value: string, label: string, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }> }> = [];
   //当前数据
-  currentControl: { id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, longTime, lastTime, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } };
+  currentControl: { id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } };
 
   q: any = {
     status: 'all',
@@ -479,14 +479,6 @@ export class FlowchartComponent implements OnInit {
 
       taretData.data.forEach(timeData => {
         let autoValue = false;
-
-        //判断最短最长时间是否为0，为0赋空值
-        if (timeData.csysPotTrsLongestTime == 0) {
-          timeData.csysPotTrsLongestTime = null
-        }
-        if (timeData.csysPotTrsLeastTime == 0) {
-          timeData.csysPotTrsLeastTime = null
-        }
         if (timeData.csysPotTrsAutoExe == 1) {
           autoValue = true;
         }
@@ -502,8 +494,6 @@ export class FlowchartComponent implements OnInit {
             potType: potdata.data.csysPotStyleId,
             autoExcuteControl: timeData.csysPotTrsId + "auto",
             autoExcute: autoValue,//自动完成的权限
-            longTime: timeData.csysPotTrsId + "longTime",
-            lastTime: timeData.csysPotTrsId + "lastTime",
             desc: timeData.csysPotTrsId + "desc",
             pageIds: timeData.csysPotTrsId + "pageId",
             flag: "update",
@@ -515,8 +505,6 @@ export class FlowchartComponent implements OnInit {
           console.log("control", this.controlArray)
           this.editForm.addControl(timeData.csysPotTrsId, new FormControl(timeData.csysPotTrsPointId, Validators.required));
           this.editForm.addControl(timeData.csysPotTrsId + "auto", new FormControl(autoValue, Validators.required));
-          this.editForm.addControl(timeData.csysPotTrsId + "longTime", new FormControl(timeData.csysPotTrsLongestTime));
-          this.editForm.addControl(timeData.csysPotTrsId + "lastTime", new FormControl(timeData.csysPotTrsLeastTime));
           this.editForm.addControl(timeData.csysPotTrsId + "desc", new FormControl(timeData.csysPotTrsDesc));
           this.editForm.addControl(timeData.csysPotTrsId + "pageId", new FormControl(pageDatai));
           ////重新获取自动执行的
@@ -588,8 +576,6 @@ export class FlowchartComponent implements OnInit {
       flag: "insert",
       autoExcuteControl: `passenger${id}auto`,
       autoExcute: false,//自动完成的权限
-      longTime: `passenger${id}longTime`,
-      lastTime: `passenger${id}lastTime`,
       desc: `passenger${id}desc`,
       pageIds: `passenger${id}pageId`,
       checked: false,
@@ -605,8 +591,6 @@ export class FlowchartComponent implements OnInit {
     if (!this.formEditStatus) {
       this.insertForm.addControl(this.controlArray[index - 1].controlInstance, new FormControl(null, Validators.required));
       this.insertForm.addControl(this.controlArray[index - 1].autoExcuteControl, new FormControl(false, Validators.required));
-      this.insertForm.addControl(this.controlArray[index - 1].longTime, new FormControl(null));
-      this.insertForm.addControl(this.controlArray[index - 1].lastTime, new FormControl(null));
       this.insertForm.addControl(this.controlArray[index - 1].desc, new FormControl(null));
       this.insertForm.addControl(this.controlArray[index - 1].pageIds, new FormControl(null));
 
@@ -614,8 +598,6 @@ export class FlowchartComponent implements OnInit {
     else {
       this.editForm.addControl(this.controlArray[index - 1].controlInstance, new FormControl(null, Validators.required));
       this.editForm.addControl(this.controlArray[index - 1].autoExcuteControl, new FormControl(false, Validators.required));
-      this.editForm.addControl(this.controlArray[index - 1].longTime, new FormControl(null));
-      this.editForm.addControl(this.controlArray[index - 1].lastTime, new FormControl(null));
       this.editForm.addControl(this.controlArray[index - 1].desc, new FormControl(null));
       this.editForm.addControl(this.controlArray[index - 1].pageIds, new FormControl(null));
     }
@@ -650,7 +632,7 @@ export class FlowchartComponent implements OnInit {
     console.log("输出：", this.controlArray);
   }
   //移除目标工序
-  removeField(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, longTime, lastTime, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: "", oldPageId: "", currentPageId: "" } }, e: MouseEvent): void {
+  removeField(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: "", oldPageId: "", currentPageId: "" } }, e: MouseEvent): void {
     e.preventDefault();
     //第一步
     if (this.controlArray.length > 0) {
@@ -1588,14 +1570,10 @@ export class FlowchartComponent implements OnInit {
 
     if (!this.formEditStatus) {
       formData = this.insertForm.value;
-      longestime = formData[control.longTime];
-      leastime = formData[control.lastTime];
       auto = formData[autocontrol];
       pages = formData[control.pageIds]
     } else {
       formData = this.editForm.value;
-      longestime = formData[control.longTime];
-      leastime = formData[control.lastTime];
       auto = formData[autocontrol];
       pages = formData[control.pageIds]
     }
@@ -1631,8 +1609,6 @@ export class FlowchartComponent implements OnInit {
                 "csysPotCurrentName": formData.addNodeName1,
                 "csysPotTrsPointId": control.value,//迁移目标
                 "csysPotTrsPointName": targetPot.data.csysPotName,
-                "csysPotTrsLongestTime": formData[control.longTime],//最长时间
-                "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
                 "csysPotTrsDesc": formData[control.desc]
               };
 
@@ -1646,8 +1622,6 @@ export class FlowchartComponent implements OnInit {
                 "csysPotCurrentName": formData.nodeEditName,
                 "csysPotTrsPointId": control.value,//迁移目标
                 "csysPotTrsPointName": targetPot.data.csysPotName,
-                "csysPotTrsLongestTime": formData[control.longTime],//最长时间
-                "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
                 "csysPotTrsDesc": formData[control.desc]
               };
 
@@ -1745,8 +1719,6 @@ export class FlowchartComponent implements OnInit {
               "csysPotCurrentName": formData.addNodeName1,
               "csysPotTrsPointId": control.value,//迁移目标
               "csysPotTrsPointName": targetPot.data.csysPotName,
-              "csysPotTrsLongestTime": formData[control.longTime],//最长时间
-              "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
               "csysPotTrsDesc": formData[control.desc]
             };
             potType = formData.addNodeName2;
@@ -1760,8 +1732,6 @@ export class FlowchartComponent implements OnInit {
               "csysPotCurrentName": formData.nodeEditName,
               "csysPotTrsPointId": control.value,//迁移目标
               "csysPotTrsPointName": targetPot.data.csysPotName,
-              "csysPotTrsLongestTime": formData[control.longTime],//最长时间
-              "csysPotTrsLeastTime": formData[control.lastTime],//最短时间
               "csysPotTrsDesc": formData[control.desc]
             };
             potType = formData.addNodeName2;
@@ -1888,116 +1858,108 @@ export class FlowchartComponent implements OnInit {
         this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
 
           //先判断不为空，在判断大小
-          if (typeof longestime == "number" && typeof leastime == "number") {
-            console.log("超级更新", formData)
-            if (longestime > leastime) {
-              let autocontrol = control.autoExcuteControl;
-              console.log("this is 1", formData[autocontrol])
-              if (formData[autocontrol] == false) {
-                control.autoExcute = 0
-              } else {
-                control.autoExcute = 1
-              }
+          // if (typeof longestime == "number" && typeof leastime == "number") {
+          //   console.log("超级更新", formData)
+          //   if (longestime > leastime) {
+          //     let autocontrol = control.autoExcuteControl;
+          //     console.log("this is 1", formData[autocontrol])
+          //     if (formData[autocontrol] == false) {
+          //       control.autoExcute = 0
+          //     } else {
+          //       control.autoExcute = 1
+          //     }
 
-              let targetParams = {
-                "csysPotTrsId": transferId,
-                "csysPotCurrentName": formData.nodeEditName,
-                "csysPotTrsAutoExe": control.autoExcute,
-                "csysPotTrsPointId": control.value,//迁移目标
-                "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
-                "csysPotTrsLongestTime": formData[control.longTime],
-                "csysPotTrsLeastTime": formData[control.lastTime],
-                "csysPotTrsDesc": formData[control.desc]
-              };
-              console.log("targetParamsupdate", targetParams)
-              console.log("工序类型检测-当前工序", formData.addNodeName2);
-              console.log("工序类型检测-迁移工序", control)
+          //     let targetParams = {
+          //       "csysPotTrsId": transferId,
+          //       "csysPotCurrentName": formData.nodeEditName,
+          //       "csysPotTrsAutoExe": control.autoExcute,
+          //       "csysPotTrsPointId": control.value,//迁移目标
+          //       "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
+          //       "csysPotTrsDesc": formData[control.desc]
+          //     };
+          //     console.log("targetParamsupdate", targetParams)
+          //     console.log("工序类型检测-当前工序", formData.addNodeName2);
+          //     console.log("工序类型检测-迁移工序", control)
 
 
-              //如果当前是初始化节点，将指向的节点设置为头结点
-              if (formData.addNodeName2 == '3') {
+          //     //如果当前是初始化节点，将指向的节点设置为头结点
+          //     if (formData.addNodeName2 == '3') {
 
-                console.log("初始化节点操作");
+          //       console.log("初始化节点操作");
 
 
 
-                targetParams['csysPotCurrentId'] = "";
-                targetParams['csysPotCurrentName'] = "";
+          //       targetParams['csysPotCurrentId'] = "";
+          //       targetParams['csysPotCurrentName'] = "";
 
-                console.log("更新工序", targetParams)
-                this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+          //       console.log("更新工序", targetParams)
+          //       this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
 
-                  //console.log("工序迁移修改成功", data);
-                  //更新途程连接
-                  this.updateLinks(transferId, control.value, control.autoExcute);
-                  //保存工序迁移权限
-                  //this.saveAuthority(transferId, control.authority);
-                  //更新页面
-                  //this.updateTsrPage(transferId, pageId)
-                  //保存工序迁移权限页面
-                  //this.saveTransferPage(transferId, control.pageData);
+          //         //console.log("工序迁移修改成功", data);
+          //         //更新途程连接
+          //         this.updateLinks(transferId, control.value, control.autoExcute);
+          //         //保存工序迁移权限
+          //         //this.saveAuthority(transferId, control.authority);
+          //         //更新页面
+          //         //this.updateTsrPage(transferId, pageId)
+          //         //保存工序迁移权限页面
+          //         //this.saveTransferPage(transferId, control.pageData);
 
-                  //新增迁移规则
-                  this.potTransferRule(sourcePot, targetPot, transferId);
+          //         //新增迁移规则
+          //         this.potTransferRule(sourcePot, targetPot, transferId);
 
-                  //工序迁移全部操作完后保存途程
-                  if (i == length) {
-                    this.saveWorkFlow();
-                  }
-                });
-
-
-              } else {
+          //         //工序迁移全部操作完后保存途程
+          //         if (i == length) {
+          //           this.saveWorkFlow();
+          //         }
+          //       });
 
 
-                console.log("更新工序1", targetParams)
-                this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
-
-                  //console.log("工序迁移修改成功", data);
-                  //更新途程连接
-                  this.updateLinks(transferId, control.value, control.autoExcute);
-                  //保存工序迁移权限
-                  //this.saveAuthority(transferId, control.authority);
-                  //保存工序迁移权限页面
-                  //this.saveTransferPage(transferId, control.pageData);
-                  //更新页面
-                  //this.updateTsrPage(transferId, pageId)
-
-                  //新增迁移规则
-                  this.potTransferRule(sourcePot, targetPot, transferId);
-
-                  //工序迁移全部操作完后保存途程
-                  if (i == length) {
-                    this.saveWorkFlow();
-                  }
-                });
+          //     } else {
 
 
-              }
-              /*自动判断节点类型*/
+          //       console.log("更新工序1", targetParams)
+          //       this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
 
-              this.potAutoChangeType(sourcePot, targetPot);
-              /*自动判断节点类型 */
+          //         //console.log("工序迁移修改成功", data);
+          //         //更新途程连接
+          //         this.updateLinks(transferId, control.value, control.autoExcute);
+          //         //保存工序迁移权限
+          //         //this.saveAuthority(transferId, control.authority);
+          //         //保存工序迁移权限页面
+          //         //this.saveTransferPage(transferId, control.pageData);
+          //         //更新页面
+          //         //this.updateTsrPage(transferId, pageId)
+
+          //         //新增迁移规则
+          //         this.potTransferRule(sourcePot, targetPot, transferId);
+
+          //         //工序迁移全部操作完后保存途程
+          //         if (i == length) {
+          //           this.saveWorkFlow();
+          //         }
+          //       });
 
 
-            } else {
-              this.submitting = false;
-              this.isGraphSpinning = false;
-              this.msg.create("error", "最短时间大于最长时间，请重新输入")
-            }
-          } else {
+          //     }
+          //     /*自动判断节点类型*/
+
+          //     this.potAutoChangeType(sourcePot, targetPot);
+          //     /*自动判断节点类型 */
+
+
+          //   } else {
+          //     this.submitting = false;
+          //     this.isGraphSpinning = false;
+          //     this.msg.create("error", "最短时间大于最长时间，请重新输入")
+          //   }
+          // } else {
             console.log("超级更新", formData.value)
             let autocontrol = control.autoExcuteControl;
             if (formData[autocontrol] == false) {
               control.autoExcute = 0
             } else {
               control.autoExcute = 1
-            }
-            if (!formData[control.lastTime]) {
-              formData[control.lastTime] = 0
-            }
-            if (!formData[control.longTime]) {
-              formData[control.longTime] = 0
             }
             console.log("thistime", control.autoExcute)
             let targetParams = {
@@ -2006,8 +1968,6 @@ export class FlowchartComponent implements OnInit {
               "csysPotTrsAutoExe": control.autoExcute,
               "csysPotTrsPointId": control.value,//迁移目标
               "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
-              "csysPotTrsLongestTime": formData[control.longTime],
-              "csysPotTrsLeastTime": formData[control.lastTime],
               "csysPotTrsDesc": formData[control.desc]
             };
             console.log("targetParams", targetParams)
@@ -2075,7 +2035,7 @@ export class FlowchartComponent implements OnInit {
             /*自动判断节点类型*/
             this.potAutoChangeType(sourcePot, targetPot);
             /*自动判断节点类型 */
-          }
+          
 
         });
       });
@@ -2390,7 +2350,7 @@ export class FlowchartComponent implements OnInit {
 
 
   //设置权限
-  setAuthority(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, longTime, lastTime, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }, e: MouseEvent): void {
+  setAuthority(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }, e: MouseEvent): void {
     let authority = i.authority;
     //查看当前迁移权限是否有数据
     if (authority.length == 0) {
@@ -2478,7 +2438,7 @@ export class FlowchartComponent implements OnInit {
     })
   }
   //设置迁移权限页面
-  setTransferPage(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, longTime, lastTime, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: any } }, e: MouseEvent): void {
+  setTransferPage(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, checked: boolean, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: any } }, e: MouseEvent): void {
     console.log("设置迁移页面", i);
     let trsPage = [];
     this.httpService.postHttp("/csyssimplepage/condition").subscribe((data: any) => {

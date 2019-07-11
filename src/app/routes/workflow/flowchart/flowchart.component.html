@@ -772,7 +772,7 @@
     </nz-form-item>
   </form>
 </nz-modal> -->
-<nz-modal nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible" nzTitle="回流设置"
+<nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible" nzTitle="回流设置"
   (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()">
   <nz-spin [nzSpinning]="timeSpin">
     <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
@@ -834,8 +834,7 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">最短时间</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="16">
-               
+              <nz-form-control [nzSm]="14" [nzXs]="16">               
                 <nz-input-group nzCompact>
                   <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
                   </nz-input-number>

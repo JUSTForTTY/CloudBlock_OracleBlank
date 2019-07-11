@@ -147,7 +147,7 @@ export class PublicworkflowComponent implements OnInit {
       this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
         this.isOkLoading = false;
         //新增公共节点再新增资源
-        this.insetPotPubRs(data.data);
+        this.insetPotPubRs(data.data,this.form.controls.workFlowName.value);
         //新增功能页面
         this.insetPotPage(data.data);
         this.msg.create("success", "创建成功");
@@ -248,7 +248,7 @@ export class PublicworkflowComponent implements OnInit {
       }
       this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
         this.editPotPage(this.cySysFlowpointPublicId);
-        this.editPotPubRs(this.cySysFlowpointPublicId);
+        this.editPotPubRs(this.cySysFlowpointPublicId,this.form.controls.workFlowName.value);
         this.isOkLoading = false;
         this.msg.create("success", "编辑成功");
         this.isVisible = false;
@@ -390,7 +390,7 @@ export class PublicworkflowComponent implements OnInit {
     注释掉之前多对多，需要的话可以开放
   */
 
-  insetPotPubRs(pfId): void {
+  insetPotPubRs(pfId,wname): void {
     //当新增公共节点资源
     let potRsId = this.form.value.workFlowResource;
     if (potRsId) {
@@ -398,7 +398,9 @@ export class PublicworkflowComponent implements OnInit {
         const element = potRsId[index];
         let potRsData = {
           "csysPotPublicId": pfId,
-          "tResourceId": element
+          "tResourceId": element,
+          "flag1":wname
+
         }
         //console.log("rs检测", potRsData)
         this.httpService.putHttp(this.resourceUrl, potRsData).subscribe((data: any) => {
@@ -435,7 +437,7 @@ export class PublicworkflowComponent implements OnInit {
     }
   }
   //编辑工序资源
-  editPotPubRs(pfId): void {
+  editPotPubRs(pfId,wname): void {
     let deleteData = [];
     this.httpService.postHttp(this.resourceUrl + "/condition").subscribe((data: any) => {
       data = data.data;
@@ -452,18 +454,19 @@ export class PublicworkflowComponent implements OnInit {
           const element = deleteData[index];
           let potRsData = {
             "csysPotPublicId": "",
-            "tResourceId": element
+            "tResourceId": element,
+            "flag1":""
           }
           //console.log("potRsData", potRsData)
           this.httpService.putHttp(this.resourceUrl, potRsData).subscribe((data: any) => {
           })
           // this.httpService.deleteHttp(this.potpubrsUrl + "/" + element).subscribe((data: any) => { })
           if (index == deleteData.length - 1) {
-            this.insetPotPubRs(pfId);
+            this.insetPotPubRs(pfId,wname);
           }
         }
       } else if (this.form.value.workFlowResource) {
-        this.insetPotPubRs(pfId);
+        this.insetPotPubRs(pfId,wname);
       }
     })
   }

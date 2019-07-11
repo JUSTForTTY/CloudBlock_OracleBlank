@@ -664,7 +664,7 @@ export class FlowchartComponent implements OnInit {
     this.isGraphSpinning = true;
 
     if (this.formEditStatus) {
-      //console.log("修改工序");
+      console.log("修改工序1");
       this.updateFlowPoint();
     } else {
       //console.log("新增工序");
@@ -683,16 +683,16 @@ export class FlowchartComponent implements OnInit {
   insertFlowPoint() {
     this.flowPointMark = "insert";
     let opId = this.insertForm.value.opPot;
-    let rId = this.insertForm.value.resource;
+    //let rId = this.insertForm.value.resource;
     let skillIds = this.insertForm.value.potSkill;
     let isExcrete = this.insertForm.value.excrete;
     //当选择资源的时候必须选择工序
-    if (rId && !opId) {
-      this.msg.error("选择资源，必须选工序");
-      this.submitting = false;
-      this.isGraphSpinning = false;
-      return;
-    }
+    // if (rId && !opId) {
+    //   this.msg.error("选择资源，必须选工序");
+    //   this.submitting = false;
+    //   this.isGraphSpinning = false;
+    //   return;
+    // }
     if (isExcrete) isExcrete = 1; else isExcrete = 0;
     //第一步从公共工序获取样式名称
     this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
@@ -749,14 +749,14 @@ export class FlowchartComponent implements OnInit {
           //重新获取目标工序
           //this.getFlowTargetNodes();
           //新增途程工序
-          this.insertNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, rId, skillIds);
+          this.insertNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, skillIds);
           //新增工序组 
           if (opId) {
             this.insertOpPot(nodeId, opId);
           }
-          if (rId && opId) {
-            this.insertPotrs(nodeId, opId, rId);
-          }
+          // if (rId && opId) {
+          //   this.insertPotrs(nodeId, opId, rId);
+          // }
           //新增资源
           if (skillIds) {
             this.insertPotSkill(nodeId, skillIds)
@@ -804,18 +804,11 @@ export class FlowchartComponent implements OnInit {
     let nodeType = this.editForm.value.addNodeName2;
     let nodeRule = this.editForm.value.rule;
     let opPotId = this.editForm.value.opPot;
-    let rId = this.editForm.value.resource;
     let skillIds = this.editForm.value.potSkill;
     let isExcrete = this.editForm.value.excrete;
     console.log('nodeRule', this.editForm)
-    if (rId && !opPotId) {
-      this.msg.error("选择资源，必须选工序");
-      this.submitting = false;
-      this.isGraphSpinning = false;
-      return;
-    }
     if (isExcrete) isExcrete = 1; else isExcrete = 0;
-    console.log("isExcrete",isExcrete);
+    console.log("isExcrete",isExcrete); 
     let params = {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
@@ -823,6 +816,7 @@ export class FlowchartComponent implements OnInit {
       "csysTrsRuleId": nodeRule,
       "csysPotIsExcrete": isExcrete
     };
+    console.log("put1",JSON.parse(JSON.stringify(params)))
     //第一步：修改工序信息
     this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
       /**
@@ -833,6 +827,7 @@ export class FlowchartComponent implements OnInit {
        */
 
       //修改途程工序
+      console.log("修改工序2");
       if (this.clickNodeData.op) {
         if (this.clickNodeData.op != opPotId) this.updateOpPot(opPotId);
         if (!opPotId) this.deleteOpPot(this.clickNodeData.id);
@@ -840,12 +835,12 @@ export class FlowchartComponent implements OnInit {
         if (opPotId) this.insertOpPot(this.clickNodeData.id, opPotId);
       }
       //工序资源编辑
-      if (this.clickNodeData.resource) {
-        if (this.clickNodeData.resource != rId) this.updateResource(this.clickNodeData.id, opPotId, rId);
-        if (!rId) this.deleteRs(this.clickNodeData.id)
-      } else {
-        if (opPotId && rId) this.insertPotrs(this.clickNodeData.id, opPotId, rId);
-      }
+      // if (this.clickNodeData.resource) {
+      //   if (this.clickNodeData.resource != rId) this.updateResource(this.clickNodeData.id, opPotId, rId);
+      //   if (!rId) this.deleteRs(this.clickNodeData.id)
+      // } else {
+      //   if (opPotId && rId) this.insertPotrs(this.clickNodeData.id, opPotId, rId);
+      // }
       //工序技能编辑
       if (this.clickNodeData.skillIds) {
         if (this.clickNodeData.skillIds != skillIds) this.updatePotSkill(this.clickNodeData.id, skillIds);
@@ -854,7 +849,7 @@ export class FlowchartComponent implements OnInit {
         if (skillIds) this.insertPotSkill(this.clickNodeData.id, skillIds);
 
       }
-      this.updateNodes(nodeId, nodeName, nodeType, opPotId, rId, skillIds);
+      this.updateNodes(nodeId, nodeName, nodeType, opPotId, skillIds);
       //第二步：保存工序迁移
       this.saveFlowpointTransfer(nodeId);
 
@@ -1291,7 +1286,7 @@ export class FlowchartComponent implements OnInit {
     })
   }
   //新增途程工序
-  insertNodes(nodeId, type, styId, opId, rId, skillIds) {
+  insertNodes(nodeId, type, styId, opId, skillIds) {
 
     this.httpService.getHttp("/csyspotstyle/" + styId).subscribe((data: any) => {
       //途程工序数据添加新增工序
@@ -1306,7 +1301,6 @@ export class FlowchartComponent implements OnInit {
           publicPotId: this.insertForm.value.addNodeName,
           op: opId,
           opName: this.opName,
-          resource: rId,
           skillIds: skillIds
         });
       } else {
@@ -1320,7 +1314,6 @@ export class FlowchartComponent implements OnInit {
           publicPotId: this.insertForm.value.addNodeName,
           op: opId,
           opName: this.opName,
-          resource: rId,
           skillIds: skillIds
         });
 
@@ -1349,25 +1342,25 @@ export class FlowchartComponent implements OnInit {
     });
   }
   //插入资源
-  insertPotrs(potid, opId, rId): void {
-    for (let index = 0; index < rId.length; index++) {
-      const element = rId[index];
-      let potrsData = {
-        "tResourcesId": element,
-        "csysPotId": potid,
-        "csysWorkflowId": this.workflowId,
-      }
-      this.httpService.postHttp("/potrs", potrsData).subscribe((data: any) => { });
+  // insertPotrs(potid, opId, rId): void {
+  //   for (let index = 0; index < rId.length; index++) {
+  //     const element = rId[index];
+  //     let potrsData = {
+  //       "tResourcesId": element,
+  //       "csysPotId": potid,
+  //       "csysWorkflowId": this.workflowId,
+  //     }
+  //     this.httpService.postHttp("/potrs", potrsData).subscribe((data: any) => { });
 
-      let oprsData = {
-        "tResourceId": element,
-        "opId": opId,
-        "csysPotId": potid,
-        "csysWorkflowId": this.workflowId,
-      }
-      this.httpService.postHttp("/oprs", oprsData).subscribe((data: any) => { });
-    }
-  }
+  //     let oprsData = {
+  //       "tResourceId": element,
+  //       "opId": opId,
+  //       "csysPotId": potid,
+  //       "csysWorkflowId": this.workflowId,
+  //     }
+  //     this.httpService.postHttp("/oprs", oprsData).subscribe((data: any) => { });
+  //   }
+  // }
   //插入工序技能
   insertPotSkill(potid, skillIds): void {
     for (let index = 0; index < skillIds.length; index++) {
@@ -1383,7 +1376,7 @@ export class FlowchartComponent implements OnInit {
 
 
   //修改途程工序
-  updateNodes(nodeId, nodeName, type, opid, rId, skillIds) {
+  updateNodes(nodeId, nodeName, type, opid, skillIds) {
     //途程工序数据添加新增工序
     for (const key in this.hierarchialGraph.nodes) {
       if (type == 0) {
@@ -1391,7 +1384,7 @@ export class FlowchartComponent implements OnInit {
           this.hierarchialGraph.nodes[key].label = nodeName;
           this.hierarchialGraph.nodes[key]["op"] = opid;
           this.hierarchialGraph.nodes[key]["opName"] = this.opName
-          this.hierarchialGraph.nodes[key]["resource"] = rId;
+          //this.hierarchialGraph.nodes[key]["resource"] = rId;
 
           break;
 
@@ -1402,7 +1395,7 @@ export class FlowchartComponent implements OnInit {
           this.hierarchialGraph.nodes[key].label = nodeName;
           this.hierarchialGraph.nodes[key]["op"] = opid;
           this.hierarchialGraph.nodes[key]["opName"] = this.opName
-          this.hierarchialGraph.nodes[key]["resource"] = rId;
+          //this.hierarchialGraph.nodes[key]["resource"] = rId;
           this.hierarchialGraph.nodes[key]["skillIds"] = skillIds;
           break;
         }
@@ -1431,54 +1424,54 @@ export class FlowchartComponent implements OnInit {
     })
   }
 
-  updateResource(potId, opId, rId): void {
-    /*
-     更新potrs
-     author:zeq
-     remark:这里同修改工序资源，因为可能存在多个资源的情况，所以先执行删除在执行新增
-     */
-    let dataSource = [];
-    let opDataSource = [];
-    this.httpService.postHttp("/potrs/condition").subscribe((data: any) => {
-      data = data.data
-      this.httpService.postHttp("/oprs/condition").subscribe((opdata: any) => {
-        opdata = opdata.data
-        //获取当前工序存在的oprs和potrs的id
-        for (let index = 0; index < data.length; index++) {
-          const element = data[index];
-          if (element.csysPotId == this.clickNodeData.id) {
-            dataSource.push(element.potRsId);
-          }
-        }
-        for (let index = 0; index < opdata.length; index++) {
-          const element = opdata[index];
-          if (element.csysPotId == this.clickNodeData.id) {
-            opDataSource.push(element.opRsId);
-          }
-        }
-        for (let index = 0; index < dataSource.length; index++) {
-          const element = dataSource[index];
-          this.httpService.deleteHttp("/potrs/" + element).subscribe((data: any) => {
-            //当全部删除的potrs执行完之后删除oprs最后再新增
-            if (index == dataSource.length - 1) {
-              //删除oprs
-              console.log("rs删除成功")
-              for (let i = 0; i < opDataSource.length; i++) {
-                const el = opDataSource[i];
-                this.httpService.deleteHttp("/oprs/" + el).subscribe((data: any) => {
-                  if (i == opDataSource.length - 1) {
-                    //执行完毕，重新添加数据
-                    console.log("oprs删除成功")
-                    this.insertPotrs(potId, opId, rId)
-                  }
-                })
-              }
-            }
-          })
-        }
-      })
-    })
-  }
+  // updateResource(potId, opId, rId): void {
+  //   /*
+  //    更新potrs
+  //    author:zeq
+  //    remark:这里同修改工序资源，因为可能存在多个资源的情况，所以先执行删除在执行新增
+  //    */
+  //   let dataSource = [];
+  //   let opDataSource = [];
+  //   this.httpService.postHttp("/potrs/condition").subscribe((data: any) => {
+  //     data = data.data
+  //     this.httpService.postHttp("/oprs/condition").subscribe((opdata: any) => {
+  //       opdata = opdata.data
+  //       //获取当前工序存在的oprs和potrs的id
+  //       for (let index = 0; index < data.length; index++) {
+  //         const element = data[index];
+  //         if (element.csysPotId == this.clickNodeData.id) {
+  //           dataSource.push(element.potRsId);
+  //         }
+  //       }
+  //       for (let index = 0; index < opdata.length; index++) {
+  //         const element = opdata[index];
+  //         if (element.csysPotId == this.clickNodeData.id) {
+  //           opDataSource.push(element.opRsId);
+  //         }
+  //       }
+  //       for (let index = 0; index < dataSource.length; index++) {
+  //         const element = dataSource[index];
+  //         this.httpService.deleteHttp("/potrs/" + element).subscribe((data: any) => {
+  //           //当全部删除的potrs执行完之后删除oprs最后再新增
+  //           if (index == dataSource.length - 1) {
+  //             //删除oprs
+  //             console.log("rs删除成功")
+  //             for (let i = 0; i < opDataSource.length; i++) {
+  //               const el = opDataSource[i];
+  //               this.httpService.deleteHttp("/oprs/" + el).subscribe((data: any) => {
+  //                 if (i == opDataSource.length - 1) {
+  //                   //执行完毕，重新添加数据
+  //                   console.log("oprs删除成功")
+  //                   this.insertPotrs(potId, opId, rId)
+  //                 }
+  //               })
+  //             }
+  //           }
+  //         })
+  //       }
+  //     })
+  //   })
+  // }
   updatePotSkill(potId, skillId): void {
     //先删除再新增
     let delSkillId = [];

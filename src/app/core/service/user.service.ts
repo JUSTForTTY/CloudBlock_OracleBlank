@@ -13,6 +13,9 @@ import { ReuseTabService } from '@delon/abc/reuse-tab';
 
 const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
 const server_name = environment.SERVER_NAME;
+const server_url = environment.SERVER_URL;
+const resource_url=environment.RESOURCE_SERVER_URL;
+const data_url=environment.DATA_SERVER_URL;
 
 @Injectable()
 export class UserService {
@@ -81,7 +84,7 @@ export class UserService {
     // Save JWT sent from server in localstorage
     this.jwtService.saveToken(server_name, user.csysUserAccessToken, user.csysUserRefreshToken);
 
-    this.jwtService.saveUserServerName(server_name);
+    this.jwtService.saveUserServerData(server_name,server_url,resource_url,data_url);
 
     this.cacheService.set('userdata' + server_name, user, { type: 's', expire: 24 * 60 * 60 });
 

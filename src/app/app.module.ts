@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GeneralPipe,FormControlService,HttpService, EventService,SetService, JwtService,LayoutService,PageService } from 'ngx-block-core';
-import { DecimalPipe,DatePipe } from '@angular/common';
+import { DecimalPipe,DatePipe,DeprecatedPercentPipe } from '@angular/common';
 import { UserService } from '@core';
 // #region default language
 // 参考：https://ng-alain.com/docs/i18n
@@ -116,7 +116,7 @@ import { LayoutModule } from './layout/layout.module';
     ...FORM_MODULES,
   ],
   providers: [
-    HttpService, EventService,UserService,LayoutService,JwtService, GeneralPipe,DecimalPipe,DatePipe, SetService, FormControlService,PageService,
+    HttpService, EventService,UserService,LayoutService,JwtService, GeneralPipe,DecimalPipe,DatePipe,DeprecatedPercentPipe, SetService, FormControlService,PageService,
     ...LANG_PROVIDES,
     ...INTERCEPTOR_PROVIDES,
     ...I18NSERVICE_PROVIDES,

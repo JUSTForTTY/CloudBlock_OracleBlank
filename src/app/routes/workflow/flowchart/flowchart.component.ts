@@ -27,7 +27,7 @@ export class FlowchartComponent implements OnInit {
   workflowId = "";
   targetNode = [1];
   workflowUrl = "/csysworkflow";
-  nodeUrl = "/csyspot";
+  nodeUrl = "csyspot";
   roleUrl = "/csysrole/listCondition";
   nodeTargertUrl = "/csyspot/condition";
   transferNodeUrl = "/csyspottrs";
@@ -49,6 +49,7 @@ export class FlowchartComponent implements OnInit {
   pageForm: FormGroup;
   editForm: FormGroup;
   timeForm: FormGroup;
+  madeForm: FormGroup;
   opForm: FormGroup;
   conditionForm: FormGroup;
   //目标工序数据，flag为标记（包含了insert：新增）
@@ -128,6 +129,7 @@ export class FlowchartComponent implements OnInit {
   center$: Subject<boolean> = new Subject();
 
   private nzTimer;
+  workflowName: any;
 
   constructor(private fb: FormBuilder, private router: Router, private msg: NzMessageService, private route: ActivatedRoute, private httpService: HttpService, private cacheService: CacheService) {
     //主题下拉框赋值
@@ -194,6 +196,7 @@ export class FlowchartComponent implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.workflowId = queryParams['workflowId'];
       this.workflowType = queryParams['workflowType'];
+      this.workflowName = queryParams['workflowName'];
     });
     if (this.workflowType == "inoperation") {
       this.nzLg = 24;
@@ -202,6 +205,8 @@ export class FlowchartComponent implements OnInit {
     this.getChartData();
     this.formInit();
     this.getOpData();
+    this.getNodeData();
+    this.getModeData();
     //this.getResource();
     //this.getSkill();
     this.getPointDescList();
@@ -323,24 +328,24 @@ export class FlowchartComponent implements OnInit {
     this.controlDeleteArray = [];
     //根据状态初始化对应表单
 
-      this.insertForm = this.fb.group({
-        opPot: [null],
-        potSkill: [null],
-        excrete: [false],
-        addNodeName: [null, [Validators.required]],
-        addNodeName1: [null, [Validators.required]],
-        addNodeName2: ["1", [Validators.required]],
-      })
-      this.editForm = this.fb.group({
-        id: [null, [Validators.required]],
-        nodeEditName: [null, [Validators.required]],
-        addNodeName2: [null],
-        excrete: [false],
-        opPot: [null],
-        potSkill: [null],
-        rule: [null]
-      })
-    
+    this.insertForm = this.fb.group({
+      opPot: [null],
+      potSkill: [null],
+      excrete: [false],
+      addNodeName: [null, [Validators.required]],
+      addNodeName1: [null, [Validators.required]],
+      addNodeName2: ["1", [Validators.required]],
+    })
+    this.editForm = this.fb.group({
+      id: [null, [Validators.required]],
+      nodeEditName: [null, [Validators.required]],
+      addNodeName2: [null],
+      excrete: [false],
+      opPot: [null],
+      potSkill: [null],
+      rule: [null]
+    })
+
     this.pageForm = this.fb.group({
       pageId: ["", [Validators.required]]
     })
@@ -423,9 +428,9 @@ export class FlowchartComponent implements OnInit {
 
         potdata.data[0].csysTrsRuleId = null;
       }
-      if(potdata.data[0].csysPotIsExcrete == 1){
+      if (potdata.data[0].csysPotIsExcrete == 1) {
         potdata.data[0].csysPotIsExcrete = true;
-      }else{
+      } else {
         potdata.data[0].csysPotIsExcrete = false;
       }
       //初始化
@@ -438,7 +443,7 @@ export class FlowchartComponent implements OnInit {
         resource: [data.resource],
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
-        excrete:[potdata.data[0].csysPotIsExcrete]
+        excrete: [potdata.data[0].csysPotIsExcrete]
         // nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -808,7 +813,7 @@ export class FlowchartComponent implements OnInit {
     let isExcrete = this.editForm.value.excrete;
     console.log('nodeRule', this.editForm)
     if (isExcrete) isExcrete = 1; else isExcrete = 0;
-    console.log("isExcrete",isExcrete); 
+    console.log("isExcrete", isExcrete);
     let params = {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
@@ -816,7 +821,7 @@ export class FlowchartComponent implements OnInit {
       "csysTrsRuleId": nodeRule,
       "csysPotIsExcrete": isExcrete
     };
-    console.log("put1",JSON.parse(JSON.stringify(params)))
+    console.log("put1", JSON.parse(JSON.stringify(params)))
     //第一步：修改工序信息
     this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
       /**
@@ -3071,11 +3076,12 @@ export class FlowchartComponent implements OnInit {
   }
   //取消
   timeCancel(): void {
-    console.log("表单打印", this.timeForm)
-    this.timeVisible = false;
+    if(!this.shiftTime){
+      this.timeVisible = false;
+    }else{
+      this.shiftTime = false;
+    } 
     this.timeSpin = false;
-    this.shiftTime = false;
-    console.log(this.timeType)
     this.initTimeForm();
   }
   //确定
@@ -3157,6 +3163,7 @@ export class FlowchartComponent implements OnInit {
     if (!item) {
       let insertData = {
         "csysWorkflowId": this.workflowId,
+        "csysWorkflowName": this.workflowName,
         "csysPotCurrentId": this.timeForm.value.potCurrentName,
         "csysPotPointId": this.timeForm.value.potPointName,
         "csysPotCurrentName": currentName,
@@ -3176,6 +3183,7 @@ export class FlowchartComponent implements OnInit {
       let insertData = {
         "csysPotConTimeId": this.editTimeId,
         "csysWorkflowId": this.workflowId,
+        "csysWorkflowName": this.workflowName,
         "csysPotCurrentId": this.timeForm.value.potCurrentName,
         "csysPotPointId": this.timeForm.value.potPointName,
         "csysPotCurrentName": currentName,
@@ -3200,6 +3208,8 @@ export class FlowchartComponent implements OnInit {
       potPointName: [item.csysPotPointId, [Validators.required]],
       potLeastTime: [item.csysPotLeastTime, [Validators.required]],
       potLongestTime: [item.csysPotLongestTime, [Validators.required]],
+      potTimeType: ["min"],
+      potTimeType1: ["min"],
       potConTimeDesc: [item.csysPotConTimeDesc]
     })
     this.editTimeId = item.csysPotConTimeId;
@@ -3217,5 +3227,307 @@ export class FlowchartComponent implements OnInit {
     })
   }
   timeType = "min"
+  madeVisible = false;
+  madeType = false;
+  madeSetting(): void {
+    this.madeType = false;
+    this.madeVisible = true;
+    this.getModeData();
+  }
+  madeCancel(): void {
+    
+    if (!this.shiftMade) { 
+      this.madeVisible = false;
+    } else {
+      this.shiftMade = false;     
+     }
+     this.initMadeForm();
+     this.madeOkLoading = false;
+  }
+  madeOk(): void {
+    this.madeOkLoading = true;
+    if (!this.madeType) {
+      console.log("打印测试")
+      this.insertMadeData()
+    } else {
+      this.editMadeData();
+    }
+  }
+  nodeData = [];
+  getNodeData(): void {
+    this.nodeData = []
+    console.log("nodeData223")
+    this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      data = data.data;
+      //去除头尾节点
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        if (element.csysPotType != "2" && element.csysPotType != "3" && element.csysPotType != "")
+          this.nodeData.push(element);
+      }
+      console.log("nodeData", this.nodeData)
+    })
+
+  }
+  getModeData(): void {
+    this.httpService.postHttp("csyspotconfirst/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      this.confisrtData = data.data;
+    })
+  }
+  confisrtData;
+  shiftMade = false;
+  firstData = [];
+  madeOkLoading = false;
+  initMadeForm(): void {
+    this.madeForm = this.fb.group({
+      potCurrentName: [null, [Validators.required]],
+      potPointName: [null, [Validators.required]],
+      potConFirstIsShift: [true, [Validators.required]],
+      firstSetting: [null, [Validators.required]],
+      potConTimeDesc: [null]
+    })
+  }
+  insertMade(): void {
+    this.initMadeForm();
+    this.shiftMade = true;
+  }
+
+  get potCurrentName() { return this.madeForm.value.potCurrentName }
+  get potPointName() { return this.madeForm.value.potPointName }
+  get potConFirstIsShift() { return this.madeForm.value.potConFirstIsShift }
+  get firstSetting() { return this.madeForm.value.firstSetting }
+  get potConTimeDesc() { return this.madeForm.value.potConTimeDesc }
+
+  checkModeChange(): void {
+    let formData = {
+      "firstSetting": null
+    }
+    this.madeForm.patchValue(formData);
+    this.madeForm.updateValueAndValidity();
+    this.firstData = [];
+    if (this.potCurrentName && this.potPointName) {
+      let cint = [];
+      //取到区间值
+      for (const key in this.nodeData) {
+        if (this.nodeData[key].csysPotId == this.potCurrentName) {
+          cint[0] = this.nodeData[key].csysPotSort;
+          break;
+        }
+      }
+      for (const key in this.nodeData) {
+        if (this.nodeData[key].csysPotId == this.potPointName) {
+          cint[1] = this.nodeData[key].csysPotSort;
+          break;
+        }
+      }
+      //判断起始工序和目标工序的顺序
+      if (cint[0] > cint[1]) {
+        this.msg.error("起始工序不能大于目标工序!")
+        return;
+      }
+      //将区间值取出
+      for (let index = 0; index < this.nodeData.length; index++) {
+        const element = this.nodeData[index];
+        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort) {
+          this.firstData.push(element)
+        }
+      }
+      console.log("区间测试", this.firstData)
+    }
+  }
+
+  insertMadeData(): void {
+    let cname;
+    let pname;
+    //取节点值
+    for (const key in this.nodeData) {
+      if (this.nodeData[key].csysPotId == this.potCurrentName) {
+        cname = this.nodeData[key].csysPotName;
+        break;
+      }
+    }
+    for (const key in this.nodeData) {
+      if (this.nodeData[key].csysPotId == this.potPointName) {
+        pname = this.nodeData[key].csysPotName;
+        break;
+      }
+    }
+    //新增数据
+    let insertData = {
+      "csysWorkflowId": this.workflowId,
+      "csysWorkflowName": this.workflowName,
+      "csysPotCurrentId": this.potCurrentName,
+      "csysPotCurrentName": cname,
+      "csysPotPointId": this.potPointName,
+      "csysPotPointName": pname,
+      "csysPotConFirstDesc": this.potConTimeDesc
+    }
+    console.log("insertData", insertData)
+    this.httpService.postHttp("csyspotconfirst", insertData).subscribe((data: any) => {
+      //更新首件
+      for (let index = 0; index < this.firstSetting.length; index++) {
+        const element = this.firstSetting[index];
+        let uData = {
+          "csysPotId": element,
+          "csysPotIsFirstPiece": 1
+        }
+        this.httpService.putHttp("csyspot", uData).subscribe((data1: any) => {
+        })
+      }
+      //更新自制段
+      for (let index = 0; index < this.firstData.length; index++) {
+        const element = this.firstData[index];
+        let uData = {
+          "csysPotId": element.csysPotId,
+          "csysPotConFirstId": data.data
+        }
+        this.httpService.putHttp("csyspot", uData).subscribe((data2: any) => {
+          if (index == this.firstData.length - 1) {
+            this.shiftMade = false;
+            this.madeOkLoading = false;
+            this.getModeData();
+          }
+
+        })
+      }
+    })
+  }
+  editFirstId;
+  editMadeInit(item): void {
+    this.madeType = true;
+    this.editFirstId = item.csysPotConFirstId;
+    //需要拿到原来工序上的首件，并且重新调获取首件源数据的方法
+    let firstdata = [];
+    this.madeForm = this.fb.group({
+      potCurrentName: [item.csysPotCurrentId, [Validators.required]],
+      potPointName: [item.csysPotPointId, [Validators.required]],
+      potConFirstIsShift: [item.potConFirstIsShift, [Validators.required]],
+      potConTimeDesc: [item.csysPotConFirstDesc]
+    })
+    this.checkModeChange();
+    this.httpService.postHttp("csyspot/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      data = data.data
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        if (element.csysPotIsFirstPiece == 1) {
+          firstdata.push(element.csysPotId)
+        }
+      }
+      //重新表单赋值
+      if (item.potConFirstIsShift == 0) {
+        item.potConFirstIsShift = false;
+      } else {
+        item.potConFirstIsShift = true;
+      }
+      this.madeForm = this.fb.group({
+        potCurrentName: [item.csysPotCurrentId, [Validators.required]],
+        potPointName: [item.csysPotPointId, [Validators.required]],
+        potConFirstIsShift: [item.potConFirstIsShift, [Validators.required]],
+        firstSetting: [firstdata, [Validators.required]],
+        potConTimeDesc: [item.csysPotConFirstDesc]
+      })
+      this.shiftMade = true;
+
+    })
+  }
+  //编辑首件
+  editMadeData(): void {
+    //更新原来数据
+    let cname;
+    let pname;
+    //取节点值
+    for (const key in this.nodeData) {
+      if (this.nodeData[key].csysPotId == this.potCurrentName) {
+        cname = this.nodeData[key].csysPotName;
+        break;
+      }
+    }
+    for (const key in this.nodeData) {
+      if (this.nodeData[key].csysPotId == this.potPointName) {
+        pname = this.nodeData[key].csysPotName;
+        break;
+      }
+    }
+    let insertData = {
+      "csysPotConFirstId": this.editFirstId,
+      "csysPotCurrentId": this.potCurrentName,
+      "csysPotCurrentName": cname,
+      "csysPotPointId": this.potPointName,
+      "csysPotPointName": pname,
+      "csysPotConFirstDesc": this.potConTimeDesc
+    }
+    console.log("testcofirst", this.editFirstId)
+    this.httpService.putHttp("csyspotconfirst", insertData).subscribe((data1: any) => { })
+    //先清除pot表中的制成段id，再重新更新一遍
+    //先清除这个途程下pot表的首件选择，为0，重新根据控件值来赋值
+    this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": this.editFirstId }).subscribe((data: any) => {
+      data = data.data;
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        let pdata = {
+          "csysPotId": element.csysPotId,
+          "csysPotIsFirstPiece": 0,
+          "csysPotConFirstId": ""
+        }
+        this.httpService.putHttp(this.nodeUrl, pdata).subscribe((data1: any) => {
+          if (index == data.length - 1) {
+            console.log("this.firstSetting", this.firstSetting)
+            //更新首件
+            for (let index2 = 0; index2 < this.firstSetting.length; index2++) {
+              const element = this.firstSetting[index2];
+              let uData = {
+                "csysPotId": element,
+                "csysPotIsFirstPiece": 1
+              }
+              console.log("uData", uData);
+              this.httpService.putHttp("csyspot", uData).subscribe((data1: any) => {
+              })
+            }
+            //更新自制段
+            for (let index1 = 0; index1 < this.firstData.length; index1++) {
+              const element = this.firstData[index1];
+              let uData = {
+                "csysPotId": element.csysPotId,
+                "csysPotConFirstId": this.editFirstId
+              }
+              console.log("uData检查", uData)
+              this.httpService.putHttp("csyspot", uData).subscribe((data2: any) => {
+                //返回列表，关闭按钮旋转
+                if (index1 == this.firstData.length - 1) {
+                  this.shiftMade = false;
+                  this.madeOkLoading = false;
+                  this.getModeData();
+                }
+              })
+            }
+          }
+        })
+      }
+    })
+  }
+  //删除首件制成段
+  deleteMadeData(item): void {
+    let deleteData = {
+      "csysPotConFirstId": item,
+      "csysPotConFirstIsDelete": "1"
+    }
+    this.httpService.putHttp("csyspotconfirst", deleteData).subscribe((data2: any) => {
+      this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": item.conFirstId }).subscribe((data: any) => {
+        data = data.data;
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index];
+          let pdata = {
+            "csysPotId": element.csysPotId,
+            "csysPotIsFirstPiece": 0,
+            "csysPotConFirstId": ""
+          }
+          this.httpService.putHttp(this.nodeUrl, pdata).subscribe((data1: any) => {
+          })
+        }
+        this.msg.success("删除成功！")
+        this.getModeData();
+      })
+    })
+  }
 }
 

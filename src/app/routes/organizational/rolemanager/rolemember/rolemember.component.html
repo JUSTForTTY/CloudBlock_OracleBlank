@@ -177,7 +177,7 @@
     <nz-form-item>
       <nz-form-label nzSpan="5" nzFor="position" [nzOffset]="2" nzRequired>用户组</nz-form-label>
       <nz-form-control nzSpan="10" [nzValidateStatus]="addUserForm.get('position')">
-        <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择用户组" formControlName="position">
+        <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择用户组" formControlName="position" [nzMaxMultipleCount]="1">
           <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.csysRoleName" [nzValue]="option.csysRoleId">
           </nz-option>
         </nz-select>

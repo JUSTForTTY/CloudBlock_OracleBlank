@@ -332,6 +332,7 @@ export class Myflow2Component implements OnInit {
     let queryParams = {};
     queryParams['workflowId'] = item.csysWorkflowId;
     queryParams['workflowType'] = this.workflowType1;
+    queryParams['workflowName'] = item.csysWorkflowName;
     this.router.navigate(['/workflow/flowchart/'], {
       queryParams
     });

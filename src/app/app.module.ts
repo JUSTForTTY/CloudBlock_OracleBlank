@@ -2,11 +2,9 @@ import { NgModule, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { GeneralPipe,FormControlService,HttpService, EventService,SetService, JwtService,LayoutService,PageService } from 'ngx-block-core';
 import { DecimalPipe,DatePipe,DeprecatedPercentPipe } from '@angular/common';
 import { UserService } from '@core';
-
 // #region default language
 // 参考：https://ng-alain.com/docs/i18n
 import { default as ngLang } from '@angular/common/locales/zh';

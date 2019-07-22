@@ -3,7 +3,7 @@
 
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
     <!-- <nz-affix [nzTarget]="target"> -->
-    <nz-card nzTitle="途程" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate"
+    <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate"
       [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
 
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
@@ -22,12 +22,8 @@
 
 
           <ng-template #nodeTemplate let-node>
-
-
             <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
               [tooltipTitle]="node.label">
-
-
               <!-- 矩形构造  *ngIf="node.style.csysPotStyleDesc == '矩形'" -->
               <ng-container *ngIf="node.shape == 'rect'||node.shape == '矩形'">
 
@@ -88,6 +84,8 @@
       <a (click)="styleSetting()">风格设置</a>
       <nz-divider nzType="vertical"></nz-divider>
       <a (click)="timeManger()">时间管控</a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <a (click)="madeSetting()">制成段设置</a>
     </ng-template>
   </div>
 
@@ -189,8 +187,7 @@
           <nz-form-item>
             <nz-form-label nzXs="24" nzSm="7" nzRequired>是否拆件</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-switch formControlName="excrete" nzCheckedChildren="开"
-              nzUnCheckedChildren="关"></nz-switch>
+              <nz-switch formControlName="excrete" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
             </nz-form-control>
           </nz-form-item>
 
@@ -358,11 +355,10 @@
               <nz-form-item>
                 <nz-form-label nzXs="24" nzSm="7" nzRequired>是否拆件</nz-form-label>
                 <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                  <nz-switch formControlName="excrete" nzCheckedChildren="是"
-                  nzUnCheckedChildren="否"></nz-switch>
+                  <nz-switch formControlName="excrete" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
                 </nz-form-control>
               </nz-form-item>
-    
+
               <ng-container *ngIf="formEditEnabled">
                 <nz-form-item>
                   <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
@@ -772,8 +768,8 @@
     </nz-form-item>
   </form>
 </nz-modal> -->
-<nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible" nzTitle="回流设置"
-  (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()">
+<nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible"
+  nzTitle="回流设置" (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()">
   <nz-spin [nzSpinning]="timeSpin">
     <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>
@@ -783,8 +779,8 @@
       <nz-table #basicTable nzPageSize=5 [nzData]="timeData">
         <thead>
           <tr>
-            <th>当前节点</th>
-            <th>目标节点</th>
+            <th>起始工序</th>
+            <th>目标工序</th>
             <th>最短时间/分</th>
             <th>最长时间/分</th>
             <th>描述</th>
@@ -813,9 +809,9 @@
         <div nz-col nzSpan="16">
           <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始节点</nz-form-label>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始节点">
+                <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始工序">
                   <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
                     [nzLabel]="timedata.label">
                   </nz-option>
@@ -823,9 +819,9 @@
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标节点</nz-form-label>
+              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="16">
-                <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标节点">
+                <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标工序">
                   <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
                     [nzLabel]="timedata.label">
                   </nz-option>
@@ -834,7 +830,7 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">最短时间</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="16">               
+              <nz-form-control [nzSm]="14" [nzXs]="16">
                 <nz-input-group nzCompact>
                   <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
                   </nz-input-number>
@@ -870,4 +866,86 @@
       </div>
     </ng-container>
   </nz-spin>
+</nz-modal>
+<!-- 制成段 -->
+<nz-modal [(nzVisible)]="madeVisible" nzTitle="首件制成段" nzWidth="50%" (nzOnCancel)="madeCancel()" (nzOnOk)="madeOk()"  [nzOkLoading]="madeOkLoading">
+  <ng-container *ngIf="!shiftMade">
+    <button nz-button (click)="insertMade()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+      <i class="anticon anticon-plus"></i>
+      <span>添加</span>
+    </button>
+    <nz-table #basicTable nzPageSize=5 [nzData]="confisrtData">
+      <thead>
+        <tr>
+          <th>起始工序</th>
+          <th>目标工序</th>
+          <th>开启版次</th>
+          <th>描述</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.csysPotCurrentName }}</td>
+          <td>{{ data.csysPotPointName }}</td>
+          <td>{{ data.csysPotConFirstIsShift }}</td>
+          <td>{{ data.csysPotConFirstDesc }}</td>
+          <td>
+            <a (click)="editMadeInit(data)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="deleteMadeData(data.csysPotConFirstId)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-container>
+  <ng-container *ngIf="shiftMade">
+    <form nz-form [formGroup]="madeForm" (ngSubmit)="_saveConfigure()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始工序"
+            (ngModelChange)="checkModeChange()">
+            <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
+              [nzLabel]="madedata.csysPotName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="16">
+          <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标工序"
+            (ngModelChange)="checkModeChange()">
+            <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
+              [nzLabel]="madedata.csysPotName">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">开启班次</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="16">
+          <nz-switch formControlName="potConFirstIsShift" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">首件选择</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="16">
+          <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" style="width: 100%" nzMode="multiple"
+            nzPlaceHolder="请选择首件" formControlName="firstSetting">
+            <nz-option *ngFor="let option of firstData" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potConTimeDesc">描述</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="16">
+          <input nz-input placeholder="描述" formControlName="potConTimeDesc">
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
 </nz-modal>

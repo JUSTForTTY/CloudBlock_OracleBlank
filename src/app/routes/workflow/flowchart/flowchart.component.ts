@@ -3082,7 +3082,7 @@ export class FlowchartComponent implements OnInit {
       this.shiftTime = false;
     } 
     this.timeSpin = false;
-    this.initTimeForm();
+    this.initTimeForm(); 
   }
   //确定
   timeOk(): void {

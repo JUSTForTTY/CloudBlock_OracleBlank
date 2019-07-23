@@ -356,7 +356,6 @@ export class FlowchartComponent implements OnInit {
 
 
 
-
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.workType = data.data[0].csysWorkflowType;
     })

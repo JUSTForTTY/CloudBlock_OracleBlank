@@ -572,7 +572,6 @@
       </div>
     </nz-modal>
     <ng-template #extraTemplate1>
-
     </ng-template>
   </div>
 
@@ -725,7 +724,7 @@
 </nz-modal>
 <!-- 新增制程段 -->
 <nz-modal [(nzVisible)]="opVisible" nzWidth="40%" [nzTitle]="opListTitle" [nzFooter]="modalFooter1"
-  (nzOnCancel)="opCancel()">
+  (nzOnCancel)="opCancel()" >
   <ng-container *ngIf="opDiv == 'list'">
     <button nz-button (click)="insertOp()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>

@@ -9,14 +9,13 @@ import { CacheService } from '@delon/cache';
 import { MenuService } from '@delon/theme';
 import { ACLService } from '@delon/acl';
 import { ReuseTabService } from '@delon/abc/reuse-tab';
-import { of as observableOf } from 'rxjs';
 
 
 const aclhttpurl = "" + environment.SERVER_URL + "/csysuserrole/condition";
 const server_name = environment.SERVER_NAME;
 const server_url = environment.SERVER_URL;
-const resource_url = environment.RESOURCE_SERVER_URL;
-const data_url = environment.DATA_SERVER_URL;
+const resource_url=environment.RESOURCE_SERVER_URL;
+const data_url=environment.DATA_SERVER_URL;
 
 @Injectable()
 export class UserService {
@@ -53,11 +52,11 @@ export class UserService {
             if (data.data.length > 0) {
 
               console.log("存在用户，无需重新登录", data.data);
-
+              
               //清空reuseTabService;
 
               this.reuseTabService.clear();
-
+              
               this.setAuth(data.data[0])
 
               this.loadMenu(data.data[0]).subscribe(
@@ -78,20 +77,20 @@ export class UserService {
     } else {
       // Remove any potential remnants of previous auth states
       this.purgeAuth();
-    }
+    } 
   }
 
   setAuth(user) {
     // Save JWT sent from server in localstorage
     this.jwtService.saveToken(server_name, user.csysUserAccessToken, user.csysUserRefreshToken);
 
-    this.jwtService.saveUserServerData(server_name, server_url, resource_url, data_url);
+    this.jwtService.saveUserServerData(server_name,server_url,resource_url,data_url);
 
     this.cacheService.set('userdata' + server_name, user, { type: 's', expire: 24 * 60 * 60 });
 
   }
 
-  purgeAuth() {
+  purgeAuth() { 
     console.log("清空token");
     // Remove JWT from localstorage
     this.jwtService.destroyToken(server_name);
@@ -135,63 +134,9 @@ export class UserService {
       return this.httpService.postHttpAllUrl(this.cyhttp + '/csysmenuauthview/tree', aclparams)
         .pipe(map(
           data => {
+
+
             let menuData = data.data;
-
-            const myObservable = observableOf(1);
-            const addPage = {
-              next: x => {
-                this.httpService.postHttpAllUrl(this.cyhttp + '/csyssimplepage/condition', { csysPageType: 1 }).subscribe(
-                  (pagedata: any) => {
-                    let pageData=[]
-                    console.log("内置页面-未组装数据加载完毕2", pagedata, JSON.stringify(pagedata));
-                    pagedata.data.forEach(element => {
-
-                      pageData.push(
-                        {
-                          text: element['csysPageName'],
-                          link: element['csysPageRouthPath'],
-                        }
-                      )
-                      console.log("link",element['csysPageRouthPath'])
-                    });
-                    menuData.push(
-                      {
-                        text: '内置页面',
-                        group:true,
-                        hide: true,
-                        children:pageData
-                      }
-                    )
-                    console.log("菜单数据",menuData)
-
-                    this.menuService.add([
-                      {
-                        text: 'MES智能制造系统',
-                        group: true,
-                        children: menuData
-                      }]);
-                    console.log("菜单数据23", this.menuService, this.menuService.menus)
-
-
-
-                    // this.menuService.add([
-                    //   {
-                    //     text: '内置页面',
-                    //     group: true,
-                    //     children: pageData
-                    //   }]);
-
-
-
-                  });
-
-              },
-            };
-
-
-
-
-            
             menuData.forEach(element => {
               if (element.children.length > 0) {
 
@@ -221,10 +166,12 @@ export class UserService {
               icon: 'fa fa-home',
               link: '/default/workplace',
             });
-
-
-
-            myObservable.subscribe(addPage);
+            this.menuService.add([
+              {
+                text: 'MES智能制造系统',
+                group: true,
+                children: menuData
+              }]);
 
             return true;
           }

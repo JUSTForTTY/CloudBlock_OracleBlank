@@ -96,6 +96,7 @@ export class FlowchartComponent implements OnInit {
   layout = "";
   nodeEditName = "";
   workFlowData: object;
+  workType;
   symbol = ['=', '>=', '>', '<=', '<', 'like'];
   checkChartName;
   targetNodeList1 = [];
@@ -204,7 +205,7 @@ export class FlowchartComponent implements OnInit {
     }
     this.getChartData();
     this.formInit();
-    this.getOpData();
+    // this.getOpData();
     this.getNodeData();
     this.getModeData();
     //this.getResource();
@@ -307,7 +308,9 @@ export class FlowchartComponent implements OnInit {
 
     }, 1000)
 
-
+    this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      this.workType = data.data[0].csysWorkflowType;
+    })
 
 
 
@@ -329,7 +332,7 @@ export class FlowchartComponent implements OnInit {
     //根据状态初始化对应表单
 
     this.insertForm = this.fb.group({
-      opPot: [null],
+      opPot: [null, [Validators.required]],
       potSkill: [null],
       excrete: [false],
       addNodeName: [null, [Validators.required]],
@@ -341,7 +344,7 @@ export class FlowchartComponent implements OnInit {
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
       excrete: [false],
-      opPot: [null],
+      opPot: [null, [Validators.required]],
       potSkill: [null],
       rule: [null]
     })
@@ -407,6 +410,7 @@ export class FlowchartComponent implements OnInit {
   //工序点击事件
   clickNode(data) {
 
+    console.log("测试", this.timeVisible);
 
     console.log("点击数据", data)
 
@@ -439,7 +443,7 @@ export class FlowchartComponent implements OnInit {
         id: [data.id, [Validators.required]],
         nodeEditName: [data.label, [Validators.required]],
         addNodeName2: [potdata.data[0].csysPotType],
-        opPot: [data.op],
+        opPot: [data.op, [Validators.required]],
         resource: [data.resource],
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
@@ -2299,7 +2303,7 @@ export class FlowchartComponent implements OnInit {
       addNodeName1: [null, [Validators.required]],
       addNodeName2: ["1", [Validators.required]],
       excrete: [false],
-      opPot: [null],
+      opPot: [null, [Validators.required]],
       resource: [null],
       potSkill: [null],
 
@@ -2310,7 +2314,7 @@ export class FlowchartComponent implements OnInit {
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
       excrete: [false],
-      opPot: [null],
+      opPot: [null, [Validators.required]],
       resource: [null],
       potSkill: [null],
       rule: [null]
@@ -2703,12 +2707,14 @@ export class FlowchartComponent implements OnInit {
   //获取工序组
   getOpData() {
     this.opData = [];
-    let opparam = {
-      csysWorkflowId: this.workflowId
+    if (this.workflowType == "operation") {
+      let opparam = {
+        csysWorkflowId: this.workflowId
+      }
+      this.httpService.postHttp("/op/condition", opparam).subscribe((data: any) => {
+        this.opData = data.data;
+      })
     }
-    this.httpService.postHttp("/op/condition", opparam).subscribe((data: any) => {
-      this.opData = data.data;
-    })
   }
   //获取当前点击工序组名称
 
@@ -2744,10 +2750,7 @@ export class FlowchartComponent implements OnInit {
     })
 
   }
-  //获取工序组列表
-  getOpList(): void {
 
-  }
   initOpForm(): void {
     this.httpService.getHttp("/csysworkflow/" + this.workflowId).subscribe((data: any) => {
       this.opForm = this.fb.group({
@@ -2766,7 +2769,10 @@ export class FlowchartComponent implements OnInit {
   opListTitle = "工序组列表";
   editOpId = "";
   opList(): void {
-    this.opVisible = true;
+    if (this.workflowType == "operation") {
+      this.opVisible = true;
+      this.getOpData();
+    }
   }
   //
   opCancel(): void {
@@ -2806,8 +2812,9 @@ export class FlowchartComponent implements OnInit {
     let opdata = {
       "opCode": this.opForm.value.opcode,
       "opDesc": this.opForm.value.opdesc,
+      "opType": this.workType,
       "csysWorkflowId": this.opForm.value.workflowid,
-      "csysWorkflowName": this.opForm.value.workflowname
+      "csysWorkflowName": this.opForm.value.workflowname,
     }
     console.log("opData", opdata);
     this.httpService.postHttp("/op", opdata).subscribe((data: any) => {
@@ -2816,6 +2823,7 @@ export class FlowchartComponent implements OnInit {
         this.isOpLoding = false;
         this.initOpForm();
         this.getOpData();
+        this.opDiv = "list";
       } else {
         this.msg.error("请稍后再试");
         this.isOpLoding = false;
@@ -2845,8 +2853,6 @@ export class FlowchartComponent implements OnInit {
       "opCode": this.opForm.value.opcode,
       "opDesc": this.opForm.value.opdesc,
       //"opControl": this.opForm.value.opcontrol,
-      "csysWorkflowId": this.opForm.value.workflowid,
-      "csysWorkflowName": this.opForm.value.workflowname
     }
     this.httpService.putHttp("/op", opdata).subscribe((data: any) => {
       if (data.code == 200) {
@@ -2855,6 +2861,7 @@ export class FlowchartComponent implements OnInit {
         this.opDiv = "list";
         this.initOpForm();
         this.getOpData();
+        this.opDiv = "list";
       } else {
         this.msg.error("请稍后再试");
         this.isOpLoding = false;
@@ -3012,7 +3019,6 @@ export class FlowchartComponent implements OnInit {
 
 
           ruleDataCurrent.forEach(currentElement => {
-
             let conditionData = {
               "csysWorkflowId": this.workflowId,
               "csysPotTrsId": transferId,
@@ -3058,7 +3064,7 @@ export class FlowchartComponent implements OnInit {
   timeVisible = false
   //打开事件管控窗口
   timeManger(): void {
-    if (!this.formEditStatus) {
+    if (this.workflowType == "operation") {
       console.log("测试log", this.hierarchialGraph.nodes)
       this.getTimeMage();
       this.timeVisible = true;
@@ -3068,6 +3074,7 @@ export class FlowchartComponent implements OnInit {
   timeSpin = false;
   shiftTime = false;
   status = false;
+  timeLoading = false;
   getTimeMage(): void {
     this.httpService.postHttp("csyspotcontime/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.timeData = data.data;
@@ -3076,13 +3083,14 @@ export class FlowchartComponent implements OnInit {
   }
   //取消
   timeCancel(): void {
-    if(!this.shiftTime){
+    if (!this.shiftTime) {
       this.timeVisible = false;
-    }else{
+    } else {
       this.shiftTime = false;
-    } 
+    }
     this.timeSpin = false;
-    this.initTimeForm(); 
+    this.timeLoading = false;
+    this.initTimeForm();
   }
   //确定
   timeOk(): void {
@@ -3111,6 +3119,7 @@ export class FlowchartComponent implements OnInit {
     })
   }
   insertTimeMag(item): void {
+    this.timeLoading = true;
     //检验为空
     for (const i in this.timeForm.controls) {
       this.timeForm.controls[i].markAsDirty();
@@ -3177,6 +3186,7 @@ export class FlowchartComponent implements OnInit {
         this.shiftTime = false;
         this.getTimeMage();
         this.msg.success("创建成功");
+        this.timeLoading = false;
       })
     } else {
       //编辑
@@ -3196,6 +3206,7 @@ export class FlowchartComponent implements OnInit {
         this.initTimeForm();
         this.shiftTime = false;
         this.getTimeMage();
+        this.timeLoading = false;
         this.msg.success("创建成功");
       })
     }
@@ -3230,21 +3241,40 @@ export class FlowchartComponent implements OnInit {
   madeVisible = false;
   madeType = false;
   madeSetting(): void {
-    this.madeType = false;
-    this.madeVisible = true;
-    this.getModeData();
+    if (this.workflowType == "operation") {
+      this.madeType = false;
+      this.madeVisible = true;
+      this.getModeData();
+    }
   }
   madeCancel(): void {
-    
-    if (!this.shiftMade) { 
+
+    if (!this.shiftMade) {
       this.madeVisible = false;
     } else {
-      this.shiftMade = false;     
-     }
-     this.initMadeForm();
-     this.madeOkLoading = false;
+      this.shiftMade = false;
+    }
+    this.initMadeForm();
+    this.madeOkLoading = false;
+
   }
   madeOk(): void {
+    if (!this.shiftMade) {
+      this.initMadeForm();
+      this.madeVisible = false;
+      return;
+    }
+    for (const i in this.madeForm.controls) {
+      this.madeForm.controls[i].markAsDirty();
+      this.madeForm.controls[i].updateValueAndValidity();
+    }
+    if (this.madeForm.controls.potCurrentName.invalid) return;
+    if (this.madeForm.controls.potPointName.invalid) return;
+    if (this.madeForm.controls.firstSetting.invalid) return;
+    if (this.subStatu) {
+      this.msg.error("起始工序不能大于目标工序!");
+      return;
+    }
     this.madeOkLoading = true;
     if (!this.madeType) {
       console.log("打印测试")
@@ -3298,6 +3328,7 @@ export class FlowchartComponent implements OnInit {
   get firstSetting() { return this.madeForm.value.firstSetting }
   get potConTimeDesc() { return this.madeForm.value.potConTimeDesc }
 
+  subStatu = false;
   checkModeChange(): void {
     let formData = {
       "firstSetting": null
@@ -3323,8 +3354,10 @@ export class FlowchartComponent implements OnInit {
       //判断起始工序和目标工序的顺序
       if (cint[0] > cint[1]) {
         this.msg.error("起始工序不能大于目标工序!")
+        this.subStatu = true;
         return;
       }
+      this.subStatu = false;
       //将区间值取出
       for (let index = 0; index < this.nodeData.length; index++) {
         const element = this.nodeData[index];

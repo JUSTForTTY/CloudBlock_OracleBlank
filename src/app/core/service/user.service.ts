@@ -77,7 +77,7 @@ export class UserService {
     } else {
       // Remove any potential remnants of previous auth states
       this.purgeAuth();
-    }
+    } 
   }
 
   setAuth(user) {
@@ -90,7 +90,7 @@ export class UserService {
 
   }
 
-  purgeAuth() {
+  purgeAuth() { 
     console.log("清空token");
     // Remove JWT from localstorage
     this.jwtService.destroyToken(server_name);

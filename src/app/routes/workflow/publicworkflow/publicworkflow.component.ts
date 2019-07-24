@@ -48,6 +48,7 @@ export class PublicworkflowComponent implements OnInit {
     this.init();
     this.getPageData();
     this.getPageGroup();
+    this.getDataGroup()
     // this.getResource();
   }
 
@@ -56,6 +57,7 @@ export class PublicworkflowComponent implements OnInit {
       workFlowName: [null, [Validators.required]],
       workFlowStyle: [null, [Validators.required]],
       workFlowGroup: [null, [Validators.required]],
+      workDataGroup: [null],
       workFlowPage: [null],
       workFlowResource: [null],
       workFlowDesc: [null],
@@ -120,6 +122,7 @@ export class PublicworkflowComponent implements OnInit {
     this.getResource();
     this.getPageData();
     this.getFlowStyle();
+    this.getDataGroup();
     this.isVisible = true;
   }
 
@@ -136,7 +139,8 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotPublicName": this.form.controls.workFlowName.value,
       "csysPotPublicDesc": this.form.controls.workFlowDesc.value,
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
-      "csysPotGroupId": this.form.controls.workFlowGroup.value
+      "csysPotGroupId": this.form.controls.workFlowGroup.value,
+      "csysPotDataGroup": this.form.controls.workDataGroup.value,
     }
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
       if (wdata.data.length > 0) {
@@ -206,12 +210,17 @@ export class PublicworkflowComponent implements OnInit {
             console.log("pageDatal", potPage);
           }
           data = data.data;
+          console.log("datag", data.csysPotDataGroup);
+          if(!data.csysPotDataGroup){
+            data.csysPotDataGroup = null
+          }
           this.PublicName = data.csysPotPublicName;
           this.form = this.fb.group({
             workFlowName: [data.csysPotPublicName, [Validators.required]],
             workFlowDesc: [data.csysPotPublicDesc, []],
             workFlowStyle: [data.csysPotStyleId, [Validators.required]],
             workFlowGroup: [data.csysPotGroupId, [Validators.required]],
+            workDataGroup: [data.csysPotDataGroup],
             workFlowResource: [potrs],
             workFlowPage: [potPage]
           });
@@ -230,13 +239,18 @@ export class PublicworkflowComponent implements OnInit {
     }
     if (this.form.controls.workFlowName.invalid) return;
     this.isOkLoading = true;
+    console.log("datags",this.form.controls.workDataGroup.value);
+    if(!this.form.value.workDataGroup){
+      this.form.value.workDataGroup = ""
+    }
     //新写入数据
     let params = {
       "csysPotPublicId": this.cySysFlowpointPublicId,
       "csysPotPublicName": this.form.controls.workFlowName.value,
       "csysPotPublicDesc": this.form.controls.workFlowDesc.value,
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
-      "csysPotGroupId": this.form.controls.workFlowGroup.value
+      "csysPotGroupId": this.form.controls.workFlowGroup.value,
+      "csysPotDataGroup": this.form.value.workDataGroup
     }
     //console.log("123", params);
     //编辑保存途程
@@ -579,6 +593,12 @@ export class PublicworkflowComponent implements OnInit {
       }
       console.log("test1a", this.groupData);
     })
+  }
+  dataGroup;
+  getDataGroup():void{
+    this.httpService.postHttp("csyscodemaster/condition",{ "csysCodemasterType": "data_group"}).subscribe((data1: any) => {
+      this.dataGroup = data1.data
+      })
   }
 }
 

@@ -9,8 +9,8 @@
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
         <ngx-graph class="chart-container" [layout]="layout"
           [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight,'margin-left':'-25px','width':'400px'}"
-          [view]="view" [center$]="center$" minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false  
-          [legend]="showLegend" [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
+          [view]="view" [center$]="center$" minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false [legend]="showLegend"
+          [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
           [nodes]="hierarchialGraph.nodes" [curve]="curve" (select)="clickNode($event)">
 
           <ng-template #defsTemplate>
@@ -98,11 +98,11 @@
         <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
           <!-- <nz-form-item>
             <nz-form-control nzXs="24" nzSm="24" nzMd="24"> -->
-              <!-- 非必须的属性 折叠-->
-              <!-- <nz-collapse [nzBordered]="false">
+          <!-- 非必须的属性 折叠-->
+          <!-- <nz-collapse [nzBordered]="false">
                 <nz-collapse-panel nzHeader="多功能选择"> -->
-                  <!-- 工序资源暂且隐藏不需要 -->
-                  <!-- <nz-form-item>
+          <!-- 工序资源暂且隐藏不需要 -->
+          <!-- <nz-form-item>
                     <nz-form-label nzXs="24" nzSm="7" nzFor="resource">资源选择</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <nz-select style="width: 100%" formControlName="resource" [nzSize]="size" nzMode="tags"
@@ -112,7 +112,7 @@
                       </nz-select>
                     </nz-form-control>
                   </nz-form-item> -->
-                  <!-- <nz-form-item>
+          <!-- <nz-form-item>
                     <nz-form-label nzXs="24" nzSm="7" nzFor="resource">技能选择</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <nz-select style="width: 100%" formControlName="potSkill" [nzSize]="size" nzMode="tags"
@@ -140,7 +140,22 @@
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="opPot">工序组</nz-form-label>
+            <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">节点属性</nz-form-label>
+            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+              <nz-select nzPlaceHolder="请选择节点属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
+                <nz-option nzLabel="组结束点" nzValue="8">
+
+                </nz-option>
+              </nz-select>
+              <!-- <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
+                  <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                  <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                  <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>
+                </nz-select> -->
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序组</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
               <nz-select nzPlaceHolder="请选择工序组" formControlName="opPot" nzShowSearch nzAllowClear
                 (ngModelChange)="opChange($event)">
@@ -296,12 +311,12 @@
               </nz-form-item>
               <!-- <nz-form-item>
                 <nz-form-control nzXs="24" nzSm="24" nzMd="24"> -->
-                  <!-- 非必须的属性 折叠-->
-                  <!-- <nz-collapse [nzBordered]="false">
+              <!-- 非必须的属性 折叠-->
+              <!-- <nz-collapse [nzBordered]="false">
                     <nz-collapse-panel nzHeader="多功能选择"> -->
 
-                      <!-- 工序资源暂且隐藏不需要 -->
-                      <!-- <nz-form-item>
+              <!-- 工序资源暂且隐藏不需要 -->
+              <!-- <nz-form-item>
                       <nz-form-label nzXs="24" nzSm="7" nzFor="resource">资源选择</nz-form-label>
                       <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                         <nz-select style="width: 100%" formControlName="resource" [nzSize]="size" nzMode="tags"
@@ -311,7 +326,7 @@
                         </nz-select>
                       </nz-form-control>
                     </nz-form-item> -->
-                      <!-- <nz-form-item>
+              <!-- <nz-form-item>
                         <nz-form-label nzXs="24" nzSm="7" nzFor="resource">技能选择</nz-form-label>
                         <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                           <nz-select style="width: 100%" formControlName="potSkill" [nzSize]="size" nzMode="tags"
@@ -326,7 +341,16 @@
                 </nz-form-control>
               </nz-form-item> -->
               <nz-form-item>
-                <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="opPot">工序组</nz-form-label>
+                <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">节点属性</nz-form-label>
+                <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                  <nz-select nzPlaceHolder="请选择节点属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
+                    <nz-option nzLabel="组结束点" nzValue="8">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序组</nz-form-label>
                 <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                   <nz-select nzPlaceHolder="请选择工序" formControlName="opPot" nzShowSearch nzAllowClear
                     (ngModelChange)="opChange($event)">
@@ -533,7 +557,7 @@
       </div>
     </nz-modal>
     <ng-template #extraTemplate1>
-      
+
     </ng-template>
   </div>
 
@@ -661,7 +685,7 @@
 </nz-modal>
 <!-- 新增工序组 -->
 <nz-modal [(nzVisible)]="opVisible" nzWidth="40%" [nzTitle]="opListTitle" [nzFooter]="modalFooter1"
-  (nzOnCancel)="opCancel()" >
+  (nzOnCancel)="opCancel()">
   <ng-container *ngIf="opDiv == 'list'">
     <button nz-button (click)="insertOp()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>
@@ -708,9 +732,11 @@
           <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">工序组代码</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-              <nz-input-group [nzPrefix]="prefixUser">
-                <input nz-input placeholder="请输入工序组代码" formControlName="opcode">
-              </nz-input-group>
+              <nz-select formControlName="opcode" nzAllowClear nzPlaceHolder="请输入工序组代码">
+                <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
+                  [nzLabel]="opgroupdata.csysCodemasterDesc">
+                </nz-option>
+              </nz-select>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
@@ -768,7 +794,7 @@
   </form>
 </nz-modal> -->
 <nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible"
-  nzTitle="回流设置" (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()" [nzOkLoading]="timeLoading">
+  nzTitle="时间管控" (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()" [nzOkLoading]="timeLoading">
   <nz-spin [nzSpinning]="timeSpin">
     <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>
@@ -867,7 +893,8 @@
   </nz-spin>
 </nz-modal>
 <!-- 制程段 -->
-<nz-modal [(nzVisible)]="madeVisible" nzTitle="首件制程段" nzWidth="50%" (nzOnCancel)="madeCancel()" (nzOnOk)="madeOk()"  [nzOkLoading]="madeOkLoading">
+<nz-modal [(nzVisible)]="madeVisible" nzTitle="首件制程段" nzWidth="50%" (nzOnCancel)="madeCancel()" (nzOnOk)="madeOk()"
+  [nzOkLoading]="madeOkLoading">
   <ng-container *ngIf="!shiftMade">
     <button nz-button (click)="insertMade()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>

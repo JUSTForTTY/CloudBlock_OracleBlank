@@ -332,7 +332,8 @@ export class FlowchartComponent implements OnInit {
     //根据状态初始化对应表单
 
     this.insertForm = this.fb.group({
-      opPot: [null, [Validators.required]],
+      opPot: [null],
+      potAttribute: [null],
       potSkill: [null],
       excrete: [false],
       addNodeName: [null, [Validators.required]],
@@ -344,7 +345,8 @@ export class FlowchartComponent implements OnInit {
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
       excrete: [false],
-      opPot: [null, [Validators.required]],
+      opPot: [null],
+      potAttribute: [null],
       potSkill: [null],
       rule: [null]
     })
@@ -443,7 +445,8 @@ export class FlowchartComponent implements OnInit {
         id: [data.id, [Validators.required]],
         nodeEditName: [data.label, [Validators.required]],
         addNodeName2: [potdata.data[0].csysPotType],
-        opPot: [data.op, [Validators.required]],
+        potAttribute: [potdata.data[0].csysPotAtrribute],
+        opPot: [data.op],
         resource: [data.resource],
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
@@ -714,12 +717,13 @@ export class FlowchartComponent implements OnInit {
       //查询节点主规则
       this.httpService.postHttp("/csystrsrule/condition", ruleparam).subscribe((ruleData: any) => {
         let params = {};
-        console.log("规则数据", ruleData)
+        console.log("规则数据attribute", this.insertForm.value.potAttribute)
         if (ruleData.data.length > 0) {
           params = {
             "csysPotPublicId": this.insertForm.value.addNodeName,
             "csysPotName": this.insertForm.value.addNodeName1,
             "csysPotType": this.insertForm.value.addNodeName2,
+            "csysPotAtrribute":this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
@@ -731,6 +735,7 @@ export class FlowchartComponent implements OnInit {
             "csysPotPublicId": this.insertForm.value.addNodeName,
             "csysPotName": this.insertForm.value.addNodeName1,
             "csysPotType": this.insertForm.value.addNodeName2,
+            "csysPotAtrribute":this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
@@ -822,6 +827,7 @@ export class FlowchartComponent implements OnInit {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
       "csysPotType": nodeType,
+      "csysPotAtrribute":this.editForm.value.potAttribute,
       "csysTrsRuleId": nodeRule,
       "csysPotIsExcrete": isExcrete
     };
@@ -1339,10 +1345,12 @@ export class FlowchartComponent implements OnInit {
   }
   //插入工序组权限
   insertOpPot(potid, opId) {
+    
     let opPotData = {
       "opId": opId,
       "csysPotId": potid,
-      "csysWorkflowId": this.workflowId
+      "csysWorkflowId": this.workflowId,
+      "opCode":this.opName
     }
     console.log("opPotData", opPotData);
 
@@ -2303,7 +2311,8 @@ export class FlowchartComponent implements OnInit {
       addNodeName1: [null, [Validators.required]],
       addNodeName2: ["1", [Validators.required]],
       excrete: [false],
-      opPot: [null, [Validators.required]],
+      opPot: [null],
+      potAttribute: [null],
       resource: [null],
       potSkill: [null],
 
@@ -2314,7 +2323,8 @@ export class FlowchartComponent implements OnInit {
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
       excrete: [false],
-      opPot: [null, [Validators.required]],
+      opPot: [null],
+      potAttribute: [null],
       resource: [null],
       potSkill: [null],
       rule: [null]
@@ -2717,7 +2727,6 @@ export class FlowchartComponent implements OnInit {
     }
   }
   //获取当前点击工序组名称
-
   opChange(event) {
     for (let index = 0; index < this.opData.length; index++) {
       const element = this.opData[index];
@@ -2772,6 +2781,7 @@ export class FlowchartComponent implements OnInit {
     if (this.workflowType == "operation") {
       this.opVisible = true;
       this.getOpData();
+      this.getOpGroup();
     }
   }
   //
@@ -2783,6 +2793,10 @@ export class FlowchartComponent implements OnInit {
     this.initOpForm();
   }
   opOk(): void {
+    if(this.opDiv == 'list'){
+      this.opVisible = false;
+      return;
+    }
     if (this.opListTitle == "工序组列表") {
       this.opVisible = false;
       this.initOpForm();
@@ -3094,6 +3108,10 @@ export class FlowchartComponent implements OnInit {
   }
   //确定
   timeOk(): void {
+    if(!this.shiftTime){
+      this.timeVisible = false;
+      return;
+    }
     if (!this.status) {
       //新增
       this.insertTimeMag(false);
@@ -3560,6 +3578,13 @@ export class FlowchartComponent implements OnInit {
         this.msg.success("删除成功！")
         this.getModeData();
       })
+    })
+  }
+  opGroup
+  //获取usercodemaster表中的工序组数据
+  getOpGroup():void{
+    this.httpService.postHttp("csyscodemaster/condition",{ "csysCodemasterType": "op_group"}).subscribe((data1: any) => {
+    this.opGroup = data1.data
     })
   }
 }

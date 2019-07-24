@@ -212,7 +212,7 @@ export class PublicworkflowComponent implements OnInit {
           data = data.data;
           console.log("datag", data.csysPotDataGroup);
           if(!data.csysPotDataGroup){
-            data.csysPotDataGroup = null
+            data.csysPotDataGroup = null 
           }
           this.PublicName = data.csysPotPublicName;
           this.form = this.fb.group({

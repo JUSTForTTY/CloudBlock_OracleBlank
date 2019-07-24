@@ -3579,7 +3579,7 @@ export class FlowchartComponent implements OnInit {
         this.getModeData();
       })
     })
-  }
+  } 
   opGroup
   //获取usercodemaster表中的工序组数据
   getOpGroup():void{

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { RouteRoutingModule } from './routes-routing.module';
 // dashboard pages
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardWorkplaceComponent } from './workplace/workplace.component';
 // passport pages
 import { UserLoginComponent } from './passport/login/login.component';
@@ -18,10 +17,10 @@ import { IndexComponent } from './index/index.component';
 import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
 
 
+
 @NgModule({
     imports: [ SharedModule, RouteRoutingModule ],
     declarations: [
-        DashboardComponent,
         DashboardWorkplaceComponent,
         // passport pages
         UserLoginComponent,
@@ -33,7 +32,7 @@ import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
         Exception404Component,
         Exception500Component,
         IndexComponent,
-        AuthLoginComponent
+        AuthLoginComponent,
      
     ]
 })

@@ -6,7 +6,6 @@ import { LayoutDefaultComponent } from '../layout/default/default.component';
 import { LayoutFullScreenComponent } from '../layout/fullscreen/fullscreen.component';
 import { LayoutPassportComponent } from '../layout/passport/passport.component';
 // dashboard pages
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardWorkplaceComponent } from './workplace/workplace.component';
 
 // passport pages
@@ -61,6 +60,7 @@ const routes: Routes = [
         component: LayoutFullScreenComponent,
         children: [
             { path: 'default/pages', loadChildren: './pages/pages.module#PagesModule' },
+            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },

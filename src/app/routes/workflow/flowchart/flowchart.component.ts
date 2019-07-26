@@ -723,7 +723,7 @@ export class FlowchartComponent implements OnInit {
             "csysPotPublicId": this.insertForm.value.addNodeName,
             "csysPotName": this.insertForm.value.addNodeName1,
             "csysPotType": this.insertForm.value.addNodeName2,
-            "csysPotAtrribute":this.insertForm.value.potAttribute,
+            "csysPotAtrribute": this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
@@ -735,7 +735,7 @@ export class FlowchartComponent implements OnInit {
             "csysPotPublicId": this.insertForm.value.addNodeName,
             "csysPotName": this.insertForm.value.addNodeName1,
             "csysPotType": this.insertForm.value.addNodeName2,
-            "csysPotAtrribute":this.insertForm.value.potAttribute,
+            "csysPotAtrribute": this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
             "csysPotGroupId": data1.data.csysPotGroupId,
@@ -827,7 +827,7 @@ export class FlowchartComponent implements OnInit {
       "csysPotId": nodeId,
       "csysPotName": nodeName,//工序名称
       "csysPotType": nodeType,
-      "csysPotAtrribute":this.editForm.value.potAttribute,
+      "csysPotAtrribute": this.editForm.value.potAttribute,
       "csysTrsRuleId": nodeRule,
       "csysPotIsExcrete": isExcrete
     };
@@ -1345,12 +1345,12 @@ export class FlowchartComponent implements OnInit {
   }
   //插入工序组权限
   insertOpPot(potid, opId) {
-    
+
     let opPotData = {
       "opId": opId,
       "csysPotId": potid,
       "csysWorkflowId": this.workflowId,
-      "opCode":this.opName
+      "opCode": this.opName
     }
     console.log("opPotData", opPotData);
 
@@ -2793,7 +2793,7 @@ export class FlowchartComponent implements OnInit {
     this.initOpForm();
   }
   opOk(): void {
-    if(this.opDiv == 'list'){
+    if (this.opDiv == 'list') {
       this.opVisible = false;
       return;
     }
@@ -3108,7 +3108,7 @@ export class FlowchartComponent implements OnInit {
   }
   //确定
   timeOk(): void {
-    if(!this.shiftTime){
+    if (!this.shiftTime) {
       this.timeVisible = false;
       return;
     }
@@ -3149,17 +3149,6 @@ export class FlowchartComponent implements OnInit {
     //判读其中一个必须有值
     console.log("1123", this.timeForm.value.potLeastTime);
     console.log("1123", this.timeForm.value.potLongestTime);
-    if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
-      this.msg.error("必须输入一个时间!")
-      return;
-    } else {
-      if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
-        if (this.timeForm.value.potLeastTime >= this.timeForm.value.potLongestTime) {
-          this.msg.error("最短时间必须小于最长时间!")
-          return;
-        }
-      }
-    }
     //进行时间计算
     if (this.timeForm.value.potLeastTime) {
       if (this.timeForm.value.potTimeType == "h") {
@@ -3171,6 +3160,18 @@ export class FlowchartComponent implements OnInit {
         this.timeForm.value.potLongestTime = this.timeForm.value.potLongestTime * 60
       }
     }
+    if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
+      this.msg.error("必须输入一个时间!")
+      return;
+    } else {
+      if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
+        if (this.timeForm.value.potLeastTime >= this.timeForm.value.potLongestTime) {
+          this.msg.error("最短时间必须小于最长时间!")
+          return;
+        }
+      }
+    }
+
     this.timeSpin = true;
     let currentName;
     let pointName;
@@ -3379,7 +3380,7 @@ export class FlowchartComponent implements OnInit {
       //将区间值取出
       for (let index = 0; index < this.nodeData.length; index++) {
         const element = this.nodeData[index];
-        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort) {
+        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && element.csysPotSort !="") {
           this.firstData.push(element)
         }
       }
@@ -3579,12 +3580,12 @@ export class FlowchartComponent implements OnInit {
         this.getModeData();
       })
     })
-  } 
+  }
   opGroup
   //获取usercodemaster表中的工序组数据
-  getOpGroup():void{
-    this.httpService.postHttp("csyscodemaster/condition",{ "csysCodemasterType": "op_group"}).subscribe((data1: any) => {
-    this.opGroup = data1.data
+  getOpGroup(): void {
+    this.httpService.postHttp("csyscodemaster/condition", { "csysCodemasterType": "op_group" }).subscribe((data1: any) => {
+      this.opGroup = data1.data
     })
   }
 }

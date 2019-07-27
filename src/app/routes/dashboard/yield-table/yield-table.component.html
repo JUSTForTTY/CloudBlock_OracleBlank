@@ -1,0 +1,28 @@
+ 
+<nz-table   #borderedTable nzBordered  nzShowPagination=false [nzTitle]="Header" [nzData]="dataSet">
+    <thead>
+      <tr>
+        <th>项目</th>
+        <th>产线</th>
+        <th>工单</th>
+        <th>产品</th>
+        <th>直通率</th>
+      </tr>
+    </thead>
+    <tbody style="background:#101638;color:#ffffff">
+      <tr *ngFor="let data of borderedTable.data">
+        <td>{{ data.name }}</td>
+        <td>{{ data.age }}</td>
+        <td>{{ data.address }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <ng-template #Header>
+      <div style="background:#101638;color:#1e91de;font-size: 18px">
+        <i nz-icon nzType="double-right" nzTheme="outline"></i>
+        良率数据看板
+        <small class="text-sm font-weight-normal">共8条生产线</small>
+      </div>
+  
+    </ng-template>

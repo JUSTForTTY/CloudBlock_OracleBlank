@@ -8,9 +8,12 @@ import { ColorPickerModule } from 'ngx-color-picker';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { YieldDashboardComponent } from './yield-dashboard/yield-dashboard.component';
+import { YieldTableComponent } from './yield-table/yield-table.component';
+import { YieldBarlineComponent } from './yield-barline/yield-barline.component';
+import { YieldGaugeComponent } from './yield-gauge/yield-gauge.component';
 
 @NgModule({
-  declarations: [YieldDashboardComponent],
+  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

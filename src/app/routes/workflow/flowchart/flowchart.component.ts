@@ -3496,7 +3496,7 @@ export class FlowchartComponent implements OnInit {
         firstSetting: [firstdata, [Validators.required]],
         potConTimeDesc: [item.csysPotConFirstDesc]
       })
-      this.shiftMade = true;
+      this.shiftMade = true; 
 
     })
   }

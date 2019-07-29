@@ -17,7 +17,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   dataSetTable = [];
   dataSetGauge = [];
 
-  pageSize = 4;
+  pageSize = 8;
   constructor(private httpService: HttpService) {
     this.timer = setTimeout(this.setData, 0);
   }
@@ -27,6 +27,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       clearTimeout(this.timer);
     }
     this.getYieldData();
+    this.getYieldAllData();
 
     this.timer = setTimeout(this.setData, 10000);
   }
@@ -40,7 +41,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
     let bodyData = {
       "tableColumn": [],
-      "tableName": "T_TEST001",
+      "tableName": "",
       "pageSize": this.pageSize,
       "nowPage": this.currentPageSize,
       "tableSort": [],
@@ -55,12 +56,11 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
       this.dataSetGauge = [];
       let datahandle = data.data.list;
-      this.dataSet = datahandle;
       datahandle.forEach(element => {
 
-        element.value = element.FLAG1;
+        element.value = element.FLAG1*10;
         this.dataSetGauge.push([element]);
- 
+
       });
 
       if (data.data.list.length < this.pageSize) {
@@ -80,6 +80,30 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       }
 
 
+
+    });
+
+  }
+  getYieldAllData() {
+
+    let bodyData = {
+      "tableColumn": [],
+      "tableName": "",
+      "pageSize": 0,
+      "nowPage": 0,
+      "tableSort": [],
+      "searchMap": {},
+      "deleteFlag": [{ "name": "T_TEST001_FLAG", "value": "0" }], "engineMap": {}
+    }
+
+    console.log("报表数据-body", bodyData);
+
+    this.httpService.postHttp("/yieldDashboard/tableData", bodyData).subscribe((data: any) => {
+
+
+      this.dataSet = data.data.list;
+
+      console.log("所有数据",data.data.list)
 
     });
 

@@ -50,7 +50,7 @@ const color = ['#0086FA', '#FFBF00', '#F5222D'];
 })
 export class YieldGaugeComponent implements OnInit {
   forceFit: boolean = true;
-  height = 400;
+  height = 300;
   @Input() data = [
     {value:9}
   ];
@@ -102,12 +102,12 @@ export class YieldGaugeComponent implements OnInit {
  
   ngOnInit() {
 
-    this.arcGuide2End=[this.data[0].value*10, 0.945];
+    this.arcGuide2End=[this.data[0].value, 0.945];
 
     this.htmlGuideHtml = `
     <div style="width: 300px;text-align: center;">
       <p style="font-size: 20px;color: #ffffff;margin: 0;">合格率</p>
-      <p style="font-size: 36px;color: #ffffff;margin: 0;">${Math.ceil(this.data[0].value * 100)}%</p>
+      <p style="font-size: 36px;color: #ffffff;margin: 0;">${Math.ceil(this.data[0].value * 10)}%</p>
     </div>
   `;
     console.log("初始化数据",this.data)

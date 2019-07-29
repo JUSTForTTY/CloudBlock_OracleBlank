@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {  registerShape } from 'viser-ng';
+import { Component, Input, OnInit } from '@angular/core';
+import { registerShape } from 'viser-ng';
 
 registerShape('point', 'pointer', {
   draw(cfg, container) {
@@ -51,8 +51,8 @@ const color = ['#0086FA', '#FFBF00', '#F5222D'];
 export class YieldGaugeComponent implements OnInit {
   forceFit: boolean = true;
   height = 400;
-  data = [
-    { value: 5.6 }
+  @Input() data = [
+    {value:9}
   ];
   scale = scale;
 
@@ -82,86 +82,35 @@ export class YieldGaugeComponent implements OnInit {
     lineWidth: 18,
   };
 
-  arcGuideLowStart = [0, 0.945];
-  arcGuideLowEnd = [Math.max(0, Math.min(3, this.data[0].value)), 0.945];
-  arcGuideLowStyle = {
-    stroke: color[0],
-    lineWidth: 18,
-  };
-  arcGuideMidStart = [3, 0.945];
-  arcGuideMidEnd = [Math.max(3, Math.min(6, this.data[0].value)), 0.945];
-  arcGuideMidStyle = {
-    stroke: color[1],
-    lineWidth: 18,
-  };
-  arcGuideHighStart = [6, 0.945];
-  arcGuideHighEnd = [Math.max(6, Math.min(9, this.data[0].value)), 0.945];
-  arcGuideHighStyle = {
-    stroke: color[2],
+  arcGuide2Start = [0, 0.945];
+  arcGuide2End = [];
+  arcGuide2Style = {
+    stroke: '#1890FF',
     lineWidth: 18,
   };
 
   htmlGuidePosition = ['50%', '95%'];
-  htmlGuideHtml = `
-    <div style="width: 300px;text-align: center;">
-      <p style="font-size: 20px;color: #545454;margin: 0;">合格率</p>
-      <p style="font-size: 36px;color: #545454;margin: 0;">${Math.ceil(this.data[0].value * 10)}%</p>
-    </div>
-  `;
+  htmlGuideHtml = ""
 
   timer: any;
   trend: 'up' | 'down' = 'up';
 
-  theme=require('assets/js/chartstheme.js');
-  constructor() { 
-    this.timer = setTimeout(this.setData, 0);
+  theme = require('assets/js/chartstheme.js');
+  constructor() {
   }
 
-
-  setData = () => {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
-    const delta = Math.random();
-    const prevVal = this.data[0].value;
-    if (this.trend === 'up') {
-      const nextVal = prevVal + delta;
-      if (nextVal > 9) {
-        this.trend = 'down';
-      } else {
-        this.data = [{ value: nextVal }];
-        this.arcGuideLowEnd = [Math.max(0, Math.min(3, nextVal)), 0.945];
-        this.arcGuideMidEnd = [Math.max(3, Math.min(6, nextVal)), 0.945];
-        this.arcGuideHighEnd = [Math.max(6, Math.min(9, nextVal)), 0.945];
-        this.htmlGuideHtml = `
-          <div style="width: 300px;text-align: center;">
-            <p style="font-size: 20px;color: #545454;margin: 0;">合格率</p>
-            <p style="font-size: 36px;color: #545454;margin: 0;">${Math.ceil(nextVal * 10)}%</p>
-          </div>
-        `;
-      }
-    } else {
-      const nextVal = prevVal - delta;
-      if (nextVal < 0) {
-        this.trend = 'up';
-      } else {
-        this.data = [{ value: nextVal }];
-        this.arcGuideLowEnd = [Math.max(0, Math.min(3, nextVal)), 0.945];
-        this.arcGuideMidEnd = [Math.max(3, Math.min(6, nextVal)), 0.945];
-        this.arcGuideHighEnd = [Math.max(6, Math.min(9, nextVal)), 0.945];
-        this.htmlGuideHtml = `
-          <div style="width: 300px;text-align: center;">
-            <p style="font-size: 20px;color: #545454;margin: 0;">合格率</p>
-            <p style="font-size: 36px;color: #545454;margin: 0;">${Math.ceil(nextVal * 10)}%</p>
-          </div>
-        `;
-      }
-    }
-
-    this.timer = setTimeout(this.setData, 200);
-  }
+ 
   ngOnInit() {
+
+    this.arcGuide2End=[this.data[0].value*10, 0.945];
+
+    this.htmlGuideHtml = `
+    <div style="width: 300px;text-align: center;">
+      <p style="font-size: 20px;color: #ffffff;margin: 0;">合格率</p>
+      <p style="font-size: 36px;color: #ffffff;margin: 0;">${Math.ceil(this.data[0].value * 100)}%</p>
+    </div>
+  `;
+    console.log("初始化数据",this.data)
   }
 
 }

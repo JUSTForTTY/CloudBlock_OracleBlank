@@ -7,9 +7,9 @@
     </div>
 
   </ng-template>
-  <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale" [theme]="theme">
+  <v-chart [forceFit]="forceFit" [height]="height" [data]="dataSet" [scale]="scale" [theme]="theme">
     <v-tooltip></v-tooltip>
     <v-axis></v-axis>
-    <v-bar position="year*sales"></v-bar>
+    <v-bar position="PRO_LINE_CODE*FLAG1"></v-bar>
   </v-chart>
 </nz-card>

@@ -3320,7 +3320,17 @@ export class FlowchartComponent implements OnInit {
   }
   getModeData(): void {
     this.httpService.postHttp("csyspotconfirst/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+
+      for (let index = 0; index < data.data.length; index++) {
+        const element = data.data[index];
+        if (element.csysPotConFirstIsShift == 1)
+          data.data[index]["csysPotConFirstName"] = "是";
+        else
+          data.data[index]["csysPotConFirstName"] = "否";
+      }
+
       this.confisrtData = data.data;
+      console.log("confisrtData", this.confisrtData)
     })
   }
   confisrtData;
@@ -3380,7 +3390,7 @@ export class FlowchartComponent implements OnInit {
       //将区间值取出
       for (let index = 0; index < this.nodeData.length; index++) {
         const element = this.nodeData[index];
-        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && element.csysPotSort !="") {
+        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && element.csysPotSort != "") {
           this.firstData.push(element)
         }
       }
@@ -3391,6 +3401,7 @@ export class FlowchartComponent implements OnInit {
   insertMadeData(): void {
     let cname;
     let pname;
+    let openMade = 1;
     //取节点值
     for (const key in this.nodeData) {
       if (this.nodeData[key].csysPotId == this.potCurrentName) {
@@ -3405,6 +3416,10 @@ export class FlowchartComponent implements OnInit {
       }
     }
     //新增数据
+    if (!this.potConFirstIsShift) {
+      openMade = 0;
+    }
+    console.log("potConFirstIsShift",this.potConFirstIsShift)
     let insertData = {
       "csysWorkflowId": this.workflowId,
       "csysWorkflowName": this.workflowName,
@@ -3412,7 +3427,8 @@ export class FlowchartComponent implements OnInit {
       "csysPotCurrentName": cname,
       "csysPotPointId": this.potPointName,
       "csysPotPointName": pname,
-      "csysPotConFirstDesc": this.potConTimeDesc
+      "csysPotConFirstDesc": this.potConTimeDesc,
+      "csysPotConFirstIsShift": openMade
     }
     console.log("insertData", insertData)
     this.httpService.postHttp("csyspotconfirst", insertData).subscribe((data: any) => {
@@ -3448,6 +3464,7 @@ export class FlowchartComponent implements OnInit {
   editMadeInit(item): void {
     this.madeType = true;
     this.editFirstId = item.csysPotConFirstId;
+    let firstPiece;
     //需要拿到原来工序上的首件，并且重新调获取首件源数据的方法
     let firstdata = [];
     this.madeForm = this.fb.group({
@@ -3466,15 +3483,16 @@ export class FlowchartComponent implements OnInit {
         }
       }
       //重新表单赋值
-      if (item.potConFirstIsShift == 0) {
-        item.potConFirstIsShift = false;
+      if (item.csysPotConFirstIsShift == 0) {
+        firstPiece = false;
       } else {
-        item.potConFirstIsShift = true;
+        firstPiece = true;
       }
+      console.log("数值检查1",item.csysPotConFirstIsShift)
       this.madeForm = this.fb.group({
         potCurrentName: [item.csysPotCurrentId, [Validators.required]],
         potPointName: [item.csysPotPointId, [Validators.required]],
-        potConFirstIsShift: [item.potConFirstIsShift, [Validators.required]],
+        potConFirstIsShift: [firstPiece, [Validators.required]],
         firstSetting: [firstdata, [Validators.required]],
         potConTimeDesc: [item.csysPotConFirstDesc]
       })
@@ -3487,6 +3505,7 @@ export class FlowchartComponent implements OnInit {
     //更新原来数据
     let cname;
     let pname;
+    let openMade = 1;
     //取节点值
     for (const key in this.nodeData) {
       if (this.nodeData[key].csysPotId == this.potCurrentName) {
@@ -3500,13 +3519,17 @@ export class FlowchartComponent implements OnInit {
         break;
       }
     }
+    if (!this.potConFirstIsShift) {
+      openMade = 0;
+    }
     let insertData = {
       "csysPotConFirstId": this.editFirstId,
       "csysPotCurrentId": this.potCurrentName,
       "csysPotCurrentName": cname,
       "csysPotPointId": this.potPointName,
       "csysPotPointName": pname,
-      "csysPotConFirstDesc": this.potConTimeDesc
+      "csysPotConFirstDesc": this.potConTimeDesc,
+      "csysPotConFirstIsShift": openMade
     }
     console.log("testcofirst", this.editFirstId)
     this.httpService.putHttp("csyspotconfirst", insertData).subscribe((data1: any) => { })

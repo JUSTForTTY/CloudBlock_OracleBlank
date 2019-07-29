@@ -161,6 +161,15 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowGroup">工序报表组</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-select formControlName="workDataGroup" nzAllowClear nzShowSearch nzPlaceHolder="请选择工序报表组">
+            <nz-option *ngFor="let item of dataGroup" [nzValue]="item.csysCodemasterCode" [nzLabel]="item.csysCodemasterDesc">
+            </nz-option>
+          </nz-select> 
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowPage">工序页面组</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24">
         <nz-select formControlName="workFlowPage" nzAllowClear nzShowSearch nzPlaceHolder="请选择工序页面 ">

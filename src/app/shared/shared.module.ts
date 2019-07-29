@@ -19,6 +19,10 @@ import { NgxTinymceModule } from 'ngx-tinymce';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { DndModule } from 'ngx-drag-drop';
 
+//
+ 
+import { ViserModule } from 'viser-ng';
+
 const THIRDMODULES = [
   NgZorroAntdModule,
   CountdownModule,
@@ -45,6 +49,7 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
+    ViserModule,
     // third libs
     ...THIRDMODULES,
   ],
@@ -63,6 +68,7 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
+    ViserModule,
     // i18n
     TranslateModule,
     // third libs

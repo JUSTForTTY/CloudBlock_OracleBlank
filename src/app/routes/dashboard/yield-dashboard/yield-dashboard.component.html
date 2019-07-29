@@ -1,0 +1,22 @@
+<div class="chartContainer">
+  <p style="color:#1e91de;text-align: center;font-size: 26px;"> 产线直通率看板</p>
+
+  <app-yield-table [dataSet]="dataSetTable"></app-yield-table>
+
+
+  <div nz-row [nzGutter]="24">
+    <ng-container *ngFor="let data of dataSetGauge;let i=index">
+      <div nz-col nzXs="24" nzSm="24" nzLg="6" class="mb-lg">
+        <app-yield-gauge [data]="data"></app-yield-gauge>
+      </div>
+    </ng-container>
+
+  </div>
+  <!-- <div nz-row [nzGutter]="24" class="pt-lg">
+
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="24">
+
+      <app-yield-barline [dataSet]="dataSet"></app-yield-barline>
+    </div>
+  </div> -->
+</div>

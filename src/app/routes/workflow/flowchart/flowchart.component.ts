@@ -3611,5 +3611,130 @@ export class FlowchartComponent implements OnInit {
       this.opGroup = data1.data
     })
   }
+
+  quickAddPPACondition(type){
+
+    console.log("快速创建",type)
+    switch (type) {
+      case '0':
+        //抽检成功
+        let conditionsuccessData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "抽检过站成功",
+        }
+        console.log("conditionData", JSON.stringify(conditionsuccessData))
+        this.httpService.postHttp("csyspottrscon", conditionsuccessData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      case '1':
+        //抽检失败
+        let conditionfailData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "1",
+          "csysPotTrsConInfo": "抽检前往维修站",
+        }
+        console.log("conditionData", JSON.stringify(conditionfailData))
+        this.httpService.postHttp("csyspottrscon", conditionfailData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      case '2':
+        //抽检回退
+        let conditionbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5' ",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "抽检回退成功",
+        }
+        console.log("conditionData", JSON.stringify(conditionbackData))
+        this.httpService.postHttp("csyspottrscon", conditionbackData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+        case '3':
+        //PPA维修站hold回退
+        let conditionPPAbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select count(*)  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
+          "csysPotTrsConMethod": ">",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "PPA维修站hold回退",
+        }
+        console.log("conditionData", JSON.stringify(conditionPPAbackData))
+        this.httpService.postHttp("csyspottrscon", conditionPPAbackData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+        case '4':
+        //PPA维修站失败回退
+        let conditionPPAfailbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select count(*)  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
+          "csysPotTrsConMethod": ">",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "PPA维修站失败回退",
+        }
+        console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
+        this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {
+          this.msg.create("success", "PPA维修站失败回退");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      default:
+        break;
+    }
+
+  }
 }
 

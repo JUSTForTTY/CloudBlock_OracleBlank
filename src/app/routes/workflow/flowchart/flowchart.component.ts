@@ -1877,6 +1877,8 @@ export class FlowchartComponent implements OnInit {
 
       this.httpService.getHttp("/csyspottrs/" + transferId).subscribe((trsData: any) => {
 
+        if (null != trsData.data.csysPotCurrentId && trsData.data.csysPotCurrentId != "") {
+
         this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
 
           //先判断不为空，在判断大小
@@ -2060,6 +2062,86 @@ export class FlowchartComponent implements OnInit {
 
 
         });
+      } else {
+        let autocontrol = control.autoExcuteControl;
+        if (formData[autocontrol] == false) {
+          control.autoExcute = 0
+        } else {
+          control.autoExcute = 1
+        }
+        console.log("thistime", control.autoExcute)
+        let targetParams = {
+          "csysPotTrsId": transferId,
+          "csysPotCurrentName": formData.nodeEditName,
+          "csysPotTrsAutoExe": control.autoExcute,
+          "csysPotTrsPointId": control.value,//迁移目标
+          "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
+          "csysPotTrsDesc": formData[control.desc]
+        };
+        console.log("targetParams", targetParams)
+        console.log("工序类型检测-当前工序", formData.addNodeName2);
+        console.log("工序类型检测-迁移工序", control)
+        //如果当前是初始化节点，将指向的节点设置为头结点
+        if (formData.addNodeName2 == '3') {
+
+          console.log("初始化节点操作-更新操作");
+
+
+
+          targetParams['csysPotCurrentId'] = "";
+          targetParams['csysPotCurrentName'] = "";
+
+
+          console.log("更新工序2", targetParams)
+          this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+            console.log("工序迁移修改成功", data);
+            //更新途程连接
+            this.updateLinks(transferId, control.value, control.autoExcute);
+            //保存工序迁移权限
+            //this.saveAuthority(transferId, control.authority);
+            //保存工序迁移权限页面
+            //更新页面
+            //this.updateTsrPage(transferId, pageId)
+            //this.saveTransferPage(transferId, control.pageData);
+
+            //this.potTransferRule(sourcePot, targetPot, transferId);
+
+            //工序迁移全部操作完后保存途程
+            if (i == length) {
+              this.saveWorkFlow();
+            }
+          });
+
+
+        } else {
+
+          console.log("更新工序3", targetParams)
+          this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+            //console.log("工序迁移修改成功", data);
+            //更新途程连接
+            this.updateLinks(transferId, control.value, control.autoExcute);
+            //保存工序迁移权限
+            //this.saveAuthority(transferId, control.authority);
+            //保存工序迁移权限页面
+            //this.saveTransferPage(transferId, control.pageData);
+            //更新页面
+            //this.updateTsrPage(transferId, pageId)
+
+            //this.potTransferRule(sourcePot, targetPot, transferId);
+
+            //工序迁移全部操作完后保存途程
+            if (i == length) {
+              this.saveWorkFlow();
+            }
+          });
+
+
+        }
+
+
+      }
       });
     });
 

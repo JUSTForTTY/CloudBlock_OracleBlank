@@ -434,6 +434,10 @@ export class FlowchartComponent implements OnInit {
 
         potdata.data[0].csysTrsRuleId = null;
       }
+      if (!potdata.data[0].csysPotAtrribute) {
+       
+        potdata.data[0].csysPotAtrribute = null;
+      }
       if (potdata.data[0].csysPotIsExcrete == 1) {
         potdata.data[0].csysPotIsExcrete = true;
       } else {
@@ -450,7 +454,7 @@ export class FlowchartComponent implements OnInit {
         resource: [data.resource],
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
-        excrete: [potdata.data[0].csysPotIsExcrete]
+        excrete: [potdata.data[0].csysPotIsExcrete],
         // nodeEditName1: [data.label, [Validators.required]]
       });
 

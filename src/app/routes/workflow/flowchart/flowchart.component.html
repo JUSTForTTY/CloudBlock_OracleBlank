@@ -601,29 +601,29 @@
   (nzOnCancel)="conditionCancel()">
 
   <ng-container *ngIf="tableShow == 'table'">
-    <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+    <!-- <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>
       <span>自定义添加</span>
-    </button>
+    </button> -->
     <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>快速创建(PPA抽检回退)</span>
+      <span>PPA抽检回退</span>
     </button>
     <button nz-button (click)="quickAddPPACondition('0')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>快速创建(PPA抽检完成)</span>
+      <span>PPA抽检完成</span>
     </button>
     <button nz-button (click)="quickAddPPACondition('1')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>快速创建(PPA抽检失败)</span>
+      <span>PPA抽检失败</span>
     </button>
     <button nz-button (click)="quickAddPPACondition('3')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>快速创建(PPA维修站暂停回退)</span>
+      <span>PPA维修站暂停回退</span>
     </button>
     <button nz-button (click)="quickAddPPACondition('4')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>快速创建(PPA维修站失败回退)</span>
+      <span>PPA维修站失败回退</span>
     </button>
     <nz-table #basicTable [nzData]="pottrsconData" [nzLoading]="tableLodding">
       <thead>

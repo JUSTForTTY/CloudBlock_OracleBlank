@@ -6,7 +6,6 @@ import * as graph from '@swimlane/ngx-graph';
 import { HttpService } from 'ngx-block-core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { equalSegments } from '@angular/router/src/url_tree';
 import { NzModalService } from 'ng-zorro-antd';
 import { CacheService } from '@delon/cache';
 

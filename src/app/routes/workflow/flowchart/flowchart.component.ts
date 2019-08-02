@@ -208,6 +208,7 @@ export class FlowchartComponent implements OnInit {
     // this.getOpData();
     this.getNodeData();
     this.getModeData();
+    this.getOpData();
     //this.getResource();
     //this.getSkill();
     this.getPointDescList();
@@ -2539,7 +2540,7 @@ export class FlowchartComponent implements OnInit {
   getChartData(): void {
     this.httpService.postHttp("/csyspotpublic/condition").subscribe((data: any) => {
       this.nodes = data.data;
-      console.log("data", this.nodes)
+      // console.log("data", this.nodes)
     })
   }
 
@@ -3387,10 +3388,16 @@ export class FlowchartComponent implements OnInit {
         return;
       }
       this.subStatu = false;
+      if(0<=0){
+        console.log("0校验");
+        
+      }
       //将区间值取出
       for (let index = 0; index < this.nodeData.length; index++) {
         const element = this.nodeData[index];
-        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && element.csysPotSort != "") {
+        console.log("区间测试1", element)
+        console.log("区间测试2",typeof(element.csysPotSort))
+        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && typeof(element.csysPotSort) == "number") {
           this.firstData.push(element)
         }
       }
@@ -3497,7 +3504,6 @@ export class FlowchartComponent implements OnInit {
         potConTimeDesc: [item.csysPotConFirstDesc]
       })
       this.shiftMade = true; 
-
     })
   }
   //编辑首件

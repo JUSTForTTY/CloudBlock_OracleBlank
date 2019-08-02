@@ -435,6 +435,10 @@ export class FlowchartComponent implements OnInit {
 
         potdata.data[0].csysTrsRuleId = null;
       }
+      if (!potdata.data[0].csysPotAtrribute) {
+       
+        potdata.data[0].csysPotAtrribute = null;
+      }
       if (potdata.data[0].csysPotIsExcrete == 1) {
         potdata.data[0].csysPotIsExcrete = true;
       } else {
@@ -451,7 +455,7 @@ export class FlowchartComponent implements OnInit {
         resource: [data.resource],
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
-        excrete: [potdata.data[0].csysPotIsExcrete]
+        excrete: [potdata.data[0].csysPotIsExcrete],
         // nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -1878,6 +1882,8 @@ export class FlowchartComponent implements OnInit {
 
       this.httpService.getHttp("/csyspottrs/" + transferId).subscribe((trsData: any) => {
 
+        if (null != trsData.data.csysPotCurrentId && trsData.data.csysPotCurrentId != "") {
+
         this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
 
           //先判断不为空，在判断大小
@@ -2061,6 +2067,86 @@ export class FlowchartComponent implements OnInit {
 
 
         });
+      } else {
+        let autocontrol = control.autoExcuteControl;
+        if (formData[autocontrol] == false) {
+          control.autoExcute = 0
+        } else {
+          control.autoExcute = 1
+        }
+        console.log("thistime", control.autoExcute)
+        let targetParams = {
+          "csysPotTrsId": transferId,
+          "csysPotCurrentName": formData.nodeEditName,
+          "csysPotTrsAutoExe": control.autoExcute,
+          "csysPotTrsPointId": control.value,//迁移目标
+          "csysPotTrsPointName": targetPot.data.csysPotName,//迁移目标名称
+          "csysPotTrsDesc": formData[control.desc]
+        };
+        console.log("targetParams", targetParams)
+        console.log("工序类型检测-当前工序", formData.addNodeName2);
+        console.log("工序类型检测-迁移工序", control)
+        //如果当前是初始化节点，将指向的节点设置为头结点
+        if (formData.addNodeName2 == '3') {
+
+          console.log("初始化节点操作-更新操作");
+
+
+
+          targetParams['csysPotCurrentId'] = "";
+          targetParams['csysPotCurrentName'] = "";
+
+
+          console.log("更新工序2", targetParams)
+          this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+            console.log("工序迁移修改成功", data);
+            //更新途程连接
+            this.updateLinks(transferId, control.value, control.autoExcute);
+            //保存工序迁移权限
+            //this.saveAuthority(transferId, control.authority);
+            //保存工序迁移权限页面
+            //更新页面
+            //this.updateTsrPage(transferId, pageId)
+            //this.saveTransferPage(transferId, control.pageData);
+
+            //this.potTransferRule(sourcePot, targetPot, transferId);
+
+            //工序迁移全部操作完后保存途程
+            if (i == length) {
+              this.saveWorkFlow();
+            }
+          });
+
+
+        } else {
+
+          console.log("更新工序3", targetParams)
+          this.httpService.putHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+            //console.log("工序迁移修改成功", data);
+            //更新途程连接
+            this.updateLinks(transferId, control.value, control.autoExcute);
+            //保存工序迁移权限
+            //this.saveAuthority(transferId, control.authority);
+            //保存工序迁移权限页面
+            //this.saveTransferPage(transferId, control.pageData);
+            //更新页面
+            //this.updateTsrPage(transferId, pageId)
+
+            //this.potTransferRule(sourcePot, targetPot, transferId);
+
+            //工序迁移全部操作完后保存途程
+            if (i == length) {
+              this.saveWorkFlow();
+            }
+          });
+
+
+        }
+
+
+      }
       });
     });
 
@@ -3616,6 +3702,131 @@ export class FlowchartComponent implements OnInit {
     this.httpService.postHttp("csyscodemaster/condition", { "csysCodemasterType": "op_group" }).subscribe((data1: any) => {
       this.opGroup = data1.data
     })
+  }
+
+  quickAddPPACondition(type){
+
+    console.log("快速创建",type)
+    switch (type) {
+      case '0':
+        //抽检成功
+        let conditionsuccessData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "抽检过站成功",
+        }
+        console.log("conditionData", JSON.stringify(conditionsuccessData))
+        this.httpService.postHttp("csyspottrscon", conditionsuccessData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      case '1':
+        //抽检失败
+        let conditionfailData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "1",
+          "csysPotTrsConInfo": "抽检前往维修站",
+        }
+        console.log("conditionData", JSON.stringify(conditionfailData))
+        this.httpService.postHttp("csyspottrscon", conditionfailData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      case '2':
+        //抽检回退
+        let conditionbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4' ",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "抽检回退成功",
+        }
+        console.log("conditionData", JSON.stringify(conditionbackData))
+        this.httpService.postHttp("csyspottrscon", conditionbackData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+        case '3':
+        //PPA维修站hold回退
+        let conditionPPAbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
+          "csysPotTrsConMethod": ">",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "PPA维修站hold回退",
+        }
+        console.log("conditionData", JSON.stringify(conditionPPAbackData))
+        this.httpService.postHttp("csyspottrscon", conditionPPAbackData).subscribe((data: any) => {
+          this.msg.create("success", "创建成功");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+        case '4':
+        //PPA维修站失败回退
+        let conditionPPAfailbackData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": this.csysPointTrsId,
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
+          "csysPotTrsConMethod": ">",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "PPA维修站失败回退",
+        }
+        console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
+        this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {
+          this.msg.create("success", "PPA维修站失败回退");
+          this.isConfirmLoading = false;
+          this.getTableData();
+          this.tableShow = "table";
+          this.tableLodding = false;
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+            this.tableLodding = false;
+          });
+        break;
+      default:
+        break;
+    }
+
   }
 }
 

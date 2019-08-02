@@ -17,7 +17,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   dataSetTable = [];
   dataSetGauge = [];
 
-  pageSize = 8;
+  pageSize = 6;
   constructor(private httpService: HttpService) {
     this.timer = setTimeout(this.setData, 0);
   }

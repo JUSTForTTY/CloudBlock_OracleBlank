@@ -63,9 +63,9 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
 
     ngOnInit() {
 
-        console.log("自动登录", this.jwtService.getToken(server_name)['access_token'])
+        //console.log("自动登录", this.jwtService.getToken(server_name)['access_token'])
         //检测token是否为空，不为空，自动登录
-        this.userService.autoLogin();
+        //this.userService.autoLogin();
 
     }
     ngAfterContentInit() {

@@ -3405,6 +3405,7 @@ export class FlowchartComponent implements OnInit {
     })
 
   }
+  
   getModeData(): void {
     this.httpService.postHttp("csyspotconfirst/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
 

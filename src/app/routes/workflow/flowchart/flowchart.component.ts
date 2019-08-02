@@ -3707,7 +3707,7 @@ export class FlowchartComponent implements OnInit {
         let conditionsuccessData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检过站成功",
@@ -3730,7 +3730,7 @@ export class FlowchartComponent implements OnInit {
         let conditionfailData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "1",
           "csysPotTrsConInfo": "抽检前往维修站",
@@ -3753,7 +3753,7 @@ export class FlowchartComponent implements OnInit {
         let conditionbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5' ",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4' ",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检回退成功",
@@ -3776,7 +3776,7 @@ export class FlowchartComponent implements OnInit {
         let conditionPPAbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select count(*)  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站hold回退",
@@ -3799,7 +3799,7 @@ export class FlowchartComponent implements OnInit {
         let conditionPPAfailbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select count(*)  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站失败回退",

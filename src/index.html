@@ -123,12 +123,11 @@
       animation: lol 3s .9s infinite ease-in-out
     }
   </style>
-  <!-- <script type="text/javascript" src="cordova.js"></script> -->
+    <!-- <script type="text/javascript" src="cordova.js"></script> -->
 
 </head>
 
-<!-- <body onbeforeunload="return CloseEvent();" onunload="return UnLoadEvent();" onload="onloadEvent()"> -->
-  <body> 
+<body>
   <app-root></app-root>
   <div class="preloader">
     <div class="cs-loader">
@@ -139,38 +138,11 @@
         <label> <img src="assets/img/V.png" style="width:30px;height:30px" /></label>
         <label> <img src="assets/img/A.png" style="width:30px;height:30px" /></label>
         <label> <img src="assets/img/L.png" style="width:30px;height:30px" /></label>
-
+       
 
       </div>
     </div>
   </div>
 </body>
-<script language="JavaScript" type="text/javascript">
-
-
-  var refresh = "0";
-
-  function CloseEvent() {
-    window.sessionStorage["refresh"] = "1";
-    window.localStorage['refresh'] = "false";
-  }
-
-
-  function UnLoadEvent() {
-    window.sessionStorage["refresh"] = "1";
-
-    window.localStorage['refresh'] = "false";
-  }
-  function onloadEvent() {
-    if (window.sessionStorage["refresh"] == "1") {
-      window.localStorage['refresh'] = "true";
-      window.sessionStorage["refresh"] = "0";
-      console.log("session onloadEvent", wZindow.localStorage['refresh'])
-    }
-
-  }
-
-
-</script>
 
 </html>

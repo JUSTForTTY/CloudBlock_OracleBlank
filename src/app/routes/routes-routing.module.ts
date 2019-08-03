@@ -27,10 +27,7 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
         children: [
             { path: 'workplace', component: DashboardWorkplaceComponent, data: { title: '控制台' } },
-            {
-                path: 'pages',
-                loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
-            },
+            { path: 'pages', loadChildren: './pages/pages.module#PagesModule' }//test测试页面
             // 业务子模块
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
         ]
@@ -46,15 +43,14 @@ const routes: Routes = [
     },
     //工作流
     {
-        path: 'workflow', loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule), data: { title: '工作流' },
+        path: 'workflow', loadChildren: './workflow/workflow.module#WorkflowModule', data: { title: '工作流' },
         component: LayoutDefaultComponent,
 
     },
     //组织权限
     {
 
-        path: 'authority',  loadChildren: () => import('./organizational/organizational.module').then(m => m.OrganizationalModule) , data: { title: '组织权限' },
-        
+        path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' },
         component: LayoutDefaultComponent,
 
     },

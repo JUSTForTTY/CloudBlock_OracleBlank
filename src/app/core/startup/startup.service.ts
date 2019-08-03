@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { zip } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CacheService } from '@delon/cache';
 import {
   MenuService,
   SettingsService,
@@ -15,7 +14,7 @@ import { I18NService } from '../i18n/i18n.service';
 import { NzIconService } from 'ng-zorro-antd';
 import { ICONS_AUTO } from '../../../style-icons-auto';
 import { ICONS } from '../../../style-icons';
-import { JwtService } from 'ngx-block-core';
+
 /**
  * 用于应用启动时
  * 一般用来获取应用所需要的基础数据等
@@ -30,9 +29,7 @@ export class StartupService {
     private settingService: SettingsService,
     private aclService: ACLService,
     private titleService: TitleService,
-    private httpClient: HttpClient,
-    private cacheService: CacheService,
-    private JwtService: JwtService
+    private httpClient: HttpClient
   ) {
     iconSrv.addIcon(...ICONS_AUTO, ...ICONS);
   }
@@ -58,13 +55,6 @@ export class StartupService {
             this.translate.setTranslation(this.i18n.defaultLang, langData);
             this.translate.setDefaultLang(this.i18n.defaultLang);
 
-            if (window.localStorage['refresh'] == "false") {
-              console.log("session  removeItem user")
-              this.JwtService.destroyToken(this.JwtService.getUserServerName());
-              this.cacheService.remove('userdata' + this.JwtService.getUserServerName());
-              window.localStorage['refresh'] = "true";
-            }
-
             // application data
             const res: any = appData;
             // 应用信息：包括站点名、描述、年份
@@ -73,7 +63,7 @@ export class StartupService {
             this.settingService.setUser(res.user);
             // ACL：设置权限为全量
             this.aclService.setFull(true);
-
+          
             // 设置页面标题的后缀
             this.titleService.default = '';
             this.titleService.suffix = res.app.name;

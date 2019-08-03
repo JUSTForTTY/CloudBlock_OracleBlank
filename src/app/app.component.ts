@@ -5,7 +5,6 @@ import { TitleService } from '@delon/theme';
 import { VERSION as VERSION_ALAIN } from '@delon/theme';
 import { VERSION as VERSION_ZORRO, NzModalService } from 'ng-zorro-antd';
 import { UserService } from '@core';
-import {environment} from 'environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -39,12 +38,8 @@ export class AppComponent implements OnInit {
         this.titleSrv.setTitle();
         this.modalSrv.closeAll();
       });
-    if (window.localStorage['jwtAccessToken' + environment.SERVER_NAME] == undefined || window.localStorage['jwtRefreshToken' + environment.SERVER_NAME] == undefined) {
-      console.log("session login")
-      this.router.navigate(['/login']);
-    }
-    // console.log("加载菜单---->")
-    // console.log("加载菜单---->用户", this.userService.getCurrentUser())
+    console.log("加载菜单---->")
+    console.log("加载菜单---->用户", this.userService.getCurrentUser())
     //加载菜单
     //this.userService.loadMenu(this.userService.getCurrentUser())
     // try {

@@ -30,6 +30,7 @@ const routes: Routes = [
             {
                 path: 'pages',
                 loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
+            },
             // 业务子模块
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
         ]

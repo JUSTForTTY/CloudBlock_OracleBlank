@@ -4,11 +4,11 @@
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
     <!-- <nz-affix [nzTarget]="target"> -->
     <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate"
-      [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
+     >
 
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
         <ngx-graph class="chart-container" [layout]="layout"
-          [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight,'margin-left':'-25px','width':'400px'}"
+           
           [view]="view" [center$]="center$" minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false [legend]="showLegend"
           [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
           [nodes]="hierarchialGraph.nodes" [curve]="curve" (select)="clickNode($event)">

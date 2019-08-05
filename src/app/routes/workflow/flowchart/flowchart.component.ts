@@ -1,6 +1,6 @@
 
 import { fromEvent as observableFromEvent, Subject } from 'rxjs';
-import { Component, OnInit, ViewEncapsulation, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, EventEmitter,HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as shape from 'd3-shape';
@@ -21,7 +21,11 @@ const roleCurrencyList = [];
 
 export class FlowchartComponent implements OnInit {
 
-
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.screenHeight= event.target.innerWidth +"px"; 
+    console.log("页面尺寸高度",this.screenHeight)
+  }
   //新增工序名称
   addNodeName = "";
   workflowId = "";
@@ -71,7 +75,7 @@ export class FlowchartComponent implements OnInit {
   // inputDisabled = true;
   //默认开启新增工序
   formEditStatus = false;
-  screenHeight = "400px";
+  screenHeight = "800px";
   isVisible = false;
   isOkLoading = false;
   submitting = false;
@@ -235,18 +239,7 @@ export class FlowchartComponent implements OnInit {
 
     //获取角色信息
     //this.getRoleList();
-
-    //设置图像高度
-    this.screenHeight = window.innerHeight - 200 + 'px';
-
-    // 监听页面
-    observableFromEvent(window, 'resize')
-      .subscribe((event) => {
-        // 操作
-        this.screenHeight = window.innerHeight - 200 + 'px';
-      });
-
-
+ 
     /*判断工作流是否有初始化节点，如果没有进行初始化操作。start*/
 
     let paramsinit = {

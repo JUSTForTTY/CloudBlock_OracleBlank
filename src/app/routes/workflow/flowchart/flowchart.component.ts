@@ -463,7 +463,7 @@ export class FlowchartComponent implements OnInit {
   modeldata
   //工序点击事件
   clickNode(data) {
- 
+
 
     console.log("点击数据", data)
 
@@ -590,8 +590,8 @@ export class FlowchartComponent implements OnInit {
     //调整工序形状，防止变形
     //this.drawWorkFlow();
 
-     //控制站点显示隐藏
-     this.workflowFilter(data);
+    //控制站点显示隐藏
+    this.workflowFilter(data);
 
   }
 
@@ -1207,12 +1207,29 @@ export class FlowchartComponent implements OnInit {
         x => {
 
           if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+            let showflag = true;
             //过滤连线
             console.log("过滤节点", x.id)
-            this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+            this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => {
 
+              if (y.source != x.id && y.target != x.id) {
 
-            return false;
+                return true;
+              } else {
+
+                showflag = false;
+                return false;
+              }
+
+            });
+
+            //当前维修点如果没有进行关联，需进行显示
+            if (showflag) {
+              return true;
+            } else {
+              return false;
+            }
+
           } else {
 
             return true;
@@ -1387,7 +1404,7 @@ export class FlowchartComponent implements OnInit {
           opName: this.opName,
           skillIds: skillIds
         });
-        
+
       } else {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
@@ -1402,7 +1419,7 @@ export class FlowchartComponent implements OnInit {
           skillIds: skillIds
         });
 
-        
+
         console.log("node测试123", this.hierarchialGraph.nodes)
       }
 
@@ -1744,7 +1761,7 @@ export class FlowchartComponent implements OnInit {
                 //新增迁移权限页面
                 //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
                 //重新获取工序迁移表
-                
+
                 //重新画图
 
 
@@ -2457,12 +2474,31 @@ export class FlowchartComponent implements OnInit {
       x => {
 
         if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+          let showflag = true;
           //过滤连线
           console.log("过滤节点", x.id)
-          this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+          this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => {
+
+            if (y.source != x.id && y.target != x.id) {
+
+              return true;
+            } else {
+
+              showflag = false;
+              return false;
+            }
+
+          });
+
+          //当前维修点如果没有进行关联，需进行显示
+          if (showflag) {
+            return true;
+          } else {
+            return false;
+          }
 
 
-          return false;
+
         } else {
 
           return true;
@@ -2470,7 +2506,7 @@ export class FlowchartComponent implements OnInit {
 
       }
     );
-    
+
 
 
 
@@ -3901,7 +3937,7 @@ export class FlowchartComponent implements OnInit {
         let conditionPPAfailbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS_H t inner join LOT_NO_H f on t.LOT_NO_H_SN=f.LOT_NO_H_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站失败回退",
@@ -3957,12 +3993,28 @@ export class FlowchartComponent implements OnInit {
           this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
             x => {
               if (x.styleId == 'LHCsysPotStyle20190620042709661000002' && x.id != data.data[0].csysPotTrsPointId) {
+                let showflag = true;
                 //过滤连线
                 console.log("过滤节点", x.id)
-                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => {
 
+                  if (y.source != x.id && y.target != x.id) {
 
-                return false;
+                    return true;
+                  } else {
+
+                    showflag = false;
+                    return false;
+                  }
+
+                });
+
+                //当前维修点如果没有进行关联，需进行显示
+                if (showflag) {
+                  return true;
+                } else {
+                  return false;
+                }
               } else {
 
 
@@ -3976,12 +4028,28 @@ export class FlowchartComponent implements OnInit {
             x => {
 
               if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+                let showflag = true;
                 //过滤连线
                 console.log("过滤节点", x.id)
-                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => {
 
+                  if (y.source != x.id && y.target != x.id) {
 
-                return false;
+                    return true;
+                  } else {
+
+                    showflag = false;
+                    return false;
+                  }
+
+                });
+
+                //当前维修点如果没有进行关联，需进行显示
+                if (showflag) {
+                  return true;
+                } else {
+                  return false;
+                }
               } else {
 
                 return true;

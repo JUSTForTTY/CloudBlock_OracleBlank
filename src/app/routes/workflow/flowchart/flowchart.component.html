@@ -3,15 +3,13 @@
 
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
     <!-- <nz-affix [nzTarget]="target"> -->
-    <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate"
-     >
+    <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
 
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
-        <ngx-graph class="chart-container" [layout]="layout"
-           
-          [view]="view" [center$]="center$" minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false [legend]="showLegend"
-          [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
-          [nodes]="hierarchialGraph.nodes" [curve]="curve" (select)="clickNode($event)">
+        <ngx-graph class="chart-container" [layout]="layout" [view]="view" [center$]="center$" minZoomLevel=0.3
+          maxZoomLevel=2 panningEnabled=false [layoutSettings]="layoutSettings" [legend]="showLegend" [links]="hierarchialGraph.links"
+          (legendLabelClick)="onLegendLabelClick($event)" [nodes]="hierarchialGraph.nodes" [curve]="curve"
+          (select)="clickNode($event)">
 
           <ng-template #defsTemplate>
             <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
@@ -540,14 +538,23 @@
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="orientation">风格</nz-form-label>
+            <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="layoutStyle">风格</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-select [(ngModel)]="layout" formControlName="orientation" id="orientation">
+              <nz-select [(ngModel)]="layout" formControlName="layoutStyle" id="layoutStyle">
                 <nz-option *ngFor="let orient of workflowlayout" [nzValue]="orient.value" [nzLabel]="orient.label">
                 </nz-option>
               </nz-select>
             </nz-form-control>
           </nz-form-item>
+          <nz-form-item>
+              <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="orientation">流向</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <nz-select [(ngModel)]="layoutSettings.orientation" (ngModelChange)="setOrientation($event)" formControlName="orientation" id="orientation">
+                  <nz-option *ngFor="let orient of orientations" [nzValue]="orient.value" [nzLabel]="orient.label">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
           <!-- <nz-form-item>
               <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
                 <button nz-button nzType="primary" type="submit" [nzLoading]="saveStyling">保存</button>
@@ -605,18 +612,22 @@
       <i class="anticon anticon-plus"></i>
       <span>自定义添加</span>
     </button> -->
-    <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-      <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>PPA抽检回退</span>
-    </button>
-    <button nz-button (click)="quickAddPPACondition('0')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-      <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>PPA抽检完成</span>
-    </button>
-    <button nz-button (click)="quickAddPPACondition('1')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-      <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-      <span>PPA抽检失败</span>
-    </button>
+    <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190723111446098000016'">
+      <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+        <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+        <span>PPA抽检回退</span>
+      </button>
+      <button nz-button (click)="quickAddPPACondition('0')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+        <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+        <span>PPA抽检完成</span>
+      </button>
+      <button nz-button (click)="quickAddPPACondition('1')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+        <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+        <span>PPA抽检失败</span>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190803014643552000017'">
+    
     <button nz-button (click)="quickAddPPACondition('3')" [nzType]="'primary'" class="ant-btn__block mb-sm">
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
       <span>PPA维修站暂停回退</span>
@@ -625,45 +636,46 @@
       <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
       <span>PPA维修站失败回退</span>
     </button>
-    <nz-table #basicTable [nzData]="pottrsconData" [nzLoading]="tableLodding">
-      <thead>
-        <tr>
-          <th>数据源</th>
-          <th>条件对比</th>
-          <th>对比数据</th>
-          <th>提示信息</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of basicTable.data">
-          <td>
-            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConRawData">
-              {{data.csysPotTrsConRawData}}
-            </p>
-          </td>
-          <td>
-            <P style="width: 100px;">{{data.csysPotTrsConMethod}}</P>
-          </td>
-          <td>
-            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConDate">
-              {{data.csysPotTrsConContrastData}}
-            </p>
-          </td>
-          <td>
-            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConInfo">
-              {{data.csysPotTrsConInfo}}
-            </p>
-          </td>
-          <td>
-            <a
-              (click)="editCondition(data.csysPotTrsConId,data.csysPotTrsConRawData,data.csysPotTrsConMethod,data.csysPotTrsConContrastData,data.csysPotTrsConInfo)">编辑</a>
-            <nz-divider nzType="vertical"></nz-divider>
-            <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
+  </ng-container>
+  <nz-table #basicTable [nzData]="pottrsconData" [nzLoading]="tableLodding">
+    <thead>
+      <tr>
+        <th>数据源</th>
+        <th>条件对比</th>
+        <th>对比数据</th>
+        <th>提示信息</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>
+          <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConRawData">
+            {{data.csysPotTrsConRawData}}
+          </p>
+        </td>
+        <td>
+          <P style="width: 100px;">{{data.csysPotTrsConMethod}}</P>
+        </td>
+        <td>
+          <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConDate">
+            {{data.csysPotTrsConContrastData}}
+          </p>
+        </td>
+        <td>
+          <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConInfo">
+            {{data.csysPotTrsConInfo}}
+          </p>
+        </td>
+        <td>
+          <a
+            (click)="editCondition(data.csysPotTrsConId,data.csysPotTrsConRawData,data.csysPotTrsConMethod,data.csysPotTrsConContrastData,data.csysPotTrsConInfo)">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
   </ng-container>
   <!-- 新增 -->
   <ng-container *ngIf="tableShow == 'addTable'">
@@ -756,7 +768,7 @@
                 <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
                   [nzLabel]="opgroupdata.csysCodemasterDesc">
                 </nz-option>
-              </nz-select> 
+              </nz-select>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>

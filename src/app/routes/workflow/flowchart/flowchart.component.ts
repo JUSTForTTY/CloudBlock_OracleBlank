@@ -142,7 +142,9 @@ export class FlowchartComponent implements OnInit {
       colorSchemes: colorSets,
     });
   }
-
+  layoutSettings = {
+    orientation: "LR"
+  }
   //流向下拉框赋数据
   orientations: any[] = [
     {
@@ -222,7 +224,8 @@ export class FlowchartComponent implements OnInit {
     this.form = this.fb.group({
       colorTheme: ['', [Validators.required]],
       lineStyle: ['', [Validators.required]],
-      orientation: ['', [Validators.required]]
+      orientation: ['', [Validators.required]],
+      layoutStyle: ['', [Validators.required]]
     });
     //this.getFlowTargetNodes();
     //设置主题
@@ -446,6 +449,11 @@ export class FlowchartComponent implements OnInit {
     }
   }
 
+  setOrientation(orientation){
+
+    this.drawWorkFlow();
+
+  }
   onLegendLabelClick(entry) {
     //console.log('Legend clicked', entry);
   }
@@ -1130,7 +1138,10 @@ export class FlowchartComponent implements OnInit {
       "csysWorkflowColortheme": this.colorTheme,
       "csysWorkflowLinestyle": this.lineStyle,
       "csysWorkflowOrientation": this.layout,
+      "csysWorkflowVersion": this.layoutSettings.orientation,
+
     }
+    console.log("通用配置保存参数", params);
     //更改途程工序和连接数据
     this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
       //console.log("通用配置保存成功", data);
@@ -1220,6 +1231,8 @@ export class FlowchartComponent implements OnInit {
       this.setLineStyle(workFolowData.csysWorkflowLinestyle != null && workFolowData.csysWorkflowLinestyle != "" ? workFolowData.csysWorkflowLinestyle : 'Monotone X');
       //设置流向
       this.layout = workFolowData.csysWorkflowOrientation != null && workFolowData.csysWorkflowOrientation != "" ? workFolowData.csysWorkflowOrientation : 'dagreCluster';
+
+      this.layoutSettings.orientation=workFolowData.csysWorkflowVersion != null && workFolowData.csysWorkflowVersion != "" ? workFolowData.csysWorkflowVersion : 'LR';
 
       this.isGraphSpinning = false;
 
@@ -3039,6 +3052,7 @@ export class FlowchartComponent implements OnInit {
       "csysWorkflowColortheme": this.colorTheme,
       "csysWorkflowLinestyle": this.lineStyle,
       "csysWorkflowOrientation": this.layout,
+      "csysWorkflowVersion": this.layoutSettings.orientation,
     }
     //更改途程工序和连接数据
     this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
@@ -3767,6 +3781,8 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检过站成功",
+          "csysPotTrsConDesc":"PPA抽检完成"
+
         }
         console.log("conditionData", JSON.stringify(conditionsuccessData))
         this.httpService.postHttp("csyspottrscon", conditionsuccessData).subscribe((data: any) => {
@@ -3790,6 +3806,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "1",
           "csysPotTrsConInfo": "抽检前往维修站",
+          "csysPotTrsConDesc":"PPA抽检失败"
         }
         console.log("conditionData", JSON.stringify(conditionfailData))
         this.httpService.postHttp("csyspottrscon", conditionfailData).subscribe((data: any) => {
@@ -3813,6 +3830,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检回退成功",
+          "csysPotTrsConDesc":"PPA抽检回退"
         }
         console.log("conditionData", JSON.stringify(conditionbackData))
         this.httpService.postHttp("csyspottrscon", conditionbackData).subscribe((data: any) => {
@@ -3836,6 +3854,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站hold回退",
+          "csysPotTrsConDesc":"PPA维修站hold回退"
         }
         console.log("conditionData", JSON.stringify(conditionPPAbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAbackData).subscribe((data: any) => {
@@ -3859,6 +3878,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站失败回退",
+          "csysPotTrsConDesc":"PPA维修站失败回退"
         }
         console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {

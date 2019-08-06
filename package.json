@@ -64,7 +64,7 @@
     "moment": "^2.19.3",
     "ng-dynamic-component": "^3.0.0",
     "ng-zorro-antd": "^7.5.0",
-    "ngx-block": "^0.7.0",
+    "ngx-block": "^0.7.1",
     "ngx-block-core": "^0.9.80",
     "ngx-color-picker": "^6.7.0",
     "ngx-countdown": "^3.1.0",

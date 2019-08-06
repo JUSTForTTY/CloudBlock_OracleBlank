@@ -1,6 +1,6 @@
 
 import { fromEvent as observableFromEvent, Subject } from 'rxjs';
-import { Component, OnInit, ViewEncapsulation, EventEmitter,HostListener } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, EventEmitter, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as shape from 'd3-shape';
@@ -23,8 +23,8 @@ export class FlowchartComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.screenHeight= event.target.innerWidth +"px"; 
-    console.log("页面尺寸高度",this.screenHeight)
+    this.screenHeight = event.target.innerWidth + "px";
+    console.log("页面尺寸高度", this.screenHeight)
   }
   //新增工序名称
   addNodeName = "";
@@ -242,7 +242,7 @@ export class FlowchartComponent implements OnInit {
 
     //获取角色信息
     //this.getRoleList();
- 
+
     /*判断工作流是否有初始化节点，如果没有进行初始化操作。start*/
 
     let paramsinit = {
@@ -289,7 +289,7 @@ export class FlowchartComponent implements OnInit {
 
 
           let params = {};
-        
+
           params = {
             "csysPotPublicId": "LHCsysPotPublic20190625092513130000031",
             "csysPotName": "结束",
@@ -449,7 +449,7 @@ export class FlowchartComponent implements OnInit {
     }
   }
 
-  setOrientation(orientation){
+  setOrientation(orientation) {
 
     this.drawWorkFlow();
 
@@ -463,8 +463,7 @@ export class FlowchartComponent implements OnInit {
   modeldata
   //工序点击事件
   clickNode(data) {
-
-    console.log("测试", this.timeVisible);
+ 
 
     console.log("点击数据", data)
 
@@ -589,7 +588,10 @@ export class FlowchartComponent implements OnInit {
     });
 
     //调整工序形状，防止变形
-    this.drawWorkFlow();
+    //this.drawWorkFlow();
+
+     //控制站点显示隐藏
+     this.workflowFilter(data);
 
   }
 
@@ -1192,7 +1194,7 @@ export class FlowchartComponent implements OnInit {
 
       this.hierarchialGraphSimple.nodes = workFolowData.csysWorkflowNodes != null && workFolowData.csysWorkflowNodes != "" ? JSON.parse(workFolowData.csysWorkflowNodes) : [];
 
-      console.log("工序信息2", this.hierarchialGraph.nodes);
+      console.log("工序信息-nodes", this.hierarchialGraph.nodes);
 
 
       this.hierarchialGraph.links = workFolowData.csysWorkflowLinks != null && workFolowData.csysWorkflowLinks != "" ? JSON.parse(workFolowData.csysWorkflowLinks) : [];
@@ -1218,7 +1220,7 @@ export class FlowchartComponent implements OnInit {
 
         }
       );
-      console.log("工序links信息", this.hierarchialGraphSimple.links);
+      console.log("工序信息-links", this.hierarchialGraphSimple.links);
 
       //this.hierarchialGraph.links=[{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""}{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000052","label":"","id":"SUCUCsysPotTrs20190225000048","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000052","target":"SUCUCsysPot20190225000053","label":"","id":"SUCUCsysPotTrs20190225000049","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000053","target":"SUCUCsysPot20190225000054","label":"","id":"SUCUCsysPotTrs20190225000050","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000054","target":"SUCUCsysPot20190225000055","label":"","id":"SUCUCsysPotTrs20190225000051","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000056","label":"","id":"SUCUCsysPotTrs20190225000052","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000057","label":"","id":"SUCUCsysPotTrs20190225000053","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000058","label":"","id":"SUCUCsysPotTrs20190225000054","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000055","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000056","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000057","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000058","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190226000067","target":"SUCUCsysPot20190225000050","label":"","id":"SUCUCsysPotTrs20190226000068","stroke":"","strokeWidth":"","strokeDash":""}];
       //工序数据
@@ -1232,7 +1234,7 @@ export class FlowchartComponent implements OnInit {
       //设置流向
       this.layout = workFolowData.csysWorkflowOrientation != null && workFolowData.csysWorkflowOrientation != "" ? workFolowData.csysWorkflowOrientation : 'dagreCluster';
 
-      this.layoutSettings.orientation=workFolowData.csysWorkflowVersion != null && workFolowData.csysWorkflowVersion != "" ? workFolowData.csysWorkflowVersion : 'LR';
+      this.layoutSettings.orientation = workFolowData.csysWorkflowVersion != null && workFolowData.csysWorkflowVersion != "" ? workFolowData.csysWorkflowVersion : 'LR';
 
       this.isGraphSpinning = false;
 
@@ -1385,6 +1387,7 @@ export class FlowchartComponent implements OnInit {
           opName: this.opName,
           skillIds: skillIds
         });
+        
       } else {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
@@ -1399,8 +1402,12 @@ export class FlowchartComponent implements OnInit {
           skillIds: skillIds
         });
 
+        
         console.log("node测试123", this.hierarchialGraph.nodes)
       }
+
+
+
 
       //第二步：保存工序迁移
       this.saveFlowpointTransfer(nodeId);
@@ -1673,7 +1680,6 @@ export class FlowchartComponent implements OnInit {
       /*查询源节点信息 */
       this.httpService.getHttp("/csyspot/" + nodeId).subscribe((sourcePot: any) => {
 
-
         // if (longestime > leastime) {
         //先判断不为空，在判断大小
         if (typeof longestime == "number" && typeof leastime == "number") {
@@ -1738,6 +1744,9 @@ export class FlowchartComponent implements OnInit {
                 //新增迁移权限页面
                 //this.insertTransferPage(transferId, this.controlArray[i].pageData.currentPageId)
                 //重新获取工序迁移表
+                
+                //重新画图
+
 
                 //新增迁移规则
                 this.potTransferRule(sourcePot, targetPot, transferId);
@@ -2438,15 +2447,33 @@ export class FlowchartComponent implements OnInit {
   //重绘途程图
   drawWorkFlow() {
 
-    // let link = this.hierarchialGraph.links;
-    // let node = this.hierarchialGraph.nodes;
-    // this.hierarchialGraph = { nodes: [], links: [] };
-    // this.hierarchialGraph.nodes = node;
-    // this.hierarchialGraph.links = link;
     this.hierarchialGraph.links = [...this.hierarchialGraph.links];
     this.hierarchialGraph.nodes = [...this.hierarchialGraph.nodes];
-    this.hierarchialGraphSimple.links = [...this.hierarchialGraphSimple.links];
-    this.hierarchialGraphSimple.nodes = [...this.hierarchialGraphSimple.nodes];
+
+    this.hierarchialGraphSimple.links = [...this.hierarchialGraph.links];
+    this.hierarchialGraphSimple.nodes = [...this.hierarchialGraph.nodes];
+
+    this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
+      x => {
+
+        if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+          //过滤连线
+          console.log("过滤节点", x.id)
+          this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+
+
+          return false;
+        } else {
+
+          return true;
+        }
+
+      }
+    );
+    
+
+
+
   }
 
 
@@ -3468,7 +3495,7 @@ export class FlowchartComponent implements OnInit {
     })
 
   }
-  
+
   getModeData(): void {
     this.httpService.postHttp("csyspotconfirst/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
 
@@ -3538,16 +3565,16 @@ export class FlowchartComponent implements OnInit {
         return;
       }
       this.subStatu = false;
-      if(0<=0){
+      if (0 <= 0) {
         console.log("0校验");
-        
+
       }
       //将区间值取出
       for (let index = 0; index < this.nodeData.length; index++) {
         const element = this.nodeData[index];
         console.log("区间测试1", element)
-        console.log("区间测试2",typeof(element.csysPotSort))
-        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && typeof(element.csysPotSort) == "number") {
+        console.log("区间测试2", typeof (element.csysPotSort))
+        if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && typeof (element.csysPotSort) == "number") {
           this.firstData.push(element)
         }
       }
@@ -3653,7 +3680,7 @@ export class FlowchartComponent implements OnInit {
         firstSetting: [firstdata, [Validators.required]],
         potConTimeDesc: [item.csysPotConFirstDesc]
       })
-      this.shiftMade = true; 
+      this.shiftMade = true;
     })
   }
   //编辑首件
@@ -3781,7 +3808,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检过站成功",
-          "csysPotTrsConDesc":"PPA抽检完成"
+          "csysPotTrsConDesc": "PPA抽检完成"
 
         }
         console.log("conditionData", JSON.stringify(conditionsuccessData))
@@ -3806,7 +3833,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "1",
           "csysPotTrsConInfo": "抽检前往维修站",
-          "csysPotTrsConDesc":"PPA抽检失败"
+          "csysPotTrsConDesc": "PPA抽检失败"
         }
         console.log("conditionData", JSON.stringify(conditionfailData))
         this.httpService.postHttp("csyspottrscon", conditionfailData).subscribe((data: any) => {
@@ -3830,7 +3857,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "抽检回退成功",
-          "csysPotTrsConDesc":"PPA抽检回退"
+          "csysPotTrsConDesc": "PPA抽检回退"
         }
         console.log("conditionData", JSON.stringify(conditionbackData))
         this.httpService.postHttp("csyspottrscon", conditionbackData).subscribe((data: any) => {
@@ -3854,7 +3881,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站hold回退",
-          "csysPotTrsConDesc":"PPA维修站hold回退"
+          "csysPotTrsConDesc": "PPA维修站hold回退"
         }
         console.log("conditionData", JSON.stringify(conditionPPAbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAbackData).subscribe((data: any) => {
@@ -3878,7 +3905,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA维修站失败回退",
-          "csysPotTrsConDesc":"PPA维修站失败回退"
+          "csysPotTrsConDesc": "PPA维修站失败回退"
         }
         console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {
@@ -3895,6 +3922,81 @@ export class FlowchartComponent implements OnInit {
         break;
       default:
         break;
+    }
+
+  }
+
+  /**工作流站点隐藏/显示    */
+  workflowFilter(currentPot) {
+    console.log("当前检测-节点", currentPot);
+    console.log("当前检测-nodes", this.hierarchialGraph.nodes);
+    console.log("当前检测-links", this.hierarchialGraph.links);
+
+    //如果当前是维修节点，不需要进行过滤操作
+
+    if (currentPot.styleId != 'LHCsysPotStyle20190620042709661000002') {
+
+      //查询当前节点关联的维修节点
+      let potTrs = {
+        "csysPotCurrentId": currentPot.id,
+        "csysPotStyleId": "LHCsysPotStyle20190620042709661000002",
+        "csysWorkflowId": this.workflowId
+      }
+      this.httpService.postHttp("/csyspottrsdetail/condition", potTrs).subscribe((data: any) => {
+
+        console.log("当前检测-维修站点数据", data);
+
+        //进行重新过滤
+        console.log("当前检测-hierarchialGraphSimple", this.hierarchialGraphSimple.nodes);
+        this.hierarchialGraphSimple.nodes = [...this.hierarchialGraph.nodes];
+        this.hierarchialGraphSimple.links = [...this.hierarchialGraph.links];
+
+
+        console.log("当前检测-hierarchialGraphSimple", this.hierarchialGraphSimple.nodes);
+        if (data.data.length > 0) {
+          this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
+            x => {
+              if (x.styleId == 'LHCsysPotStyle20190620042709661000002' && x.id != data.data[0].csysPotTrsPointId) {
+                //过滤连线
+                console.log("过滤节点", x.id)
+                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+
+
+                return false;
+              } else {
+
+
+                return true;
+              }
+
+            }
+          );
+        } else {
+          this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
+            x => {
+
+              if (x.styleId == 'LHCsysPotStyle20190620042709661000002') {
+                //过滤连线
+                console.log("过滤节点", x.id)
+                this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => y.source != x.id && y.target != x.id);
+
+
+                return false;
+              } else {
+
+                return true;
+              }
+
+            }
+          );
+        }
+
+
+      },
+        (err) => {
+          this.msg.create("error", "发生错误，请稍后重试！");
+
+        });
     }
 
   }

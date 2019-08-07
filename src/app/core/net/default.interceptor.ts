@@ -93,9 +93,9 @@ export class DefaultInterceptor implements HttpInterceptor {
                     }
                 } else if (body.code == 500) {
 
-                    // this.notification.create('error', '系统提示',
-                    //     '系统故障，请停止操作并联系管理员"。');
-                    this.goTo(`/${ev.status}`);
+                    this.notification.create('error', '系统提示',
+                        '系统故障，请停止操作并联系管理员"。');
+                    //this.goTo(`/${ev.status}`);
                 }
 
                 break;

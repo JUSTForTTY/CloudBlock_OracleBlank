@@ -4024,6 +4024,7 @@ export class FlowchartComponent implements OnInit {
             }
           );
         } else {
+          //指向本节点的维修站不进行过滤
           this.hierarchialGraphSimple.nodes = this.hierarchialGraphSimple.nodes.filter(
             x => {
 
@@ -4033,14 +4034,23 @@ export class FlowchartComponent implements OnInit {
                 console.log("过滤节点", x.id)
                 this.hierarchialGraphSimple.links = this.hierarchialGraphSimple.links.filter(y => {
 
-                  if (y.source != x.id && y.target != x.id) {
+                  if (y.target == currentPot.id) {
 
                     return true;
                   } else {
+                    if (y.source != x.id && y.target != x.id) {
 
-                    showflag = false;
-                    return false;
+
+                      return true;
+                    } else {
+
+
+                      showflag = false;
+                      return false;
+                    }
+
                   }
+
 
                 });
 
@@ -4065,6 +4075,11 @@ export class FlowchartComponent implements OnInit {
           this.msg.create("error", "发生错误，请稍后重试！");
 
         });
+    } else {
+ 
+      this.hierarchialGraphSimple.links = [...this.hierarchialGraphSimple.links];
+      this.hierarchialGraphSimple.nodes = [...this.hierarchialGraphSimple.nodes];
+
     }
 
   }

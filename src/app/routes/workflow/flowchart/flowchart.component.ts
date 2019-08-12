@@ -843,7 +843,7 @@ export class FlowchartComponent implements OnInit {
   }
 
   //新增工序
-  insertRepairFlowPoint(otherNodeId) {
+  insertRepairFlowPoint(otherNodeId,potName,potPublicId,potType) {
     this.flowPointMark = "insert";
     let opId = this.insertForm.value.opPot;
     //let rId = this.insertForm.value.resource;
@@ -858,7 +858,7 @@ export class FlowchartComponent implements OnInit {
     // }
     if (isExcrete) isExcrete = 1; else isExcrete = 0;
     //第一步从公共工序获取样式名称
-    this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
+    this.httpService.getHttp("/csyspotpublic/" + potPublicId).subscribe((data1: any) => {
       let ruleparam = {
 
         "csysPotStyleId": data1.data.csysPotStyleId,
@@ -871,9 +871,9 @@ export class FlowchartComponent implements OnInit {
         console.log("规则数据attribute", this.insertForm.value.potAttribute)
         if (ruleData.data.length > 0) {
           params = {
-            "csysPotPublicId": this.insertForm.value.addNodeName,
-            "csysPotName": this.insertForm.value.addNodeName1,
-            "csysPotType": this.insertForm.value.addNodeName2,
+            "csysPotPublicId": potPublicId,
+            "csysPotName": potName,
+            "csysPotType": potType,
             "csysPotAtrribute": this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
@@ -883,9 +883,9 @@ export class FlowchartComponent implements OnInit {
           }
         } else {
           params = {
-            "csysPotPublicId": this.insertForm.value.addNodeName,
-            "csysPotName": this.insertForm.value.addNodeName1,
-            "csysPotType": this.insertForm.value.addNodeName2,
+            "csysPotPublicId": potPublicId,
+            "csysPotName": potName,
+            "csysPotType": potType,
             "csysPotAtrribute": this.insertForm.value.potAttribute,
             "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
@@ -930,7 +930,7 @@ export class FlowchartComponent implements OnInit {
           //重新获取目标工序
           //this.getFlowTargetNodes();
           //新增途程工序
-          this.insertRepairNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, skillIds, otherNodeId);
+          this.insertRepairNodes(nodeId, potType, data1.data.csysPotStyleId, opId, skillIds, potName,potPublicId,otherNodeId);
           //新增工序组 
           if (opId) {
             this.insertOpPot(nodeId, opId);
@@ -1541,19 +1541,19 @@ export class FlowchartComponent implements OnInit {
   }
 
   //新增途程工序
-  insertRepairNodes(nodeId, type, styId, opId, skillIds, otherNodeId) {
+  insertRepairNodes(nodeId, type, styId, opId, skillIds,potName,potPublicId, otherNodeId) {
 
     this.httpService.getHttp("/csyspotstyle/" + styId).subscribe((data: any) => {
       //途程工序数据添加新增工序
       if (type == 0) {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
-          label: this.insertForm.value.addNodeName1,
+          label: potName,
           position: { "x": 20, "y": 20 },
           color: data.data.csysPotStyleColor,
           shape: data.data.csysPotStyleDesc,
           styleId: data.data.csysPotStyleId,
-          publicPotId: this.insertForm.value.addNodeName,
+          publicPotId: potPublicId,
           op: opId,
           opName: this.opName,
           skillIds: skillIds
@@ -1562,12 +1562,12 @@ export class FlowchartComponent implements OnInit {
       } else {
         this.hierarchialGraph.nodes.push({
           id: nodeId,
-          label: this.insertForm.value.addNodeName1,
+          label: potName,
           position: { "x": 20, "y": 20 },
           color: data.data.csysPotStyleColor,
           shape: data.data.csysPotStyleDesc,
           styleId: data.data.csysPotStyleId,
-          publicPotId: this.insertForm.value.addNodeName,
+          publicPotId: potPublicId,
           op: opId,
           opName: this.opName,
           skillIds: skillIds
@@ -3489,12 +3489,12 @@ export class FlowchartComponent implements OnInit {
           } else {
 
             //创建维修节点
-            this.insertForm.value.addNodeName = "LHCsysPotPublic20190620043043486000010";
-            this.insertForm.value.addNodeName1 = "TS1-" + potName;
-            this.insertForm.value.addNodeName2 = "1";
+            let potPublicId = "LHCsysPotPublic20190620043043486000010";
+            potName = "TS1-" + potName;
+            let potType = "1";
 
 
-            this.insertRepairFlowPoint(currentPot);
+            this.insertRepairFlowPoint(currentPot,potName,potPublicId,potType);
 
 
 

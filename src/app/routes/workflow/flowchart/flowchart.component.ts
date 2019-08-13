@@ -120,9 +120,10 @@ export class FlowchartComponent implements OnInit {
   pointDescList = [];
   workflowType;
   //定义途程图数据
-  hierarchialGraph = { nodes: [], links: [] };
+  hierarchialGraph = { nodes: [], links: [], clusters: [] };
 
-  hierarchialGraphSimple = { nodes: [], links: [] };
+  hierarchialGraphSimple = { nodes: [], links: [], clusters: [] };
+
 
   curve = shape.curveBundle.beta(1);
 
@@ -843,7 +844,7 @@ export class FlowchartComponent implements OnInit {
   }
 
   //新增工序
-  insertRepairFlowPoint(otherNodeId,potName,potPublicId,potType) {
+  insertRepairFlowPoint(otherNodeId, potName, potPublicId, potType) {
     this.flowPointMark = "insert";
     let opId = this.insertForm.value.opPot;
     //let rId = this.insertForm.value.resource;
@@ -930,7 +931,7 @@ export class FlowchartComponent implements OnInit {
           //重新获取目标工序
           //this.getFlowTargetNodes();
           //新增途程工序
-          this.insertRepairNodes(nodeId, potType, data1.data.csysPotStyleId, opId, skillIds, potName,potPublicId,otherNodeId);
+          this.insertRepairNodes(nodeId, potType, data1.data.csysPotStyleId, opId, skillIds, potName, potPublicId, otherNodeId);
           //新增工序组 
           if (opId) {
             this.insertOpPot(nodeId, opId);
@@ -1342,12 +1343,15 @@ export class FlowchartComponent implements OnInit {
 
         }
       );
+      console.log("工序信息-nodes", this.hierarchialGraphSimple.nodes);
       console.log("工序信息-links", this.hierarchialGraphSimple.links);
 
       //this.hierarchialGraph.links=[{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""}{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000052","label":"","id":"SUCUCsysPotTrs20190225000048","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000052","target":"SUCUCsysPot20190225000053","label":"","id":"SUCUCsysPotTrs20190225000049","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000053","target":"SUCUCsysPot20190225000054","label":"","id":"SUCUCsysPotTrs20190225000050","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000054","target":"SUCUCsysPot20190225000055","label":"","id":"SUCUCsysPotTrs20190225000051","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000056","label":"","id":"SUCUCsysPotTrs20190225000052","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000057","label":"","id":"SUCUCsysPotTrs20190225000053","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000058","label":"","id":"SUCUCsysPotTrs20190225000054","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000055","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000056","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000057","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000058","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190226000067","target":"SUCUCsysPot20190225000050","label":"","id":"SUCUCsysPotTrs20190226000068","stroke":"","strokeWidth":"","strokeDash":""}];
       //工序数据
       /*console.log(this.hierarchialGraph.nodes)*/
-      console.log("当前工序信息", JSON.stringify(this.hierarchialGraph.links));
+
+      
+
 
       //设置主题
       this.setColorScheme(workFolowData.csysWorkflowColortheme != null && workFolowData.csysWorkflowColortheme != "" ? workFolowData.csysWorkflowColortheme : 'cool');
@@ -1361,6 +1365,50 @@ export class FlowchartComponent implements OnInit {
       this.isGraphSpinning = false;
 
     })
+  }
+
+
+  getOpPot(){
+    
+    this.hierarchialGraphSimple.clusters=[];
+     //查询工序组工序信息
+     let opparam = {
+      csysWorkflowId: this.workflowId
+    }
+    this.httpService.postHttp("/op/condition", opparam).subscribe((opData: any) => {
+
+      console.log("工序组显示", opData);
+      opData.data.forEach(element => {
+
+        let item = {
+          id: element.opId,
+          data:{color: "#8796c0"},
+          label: element.opCode,
+          childNodeIds: []
+        }
+        //查询组节点
+        let opPotDataParam = {
+          csysWorkflowId: this.workflowId,
+          opId: element.opId
+        }
+        this.httpService.postHttp("/oppot/condition", opPotDataParam).subscribe((opPotData: any) => {
+
+          opPotData.data.forEach(element => {
+            
+            item.childNodeIds.push(element.csysPotId);
+          });
+         
+          this.hierarchialGraphSimple.clusters=[...this.hierarchialGraphSimple.clusters];
+        });
+
+        this.hierarchialGraphSimple.clusters.push(item);
+
+      });
+      console.log("处理组信息", this.hierarchialGraphSimple.clusters);
+
+
+
+    });
   }
   //获取目标工序
   getFlowTargetNodes() {
@@ -1541,7 +1589,7 @@ export class FlowchartComponent implements OnInit {
   }
 
   //新增途程工序
-  insertRepairNodes(nodeId, type, styId, opId, skillIds,potName,potPublicId, otherNodeId) {
+  insertRepairNodes(nodeId, type, styId, opId, skillIds, potName, potPublicId, otherNodeId) {
 
     this.httpService.getHttp("/csyspotstyle/" + styId).subscribe((data: any) => {
       //途程工序数据添加新增工序
@@ -1583,7 +1631,7 @@ export class FlowchartComponent implements OnInit {
       //第二步：保存工序迁移
       this.saveFlowpointTransfer(otherNodeId);
 
-      this.controlArray=[];
+      this.controlArray = [];
 
       const id = "sucu" + Math.floor(Math.random() * 10000 + 1);
       const control = {
@@ -2638,6 +2686,7 @@ export class FlowchartComponent implements OnInit {
 
   //重绘途程图
   drawWorkFlow() {
+    
 
     this.hierarchialGraph.links = [...this.hierarchialGraph.links];
     this.hierarchialGraph.nodes = [...this.hierarchialGraph.nodes];
@@ -2681,9 +2730,8 @@ export class FlowchartComponent implements OnInit {
 
       }
     );
-
-
-
+ 
+    this.getOpPot();
 
   }
 
@@ -3501,7 +3549,7 @@ export class FlowchartComponent implements OnInit {
             let potType = "1";
 
 
-            this.insertRepairFlowPoint(currentPot,potName,potPublicId,potType);
+            this.insertRepairFlowPoint(currentPot, potName, potPublicId, potType);
 
 
 

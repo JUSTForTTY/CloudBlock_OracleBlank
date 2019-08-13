@@ -8,6 +8,7 @@
       <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
         <ngx-graph class="chart-container" [layout]="layout" [view]="view" [center$]="center$" minZoomLevel=0.3
           maxZoomLevel=2 panningEnabled=false [layoutSettings]="layoutSettings" [legend]="showLegend" [links]="hierarchialGraphSimple.links"
+          [clusters]=hierarchialGraphSimple.clusters
           (legendLabelClick)="onLegendLabelClick($event)" [nodes]="hierarchialGraphSimple.nodes" [curve]="curve"
           (select)="clickNode($event)">
 

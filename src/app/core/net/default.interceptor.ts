@@ -95,6 +95,7 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                     this.notification.create('error', '系统提示',
                         '系统故障，请停止操作并联系管理员"。');
+                    //this.goTo(`/${ev.status}`);
                 }
 
                 break;
@@ -106,7 +107,7 @@ export class DefaultInterceptor implements HttpInterceptor {
             case 403:
             case 404:
             case 500:
-                this.goTo(`/exception/${ev.status}`);
+                this.goTo(`/${ev.status}`);
                 break;
             default:
                 if (ev instanceof HttpErrorResponse) {

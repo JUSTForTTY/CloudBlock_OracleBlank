@@ -66,12 +66,17 @@ export function fnSTConfig(): STConfig {
     } as STConfig
   };
 }
+import { LodopConfig } from '@delon/abc';
+export function fnLodopConfig(): LodopConfig {
+  return { ...new LodopConfig(), ...{ } as LodopConfig };
+}
 
 const GLOBAL_CONFIG_PROVIDES = [
   // TIPS：@delon/abc 有大量的全局配置信息，例如设置所有 `st` 的页码默认为 `20` 行
   { provide: STConfig, useFactory: fnSTConfig },
   { provide: PageHeaderConfig, useFactory: fnPageHeaderConfig },
   { provide: DelonAuthConfig, useFactory: fnDelonAuthConfig },
+  { provide: LodopConfig, useFactory: fnLodopConfig }
 ];
 
 // #endregion

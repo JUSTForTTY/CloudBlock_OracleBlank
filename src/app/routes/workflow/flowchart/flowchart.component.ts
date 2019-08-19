@@ -3583,7 +3583,7 @@ export class FlowchartComponent implements OnInit {
       this.timeVisible = true;
     }
   }
-  timeData;
+  timeData = [];
   timeSpin = false;
   shiftTime = false;
   status = false;
@@ -3833,7 +3833,7 @@ export class FlowchartComponent implements OnInit {
       console.log("confisrtData", this.confisrtData)
     })
   }
-  confisrtData;
+  confisrtData = [];
   shiftMade = false;
   firstData = [];
   madeOkLoading = false;
@@ -4010,6 +4010,7 @@ export class FlowchartComponent implements OnInit {
     //更新原来数据
     let cname;
     let pname;
+    
     let openMade = 1;
     //取节点值
     for (const key in this.nodeData) {
@@ -4370,4 +4371,6 @@ export class FlowchartComponent implements OnInit {
 
   }
 }
+
+
 

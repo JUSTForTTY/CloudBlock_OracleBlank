@@ -116,6 +116,9 @@ isVisible = false;
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
+    if(typeof  this.setService.pageDatas['needNextCheckBoxValue']=="undefined"){
+      this.setService.pageDatas['needNextCheckBoxValue']=false;
+    }
 
   }
 

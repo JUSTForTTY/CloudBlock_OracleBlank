@@ -17,12 +17,12 @@ const routes: Routes = [
   { path: 'test', component: TestComponent },
   //工作流
   {
-    path: 'workflow', loadChildren: './workflow/workflow.module#WorkflowModule', data: { title: '工作流' }
+    path: 'workflow', loadChildren: '../workflow/workflow.module#WorkflowModule', data: { title: '工作流' }
 
   },
   //组织架构 
   {
-    path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' }
+    path: 'authority', loadChildren: '../organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' }
   },
 
 

@@ -17,20 +17,12 @@ const routes: Routes = [
   { path: 'test', component: TestComponent },
   //工作流
   {
-<<<<<<< HEAD
-    path: 'workflow', loadChildren: '../workflow/workflow.module#WorkflowModule', data: { title: '工作流' }
-=======
     path: 'workflow', loadChildren: './../workflow/workflow.module#WorkflowModule', data: { title: '工作流' }
->>>>>>> 23cc0b2d0033b4fbeea9b1285c35058b611187c8
 
   },
   //组织架构 
   {
-<<<<<<< HEAD
-    path: 'authority', loadChildren: '../organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' }
-=======
     path: 'authority', loadChildren: './../organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' }
->>>>>>> 23cc0b2d0033b4fbeea9b1285c35058b611187c8
   },
 
 

@@ -19,6 +19,7 @@
     ],
     "baseUrl": "./src/",
     "paths": {
+      "mjszip":["../node_modules/jszip/dist/jszip.min.js"],
       "@shared": [
         "app/shared/index"
       ],

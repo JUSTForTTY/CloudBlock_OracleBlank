@@ -8,6 +8,7 @@
       "node"
     ],
     "paths": {
+      "mjszip":["../node_modules/jszip/dist/jszip.min.js"],
       "@base": [
         "/"
       ],

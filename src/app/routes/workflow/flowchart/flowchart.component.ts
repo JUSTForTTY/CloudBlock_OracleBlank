@@ -20,7 +20,6 @@ const roleCurrencyList = [];
 
 
 export class FlowchartComponent implements OnInit {
-
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.screenHeight = event.target.innerWidth + "px";
@@ -40,6 +39,8 @@ export class FlowchartComponent implements OnInit {
   transferPgaeUrl = "/csystrspage";
   transferPgaeConditionUrl = "/csystrspage/listCondition";
   nodes;
+  //公共工序
+  publickPotName
   //新建工序的id
   checkChartId;
   params = {};
@@ -461,16 +462,23 @@ export class FlowchartComponent implements OnInit {
 
   isSpinning = false;
   clickNodeData;
-  modeldata
+  resourceName;
+  modeldata;
   //工序点击事件
   clickNode(data) {
-
-
     console.log("点击数据", data)
-
+    //获取当前节点的资源
+    this.httpService.postHttp("/tresource/condition",{"csysPotPublicId":data.publicPotId}).subscribe((data: any) => {
+      this.resourceData = data.data;
+    })
+    //获取当前节点公共工序名称
+    this.getPublickPotName(data.publicPotId);
     let params = {
       csysPotId: data.id,
     }
+    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
+
+    })
     this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
 
       console.log("点击节点参数数据", potdata.data[0])
@@ -744,9 +752,11 @@ export class FlowchartComponent implements OnInit {
     }
   }
 
-  getStyleId(csysPotPublicId): void {
-    this.httpService.putHttp("/csyspotpublic" + "/" + csysPotPublicId).subscribe((data: any) => {
-
+  getPublickPotName(csysPotPublicId): void {
+    this.httpService.getHttp("/csyspotpublic" + "/" + csysPotPublicId).subscribe((data: any) => {
+      this.publickPotName = data.data.csysPotPublicName
+      console.log("publickPotName",this.publickPotName);
+      
     })
   }
   flowPointMark = "none";

@@ -151,7 +151,7 @@ export class PublicworkflowComponent implements OnInit {
       this.httpService.postHttp(this.workflowUrl, workflowdata).subscribe((data: any) => {
         this.isOkLoading = false;
         //新增公共节点再新增资源
-        this.insetPotPubRs(data.data,this.form.controls.workFlowName.value);
+        this.insetPotPubRs(data.data, this.form.controls.workFlowName.value);
         //新增功能页面
         this.insetPotPage(data.data);
         this.msg.create("success", "创建成功");
@@ -168,10 +168,10 @@ export class PublicworkflowComponent implements OnInit {
   PublicName;
   //编辑途程初始化
   editWorkflowInit(cySysFlowpointPublicId): void {
-    if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010") {
-      this.msg.error("系统工序禁止编辑！");
-      return;
-    }
+    // if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010") {
+    //   this.msg.error("系统工序禁止编辑！");
+    //   return;
+    // }
     this.spinning = true;
     this.init();
     this.getResource();
@@ -192,7 +192,7 @@ export class PublicworkflowComponent implements OnInit {
             potrs.push(potRsData[key].tResourceId);
             this.resourceData.push(potRsData[key])
             // console.log(potRsData[key])
-            }
+          }
           console.log(potrs)
           // pageData = pageData.data;
           // for (let index = 0; index < potRsData.length; index++) {
@@ -211,8 +211,8 @@ export class PublicworkflowComponent implements OnInit {
           }
           data = data.data;
           console.log("datag", data.csysPotDataGroup);
-          if(!data.csysPotDataGroup){
-            data.csysPotDataGroup = null 
+          if (!data.csysPotDataGroup) {
+            data.csysPotDataGroup = null
           }
           this.PublicName = data.csysPotPublicName;
           this.form = this.fb.group({
@@ -239,8 +239,8 @@ export class PublicworkflowComponent implements OnInit {
     }
     if (this.form.controls.workFlowName.invalid) return;
     this.isOkLoading = true;
-    console.log("datags",this.form.controls.workDataGroup.value);
-    if(!this.form.value.workDataGroup){
+    console.log("datags", this.form.controls.workDataGroup.value);
+    if (!this.form.value.workDataGroup) {
       this.form.value.workDataGroup = ""
     }
     //新写入数据
@@ -262,7 +262,7 @@ export class PublicworkflowComponent implements OnInit {
       }
       this.httpService.putHttp(this.workflowUrl, params).subscribe((data: any) => {
         this.editPotPage(this.cySysFlowpointPublicId);
-        this.editPotPubRs(this.cySysFlowpointPublicId,this.form.controls.workFlowName.value);
+        this.editPotPubRs(this.cySysFlowpointPublicId, this.form.controls.workFlowName.value);
         this.isOkLoading = false;
         this.msg.create("success", "编辑成功");
         this.isVisible = false;
@@ -281,7 +281,7 @@ export class PublicworkflowComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
-    if (resolve == "LHCsysPotPublic20190620043043486000010") {
+    if (resolve == "LHCsysPotPublic20190620043043486000010" || resolve == "LHCsysPotPublic20190803014907696000063" || resolve == "LHCsysPotPublic20190815055541662000074") {
       this.msg.error("系统工序禁止删除！");
       return;
     }
@@ -404,7 +404,7 @@ export class PublicworkflowComponent implements OnInit {
     注释掉之前多对多，需要的话可以开放
   */
 
-  insetPotPubRs(pfId,wname): void {
+  insetPotPubRs(pfId, wname): void {
     //当新增公共节点资源
     let potRsId = this.form.value.workFlowResource;
     if (potRsId) {
@@ -413,7 +413,7 @@ export class PublicworkflowComponent implements OnInit {
         let potRsData = {
           "csysPotPublicId": pfId,
           "tResourceId": element,
-          "flag1":wname
+          "flag1": wname
 
         }
         //console.log("rs检测", potRsData)
@@ -451,7 +451,7 @@ export class PublicworkflowComponent implements OnInit {
     }
   }
   //编辑工序资源
-  editPotPubRs(pfId,wname): void {
+  editPotPubRs(pfId, wname): void {
     let deleteData = [];
     this.httpService.postHttp(this.resourceUrl + "/condition").subscribe((data: any) => {
       data = data.data;
@@ -469,18 +469,18 @@ export class PublicworkflowComponent implements OnInit {
           let potRsData = {
             "csysPotPublicId": "",
             "tResourceId": element,
-            "flag1":""
+            "flag1": ""
           }
           //console.log("potRsData", potRsData)
           this.httpService.putHttp(this.resourceUrl, potRsData).subscribe((data: any) => {
           })
           // this.httpService.deleteHttp(this.potpubrsUrl + "/" + element).subscribe((data: any) => { })
           if (index == deleteData.length - 1) {
-            this.insetPotPubRs(pfId,wname);
+            this.insetPotPubRs(pfId, wname);
           }
         }
       } else if (this.form.value.workFlowResource) {
-        this.insetPotPubRs(pfId,wname);
+        this.insetPotPubRs(pfId, wname);
       }
     })
   }
@@ -595,10 +595,10 @@ export class PublicworkflowComponent implements OnInit {
     })
   }
   dataGroup;
-  getDataGroup():void{
-    this.httpService.postHttp("csyscodemaster/condition",{ "csysCodemasterType": "data_group"}).subscribe((data1: any) => {
+  getDataGroup(): void {
+    this.httpService.postHttp("csyscodemaster/condition", { "csysCodemasterType": "data_group" }).subscribe((data1: any) => {
       this.dataGroup = data1.data
-      })
+    })
   }
 }
 

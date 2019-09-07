@@ -37,14 +37,14 @@
     </nz-card>
   </div>
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
-    <nz-card *ngIf="!formEditStatus" nzTitle="新建节点" [nzBordered]="false" class="mb-lg">
+    <nz-card *ngIf="!formEditStatus" nzTitle="新建部门" [nzBordered]="false" class="mb-lg">
       <div class="active-chart">
         <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
           <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="addNodeName">节点名称</nz-form-label>
+            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="addNodeName">部门名称</nz-form-label>
             <nz-form-control nzXs="24" nzSm="16" nzMd="16">
               <input nz-input formControlName="addNodeName" id="addNodeName" placeholder="给目标起个名字">
-              <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">请输入节点名称</nz-form-explain>
+              <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">请输入部门名称</nz-form-explain>
             </nz-form-control>
           </nz-form-item>
           <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
@@ -52,11 +52,11 @@
             <i class="anticon anticon-usergroup-add"></i>
           </button>
           <nz-form-item *ngFor="let control of controlArray;let i = index">
-            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标节点</nz-form-label>
+            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
             <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
               <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id" [formControlName]="control.controlInstance"> -->
               <nz-select style=" margin-right:8px;" [(ngModel)]="control.value" (ngModelChange)="updateTagetPoint(control,$event)"
-                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标节点'"
+                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'"
                 [nzShowSearch]="true">
                 <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
                 </nz-option>
@@ -76,7 +76,7 @@
           <nz-form-item>
             <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
               <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                <i class="anticon anticon-plus"></i> 增加目标节点</button>
+                <i class="anticon anticon-plus"></i> 增加目标部门</button>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
@@ -88,24 +88,24 @@
       </div>
     </nz-card>
 
-    <nz-card *ngIf="formEditStatus" nzTitle="修改节点" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
+    <nz-card *ngIf="formEditStatus" nzTitle="修改部门" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
       <ng-template #extraTemplate>
-        <a (click)="addPoint()">新建节点</a>
+        <a (click)="addPoint()">新建部门</a>
       </ng-template>
       <div class="active-chart">
         <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
           <nz-form-item hidden>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">节点编号</nz-form-label>
+            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">部门编号</nz-form-label>
             <nz-form-control nzXs="24" nzSm="17" nzMd="17">
               <input nz-input disabled="disabled" formControlName="id" id="id" placeholder="">
-              <nz-form-explain *ngIf="editForm.get('id').dirty && editForm.get('id').errors">请输入节点编号</nz-form-explain>
+              <nz-form-explain *ngIf="editForm.get('id').dirty && editForm.get('id').errors">请输入部门编号</nz-form-explain>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="nodeEditName">节点名称</nz-form-label>
+            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="nodeEditName">部门名称</nz-form-label>
             <nz-form-control nzXs="24" nzSm="16" nzMd="16">
-              <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="给目节点起个名字">
-              <nz-form-explain *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">请输入节点名称</nz-form-explain>
+              <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="给目部门起个名字">
+              <nz-form-explain *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">请输入部门名称</nz-form-explain>
             </nz-form-control>
           </nz-form-item>
           <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
@@ -113,13 +113,13 @@
             <i class="anticon anticon-usergroup-add"></i>
           </button>
           <nz-form-item *ngFor="let control of controlArray;let i = index">
-            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标节点</nz-form-label>
+            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
             <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
               <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id
                 " [formControlName]="control.controlInstance"> -->
                 
               <nz-select style=" margin-right:8px;" [(ngModel)]="control.value" (ngModelChange)="updateTagetPoint(control,$event)"
-                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标节点'"
+                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'"
                 [nzShowSearch]="true">
                 <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
                 </nz-option>
@@ -141,7 +141,7 @@
           <nz-form-item>
             <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
               <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                <i class="anticon anticon-plus"></i> 增加目标节点</button>
+                <i class="anticon anticon-plus"></i> 增加目标部门</button>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>

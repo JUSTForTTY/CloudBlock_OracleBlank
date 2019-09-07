@@ -57,8 +57,7 @@ export class RolememberComponent implements OnInit {
   buttonloading = false;
   isVisible = false;
   isOkLoading = false;
-
-
+  urValue = null;
   selectedRows: STData[] = [];
   description = '';
   totalCallNo = 0;
@@ -75,6 +74,10 @@ export class RolememberComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(queryParams => {
+      this.roleId = queryParams['roleId'];
+    });
+    this.urValue = this.roleId;
     // this.getData();
     this.getUsersList();
     this.getRoleList();
@@ -82,9 +85,7 @@ export class RolememberComponent implements OnInit {
     this.initializeFromControl();
     this.getMenuList();
     this.getTreeData();
-    this.route.queryParams.subscribe(queryParams => {
-      this.roleId = queryParams['roleId'];
-    });
+
     //this.roleId = this.route.snapshot.paramMap.get("roleId");
   }
 
@@ -102,6 +103,7 @@ export class RolememberComponent implements OnInit {
   changeCategory(chickid) {
     this.roleId = chickid;
     this.usersData = [];
+    //this.urValue = chickid;
     console.log('data', this.usersListData1)
     for (let i = 0; i < this.categories.length; i++) {
       if (this.categories[i].csysRoleId != chickid) {
@@ -124,7 +126,7 @@ export class RolememberComponent implements OnInit {
     }
 
     this.usersData = [...this.usersData]
-    this.happenUser = this.usersData;
+
 
   }
 
@@ -278,6 +280,7 @@ export class RolememberComponent implements OnInit {
     });
     this.submitTimer = setInterval(() => {
       if (this.submitNum == 3) {
+        this.urValue = this.roleId;
         this.nzBtnLoding = false;
         this.msg.create("success", "编辑成功");
         this.nzTitle = "权限分配";
@@ -461,12 +464,12 @@ export class RolememberComponent implements OnInit {
       "csysUserAddress": this.addUserForm.controls.address.value//地址
     }
     //添加用户
-    this.httpService.postHttp("/csysuser/condition", { "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase()}).subscribe((udata: any) => {
-      if(udata.data.length != 0){
+    this.httpService.postHttp("/csysuser/condition", { "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase() }).subscribe((udata: any) => {
+      if (udata.data.length != 0) {
         this.nzBtnLoding = false;
         this.msg.error("该账号已存在");
         return;
-      }else{
+      } else {
         this.httpService.postHttp("/csysuser", userData).subscribe((data: any) => {
           this.insertNum++;
           let userId = data.data;
@@ -484,7 +487,7 @@ export class RolememberComponent implements OnInit {
           }
         }, 500);
       }
-  })
+    })
   }
 
   insertUserRole(userId): void {
@@ -560,7 +563,6 @@ export class RolememberComponent implements OnInit {
         this.getUserOrganization(this.usersListData[i].csysUserId, i);
         this.getUserRole(this.usersListData[i].csysUserId, i);
       }
-
       this.timer = setInterval(() => {
         if (this.num == 0) {
           this.nzLoading = false;
@@ -575,6 +577,7 @@ export class RolememberComponent implements OnInit {
             }
           }
           this.usersData = [...this.usersData];
+          this.happenUser = this.usersListData;
           this.changeCategory(this.roleId);
           clearInterval(this.timer);
         }
@@ -669,6 +672,10 @@ export class RolememberComponent implements OnInit {
   isRoleVisible = false;
   password
   editUser(userId): void {
+    if (userId == "SUCUCsysUser20190426000036") {
+      this.msg.error("系统账号禁止编辑!");
+      return;
+    }
     this.nzTitle = "编辑成员";
     this.editUserId = userId;
     this.isRoleVisible = true;
@@ -687,7 +694,7 @@ export class RolememberComponent implements OnInit {
       name: [userData.csysUserRealname, [Validators.required]],
       username: [userData.csysUserUsername, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
       password: [userData.csysUserPassword, [Validators.required]],
-      numType:[userData.csysUserHp],
+      numType: [userData.csysUserHp],
       confitmPassword: [userData.csysUserPassword, [Validators.required, this.confirmationValidator]],
       //accountResource: [rsData],
       age: [userData.csysUserAge],
@@ -709,7 +716,7 @@ export class RolememberComponent implements OnInit {
       password: [null, [Validators.required]],
       //accountResource: [null],
       confitmPassword: [null, [Validators.required, this.confirmationValidator]],
-      numType:["0"],
+      numType: ["0"],
       age: [null],
       gender: ["男"],
       position: [null, [Validators.required]],
@@ -764,6 +771,10 @@ export class RolememberComponent implements OnInit {
   }
   //删除用户
   deleteUser(userId): void {
+    if (userId == "SUCUCsysUser20190426000036") {
+      this.msg.error("系统账号禁止删除!");
+      return;
+    }
     let deleteArray = [];
     let organizationArray = [];
     console.log(userId);
@@ -838,8 +849,15 @@ export class RolememberComponent implements OnInit {
   //     this.resourceData = data.data;
   //   })
   // }
+  sendMessage(event): void {
+    if (event.charCode == 13) {
+      //点击回车键发送消息
+      this.serchUserList()
+    }
+  }
   searchData = []
   serchUserList(): void {
+    this.urValue = "allRole";
     this.searchData = [];
     if (this.searchContent) {
       for (let index = 0; index < this.happenUser.length; index++) {
@@ -853,7 +871,45 @@ export class RolememberComponent implements OnInit {
       this.usersData = this.happenUser;
     }
   }
-  resetingUserList():void{
+  resetingUserList(): void {
     this.usersData = this.happenUser;
   }
+  onChange(value) {
+    let type = typeof value;
+    if (type == "string") {
+      //小写转大写
+      var reg2: RegExp = /[a-z]/;
+      if (reg2.test(value)) {
+        value = value.toLocaleUpperCase();
+      }
+    }
+    this.searchContent = value;
+  }
+  //监听键盘的回车
+  keytest(event){
+    console.log(event.key);
+    if(event.key == "Enter"){
+      this.serchUserList();
+    }
+  }
+  uInspect = false;
+  //用户名异步校验
+  usernameInspect(value):void{
+    this.uInspect = false;
+    let type = typeof value;
+    if (type == "string") {
+      //小写转大写
+      var reg2: RegExp = /[a-z]/;
+      if (reg2.test(value)) {
+        value = value.toLocaleUpperCase();
+      }
+    }
+    this.httpService.postHttp("csysuser/condition", {"csysUserUsername": value}).subscribe((data1: any) => {
+      if(data1.data.length != 0){
+        this.uInspect = true;
+      }
+    })
+  } 
+ 
+
 }

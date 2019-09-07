@@ -71,20 +71,31 @@ export class FlowtrsComponent implements OnInit {
 
   //搜索途程
   serchWorkFlow(): void {
-    let temporayArray1 = [];
+    this.loading = true;
     if (this.searchContent != "") {
-      for (let i = 0; i < this.searchData.length; i++) {
-        if ((this.searchData[i].csysPotGroupName).indexOf(this.searchContent) != -1) {
-          temporayArray1.push(this.searchData[i]);
-        }
-      }
-      this.data = temporayArray1;
+    this.httpService.postHttp(this.url + "&page=" + this.pageId,{"csysPotGroupName": this.searchContent}).subscribe((data: any) => {
+      this.totalRecords = data.data.total;
+      this.total = data.data.total;
+      this.currentPage = this.pageId;
+      this.data = data.data.list;
+      this.searchData = data.data.list;//用于搜索列表
+      this.loading = false;
+      console.log("pagedata", this.data);
+    });
+    // let temporayArray1 = [];
+    // if (this.searchContent != "") {
+    //   for (let i = 0; i < this.searchData.length; i++) {
+    //     if ((this.searchData[i].csysPotGroupName).indexOf(this.searchContent) != -1) {
+    //       temporayArray1.push(this.searchData[i]);
+    //     }
+    //   }
+    //   this.data = temporayArray1;
 
-      if (temporayArray1.length == 0) {
-        this.totalRecords = 1;
-      } else {
-        this.totalRecords = temporayArray1.length;
-      }
+    //   if (temporayArray1.length == 0) {
+    //     this.totalRecords = 1;
+    //   } else {
+    //     this.totalRecords = temporayArray1.length;
+    //   }
     } else {
       this._getWorkFlowListData(this.pageId);
     }
@@ -139,7 +150,7 @@ export class FlowtrsComponent implements OnInit {
               "csysPotGroupFromId": data.data,
               "csysPotGroupToId": element
             }
-            this.httpService.postHttp("/csyspotgropre", groupData).subscribe((data1: any) => {
+            this.httpService.postHttp("csyspotgropre", groupData).subscribe((data1: any) => {
               //计数
               //当执行完之后
               if (i == workGroupValue.length - 1) {
@@ -337,23 +348,24 @@ export class FlowtrsComponent implements OnInit {
           "csysPotGroupIsDelete": "1",
         }
         this.httpService.putHttp(this.workflowUrl, deleteData).subscribe((data: any) => {
-          this.httpService.postHttp("/csyspotgropre/condition", { "csysPotGroupFromId": resolve }).subscribe((data1: any) => {
+          this.httpService.postHttp("csyspotgropre/condition", { "csysPotGroupFromId": resolve }).subscribe((data1: any) => {
             preData = data1.data
             if (preData.length != 0) {
               for (let index = 0; index < preData.length; index++) {
                 const element = preData[index];
                 let preDeleteData = {
-                  "csysPotGroPreId": element,
+                  "csysPotGroPreId": element.csysPotGroPreId,
                   "csysPotGroPreIsDelete": "1",
                 }
-                this.httpService.putHttp("/csyspotgropre", preDeleteData).subscribe((data2: any) => {
+                console.log("preDeleteData",preDeleteData);                
+                this.httpService.putHttp("csyspotgropre", preDeleteData).subscribe((data2: any) => {
                   if (index == preData.length - 1) {
                     this.msg.create('success', `删除成功！`);
                     this._getWorkFlowListData(this.pageId);
                   }
                 })
               }
-            } else {
+            } else { 
               this.msg.create('success', `删除成功！`);
               console.log("22aa");
               this._getWorkFlowListData(this.pageId);
@@ -400,6 +412,12 @@ export class FlowtrsComponent implements OnInit {
   }
   potOk(): void {
     this.potVisible = false;
+  }
+  keytest(event){
+    console.log(event.key);
+    if(event.key == "Enter"){
+      this.serchWorkFlow();
+    }
   }
 }
 

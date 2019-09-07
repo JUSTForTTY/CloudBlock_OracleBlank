@@ -356,7 +356,6 @@ export class FlowchartComponent implements OnInit {
 
 
 
-
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.workType = data.data[0].csysWorkflowType;
     })
@@ -3428,14 +3427,19 @@ export class FlowchartComponent implements OnInit {
           });
         } else {
 
-          console.log("节点类型智能识别-目标节点有后续节点，设置为普通节点");
-          let uppotparams = {
-            csysPotId: targetPot.data.csysPotId,
-            csysPotType: "1"
+
+          if(targetPot.data.csysPotType!='0'){
+            console.log("节点类型智能识别-目标节点有后续节点且不是头结点，设置为普通节点");
+            let uppotparams = {
+              csysPotId: targetPot.data.csysPotId,
+              csysPotType: "1"
+            }
+            this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+              console.log("节点类型智能识别-自动目标节点为普通节点");
+            });
           }
-          this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
-            console.log("节点类型智能识别-自动目标节点为普通节点");
-          });
+
+           
 
         }
 

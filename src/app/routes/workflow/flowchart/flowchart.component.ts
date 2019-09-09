@@ -40,7 +40,7 @@ export class FlowchartComponent implements OnInit {
   transferPgaeConditionUrl = "/csystrspage/listCondition";
   nodes;
   //公共工序
-  publickPotName
+  publickPotName = ""
   //新建工序的id
   checkChartId;
   params = {};
@@ -465,11 +465,15 @@ export class FlowchartComponent implements OnInit {
   modeldata;
   //工序点击事件
   clickNode(data) {
+    this.resourceData = [];
+
     console.log("点击数据", data)
     //获取当前节点的资源
-    this.httpService.postHttp("/tresource/condition",{"csysPotPublicId":data.publicPotId}).subscribe((data: any) => {
-      this.resourceData = data.data;
-    })
+    if (data.publicPotId) {
+      this.httpService.postHttp("/tresource/condition", { "csysPotPublicId": data.publicPotId }).subscribe((data: any) => {
+        this.resourceData = data.data;
+      })
+    }
     //获取当前节点公共工序名称
     this.getPublickPotName(data.publicPotId);
     let params = {
@@ -752,11 +756,13 @@ export class FlowchartComponent implements OnInit {
   }
 
   getPublickPotName(csysPotPublicId): void {
-    this.httpService.getHttp("/csyspotpublic" + "/" + csysPotPublicId).subscribe((data: any) => {
-      this.publickPotName = data.data.csysPotPublicName
-      console.log("publickPotName",this.publickPotName);
-      
-    })
+    this.publickPotName = "";
+    if (csysPotPublicId) {
+      this.httpService.getHttp("/csyspotpublic" + "/" + csysPotPublicId).subscribe((data: any) => {
+        this.publickPotName = data.data.csysPotPublicName
+        console.log("publickPotName", this.publickPotName);
+      })
+    }
   }
   flowPointMark = "none";
   //新增工序
@@ -1359,7 +1365,7 @@ export class FlowchartComponent implements OnInit {
       //工序数据
       /*console.log(this.hierarchialGraph.nodes)*/
 
-      
+
 
 
       //设置主题
@@ -1377,11 +1383,11 @@ export class FlowchartComponent implements OnInit {
   }
 
 
-  getOpPot(){
-    
-    this.hierarchialGraphSimple.clusters=[];
-     //查询工序组工序信息
-     let opparam = {
+  getOpPot() {
+
+    this.hierarchialGraphSimple.clusters = [];
+    //查询工序组工序信息
+    let opparam = {
       csysWorkflowId: this.workflowId
     }
     this.httpService.postHttp("/op/condition", opparam).subscribe((opData: any) => {
@@ -1391,7 +1397,7 @@ export class FlowchartComponent implements OnInit {
 
         let item = {
           id: element.opId,
-          data:{color: "#8796c0"},
+          data: { color: "#8796c0" },
           label: element.opCode,
           childNodeIds: []
         }
@@ -1403,11 +1409,11 @@ export class FlowchartComponent implements OnInit {
         this.httpService.postHttp("/oppot/condition", opPotDataParam).subscribe((opPotData: any) => {
 
           opPotData.data.forEach(element => {
-            
+
             item.childNodeIds.push(element.csysPotId);
           });
-         
-          this.hierarchialGraphSimple.clusters=[...this.hierarchialGraphSimple.clusters];
+
+          this.hierarchialGraphSimple.clusters = [...this.hierarchialGraphSimple.clusters];
         });
 
         this.hierarchialGraphSimple.clusters.push(item);
@@ -2695,7 +2701,7 @@ export class FlowchartComponent implements OnInit {
 
   //重绘途程图
   drawWorkFlow() {
-    
+
 
     this.hierarchialGraph.links = [...this.hierarchialGraph.links];
     this.hierarchialGraph.nodes = [...this.hierarchialGraph.nodes];
@@ -2739,7 +2745,7 @@ export class FlowchartComponent implements OnInit {
 
       }
     );
- 
+
     this.getOpPot();
 
   }
@@ -4024,7 +4030,7 @@ export class FlowchartComponent implements OnInit {
     //更新原来数据
     let cname;
     let pname;
-    
+
     let openMade = 1;
     //取节点值
     for (const key in this.nodeData) {
@@ -4246,7 +4252,7 @@ export class FlowchartComponent implements OnInit {
         }
         console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {
-          this.msg.create("success", "PPA维修站失败回退");
+          this.msg.create("success", "创建成功");
           this.isConfirmLoading = false;
           this.getTableData();
           this.tableShow = "table";

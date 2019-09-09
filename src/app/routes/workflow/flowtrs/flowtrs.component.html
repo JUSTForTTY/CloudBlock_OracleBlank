@@ -12,9 +12,9 @@
 <nz-card [nzBordered]="false">
   <div class="d-flex align-items-center mb-lg">
     <h3 class="flex-1 text-lg">防呆组列表</h3>
-    <!-- <div>
+    <div>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-        <input type="text" nz-input placeholder="工序组名称" [(ngModel)]="searchContent">
+        <input type="text" nz-input placeholder="防呆组名称" [(ngModel)]="searchContent" (keydown)="keytest($event)">
       </nz-input-group>
       <ng-template #suffixButton>
         <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
@@ -22,7 +22,7 @@
     </div>
     <div style="margin-left:8px;margin-right: 20px">
       <button nz-button nzType="primary" nzSearch (click)="restingSearch()">重置</button>
-    </div> -->
+    </div>
   </div>
   <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
     <i class="anticon anticon-plus"></i>

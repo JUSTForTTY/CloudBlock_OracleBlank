@@ -67,29 +67,46 @@ export class PublicflowstyleComponent implements OnInit {
       this.loading = false;
     });
   }
-
+  keytest(event){
+    console.log(event.key);
+    if(event.key == "Enter"){
+      this.serchWorkFlow();
+    }
+  }
   //搜索途程
   serchWorkFlow(): void {
-    let temporayArray1 = [];
+    this.loading = true;
     if (this.searchContent != "") {
-      for (let i = 0; i < this.searchData.length; i++) {
-        if ((this.searchData[i].csysPotStyleName).indexOf(this.searchContent) != -1) {
-          temporayArray1.push(this.searchData[i]);
-        }
-      }
-      this.data = temporayArray1;
+    this.httpService.postHttp("/csyspotstyle/listCondition?size=5" + "&page=" + this.pageId,{"csysPotStyleName": this.searchContent}).subscribe((data: any) => {
+      //console.log(data)
+      this.totalRecords = data.data.total;
+      this.total = data.data.total;
+      this.currentPage = this.pageId;
+      this.data = data.data.list;
+      this.searchData = data.data.list;
+      this.loading = false;
+    });
+    // let temporayArray1 = [];
+    // if (this.searchContent != "") {
+    //   for (let i = 0; i < this.searchData.length; i++) {
+    //     if ((this.searchData[i].csysPotStyleName).indexOf(this.searchContent) != -1) {
+    //       temporayArray1.push(this.searchData[i]);
+    //     }
+    //   }
+    //   this.data = temporayArray1;
 
-      if (temporayArray1.length == 0) {
-        this.totalRecords = 1;
-      } else {
-        this.totalRecords = temporayArray1.length;
-      }
+    //   if (temporayArray1.length == 0) {
+    //     this.totalRecords = 1;
+    //   } else {
+    //     this.totalRecords = temporayArray1.length;
+    //   }
     } else {
       this._getWorkFlowListData(this.pageId);
     }
   }
   //重置
   restingSearch(): void {
+    this.searchContent = ""
     this._getWorkFlowListData(this.currentPage);
   }
   handleCancel(): void {

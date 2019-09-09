@@ -372,7 +372,8 @@
                 <nz-form-item>
                   <nz-form-label nzXs="24" nzSm="7">公共工序</nz-form-label>
                   <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                    <nz-tag>{{publickPotName}}</nz-tag>
+                    <nz-tag *ngIf
+                    ='publickPotName'>{{publickPotName}}</nz-tag>
                   </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>

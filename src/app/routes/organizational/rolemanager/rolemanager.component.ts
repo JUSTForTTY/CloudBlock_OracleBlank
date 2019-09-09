@@ -68,6 +68,10 @@ export class RolemanagerComponent implements OnInit {
   }
   //编辑用户组
   editRole(id, name, desc): void {
+    if(id == "LHCsysRole20190906053257869000029"){
+      this.msg.error("系统组禁止编辑!");
+      return;
+    }
     this.roleMainId = id;
     this.roleMainName = name;
     this.roleListTitle = "编辑用户组";
@@ -79,28 +83,39 @@ export class RolemanagerComponent implements OnInit {
   }
   //删除用户组
   deleteRole(id): void {
-    let delRole = {
-      "csysRoleId": id,
-      "csysRoleIsDelete": "1"
+    if(id == "LHCsysRole20190906053257869000029"){
+      this.msg.error("系统组禁止删除!");
+      return;
     }
-    this.httpService.putHttp("csysrole",delRole).subscribe((data: any) => {
-      //判断当前页是否还有数据，没有返回上一步
-      if (this.roleList.length == 1 && this.pagenum > 5) {
-        this.pageId = this.pageId - 1;
-      }
-      this.httpService.postHttp("csysmenuauth/condition",{"csysRoleId": id}).subscribe((deldata: any) => {
-        deldata = deldata.data;
-        for (let index = 0; index < deldata.length; index++) {
-          const element = deldata[index];
-          let delelteData = {
-            "csysMenuAuthId": element.csysMenuAuthId,
-            "csysMenuAuthIsDelete": "1",
-          }
-          this.httpService.putHttp("csysmenuauth",delelteData).subscribe((deldata: any) => {})
+    this.httpService.postHttp("csysuserrole/condition", { "csysRoleId": id }).subscribe((urdata: any) => {
+      if (urdata.length == 0) {
+        let delRole = {
+          "csysRoleId": id,
+          "csysRoleIsDelete": "1"
         }
-      })
-      this.getRoleList(this.pageId);
-    });
+        this.httpService.putHttp("csysrole", delRole).subscribe((data: any) => {
+          //判断当前页是否还有数据，没有返回上一步
+          if (this.roleList.length == 1 && this.pagenum > 5) {
+            this.pageId = this.pageId - 1;
+          }
+          this.httpService.postHttp("csysmenuauth/condition", { "csysRoleId": id }).subscribe((deldata: any) => {
+            deldata = deldata.data;
+            for (let index = 0; index < deldata.length; index++) {
+              const element = deldata[index];
+              let delelteData = {
+                "csysMenuAuthId": element.csysMenuAuthId,
+                "csysMenuAuthIsDelete": "1",
+              }
+              this.httpService.putHttp("csysmenuauth", delelteData).subscribe((deldata: any) => { })
+            }
+          })
+          this.getRoleList(this.pageId);
+        });
+      } else {
+        this.msg.error("该用户组下面存在用户,禁止删除！");
+      }
+    })
+
   }
 
 
@@ -209,9 +224,9 @@ export class RolemanagerComponent implements OnInit {
         // }
       }
       // for (const key in this.userMenu) {
-        for (let index = 0; index < this.userMenu.length; index++) {
-          const element = this.userMenu[index];
-          
+      for (let index = 0; index < this.userMenu.length; index++) {
+        const element = this.userMenu[index];
+
         // }
         this.httpService.postHttp("/csysmenuauth", element).subscribe((data: any) => {
           // this.httpService.postHttp("/cysysbaseusermenu/condition").subscribe((data1: any) => {
@@ -247,14 +262,14 @@ export class RolemanagerComponent implements OnInit {
           //   });
           //   this._logger.info("data123", str);
           // });
-          if(index == this.userMenu.length - 1){
+          if (index == this.userMenu.length - 1) {
             this.isOkLoading = false;
             this.isVisible = false;
             this.msg.create('success', `保存成功！`);
           }
         });
       }
-     
+
     } else {
       this.isOkLoading = false;
       this.isVisible = false;
@@ -292,7 +307,7 @@ export class RolemanagerComponent implements OnInit {
         if (this.form.controls.name.invalid) return;
         for (let index = 0; index < roledata.data.length; index++) {
           const element = roledata.data[index];
-          if(element.csysRoleName == this.form.controls.name.value){
+          if (element.csysRoleName == this.form.controls.name.value) {
             this.msg.error("用户组已存在")
             return;
           }
@@ -319,7 +334,7 @@ export class RolemanagerComponent implements OnInit {
         for (let index = 0; index < roledata.data.length; index++) {
           const element = roledata.data[index];
 
-          if(element.csysRoleName == this.form.controls.name.value && this.form.controls.name.value != this.roleMainName){     
+          if (element.csysRoleName == this.form.controls.name.value && this.form.controls.name.value != this.roleMainName) {
             this.msg.error("用户组已存在")
             return;
           }
@@ -340,7 +355,7 @@ export class RolemanagerComponent implements OnInit {
       }
       this.isVisibleUsergroup = false;
     });
-  
+
   }
   //查询
   serachRoleList(): void {

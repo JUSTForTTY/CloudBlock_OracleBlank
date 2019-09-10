@@ -24,7 +24,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { updateHostClass } from '@delon/util';
 import { SettingsService } from '@delon/theme';
-import { LayoutService,SetService } from 'ngx-block-core';
+import { LayoutService, SetService } from 'ngx-block-core';
 import { environment } from '@env/environment';
 import { SettingDrawerComponent } from './setting-drawer/setting-drawer.component';
 
@@ -40,19 +40,19 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
 
   links = [
     {
-        title: '帮助',
-        href: ''
+      title: '帮助',
+      href: ''
     },
     {
-        title: '隐私',
-        href: ''
+      title: '隐私',
+      href: ''
     },
     {
-        title: '条款',
-        href: ''
+      title: '条款',
+      href: ''
     }
-];
-isVisible = false;
+  ];
+  isVisible = false;
   constructor(
     private router: Router,
     _message: NzMessageService,
@@ -60,7 +60,7 @@ isVisible = false;
     private settings: SettingsService,
     private el: ElementRef,
     private renderer: Renderer2,
-    public layoutService:LayoutService,
+    public layoutService: LayoutService,
 
     public setService: SetService,
     @Inject(DOCUMENT) private doc: any,
@@ -116,42 +116,44 @@ isVisible = false;
     const { settings, unsubscribe$ } = this;
     settings.notify.pipe(takeUntil(unsubscribe$)).subscribe(() => this.setClass());
     this.setClass();
-    if(typeof  this.setService.pageDatas['needNextCheckBoxValue']=="undefined"){
-      this.setService.pageDatas['needNextCheckBoxValue']=false;
+    if (typeof this.setService.pageDatas['needNextCheckBoxValue'] == "undefined") {
+      this.setService.pageDatas['needNextCheckBoxValue'] = false;
     }
 
   }
 
   handleCancel(): void {
     console.log("关闭弹窗方法");
-    this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
+    this.router.navigate(['/default/pages', { outlets: { modal: null } }]);
     this.router.navigateByUrl(this.layoutService.nzRoutePath);
     this.layoutService.isVisible = false;
   }
   handleAfterClose(): void {
 
-    if(this.layoutService.nzRoutePath!=null&&this.layoutService.nzRoutePath!=""){
-      this.router.navigate(['/default/pages',{ outlets: { modal: null }}]);
+    if (this.layoutService.nzRoutePath != null && this.layoutService.nzRoutePath != "") {
+      this.router.navigate(['/default/pages', { outlets: { modal: null } }]);
       this.router.navigateByUrl(this.layoutService.nzRoutePath);
     }
-     
+
     console.log("弹窗已经完全关闭");
 
     console.log("table_modal", this.setService.pageDatas['table_modal']);
-    //查看是否需要执行额外事件
-    if (typeof this.setService.pageDatas['table_modal'] != 'undefined') {
+    //延时 防止路由串参数 
+    setTimeout(() => {
+      //查看是否需要执行额外事件
+      if (typeof this.setService.pageDatas['table_modal'] != 'undefined') {
 
-      console.log("查询数据")
-      //判断是否需要刷新
-      if(this.setService.pageDatas['table_modal']['isNeedRefresh']){
-        this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch")
+        console.log("查询数据")
+        //判断是否需要刷新
+        if (this.setService.pageDatas['table_modal']['isNeedRefresh']) {
+          this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch")
+        }
+
       }
+      delete this.setService.pageDatas['table_modal'];
 
-    }
-    delete this.setService.pageDatas['table_modal'];
-
-    this.layoutService.nzRoutePath="";
-     
+      this.layoutService.nzRoutePath = "";
+    }, 50);
 
   }
   ngOnDestroy() {
@@ -160,8 +162,8 @@ isVisible = false;
     unsubscribe$.complete();
   }
   //
-  checked=false;
-  changeNeedNextCheckBox(value){
-    this.setService.pageDatas['needNextCheckBoxValue']=value
+  checked = false;
+  changeNeedNextCheckBox(value) {
+    this.setService.pageDatas['needNextCheckBoxValue'] = value
   }
 }

@@ -15,7 +15,7 @@
 
     <div>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-        <input type="text" nz-input placeholder="节点组名称" [(ngModel)]="searchContent">
+        <input type="text" nz-input placeholder="用户组名称" [(ngModel)]="searchContent">
       </nz-input-group>
       <ng-template #suffixButton>
         <button nz-button nzType="primary" nzSearch (click)="serachRoleList()">查询</button>

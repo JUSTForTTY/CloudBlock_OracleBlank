@@ -518,7 +518,7 @@ export class FlowchartComponent implements OnInit {
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
         excrete: [potdata.data[0].csysPotIsExcrete],
-        // nodeEditName1: [data.label, [Validators.required]]
+        //nodeEditName1: [data.label, [Validators.required]]
       });
 
 
@@ -3786,7 +3786,6 @@ export class FlowchartComponent implements OnInit {
     }
   }
   madeCancel(): void {
-
     if (!this.shiftMade) {
       this.madeVisible = false;
     } else {
@@ -4150,7 +4149,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
-          "csysPotTrsConInfo": "抽检过站成功",
+          "csysPotTrsConInfo": "PPA抽检批通过",
           "csysPotTrsConDesc": "PPA抽检完成"
 
         }
@@ -4175,7 +4174,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "1",
-          "csysPotTrsConInfo": "抽检前往维修站",
+          "csysPotTrsConInfo": "PPA抽检批维护",
           "csysPotTrsConDesc": "PPA抽检失败"
         }
         console.log("conditionData", JSON.stringify(conditionfailData))
@@ -4199,7 +4198,7 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4' ",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
-          "csysPotTrsConInfo": "抽检回退成功",
+          "csysPotTrsConInfo": "PPA抽检批退回",
           "csysPotTrsConDesc": "PPA抽检回退"
         }
         console.log("conditionData", JSON.stringify(conditionbackData))
@@ -4223,8 +4222,8 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
-          "csysPotTrsConInfo": "PPA维修站hold回退",
-          "csysPotTrsConDesc": "PPA维修站hold回退"
+          "csysPotTrsConInfo": "PPA批等待不良回退",
+          "csysPotTrsConDesc": "PPA批等待不良回退"
         }
         console.log("conditionData", JSON.stringify(conditionPPAbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAbackData).subscribe((data: any) => {
@@ -4247,8 +4246,8 @@ export class FlowchartComponent implements OnInit {
           "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS_H t inner join LOT_NO_H f on t.LOT_NO_H_SN=f.LOT_NO_H_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
-          "csysPotTrsConInfo": "PPA维修站失败回退",
-          "csysPotTrsConDesc": "PPA维修站失败回退"
+          "csysPotTrsConInfo": "PPA批退回不良回流",
+          "csysPotTrsConDesc": "PPA批退回不良回流"
         }
         console.log("conditionData", JSON.stringify(conditionPPAfailbackData))
         this.httpService.postHttp("csyspottrscon", conditionPPAfailbackData).subscribe((data: any) => {

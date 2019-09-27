@@ -69,6 +69,7 @@ export class RolememberComponent implements OnInit {
   show = true;
   queryParamStr = '';
   path;
+  roleDisabled = true;
   constructor(private fb: FormBuilder, private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
@@ -85,12 +86,12 @@ export class RolememberComponent implements OnInit {
     this.roleId=this.pageService.getRouteParams(this.route, 'roleId',this.path)
 
     // this.getData();
-    this.getUsersList();
-    this.getRoleList();
-    //this.getResource();
-    this.initializeFromControl();
-    this.getMenuList();
-    this.getTreeData();
+    // this.getUsersList();
+    // this.getRoleList();
+    // //this.getResource();
+    // this.initializeFromControl();
+    // this.getMenuList();
+    // this.getTreeData();
     this.path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, this.path);
@@ -173,6 +174,8 @@ export class RolememberComponent implements OnInit {
 
 
   showModal(): void {
+    this.editState = false;
+    this.uInspect = false;
     this.nzTitle = "添加成员";
     this.initializeFromControl();
     this.isRoleVisible = true;
@@ -262,8 +265,9 @@ export class RolememberComponent implements OnInit {
   //     }
   //   }, 500);
   // }
-
+  editState = false;
   submitEdit(userId): void {
+    
     let userData
     this.submitNum = 0;
     //校验控件
@@ -320,6 +324,7 @@ export class RolememberComponent implements OnInit {
       this.submitNum++;
     });
     this.submitTimer = setInterval(() => {
+      console.log("sb1",this.num)
       if (this.submitNum == 3) {
         this.urValue = this.roleId;
         this.nzBtnLoding = false;
@@ -335,8 +340,10 @@ export class RolememberComponent implements OnInit {
 
 
   editOrginzation(userId): void {
+    console.log("zuzhijiagou1");
+    //delete from CSYS_ORG_POT_AUTH where csys_user_id = 'LHCsysUser20190710090548388000036'
     //编辑组织架构
-    let department = this.addUserForm.controls.department.value;//组织（部门）
+    let department = this.addUserForm.controls.department.value;//组织（部门）   
     let organizationArray = [];//组织权限
     this.httpService.postHttp("/csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
       organizationArray = data.data
@@ -351,35 +358,35 @@ export class RolememberComponent implements OnInit {
           //添加组织架构
           if (i == organizationArray.length - 1) {
             console.log("department", department);
-            for (let i = 0; i < department.length; i++) {
+            //for (let i = 0; i < department.length; i++) {
               let organization = {
                 "csysUserId": userId,
-                "csysOrgPotId": department[i]
+                "csysOrgPotId": department
               }
               console.log("123321", organization);
               this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-                if (i == department.length - 1) {
+                //if (i == department.length - 1) {
                   this.submitNum++;
-                }
+                //}
               });
-            }
+            //}
           }
         });
       }
       //当改用户不存在组织架构时候
       if (organizationArray.length == 0) {
-        for (let i = 0; i < department.length; i++) {
+        //for (let i = 0; i < department.length; i++) {
           let organization = {
             "csysUserId": userId,
-            "csysOrgPotId": department[i]
+            "csysOrgPotId": department
           }
           console.log("123321", organization);
           this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-            if (i == department.length - 1) {
+            //if (i == department.length - 1) {
               this.submitNum++;
-            }
+            //}
           });
-        }
+        //}
       }
     });
   }
@@ -505,6 +512,7 @@ export class RolememberComponent implements OnInit {
       "csysUserAddress": this.addUserForm.controls.address.value//地址
     }
     //添加用户
+    
     this.httpService.postHttp("/csysuser/condition", { "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase() }).subscribe((udata: any) => {
       if (udata.data.length != 0) {
         this.nzBtnLoding = false;
@@ -519,6 +527,7 @@ export class RolememberComponent implements OnInit {
           //this.insertUserRs(userId);
         });
         this.insertTimer = setInterval(() => {
+          console.log("sb3",this.num)
           if (this.insertNum == 3) {
             this.nzBtnLoding = false;
             this.msg.create("success", "创建成功");
@@ -551,18 +560,19 @@ export class RolememberComponent implements OnInit {
   insertUserOr(userId): void {
     //新增用户组织架构
     let department = this.addUserForm.controls.department.value;//组织（部门）
-    for (let i = 0; i < department.length; i++) {
+    console.log("department",department);
+    //for (let i = 0; i < department.length; i++) {
       let organization = {
         "csysUserId": userId,
-        "csysOrgPotId": department[i]
+        "csysOrgPotId": department
       }
-      console.log("123321", organization);
+      //console.log("123321", organization);
       this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-        if (i == department.length - 1) {
+        //if (i == department.length - 1) {
           this.insertNum++;
-        }
+        //}
       });
-    }
+    //}
   }
 
   // insertUserRs(userId): void {
@@ -605,7 +615,9 @@ export class RolememberComponent implements OnInit {
         this.getUserRole(this.usersListData[i].csysUserId, i);
       }
       this.timer = setInterval(() => {
+        //console.log("sb2",this.num)
         if (this.num == 0) {
+          this.ngOnDestroy();
           this.nzLoading = false;
           this.usersListData1 = this.usersListData;
           // this.usersListData = [];
@@ -617,22 +629,27 @@ export class RolememberComponent implements OnInit {
               }
             }
           }
+          this.roleDisabled = false;
           this.usersData = [...this.usersData];
           this.happenUser = this.usersListData;
           this.changeCategory(this.roleId);
-          clearInterval(this.timer);
+          console.log("sb",this.num)
+        
         }
       }, 500);
 
     });
 
   }
+  ngOnDestroy() {
+    clearInterval(this.timer);
+  }
   userOrganization
   //获取用户所属组织架构
   getUserOrganization(userId, index): void {
     let userOrganization = [];
     let Organization = [];
-    let OrganizationId = [];
+    let OrganizationId ;
     let userIdOrganization;
     this.httpService.postHttp("csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
       this.httpService.getHttp("/csysorgpot").subscribe((data1: any) => {
@@ -642,7 +659,7 @@ export class RolememberComponent implements OnInit {
           for (const i in userOrganization) {
             if (userOrganization[i].csysOrgPotId == this.userOrganization[key].csysOrgPotId) {
               Organization.push(userOrganization[i].csysOrgPotName);
-              OrganizationId.push(userOrganization[i].csysOrgPotId);
+              OrganizationId = userOrganization[i].csysOrgPotId;
               break;
             }
           }
@@ -717,6 +734,7 @@ export class RolememberComponent implements OnInit {
       this.msg.error("系统账号禁止编辑!");
       return;
     }
+    this.editState = true;
     this.nzTitle = "编辑成员";
     this.editUserId = userId;
     this.isRoleVisible = true;
@@ -945,6 +963,7 @@ export class RolememberComponent implements OnInit {
         value = value.toLocaleUpperCase();
       }
     }
+    console.log("用户名",value)
     this.httpService.postHttp("csysuser/condition", {"csysUserUsername": value}).subscribe((data1: any) => {
       if(data1.data.length != 0){
         this.uInspect = true;

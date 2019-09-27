@@ -3,7 +3,7 @@
   <nz-card [nzBordered]="false">
     <div style="float: right">
       <div style="float: left;margin-right: 15px">
-        <nz-select style="width: 200px;" nzShowSearch nzAllowClear [(ngModel)]="urValue"
+        <nz-select style="width: 200px;" nzShowSearch nzAllowClear [nzDisabled]="roleDisabled" [(ngModel)]="urValue"
           (ngModelChange)="changeCategory($event)" nzPlaceHolder="请选择用户组">
           <nz-option *ngFor="let option of categories" [nzLabel]="option.csysRoleName" [nzValue]="option.csysRoleId">
           </nz-option>
@@ -129,7 +129,7 @@
         <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">账号</nz-form-label>
         <nz-form-control nzSpan="10" [nzValidateStatus]="addUserForm.get('username')">
           <input nz-input formControlName="username" (ngModelChange)="usernameInspect($event)" placeholder="请输入账号">
-          <nz-form-explain *ngIf="uInspect" style="color: red">账号已存在</nz-form-explain>
+         <nz-form-explain *ngIf="uInspect && !editState" style="color: red">账号已存在</nz-form-explain>
           <!-- <span *ngIf="uInspect" style="color: red;padding: 0;margin: 0">账号已存在</span> -->
           <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">
             账号不能存在中文或者特殊字符
@@ -203,8 +203,8 @@
       <nz-form-item>
         <nz-form-label nzSpan="5" nzFor="department" [nzOffset]="2" nzRequired>组织</nz-form-label>
         <nz-form-control nzSpan="10" [nzValidateStatus]="addUserForm.get('department')">
-          <nz-tree-select [nzNodes]="nodes1" [nzDefaultExpandAll]="false" [nzAllowClear]="false" nzPlaceHolder="请选择组织"
-            [nzMultiple]="true" formControlName="department">
+          <nz-tree-select [nzNodes]="nodes1" [nzDefaultExpandAll]="true" [nzAllowClear]="false" nzPlaceHolder="请选择组织"
+            [nzMultiple]="false" formControlName="department">
           </nz-tree-select>
           <nz-form-explain *ngIf="addUserForm.get('department').dirty && addUserForm.get('department').errors">请选择组织
           </nz-form-explain>

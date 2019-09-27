@@ -3086,17 +3086,18 @@ export class FlowchartComponent implements OnInit {
   }
   getTableData(): void {
     this.pottrsconData = []
-    this.httpService.postHttp("/csyspottrscon/condition").subscribe((data: any) => {
+    this.httpService.postHttp("/csyspottrscon/condition",{"csysPotTrsId":this.csysPointTrsId}).subscribe((data: any) => {
       console.log("zeq123", this.csysPointTrsId)
       console.log("zeq123", data.data)
-      for (let index = 0; index < data.data.length; index++) {
-        const element = data.data[index];
-        if (element.csysPotTrsId == this.csysPointTrsId) {
-          this.pottrsconData.push(element);
-        }
-      }
+      this.pottrsconData = data.data;
+      // for (let index = 0; index < data.data.length; index++) {
+      //   const element = data.data[index];
+      //   if (element.csysPotTrsId == this.csysPointTrsId) {
+      //     this.pottrsconData.push(element);
+      //   }
+      // }
       //重新强制转换赋值
-      this.pottrsconData = [...this.pottrsconData]
+      //this.pottrsconData = [...this.pottrsconData]
       console.log("zzz", this.pottrsconData)
     })
   }

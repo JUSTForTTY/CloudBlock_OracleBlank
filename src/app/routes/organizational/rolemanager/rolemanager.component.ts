@@ -480,8 +480,8 @@ export class RolemanagerComponent implements OnInit {
     // this.router.navigate(['/authority/rolemember/'], {
     //   queryParams
     // });
-    this.pageService.setRouteParams('/authority/rolemember/', queryParams);
-    this.router.navigate(['/authority/rolemember/'], {
+    this.pageService.setRouteParams('/default/pages/authority/rolemember/', queryParams);
+    this.router.navigate(['/default/pages//authority/rolemember/'], {
       queryParams // 此处可省略
     });
   }
@@ -491,8 +491,8 @@ export class RolemanagerComponent implements OnInit {
     // this.router.navigate(['/authority/rolepage/'], {
     //   queryParams
     // });
-    this.pageService.setRouteParams('/authority/rolepage/', queryParams);
-    this.router.navigate(['/authority/rolepage/'], {
+    this.pageService.setRouteParams('/default/pages/authority/rolepage/', queryParams);
+    this.router.navigate(['/default/pages/authority/rolepage/'], {
       queryParams // 此处可省略
     });
   }

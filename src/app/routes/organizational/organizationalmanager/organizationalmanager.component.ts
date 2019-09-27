@@ -448,8 +448,8 @@ export class OrganizationalmanagerComponent implements OnInit {
     // this.router.navigate(['/authority/organizationalchart/'], {
     //   queryParams
     // });
-    this.pageService.setRouteParams('/authority/organizationalchart/', queryParams);
-    this.router.navigate(['/authority/organizationalchart/'], {
+    this.pageService.setRouteParams('/default/pages/authority/organizationalchart/', queryParams);
+    this.router.navigate(['/default/pages/authority/organizationalchart/'], {
       queryParams // 此处可省略
     });
     //this.router.navigate(['/authority/organizationalchart/' + item.csysOrgStruceId + '']);

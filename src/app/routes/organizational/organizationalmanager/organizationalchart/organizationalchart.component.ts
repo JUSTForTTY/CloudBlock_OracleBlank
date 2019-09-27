@@ -387,7 +387,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
 
   removeField(i: { id: string, controlInstance: string, value: string, laebl: "", flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }> }, e: MouseEvent): void {
-    e.preventDefault();
+    e.preventDefault();  
     if (this.controlArray.length > 0) {
       const index = this.controlArray.indexOf(i);
       //console.log(this.controlArray);
@@ -644,6 +644,8 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
   //删除编辑节点
   deleteCurrentNode() {
+    this.clickOrganizationId;
+    
     this.deleting = true;
     //当前节点
     let nodeId = this.editForm.value.id;

@@ -54,10 +54,10 @@
                   请输入部门名称</nz-form-explain>
               </nz-form-control>
             </nz-form-item>
-            <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
+            <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
               nzType="default" nzShape="circle" [disabled]="addUserBtn">
               <i class="anticon anticon-usergroup-add"></i>
-            </button>
+            </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
               <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
@@ -119,10 +119,10 @@
                   请输入部门名称</nz-form-explain>
               </nz-form-control>
             </nz-form-item>
-            <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
+            <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
               nzType="default" nzShape="circle">
               <i class="anticon anticon-usergroup-add"></i>
-            </button>
+            </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
               <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">

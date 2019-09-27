@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { equalSegments } from '@angular/router/src/url_tree';
 import { NzModalService } from 'ng-zorro-antd';
 import { CacheService } from '@delon/cache';
+import { PageService } from 'ngx-block-core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-flowtrs',
@@ -17,7 +19,7 @@ import { CacheService } from '@delon/cache';
 })
 export class FlowtrsComponent implements OnInit {
   constructor(private fb: FormBuilder, private http: _HttpClient, public msg: NzMessageService, private httpService: HttpService,
-    private router: Router, private modalService: NzModalService, private cacheService: CacheService) { }
+    private router: Router, private activatedRoute: ActivatedRoute, private pageService: PageService) { }
 
   form: FormGroup;
   avatar = 'assets/img/workflow.png';
@@ -38,11 +40,50 @@ export class FlowtrsComponent implements OnInit {
   searchContent = "";
   searchData;
   isSpinning = false;
-  public ngOnInit(): void {
+  show = true;
+  queryParamStr = '';
+  path;
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
+  }
+  baseInit() {
     this._getWorkFlowListData(this.currentPage);
     this.getFlowGroup();
-    this.init();
     this.getPot();
+  }
+  public ngOnInit(): void {
+    // this._getWorkFlowListData(this.currentPage);
+    // this.getFlowGroup();
+    // this.getPot();
+    this.init(); 
+    this._getWorkFlowListData(this.currentPage);
+    this.path = this.pageService.getPathByRoute(this.activatedRoute);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.activatedRoute, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    //之后是你原来的初始化代码，比如：
+    this.baseInit();
   }
 
   init() {
@@ -73,29 +114,29 @@ export class FlowtrsComponent implements OnInit {
   serchWorkFlow(): void {
     this.loading = true;
     if (this.searchContent != "") {
-    this.httpService.postHttp(this.url + "&page=" + this.pageId,{"csysPotGroupName": this.searchContent}).subscribe((data: any) => {
-      this.totalRecords = data.data.total;
-      this.total = data.data.total;
-      this.currentPage = this.pageId;
-      this.data = data.data.list;
-      this.searchData = data.data.list;//用于搜索列表
-      this.loading = false;
-      console.log("pagedata", this.data);
-    });
-    // let temporayArray1 = [];
-    // if (this.searchContent != "") {
-    //   for (let i = 0; i < this.searchData.length; i++) {
-    //     if ((this.searchData[i].csysPotGroupName).indexOf(this.searchContent) != -1) {
-    //       temporayArray1.push(this.searchData[i]);
-    //     }
-    //   }
-    //   this.data = temporayArray1;
+      this.httpService.postHttp(this.url + "&page=" + this.pageId, { "csysPotGroupName": this.searchContent }).subscribe((data: any) => {
+        this.totalRecords = data.data.total;
+        this.total = data.data.total;
+        this.currentPage = this.pageId;
+        this.data = data.data.list;
+        this.searchData = data.data.list;//用于搜索列表
+        this.loading = false;
+        console.log("pagedata", this.data);
+      });
+      // let temporayArray1 = [];
+      // if (this.searchContent != "") {
+      //   for (let i = 0; i < this.searchData.length; i++) {
+      //     if ((this.searchData[i].csysPotGroupName).indexOf(this.searchContent) != -1) {
+      //       temporayArray1.push(this.searchData[i]);
+      //     }
+      //   }
+      //   this.data = temporayArray1;
 
-    //   if (temporayArray1.length == 0) {
-    //     this.totalRecords = 1;
-    //   } else {
-    //     this.totalRecords = temporayArray1.length;
-    //   }
+      //   if (temporayArray1.length == 0) {
+      //     this.totalRecords = 1;
+      //   } else {
+      //     this.totalRecords = temporayArray1.length;
+      //   }
     } else {
       this._getWorkFlowListData(this.pageId);
     }
@@ -357,7 +398,7 @@ export class FlowtrsComponent implements OnInit {
                   "csysPotGroPreId": element.csysPotGroPreId,
                   "csysPotGroPreIsDelete": "1",
                 }
-                console.log("preDeleteData",preDeleteData);                
+                console.log("preDeleteData", preDeleteData);
                 this.httpService.putHttp("csyspotgropre", preDeleteData).subscribe((data2: any) => {
                   if (index == preData.length - 1) {
                     this.msg.create('success', `删除成功！`);
@@ -365,7 +406,7 @@ export class FlowtrsComponent implements OnInit {
                   }
                 })
               }
-            } else { 
+            } else {
               this.msg.create('success', `删除成功！`);
               console.log("22aa");
               this._getWorkFlowListData(this.pageId);
@@ -413,9 +454,9 @@ export class FlowtrsComponent implements OnInit {
   potOk(): void {
     this.potVisible = false;
   }
-  keytest(event){
+  keytest(event) {
     console.log(event.key);
-    if(event.key == "Enter"){
+    if (event.key == "Enter") {
       this.serchWorkFlow();
     }
   }

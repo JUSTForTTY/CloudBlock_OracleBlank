@@ -1,199 +1,217 @@
-<page-header [home]="''"></page-header>
-<div nz-row [nzGutter]="24" class="pt-lg">
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
-    <nz-card nzTitle="组织架构" [nzBordered]="false" class="mb-lg" [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
-      <ngx-graph class="chart-container" [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight,'margin-left':'-25px'}"
-        [view]="view" [legend]="showLegend" [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
-        [nodes]="hierarchialGraph.nodes"  [layout]="layout" [curve]="curve" (select)="clickNode($event)">
+<div *ngIf="show">
+  <page-header [home]="''"></page-header>
+  <div nz-row [nzGutter]="24" class="pt-lg">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+      <nz-card nzTitle="组织架构" [nzBordered]="false" class="mb-lg"
+        [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight}">
+        <ngx-graph class="chart-container"
+          [ngStyle]="{'min-height':screenHeight,'max-height':screenHeight,'margin-left':'-25px'}" [view]="view"
+          [legend]="showLegend" [links]="hierarchialGraph.links" (legendLabelClick)="onLegendLabelClick($event)"
+          [nodes]="hierarchialGraph.nodes" [layout]="layout" [curve]="curve" (select)="clickNode($event)">
 
-        <ng-template #defsTemplate>
-          <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-            <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-          </svg:marker>
-        </ng-template>
+          <ng-template #defsTemplate>
+            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+              orient="auto">
+              <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+          </ng-template>
 
-        <ng-template #nodeTemplate let-node>
-          <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
-            [tooltipTitle]="node.label">
-            <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" style="animation: rot 3s linear infinite;"
-              [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
-            <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}</svg:text>
-          </svg:g>
-        </ng-template>
+          <ng-template #nodeTemplate let-node>
+            <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
+              [tooltipTitle]="node.label">
+              <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                [attr.fill]="node.data.color" style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
+                [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
+              <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}
+              </svg:text>
+            </svg:g>
+          </ng-template>
 
-        <ng-template #linkTemplate let-link>
-          <svg:g class="edge">
-            <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
-            </svg:path>
-            <svg:text class="edge-label" text-anchor="middle">
-              <textPath style="fill: #666;" [attr.href]="'#' + link.id" startOffset="60%">
-                {{link.label}}
-              </textPath>
-            </svg:text>
-          </svg:g>
-        </ng-template>
+          <ng-template #linkTemplate let-link>
+            <svg:g class="edge">
+              <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+              </svg:path>
+              <svg:text class="edge-label" text-anchor="middle">
+                <textPath style="fill: #666;" [attr.href]="'#' + link.id" startOffset="60%">
+                  {{link.label}}
+                </textPath>
+              </svg:text>
+            </svg:g>
+          </ng-template>
 
-      </ngx-graph>
-    </nz-card>
-  </div>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
-    <nz-card *ngIf="!formEditStatus" nzTitle="新建部门" [nzBordered]="false" class="mb-lg">
-      <div class="active-chart">
-        <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
-          <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="addNodeName">部门名称</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="16" nzMd="16">
-              <input nz-input formControlName="addNodeName" id="addNodeName" placeholder="给目标起个名字">
-              <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">请输入部门名称</nz-form-explain>
-            </nz-form-control>
-          </nz-form-item>
-          <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
-            nzShape="circle" [disabled]="addUserBtn">
-            <i class="anticon anticon-usergroup-add"></i>
-          </button>
-          <nz-form-item *ngFor="let control of controlArray;let i = index">
-            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
-            <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
-              <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id" [formControlName]="control.controlInstance"> -->
-              <nz-select style=" margin-right:8px;" [(ngModel)]="control.value" (ngModelChange)="updateTagetPoint(control,$event)"
-                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'"
-                [nzShowSearch]="true">
-                <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
-                </nz-option>
-              </nz-select>
-              <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle" (click)="removeField(control,$event)">
-                <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
-              </button>
-              <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
+        </ngx-graph>
+      </nz-card>
+    </div>
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6">
+      <nz-card *ngIf="!formEditStatus" nzTitle="新建部门" [nzBordered]="false" class="mb-lg">
+        <div class="active-chart">
+          <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
+            <nz-form-item>
+              <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="addNodeName">部门名称</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="16" nzMd="16">
+                <input nz-input formControlName="addNodeName" id="addNodeName" placeholder="给目标起个名字">
+                <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">
+                  请输入部门名称</nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
+              nzType="default" nzShape="circle" [disabled]="addUserBtn">
+              <i class="anticon anticon-usergroup-add"></i>
+            </button> -->
+            <nz-form-item *ngFor="let control of controlArray;let i = index">
+              <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
+              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+                <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id" [formControlName]="control.controlInstance"> -->
+                <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
+                  (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
+                  [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'" [nzShowSearch]="true">
+                  <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+                <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle"
+                  (click)="removeField(control,$event)">
+                  <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
+                </button>
+                <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
                 nzShape="circle">
                 <i class="anticon anticon-usergroup-add"></i>
               </button> -->
-              <nz-form-explain *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                Please input passenger's name or delete this field.
-              </nz-form-explain>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
-              <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                <i class="anticon anticon-plus"></i> 增加目标部门</button>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
-              <button nz-button nzType="primary" type="submit" [nzLoading]="submitting" [disabled]="insertForm.invalid">保存</button>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </div>
-    </nz-card>
+                <nz-form-explain
+                  *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
+                  Please input passenger's name or delete this field.
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
+                <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
+                  <i class="anticon anticon-plus"></i> 增加目标部门</button>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
+                <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
+                  [disabled]="insertForm.invalid">保存</button>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </div>
+      </nz-card>
 
-    <nz-card *ngIf="formEditStatus" nzTitle="修改部门" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
-      <ng-template #extraTemplate>
-        <a (click)="addPoint()">新建部门</a>
-      </ng-template>
-      <div class="active-chart">
-        <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
-          <nz-form-item hidden>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">部门编号</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <input nz-input disabled="disabled" formControlName="id" id="id" placeholder="">
-              <nz-form-explain *ngIf="editForm.get('id').dirty && editForm.get('id').errors">请输入部门编号</nz-form-explain>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="nodeEditName">部门名称</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="16" nzMd="16">
-              <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="给目部门起个名字">
-              <nz-form-explain *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">请输入部门名称</nz-form-explain>
-            </nz-form-control>
-          </nz-form-item>
-          <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
-            nzShape="circle">
-            <i class="anticon anticon-usergroup-add"></i>
-          </button>
-          <nz-form-item *ngFor="let control of controlArray;let i = index">
-            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
-            <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
-              <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id
+      <nz-card *ngIf="formEditStatus" nzTitle="修改部门" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
+        <ng-template #extraTemplate>
+          <a (click)="addPoint()">新建部门</a>
+        </ng-template>
+        <div class="active-chart">
+          <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
+            <nz-form-item hidden>
+              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">部门编号</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <input nz-input disabled="disabled" formControlName="id" id="id" placeholder="">
+                <nz-form-explain *ngIf="editForm.get('id').dirty && editForm.get('id').errors">请输入部门编号</nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="nodeEditName">部门名称</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="16" nzMd="16">
+                <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="给目部门起个名字">
+                <nz-form-explain *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">
+                  请输入部门名称</nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
+              nzType="default" nzShape="circle">
+              <i class="anticon anticon-usergroup-add"></i>
+            </button> -->
+            <nz-form-item *ngFor="let control of controlArray;let i = index">
+              <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
+              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+                <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id
                 " [formControlName]="control.controlInstance"> -->
-                
-              <nz-select style=" margin-right:8px;" [(ngModel)]="control.value" (ngModelChange)="updateTagetPoint(control,$event)"
-                [attr.id]="control.id" [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'"
-                [nzShowSearch]="true">
-                <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
-                </nz-option>
-              </nz-select>
-              <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle" (click)="removeField(control,$event)">
-                <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
-              </button>
-              <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
+
+                <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
+                  (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
+                  [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标部门'" [nzShowSearch]="true">
+                  <nz-option *ngFor="let option of targetNodeList" [nzLabel]="option.label" [nzValue]="option.value">
+                  </nz-option>
+                </nz-select>
+                <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle"
+                  (click)="removeField(control,$event)">
+                  <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
+                </button>
+                <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
                 nzShape="circle">
                 <i class="anticon anticon-usergroup-add"></i>
               </button> -->
 
-              <nz-form-explain *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                Please input passenger's name or delete this field.
-              </nz-form-explain>
-            </nz-form-control>
-          </nz-form-item>
+                <nz-form-explain
+                  *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
+                  Please input passenger's name or delete this field.
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
 
-          <nz-form-item>
-            <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
-              <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                <i class="anticon anticon-plus"></i> 增加目标部门</button>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-control [nzXs]="{ span: 18, offset: 6 }">
-              <button nz-button nzType="primary" type="submit" [nzLoading]="submitting" [disabled]="editForm.invalid">保存</button>
-              <button nz-button nzType="primary" (click)="deleteCurrentNode()" type="button" [nzLoading]="deleting">删除</button>
-            </nz-form-control>
+            <nz-form-item>
+              <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
+                <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
+                  <i class="anticon anticon-plus"></i> 增加目标部门</button>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control [nzXs]="{ span: 18, offset: 6 }">
+                <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
+                  [disabled]="editForm.invalid">保存</button>
+                <button nz-button nzType="primary" (click)="deleteCurrentNode()" type="button"
+                  [nzLoading]="deleting">删除</button>
+              </nz-form-control>
 
-          </nz-form-item>
-        </form>
+            </nz-form-item>
+          </form>
 
-      </div>
-    </nz-card>
-    <nz-card nzTitle="通用配置" [nzBordered]="false" [nzBodyStyle]="{'text-align': 'center'}" class="mb-lg">
-
-
-
-      <div class="active-chart">
-        <form nz-form [formGroup]="form" (ngSubmit)="_saveConfigure()">
-          
-
-          <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="title">线风格</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-select [ngModel]="lineStyle" (ngModelChange)="setLineStyle($event)" formControlName="lineStyle" id="lineStyle">
-                <nz-option *ngFor="let lineStyleOption of lineStyleOptions" [nzValue]="lineStyleOption" [nzLabel]="lineStyleOption"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="title">风格</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-select [(ngModel)]="layout" formControlName="orientation" id="orientation">
-                <nz-option *ngFor="let orient of workflowlayout" [nzValue]="orient.value" [nzLabel]="orient.label"></nz-option>
-              </nz-select>
+        </div>
+      </nz-card>
+      <nz-card nzTitle="通用配置" [nzBordered]="false" [nzBodyStyle]="{'text-align': 'center'}" class="mb-lg">
 
 
-            </nz-form-control>
-          </nz-form-item>
 
-          <nz-form-item>
-            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
-              <button nz-button nzType="primary" type="submit" [nzLoading]="saveStyling">保存</button>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </div>
-    </nz-card>
+        <div class="active-chart">
+          <form nz-form [formGroup]="form" (ngSubmit)="_saveConfigure()">
+
+
+            <nz-form-item>
+              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="title">线风格</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <nz-select [ngModel]="lineStyle" (ngModelChange)="setLineStyle($event)" formControlName="lineStyle"
+                  id="lineStyle">
+                  <nz-option *ngFor="let lineStyleOption of lineStyleOptions" [nzValue]="lineStyleOption"
+                    [nzLabel]="lineStyleOption"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="title">风格</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <nz-select [(ngModel)]="layout" formControlName="orientation" id="orientation">
+                  <nz-option *ngFor="let orient of workflowlayout" [nzValue]="orient.value" [nzLabel]="orient.label">
+                  </nz-option>
+                </nz-select>
+
+
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
+                <button nz-button nzType="primary" type="submit" [nzLoading]="saveStyling">保存</button>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </div>
+      </nz-card>
+    </div>
   </div>
-</div>
 
-<!-- <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" nzTitle="用户分配" (nzOnCancel)="handleCancel()"
+  <!-- <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" nzTitle="用户分配" (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
   <nz-transfer [nzDataSource]="userList" nzShowSearch [nzOperations]="['to right', 'to left']" [nzListStyle]="{ 'height.px': 300}"
     [nzRender]="render" [nzFooter]="footer" (nzSelectChange)="transferselect($event)" (nzChange)="transferchange($event)">
@@ -207,17 +225,18 @@
 </nz-modal> -->
 
 
-<!-- 权限分配 -->
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="nzTitle" [nzFooter]="modalFooter"
-  (nzOnCancel)="handleCancel()" [nzOkLoading]="isOkLoading" nzWidth="55%" nzMaskClosable="false" nzGetContainer="false">
+  <!-- 权限分配 -->
+  <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="nzTitle"
+    [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" [nzOkLoading]="isOkLoading" nzWidth="55%"
+    nzMaskClosable="false" nzGetContainer="false">
 
-  <div *ngIf="windowShow == 'userList'">
-    <div style="margin-bottom:15px" class="operation_buttons">
-      <button nz-button (click)="addUser()"><i nz-icon type="user-add"></i>添加成员</button>
-      <!-- <button nz-button (click)="settingDepartment()"><i nz-icon type="setting"></i>设置所在部门</button> -->
-      <button nz-button (click)="reload()" nzType="danger"><i nz-icon type="delete"></i>批量删除</button>
-      <div style="float:right">
-        <!-- <div style="float: left;">
+    <div *ngIf="windowShow == 'userList'">
+      <div style="margin-bottom:15px" class="operation_buttons">
+        <button nz-button (click)="addUser()"><i nz-icon type="user-add"></i>添加成员</button>
+        <!-- <button nz-button (click)="settingDepartment()"><i nz-icon type="setting"></i>设置所在部门</button> -->
+        <button nz-button (click)="reload()" nzType="danger"><i nz-icon type="delete"></i>批量删除</button>
+        <div style="float:right">
+          <!-- <div style="float: left;">
           <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
             <input type="text" [(ngModel)]="searchContent" nz-input placeholder="请输入姓名">
           </nz-input-group>
@@ -228,169 +247,185 @@
         <div style="float: left;margin-left: 8px">
           <button nz-button nzType="primary" nzSearch (click)="resetingUserList()">重置</button>
         </div> -->
-      </div>
-    </div>
-    <!-- <st #st [columns]="columns" [data]="usersListData" (checkboxChange)="change($event)" ps="5"></st> -->
-    <nz-table #basicTable [nzData]="usersListData " nzPageSize="5" [nzLoading]="nzLoading">
-      <thead>
-        <tr>
-          <!-- <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th> -->
-          <th>序号</th>
-          <th>账号</th>
-          <th>姓名</th>
-          <th>性别</th>
-          <th>组织</th>
-          <th>用户组</th>
-          <th>手机</th>
-          <th>邮箱</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of basicTable.data;let i = index">
-          <!-- <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td> -->
-          <td>{{i+1}}</td>
-          <td>{{data.csysUserUsername}}</td>
-          <td>{{data.csysUserRealname}}</td>
-          <td>{{data.csysUserGender}}</td>
-          <td>
-            <p lines="2" style="width: 90px;margin-top: 15px" class="text-truncate" nz-tooltip [nzTitle]="data.csysOrgPotName">
-              {{data.csysOrgPotName}}</p>
-          </td>
-          <td>
-            <p lines="2" style="width: 90px;margin-top: 15px" class="text-truncate" nz-tooltip [nzTitle]="data.userRole">
-              {{data.userRole}}</p>
-          </td>
-          <td>{{data.csysUserPhone}}</td>
-          <td>{{data.csysUserEmail}}</td>
-          <td><a (click)="editUser(data.csysUserId)">编辑</a> | <a nz-popconfirm nzTitle="确认删除该用户？" (nzOnConfirm)="deleteUser(data.csysUserId)"
-              nzPlacement="bottom">删除</a></td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </div>
-  <div *ngIf="windowShow == 'adduser'">
-    <form nz-form [formGroup]="addUserForm" (ngSubmit)="submitUserForm()">
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">用户名</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="username" placeholder="请输入用户名">
-          <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">用户名不能存在中文或者特殊字符</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="password" [nzOffset]="2">密码</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input type="password" nz-input formControlName="password" placeholder="请输入密码">
-          <nz-form-explain *ngIf="addUserForm.get('password').dirty && addUserForm.get('password').errors">请输入密码</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="confitmPassword" [nzOffset]="2">确认密码</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input type="password" nz-input formControlName="confitmPassword" placeholder="请再次输入密码">
-          <nz-form-explain *ngIf="addUserForm.get('confitmPassword').dirty && addUserForm.get('confitmPassword').errors">
-            <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('required')">
-              请输入密码
-            </ng-container>
-            <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('confirm')">
-              两次密码不相同，请重新输入！
-            </ng-container>
-          </nz-form-explain>
-        </nz-form-control>
-
-      </nz-form-item>
-      <nz-divider nzDashed="true"></nz-divider>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="position" [nzOffset]="2" nzRequired>用户组</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择用户组" formControlName="position">
-            <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.csysRoleName" [nzValue]="option.csysRoleId"></nz-option>
-          </nz-select>
-          <nz-form-explain *ngIf="addUserForm.get('position').dirty && addUserForm.get('position').errors">请选择用户组</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="department" [nzOffset]="2" nzRequired>组织</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <nz-tree-select [nzNodes]="nodes1" [nzDefaultExpandAll]="true" [nzAllowClear]="false" nzPlaceHolder="请选择组织"
-            [nzMultiple]="true" formControlName="department">
-          </nz-tree-select>
-          <nz-form-explain *ngIf="addUserForm.get('department').dirty && addUserForm.get('department').errors">请选择组织</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="employeeId" [nzOffset]="2">员工号</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="employeeId" placeholder="请输入员工号">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-divider nzDashed="true"></nz-divider>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="name" [nzOffset]="2">姓名</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="name" placeholder="请输入姓名">
-          <nz-form-explain *ngIf="addUserForm.get('name').dirty && addUserForm.get('name').errors">请输入姓名</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="age" [nzOffset]="2">年龄</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <nz-input-number formControlName="age" [nzMin]="1" [nzMax]="200" [nzStep]="1" style="width:100%" placeholder="请输入年龄"></nz-input-number>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="gender" [nzOffset]="2">性别</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <nz-radio-group formControlName="gender">
-            <label nz-radio nzValue="男">男</label>
-            <label nz-radio nzValue="女">女</label>
-          </nz-radio-group>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="phone" [nzOffset]="2">联系电话</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="phone" placeholder="请输入联系电话">
-          <nz-form-explain *ngIf="addUserForm.get('phone').dirty && addUserForm.get('phone').errors">请输入联系电话</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzSpan="5" nzFor="email" [nzOffset]="2">邮箱</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="email" id="email" placeholder="请输入邮箱">
-          <nz-form-explain *ngIf="addUserForm.get('email').dirty && addUserForm.get('email').errors">请输入正确的邮箱!</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-        
-        <nz-form-label nzSpan="5" nzFor="address" [nzOffset]="2">地址</nz-form-label>
-        <nz-form-control nzSpan="10">
-          <input nz-input formControlName="address" placeholder="请输入地址">
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </div>
-  <div *ngIf="windowShow == 'settingDepartment'">
-    <div nz-row>
-      <div nz-col nzSpan="11">
-        <nz-tree [nzData]="nodes1" nzMultiple="true" (nzClick)="nzEvent($event)" [nzSelectedKeys]="defaultSelectedKeys"
-          nzExpandAll>
-        </nz-tree>
-        <div nz-col nzSpan="2" class="height-80">
-          <nz-divider nzType="vertical"></nz-divider>
         </div>
       </div>
-      <div nz-col nzSpan="11">
-        <nz-tag *ngFor="let tag of tags;let i = index;" nzMode="closeable" (nzOnClose)="nzOnCloseTag($event,tag)">{{tags[i].title}}</nz-tag>
-        <!---->
+      <!-- <st #st [columns]="columns" [data]="usersListData" (checkboxChange)="change($event)" ps="5"></st> -->
+      <nz-table #basicTable [nzData]="usersListData " nzPageSize="5" [nzLoading]="nzLoading">
+        <thead>
+          <tr>
+            <!-- <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th> -->
+            <th>序号</th>
+            <th>账号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>组织</th>
+            <th>用户组</th>
+            <th>手机</th>
+            <th>邮箱</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data;let i = index">
+            <!-- <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus()"></td> -->
+            <td>{{i+1}}</td>
+            <td>{{data.csysUserUsername}}</td>
+            <td>{{data.csysUserRealname}}</td>
+            <td>{{data.csysUserGender}}</td>
+            <td>
+              <p lines="2" style="width: 90px;margin-top: 15px" class="text-truncate" nz-tooltip
+                [nzTitle]="data.csysOrgPotName">
+                {{data.csysOrgPotName}}</p>
+            </td>
+            <td>
+              <p lines="2" style="width: 90px;margin-top: 15px" class="text-truncate" nz-tooltip
+                [nzTitle]="data.userRole">
+                {{data.userRole}}</p>
+            </td>
+            <td>{{data.csysUserPhone}}</td>
+            <td>{{data.csysUserEmail}}</td>
+            <td><a (click)="editUser(data.csysUserId)">编辑</a> | <a nz-popconfirm nzTitle="确认删除该用户？"
+                (nzOnConfirm)="deleteUser(data.csysUserId)" nzPlacement="bottom">删除</a></td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngIf="windowShow == 'adduser'">
+      <form nz-form [formGroup]="addUserForm" (ngSubmit)="submitUserForm()">
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">用户名</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="username" placeholder="请输入用户名">
+            <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">
+              用户名不能存在中文或者特殊字符</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzRequired nzFor="password" [nzOffset]="2">密码</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input type="password" nz-input formControlName="password" placeholder="请输入密码">
+            <nz-form-explain *ngIf="addUserForm.get('password').dirty && addUserForm.get('password').errors">请输入密码
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzRequired nzFor="confitmPassword" [nzOffset]="2">确认密码</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input type="password" nz-input formControlName="confitmPassword" placeholder="请再次输入密码">
+            <nz-form-explain
+              *ngIf="addUserForm.get('confitmPassword').dirty && addUserForm.get('confitmPassword').errors">
+              <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('required')">
+                请输入密码
+              </ng-container>
+              <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('confirm')">
+                两次密码不相同，请重新输入！
+              </ng-container>
+            </nz-form-explain>
+          </nz-form-control>
+
+        </nz-form-item>
+        <nz-divider nzDashed="true"></nz-divider>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="position" [nzOffset]="2" nzRequired>用户组</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择用户组" formControlName="position">
+              <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.csysRoleName"
+                [nzValue]="option.csysRoleId"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="addUserForm.get('position').dirty && addUserForm.get('position').errors">请选择用户组
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="department" [nzOffset]="2" nzRequired>组织</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <nz-tree-select [nzNodes]="nodes1" [nzDefaultExpandAll]="true" [nzAllowClear]="false" nzPlaceHolder="请选择组织"
+              [nzMultiple]="true" formControlName="department">
+            </nz-tree-select>
+            <nz-form-explain *ngIf="addUserForm.get('department').dirty && addUserForm.get('department').errors">请选择组织
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="employeeId" [nzOffset]="2">员工号</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="employeeId" placeholder="请输入员工号">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-divider nzDashed="true"></nz-divider>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzRequired nzFor="name" [nzOffset]="2">姓名</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="name" placeholder="请输入姓名">
+            <nz-form-explain *ngIf="addUserForm.get('name').dirty && addUserForm.get('name').errors">请输入姓名
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="age" [nzOffset]="2">年龄</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <nz-input-number formControlName="age" [nzMin]="1" [nzMax]="200" [nzStep]="1" style="width:100%"
+              placeholder="请输入年龄"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="gender" [nzOffset]="2">性别</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <nz-radio-group formControlName="gender">
+              <label nz-radio nzValue="男">男</label>
+              <label nz-radio nzValue="女">女</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzRequired nzFor="phone" [nzOffset]="2">联系电话</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="phone" placeholder="请输入联系电话">
+            <nz-form-explain *ngIf="addUserForm.get('phone').dirty && addUserForm.get('phone').errors">请输入联系电话
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="5" nzFor="email" [nzOffset]="2">邮箱</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="email" id="email" placeholder="请输入邮箱">
+            <nz-form-explain *ngIf="addUserForm.get('email').dirty && addUserForm.get('email').errors">请输入正确的邮箱!
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+
+          <nz-form-label nzSpan="5" nzFor="address" [nzOffset]="2">地址</nz-form-label>
+          <nz-form-control nzSpan="10">
+            <input nz-input formControlName="address" placeholder="请输入地址">
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <div *ngIf="windowShow == 'settingDepartment'">
+      <div nz-row>
+        <div nz-col nzSpan="11">
+          <nz-tree [nzData]="nodes1" nzMultiple="true" (nzClick)="nzEvent($event)"
+            [nzSelectedKeys]="defaultSelectedKeys" nzExpandAll>
+          </nz-tree>
+          <div nz-col nzSpan="2" class="height-80">
+            <nz-divider nzType="vertical"></nz-divider>
+          </div>
+        </div>
+        <div nz-col nzSpan="11">
+          <nz-tag *ngFor="let tag of tags;let i = index;" nzMode="closeable" (nzOnClose)="nzOnCloseTag($event,tag)">
+            {{tags[i].title}}</nz-tag>
+          <!---->
+        </div>
       </div>
     </div>
-  </div>
-  <ng-template #modalFooter>
-    <button *ngIf="windowShow == 'userList'" nz-button nzType="default" (click)="handleCancel()">取消</button>
-    <button *ngIf="windowShow == 'adduser' || windowShow == 'settingDepartment'" nz-button nzType="default" (click)="returnUserList()">返回</button>
-    <!-- <button *ngIf="windowShow == 'settingDepartment'" nz-button nzType="default" (click)="returnUserList()">返回</button> -->
-    <button *ngIf="windowShow == 'adduser'" nz-button nzType="primary" type="submit" [nzLoading]="nzBtnLoding" (click)="authorityConfirm()">确定</button>
-  </ng-template>
-</nz-modal>
+    <ng-template #modalFooter>
+      <button *ngIf="windowShow == 'userList'" nz-button nzType="default" (click)="handleCancel()">取消</button>
+      <button *ngIf="windowShow == 'adduser' || windowShow == 'settingDepartment'" nz-button nzType="default"
+        (click)="returnUserList()">返回</button>
+      <!-- <button *ngIf="windowShow == 'settingDepartment'" nz-button nzType="default" (click)="returnUserList()">返回</button> -->
+      <button *ngIf="windowShow == 'adduser'" nz-button nzType="primary" type="submit" [nzLoading]="nzBtnLoding"
+        (click)="authorityConfirm()">确定</button>
+    </ng-template>
+  </nz-modal>
+</div>

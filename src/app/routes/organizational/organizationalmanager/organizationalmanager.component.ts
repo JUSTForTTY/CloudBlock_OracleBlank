@@ -5,6 +5,8 @@ import { HttpService } from 'ngx-block-core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd';
+import { ActivatedRoute } from '@angular/router';
+import { PageService } from 'ngx-block-core';
 // import { ConsoleReporter } from 'jasmine';
 
 
@@ -24,6 +26,7 @@ export class OrganizationalmanagerComponent implements OnInit {
     public msg: NzMessageService,
     private httpService: HttpService,
     private router: Router,
+    private activatedRoute: ActivatedRoute, private pageService: PageService,
     private modalService: NzModalService,) { }
 
   logo = "assets/img/icon-zu.png";
@@ -55,13 +58,47 @@ export class OrganizationalmanagerComponent implements OnInit {
   searchContent;
   pageList = [];
   pageId = 1;
-
+  show = true;
+  queryParamStr = '';
+  path;
   public ngOnInit(): void {
     this.formInit();
     //获取组织架构数据
+    this.path = this.pageService.getPathByRoute(this.activatedRoute);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.activatedRoute, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+        }
+    }
+    //之后是你原来的初始化代码，比如：
+    this.baseInit();
+    //this.getOrganize(this.currentPage);
+  }
+  baseInit() {
     this.getOrganize(this.currentPage);
   }
-
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
+  }
   formInit() {
     this.form = this.fb.group({
       organizeName: [null, [Validators.required]],
@@ -408,8 +445,12 @@ export class OrganizationalmanagerComponent implements OnInit {
     let queryParams = {};
     queryParams['csysOrgStruceId'] = item.csysOrgStruceId;
 
-    this.router.navigate(['/authority/organizationalchart/'], {
-      queryParams
+    // this.router.navigate(['/authority/organizationalchart/'], {
+    //   queryParams
+    // });
+    this.pageService.setRouteParams('/default/pages/authority/organizationalchart/', queryParams);
+    this.router.navigate(['/default/pages/authority/organizationalchart/'], {
+      queryParams // 此处可省略
     });
     //this.router.navigate(['/authority/organizationalchart/' + item.csysOrgStruceId + '']);
     console.log("zeq", item.csysOrgStruceId);

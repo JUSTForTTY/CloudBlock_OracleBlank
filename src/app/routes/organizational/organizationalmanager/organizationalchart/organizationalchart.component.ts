@@ -14,6 +14,7 @@ import { Identifiers } from '@angular/compiler';
 import { STColumn, STChange } from '@delon/abc';
 import { Md5 } from "ts-md5/dist/md5";
 import { isThisISOWeek } from 'date-fns';
+import { PageService } from 'ngx-block-core';
 
 @Component({
   selector: 'organizationalchart',
@@ -81,6 +82,9 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   deleting = false;
   searchContent = "";
   nzBtnLoding = false;
+  show = true;
+  queryParamStr = '';
+  path;
   num = 0;
   a = "123";
   //当前组织架构的id
@@ -196,7 +200,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private msg: NzMessageService,
     private httpService: HttpService,
-
+     private pageService: PageService,
     private modalService: NzModalService, ) {
     Object.assign(this, {
       colorSchemes: colorSets,
@@ -204,10 +208,27 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     this.reload();
   }
   public ngOnInit(): void {
-    this.getMenuList();
-    this.route.queryParams.subscribe(queryParams => {
-      this.organizeId = queryParams['csysOrgStruceId'];
-    });
+    // this.getMenuList();
+    // this.route.queryParams.subscribe(queryParams => {
+    //   this.organizeId = queryParams['csysOrgStruceId'];
+    // });
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.organizeId=this.pageService.getRouteParams(this.route, 'csysOrgStruceId',this.path)
+
+    this.path = this.pageService.getPathByRoute(this.route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.route, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+        }
+    }
+    //之后是你原来的初始化代码，比如：
+    this.baseInit();
     //this.organizeId = this.route.snapshot.paramMap.get("organizeId");
     this.initializeFromControl();
     this.form = this.fb.group({
@@ -225,19 +246,14 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
       addNodeName: [null, [Validators.required]]
     })
 
-
     //保存目标节点（参数：节点编号）
     this.saveTargetEevent.subscribe((value: string) => {
       this.saveTarget(value);
     })
-
     //保存（参数：节点编号）
     this.OrganizeEevent.subscribe(() => {
       this.saveOragnize();
     })
-
-
-
     //增加默认目标节点
     //this.addField();
 
@@ -248,8 +264,8 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     this.setLineStyle('Step After');
 
     //查询组织架构节点数据
-    console.log("获取组织架构")
-    this.getOrganizeNodes();
+    // console.log("获取组织架构")
+    // this.getOrganizeNodes();
 
 
     //设置图像高度
@@ -265,7 +281,29 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
   }
 
-
+  baseInit() {
+    console.log("获取组织架构")
+    this.getOrganizeNodes();
+    this.getMenuList();
+  }
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
+  }
   reload() {
     this.users = Array(10).fill({}).map((item: any, idx: number) => {
       console.log("item", item);
@@ -349,7 +387,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
 
   removeField(i: { id: string, controlInstance: string, value: string, laebl: "", flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }> }, e: MouseEvent): void {
-    e.preventDefault();
+    e.preventDefault();  
     if (this.controlArray.length > 0) {
       const index = this.controlArray.indexOf(i);
       //console.log(this.controlArray);
@@ -606,6 +644,8 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
 
   //删除编辑节点
   deleteCurrentNode() {
+    this.clickOrganizationId;
+    
     this.deleting = true;
     //当前节点
     let nodeId = this.editForm.value.id;

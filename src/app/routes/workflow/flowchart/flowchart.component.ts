@@ -10,6 +10,7 @@ import { HttpService } from 'ngx-block-core';
 import { Router } from '@angular/router';
 import { CacheService } from '@delon/cache';
 import { CodeSandboxCircleFill } from '@ant-design/icons-angular/icons/public_api';
+import { PageService } from 'ngx-block-core';
 //通用
 const roleCurrencyList = [];
 @Component({
@@ -120,6 +121,9 @@ export class FlowchartComponent implements OnInit {
   //工序描述list
   pointDescList = [];
   workflowType;
+  show = true;
+  queryParamStr = '';
+  path;
   //定义途程图数据
   hierarchialGraph = { nodes: [], links: [], clusters: [] };
 
@@ -138,7 +142,7 @@ export class FlowchartComponent implements OnInit {
   private nzTimer;
   workflowName: any;
 
-  constructor(private fb: FormBuilder, private router: Router, private msg: NzMessageService, private route: ActivatedRoute, private httpService: HttpService, private cacheService: CacheService) {
+  constructor(private fb: FormBuilder, private router: Router, private msg: NzMessageService, private route: ActivatedRoute, private httpService: HttpService, private pageService: PageService) {
     //主题下拉框赋值
     Object.assign(this, {
       colorSchemes: colorSets,
@@ -202,15 +206,75 @@ export class FlowchartComponent implements OnInit {
   ngOnInit() {
     this.isGraphSpinning = true;
     //this.workflowId = this.route.snapshot.paramMap.get("workFlowId");
-    this.route.queryParams.subscribe(queryParams => {
-      this.workflowId = queryParams['workflowId'];
-      this.workflowType = queryParams['workflowType'];
-      this.workflowName = queryParams['workflowName'];
-    });
+    // this.route.queryParams.subscribe(queryParams => {
+    //   this.workflowId = queryParams['workflowId'];
+    //   this.workflowType = queryParams['workflowType'];
+    //   this.workflowName = queryParams['workflowName'];
+    // });
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path)
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path)
     if (this.workflowType == "inoperation") {
       this.nzLg = 24;
       this.operationShow = false;
     }
+    // this.getChartData();
+    // this.formInit();
+    // // this.getOpData();
+    // this.getNodeData();
+    // this.getModeData();
+    // this.getOpData();
+    // //this.getResource();
+    // //this.getSkill();
+    // this.getPointDescList();
+    // this.initialConditionFrom();
+    // this.initOpForm();
+    // this.getRuleData();
+    this.form = this.fb.group({
+      colorTheme: ['', [Validators.required]],
+      lineStyle: ['', [Validators.required]],
+      orientation: ['', [Validators.required]],
+      layoutStyle: ['', [Validators.required]]
+    });
+    this.path = this.pageService.getPathByRoute(this.route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.route, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+        }
+    }
+    //初始化代码
+    this.baseInit();
+    //this.getFlowTargetNodes();
+    //设置主题
+    //this.setColorScheme('picnic');
+
+    //设置线性，垂直，自然等等
+    //this.setLineStyle('Step Before');
+
+    // //查询途程工序数据
+    // this.getWorkFlowNodes();
+
+    //查询设置目标工序
+    //this.getFlowTargetNodes();
+
+    //获取角色信息
+    //this.getRoleList();
+
+    /*判断工作流是否有初始化节点，如果没有进行初始化操作。start*/
+
+
+
+
+  }
+
+  baseInit() {
     this.getChartData();
     this.formInit();
     // this.getOpData();
@@ -223,30 +287,8 @@ export class FlowchartComponent implements OnInit {
     this.initialConditionFrom();
     this.initOpForm();
     this.getRuleData();
-    this.form = this.fb.group({
-      colorTheme: ['', [Validators.required]],
-      lineStyle: ['', [Validators.required]],
-      orientation: ['', [Validators.required]],
-      layoutStyle: ['', [Validators.required]]
-    });
-    //this.getFlowTargetNodes();
-    //设置主题
-    //this.setColorScheme('picnic');
-
-    //设置线性，垂直，自然等等
-    //this.setLineStyle('Step Before');
-
     //查询途程工序数据
     this.getWorkFlowNodes();
-
-    //查询设置目标工序
-    //this.getFlowTargetNodes();
-
-    //获取角色信息
-    //this.getRoleList();
-
-    /*判断工作流是否有初始化节点，如果没有进行初始化操作。start*/
-
     let paramsinit = {
       csysWorkflowId: this.workflowId,
       csysPotType: "3"
@@ -281,17 +323,13 @@ export class FlowchartComponent implements OnInit {
       csysPotPublicId: "LHCsysPotPublic20190625092513130000031"
     }
     this.httpService.postHttp(this.nodeTargertUrl, paramsend).subscribe((data: any) => {
-
       console.log("结束节点数据", data.data.length);
       if (data.data.length == 0) {
         this.spinningText = "途程初始化中......";
         this.isGraphSpinning = true;
         //第一步从公共工序获取样式名称
         this.httpService.getHttp("/csyspotpublic/LHCsysPotPublic20190625092513130000031").subscribe((data1: any) => {
-
-
           let params = {};
-
           params = {
             "csysPotPublicId": "LHCsysPotPublic20190625092513130000031",
             "csysPotName": "结束",
@@ -301,8 +339,6 @@ export class FlowchartComponent implements OnInit {
             "csysPotGroupId": data1.data.csysPotGroupId,
 
           }
-
-
           console.log("新增节点参数", params)
           this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
             console.log("工序新增成功", data);
@@ -338,13 +374,8 @@ export class FlowchartComponent implements OnInit {
                 opName: this.opName,
                 skillIds: skillIds
               });
-
-
               //第二步：保存工序迁移
               this.saveFlowpointTransfer(nodeId);
-
-
-
             });
             //this.insertTsrPage(nodeId);
           });
@@ -353,18 +384,30 @@ export class FlowchartComponent implements OnInit {
       }
     });
 
-
-
-
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.workType = data.data[0].csysWorkflowType;
     })
 
 
-
-
   }
-
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
+  }
   fitGraph() {
     this.zoomToFit$.next(true)
   }
@@ -3428,7 +3471,7 @@ export class FlowchartComponent implements OnInit {
         } else {
 
 
-          if(targetPot.data.csysPotType!='0'){
+          if (targetPot.data.csysPotType != '0') {
             console.log("节点类型智能识别-目标节点有后续节点且不是头结点，设置为普通节点");
             let uppotparams = {
               csysPotId: targetPot.data.csysPotId,
@@ -3439,7 +3482,7 @@ export class FlowchartComponent implements OnInit {
             });
           }
 
-           
+
 
         }
 

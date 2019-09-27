@@ -5,6 +5,7 @@ import { _HttpClient } from '@delon/theme';
 import { tap, map } from 'rxjs/operators';
 import { HttpService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
+import { PageService } from 'ngx-block-core';
 import {
   STComponent, STColumn, STData
 } from '@delon/abc';
@@ -62,22 +63,27 @@ export class RolememberComponent implements OnInit {
   description = '';
   totalCallNo = 0;
   expandForm = false;
-
   // region: cateogry
   categories;
-
   searchValue;
+  show = true;
+  queryParamStr = '';
+  path;
   constructor(private fb: FormBuilder, private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
     private httpService: HttpService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private pageService: PageService) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(queryParams => {
-      this.roleId = queryParams['roleId'];
-    });
-    this.urValue = this.roleId;
+    // this.route.queryParams.subscribe(queryParams => {
+    //   this.roleId = queryParams['roleId'];
+    // });
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.roleId=this.pageService.getRouteParams(this.route, 'roleId',this.path)
+
     // this.getData();
     this.getUsersList();
     this.getRoleList();
@@ -85,12 +91,47 @@ export class RolememberComponent implements OnInit {
     this.initializeFromControl();
     this.getMenuList();
     this.getTreeData();
-
+    this.path = this.pageService.getPathByRoute(this.route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.route, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+        }
+    }
+    //初始化代码
+    this.baseInit();
     //this.roleId = this.route.snapshot.paramMap.get("roleId");
   }
-
-
-
+  baseInit() {
+    this.urValue = this.roleId;
+    this.getUsersList();
+    this.getRoleList();
+    //this.getResource();
+    this.initializeFromControl();
+    this.getMenuList();
+    this.getTreeData();
+  }
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
+  }
   checkboxChange(list: STData[]) {
     this.selectedRows = list;
     this.totalCallNo = this.selectedRows.reduce(

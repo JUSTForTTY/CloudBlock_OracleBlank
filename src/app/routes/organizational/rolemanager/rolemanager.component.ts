@@ -3,6 +3,8 @@ import { NzMessageService, NzTreeNode } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { HttpService } from 'ngx-block-core';
 import { Router } from '@angular/router';
+import { PageService } from 'ngx-block-core';
+import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -42,19 +44,54 @@ export class RolemanagerComponent implements OnInit {
   roleName;
   isSpinning = false;
   roleMainName: any;
-  constructor(private fb: FormBuilder, private msg: NzMessageService, private httpService: HttpService, private router: Router) {
+  show = true;
+  queryParamStr = '';
+  path;
+  constructor(private fb: FormBuilder, private msg: NzMessageService, private httpService: HttpService, private router: Router, private activatedRoute: ActivatedRoute, private pageService: PageService) {
 
   }
 
   public ngOnInit(): void {
-    this.isSpinning = true;
-    this.getRoleList(1);
+   
+    //this.getRoleList(1);
     this.form = this.fb.group({
       name: [null, [Validators.required]],
       comment: [null]
-
     });
-
+    this.path = this.pageService.getPathByRoute(this.activatedRoute);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.activatedRoute, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+        }
+    }
+    //初始化代码
+    this.baseInit();
+  }
+  baseInit() {
+    this.isSpinning = true;
+    this.getRoleList(1);
+  }
+  _onReuseInit() {
+    let newStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        newStr = newStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    if (newStr != '' && newStr != this.queryParamStr) {
+      this.queryParamStr = newStr;
+      // 此处是刷新逻辑 根据具体情况编写 start
+      this.show = false;
+      this.baseInit();
+      setTimeout(() => {
+        this.show = true;
+      }, 5);
+      // 此处是刷新逻辑 end
+    }
   }
   //获取所有用户组数据
   getRoleList(event: number): void {
@@ -88,7 +125,7 @@ export class RolemanagerComponent implements OnInit {
       return;
     }
     this.httpService.postHttp("csysuserrole/condition", { "csysRoleId": id }).subscribe((urdata: any) => {
-      if (urdata.length == 0) {
+      if (urdata.data.length == 0) {
         let delRole = {
           "csysRoleId": id,
           "csysRoleIsDelete": "1"
@@ -440,15 +477,23 @@ export class RolemanagerComponent implements OnInit {
   navigatedetail(item): void {
     let queryParams = {};
     queryParams['roleId'] = item.csysRoleId;
+    // this.router.navigate(['/authority/rolemember/'], {
+    //   queryParams
+    // });
+    this.pageService.setRouteParams('/authority/rolemember/', queryParams);
     this.router.navigate(['/authority/rolemember/'], {
-      queryParams
+      queryParams // 此处可省略
     });
   }
   navigatedetail1(item): void {
     let queryParams = {};
     queryParams['roleId'] = item.csysRoleId;
+    // this.router.navigate(['/authority/rolepage/'], {
+    //   queryParams
+    // });
+    this.pageService.setRouteParams('/authority/rolepage/', queryParams);
     this.router.navigate(['/authority/rolepage/'], {
-      queryParams
+      queryParams // 此处可省略
     });
   }
 }

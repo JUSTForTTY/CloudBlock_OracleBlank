@@ -1,5 +1,6 @@
-<page-header [home]="''"></page-header>
-<!-- <nz-card [nzBordered]="false">
+<div *ngIf="show">
+  <page-header [home]="''"></page-header>
+  <!-- <nz-card [nzBordered]="false">
   <div nz-row>
     <div nz-col [nzXs]="24" [nzSm]="8" class="header-info">
       <span class="text-grey-dark">防呆组</span>
@@ -9,133 +10,135 @@
 
   </div>
 </nz-card> -->
-<nz-card [nzBordered]="false">
-  <div class="d-flex align-items-center mb-lg">
-    <h3 class="flex-1 text-lg">防呆组列表</h3>
-    <div>
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-        <input type="text" nz-input placeholder="防呆组名称" [(ngModel)]="searchContent" (keydown)="keytest($event)">
-      </nz-input-group>
-      <ng-template #suffixButton>
-        <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
-      </ng-template>
-    </div>
-    <div style="margin-left:8px;margin-right: 20px">
-      <button nz-button nzType="primary" nzSearch (click)="restingSearch()">重置</button>
-    </div>
-  </div>
-  <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-    <i class="anticon anticon-plus"></i>
-    <span>添加</span>
-  </button>
-  <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
-    <ng-template #item let-item>
-      <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
-        <ng-template #edit>
-          <a (click)="showPot(item)">查看工序</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="editWorkflowInit(item.csysPotGroupId)">编辑</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a nz-popconfirm nzTitle="确认删除" (nzOnConfirm)="deleteWorkFlow(item.csysPotGroupId)" nzPlacement="top">删除</a>
+  <nz-card [nzBordered]="false">
+    <div class="d-flex align-items-center mb-lg">
+      <h3 class="flex-1 text-lg">防呆组列表</h3>
+      <div>
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+          <input type="text" nz-input placeholder="防呆组名称" [(ngModel)]="searchContent" (keydown)="keytest($event)">
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow()">查询</button>
         </ng-template>
-        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.csysPotGroupDesc" [nzAvatar]="nzAvatar">
-          <!-- <ng-template>
+      </div>
+      <div style="margin-left:8px;margin-right: 20px">
+        <button nz-button nzType="primary" nzSearch (click)="restingSearch()">重置</button>
+      </div>
+    </div>
+    <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+      <i class="anticon anticon-plus"></i>
+      <span>添加</span>
+    </button>
+    <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+      <ng-template #item let-item>
+        <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
+          <ng-template #edit>
+            <a (click)="showPot(item)">查看工序</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="editWorkflowInit(item.csysPotGroupId)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzTitle="确认删除" (nzOnConfirm)="deleteWorkFlow(item.csysPotGroupId)" nzPlacement="top">删除</a>
+          </ng-template>
+          <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.csysPotGroupDesc" [nzAvatar]="nzAvatar">
+            <!-- <ng-template>
             {{item.cySysFlowpointPublicDesc}}
           </ng-template> -->
-          <ng-template #nzTitle>
-            {{item.csysPotGroupName}}
-          </ng-template>
-          <ng-template #nzAvatar>
-            <nz-avatar [nzSrc]="avatar" nzSize="large" [nzShape]="'circle'">工</nz-avatar>
-          </ng-template>
-        </nz-list-item-meta>
-        <ng-template #nzContent>
-          <div class="width-md">
-            <div class="d-flex text-grey-dark">
-              <div class="flex-1">
-                创建人
-                <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                  [nzTitle]="item.csysPotGroupCreateUser">
-                  {{item.csysPotGroupCreateUser}}</p>
-              </div>
-              <div class="text-right">
-                创建时间
-                <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                  [nzTitle]="item.csysPotGroupCreateTime">{{item.csysPotGroupCreateTime | _date}}</p>
+            <ng-template #nzTitle>
+              {{item.csysPotGroupName}}
+            </ng-template>
+            <ng-template #nzAvatar>
+              <nz-avatar [nzSrc]="avatar" nzSize="large" [nzShape]="'circle'">工</nz-avatar>
+            </ng-template>
+          </nz-list-item-meta>
+          <ng-template #nzContent>
+            <div class="width-md">
+              <div class="d-flex text-grey-dark">
+                <div class="flex-1">
+                  创建人
+                  <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                    [nzTitle]="item.csysPotGroupCreateUser">
+                    {{item.csysPotGroupCreateUser}}</p>
+                </div>
+                <div class="text-right">
+                  创建时间
+                  <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                    [nzTitle]="item.csysPotGroupCreateTime">{{item.csysPotGroupCreateTime | _date}}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- <nz-progress [nzPercent]="item.percent" [nzStatus]="item.status" [nzStrokeWidth]="6"></nz-progress> -->
-        </ng-template>
-      </nz-list-item>
-    </ng-template>
-    <ng-template #pagination>
-      <nz-pagination [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage"
-        (nzPageIndexChange)="_getWorkFlowListData($event)"></nz-pagination>
-    </ng-template>
-  </nz-list>
-</nz-card>
+            <!-- <nz-progress [nzPercent]="item.percent" [nzStatus]="item.status" [nzStrokeWidth]="6"></nz-progress> -->
+          </ng-template>
+        </nz-list-item>
+      </ng-template>
+      <ng-template #pagination>
+        <nz-pagination [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage"
+          (nzPageIndexChange)="_getWorkFlowListData($event)"></nz-pagination>
+      </ng-template>
+    </nz-list>
+  </nz-card>
 
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title"
-  (nzOnCancel)="handleCancel()" (nzOnOk)="saveWorkFlow()" [nzFooter]="modalFooter">
-  <nz-spin [nzSpinning]="isSpinning">
-    <form nz-form [formGroup]="form">
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="flowGrpupName">工序组名称</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('flowGrpupName')">
-          <input nz-input formControlName="flowGrpupName" id="workFlowName" placeholder="请输入公共工序名称">
-          <nz-form-explain *ngIf="form.get('flowGrpupName').dirty && form.get('flowGrpupName').errors">请输入工序组名称
-          </nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowGroup">目标工序组</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <!-- <nz-select style="width: 100%" formControlName="workFlowGroup" nzMode="tags"
+  <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="saveWorkFlow()" [nzFooter]="modalFooter">
+    <nz-spin [nzSpinning]="isSpinning">
+      <form nz-form [formGroup]="form">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="flowGrpupName">工序组名称</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('flowGrpupName')">
+            <input nz-input formControlName="flowGrpupName" id="workFlowName" placeholder="请输入公共工序名称">
+            <nz-form-explain *ngIf="form.get('flowGrpupName').dirty && form.get('flowGrpupName').errors">请输入工序组名称
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowGroup">目标工序组</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <!-- <nz-select style="width: 100%" formControlName="workFlowGroup" nzMode="tags"
           nzPlaceHolder="请选择防呆组">
           <nz-option *ngFor="let item of flowGroup" [nzValue]="item.csysPotGroupId" [nzLabel]="item.csysPotGroupName">
         </nz-select> -->
-          <nz-select formControlName="workFlowGroup" nzAllowClear nzMode="tags" nzPlaceHolder="请选择目标工序组">
-            <nz-option *ngFor="let item of flowGroup" [nzValue]="item.csysPotGroupId" [nzLabel]="item.csysPotGroupName">
-            </nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowDesc">工序组描述</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <textarea nz-input formControlName="workFlowDesc" id="workFlowDesc" placeholder="请输入工序组描述"></textarea>
-          <!-- <nz-form-explain *ngIf="form.get('version').dirty && form.get('version').errors"></nz-form-explain> -->
-        </nz-form-control>
+            <nz-select formControlName="workFlowGroup" nzAllowClear nzMode="tags" nzPlaceHolder="请选择目标工序组">
+              <nz-option *ngFor="let item of flowGroup" [nzValue]="item.csysPotGroupId"
+                [nzLabel]="item.csysPotGroupName">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowDesc">工序组描述</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <textarea nz-input formControlName="workFlowDesc" id="workFlowDesc" placeholder="请输入工序组描述"></textarea>
+            <!-- <nz-form-explain *ngIf="form.get('version').dirty && form.get('version').errors"></nz-form-explain> -->
+          </nz-form-control>
 
-      </nz-form-item>
-      <ng-template #modalFooter>
-        <button nz-button nzType="default" (click)="handleCancel()">取消</button>
-        <button nz-button nzType="primary" type="submit" (click)="saveWorkFlow()" [disabled]="form.invalid"
-          [nzLoading]="isOkLoading">确认</button>
-      </ng-template>
-    </form>
-  </nz-spin>
-</nz-modal>
-<nz-modal [(nzVisible)]="potVisible" nzWidth="40%" [nzTitle]="potName" (nzOnCancel)="potCancel()" (nzOnOk)="potOk()">
-    <nz-table #basicTable [nzData]="showPotData" nzPageSize = 5>
-        <thead>
-          <tr>
-            <th>工序名称</th>
-            <th>工序描述</th>
-            <th>创建时间</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td>{{ data.csysPotPublicName }}</td>
-            <td>{{ data.csysPotPublicDesc }}</td>
-            <td>
-                <!-- <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                [nzTitle]="data.csysPotPublicCreateTime">{{data.csysPotPublicCreateTime | _date}}</p> -->
-                {{data.csysPotPublicCreateTime | _date}}
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
+        </nz-form-item>
+        <ng-template #modalFooter>
+          <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+          <button nz-button nzType="primary" type="submit" (click)="saveWorkFlow()" [disabled]="form.invalid"
+            [nzLoading]="isOkLoading">确认</button>
+        </ng-template>
+      </form>
+    </nz-spin>
   </nz-modal>
+  <nz-modal [(nzVisible)]="potVisible" nzWidth="40%" [nzTitle]="potName" (nzOnCancel)="potCancel()" (nzOnOk)="potOk()">
+    <nz-table #basicTable [nzData]="showPotData" nzPageSize=5>
+      <thead>
+        <tr>
+          <th>工序名称</th>
+          <th>工序描述</th>
+          <th>创建时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.csysPotPublicName }}</td>
+          <td>{{ data.csysPotPublicDesc }}</td>
+          <td>
+            <!-- <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                [nzTitle]="data.csysPotPublicCreateTime">{{data.csysPotPublicCreateTime | _date}}</p> -->
+            {{data.csysPotPublicCreateTime | _date}}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-modal>
+</div>

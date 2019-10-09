@@ -93,7 +93,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   nodeUrl = "/csysorgpot";
   nodeConditionUrl = "/csysorgpot/listCondition";
   userUrl = "/cysysbaseuser";
-  authorityUrl = "/csysorgpotauth";
+  authorityUrl = "csysorgpotauth";
 
   fileList = [
     {
@@ -200,7 +200,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private msg: NzMessageService,
     private httpService: HttpService,
-     private pageService: PageService,
+    private pageService: PageService,
     private modalService: NzModalService, ) {
     Object.assign(this, {
       colorSchemes: colorSets,
@@ -215,7 +215,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     this.path = this.pageService.getPathByRoute(this.route);
     //  path 可不传
     //  this.activatedRoute 需保证准确
-    this.organizeId=this.pageService.getRouteParams(this.route, 'csysOrgStruceId',this.path)
+    this.organizeId = this.pageService.getRouteParams(this.route, 'csysOrgStruceId', this.path)
 
     this.path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
@@ -223,9 +223,9 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     //初始化参数识别字串
     this.queryParamStr = '';
     for (const key in this.pageService.routeParams[this.path]) {
-        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-        }
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
     }
     //之后是你原来的初始化代码，比如：
     this.baseInit();
@@ -387,7 +387,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   }
 
   removeField(i: { id: string, controlInstance: string, value: string, laebl: "", flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }> }, e: MouseEvent): void {
-    e.preventDefault();  
+    e.preventDefault();
     if (this.controlArray.length > 0) {
       const index = this.controlArray.indexOf(i);
       //console.log(this.controlArray);
@@ -645,25 +645,37 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   //删除编辑节点
   deleteCurrentNode() {
     this.clickOrganizationId;
-    
-    this.deleting = true;
-    //当前节点
-    let nodeId = this.editForm.value.id;
-    //判断当前节点是否存在源节点和目标节点
-    try {
-      this.hierarchialGraph.links.forEach(element => {
-        if (element.source == nodeId || element.target == nodeId) {
-          //抛出异常，跳出循环
-          throw new Error("error");
+    let params = {
+      "csysOrgPotId": this.clickOrganizationId[0],
+    };
+    this.httpService.postHttp(this.authorityUrl + "/condition", params).subscribe((data: any) => {
+      console.log("datass", data);
+      if (data.data.length != 0) {
+        this.msg.error("该组织存在用户，请先解除！");
+        return;
+      } else {
+        console.log("继续执行");
+
+        this.deleting = true;
+        //当前节点
+        let nodeId = this.editForm.value.id;
+        //判断当前节点是否存在源节点和目标节点
+        try {
+          this.hierarchialGraph.links.forEach(element => {
+            if (element.source == nodeId || element.target == nodeId) {
+              //抛出异常，跳出循环
+              throw new Error("error");
+            }
+          })
+          //若无连接则删除节点
+          this.deleteFlowPoint(nodeId);
+          this.deleteAuthorityByTransferId(nodeId)
+        } catch (e) {
+          this.deleting = false;
+          this.msg.warning("对不起，当前节点存在源节点或目标节点，请删除后重试！");
         }
-      })
-      //若无连接则删除节点
-      this.deleteFlowPoint(nodeId);
-      this.deleteAuthorityByTransferId(nodeId)
-    } catch (e) {
-      this.deleting = false;
-      this.msg.warning("对不起，当前节点存在源节点或目标节点，请删除后重试！");
-    }
+      }
+    })
   }
 
 
@@ -690,9 +702,9 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   deleteAuthorityByTransferId(transferId) {
     //根据节点迁移编号，查出所有节点迁移迁移权限记录
     let params = {
-      "csysorgpotauth": transferId,
+      "csysorgpotauth": this.clickOrganizationId[0],
     };
-    this.httpService.postHttp(this.authorityUrl + "/listCondition", params).subscribe((data: any) => {
+    this.httpService.postHttp(this.authorityUrl + "/condition", params).subscribe((data: any) => {
       //console.log("需删除节点迁移权限：", data.data.list);
       //循环获取权限数据
       data.data.list.forEach(element => {
@@ -1490,7 +1502,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   editOrginzation(userId): void {
     let department = this.addUserForm.controls.department.value;//组织（部门）
     let organizationArray = [];//组织权限
-    this.httpService.postHttp("/csysorgpotauth/condition").subscribe((data: any) => {
+    this.httpService.postHttp("csysorgpotauth/condition").subscribe((data: any) => {
       let organization = data.data;
       for (let i = 0; i < organization.length; i++) {
         if (organization[i].csysUserId == userId) organizationArray.push(organization[i].csysOrgPotAuthId);
@@ -1498,13 +1510,13 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
       console.log("organizationArray", organizationArray);
       //当存在组织架构时候先删除在添加
       for (let i = 0; i < organizationArray.length; i++) {
-        this.httpService.deleteHttp("/csysorgpotauth/" + organizationArray[i]).subscribe((data: any) => {
+        this.httpService.deleteHttp("csysorgpotauth/" + organizationArray[i]).subscribe((data: any) => {
           //添加组织架构
           if (i == organizationArray.length - 1) {
             console.log("department", department);
             for (let i = 0; i < department.length; i++) {
               //查询节点信息
-              this.httpService.getHttp("/csysorgpot/" + department[i]).subscribe((data: any) => {
+              this.httpService.getHttp("csysorgpot/" + department[i]).subscribe((data: any) => {
 
                 let organization = {
                   "csysUserId": userId,

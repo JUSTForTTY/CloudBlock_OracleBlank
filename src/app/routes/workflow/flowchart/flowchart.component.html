@@ -365,7 +365,7 @@
                   <nz-form-item>
                     <nz-form-label nzXs="24" nzSm="7" nzFor="rule">规则设定</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select formControlName="rule" nzAllowClear nzPlaceHolder="请选择规则">
+                      <nz-select formControlName="rule" nzShowSearch nzAllowClear nzPlaceHolder="请选择规则" >
                         <nz-option *ngFor="let ruleOption of ruleData" [nzValue]="ruleOption.csysTrsRuleId"
                           [nzLabel]="ruleOption.csysTrsRuleName"></nz-option>
                       </nz-select>
@@ -698,7 +698,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="contrast">条件对比</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select formControlName="contrast">
+            <nz-select formControlName="contrast" nzShowSearch nzAllowClear>
               <nz-option *ngFor="let scheme of symbol" [nzValue]="scheme" [nzLabel]="scheme">
               </nz-option>
             </nz-select>
@@ -773,7 +773,7 @@
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">制程段代码</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-select formControlName="opcode" nzAllowClear nzPlaceHolder="请输入制程段代码">
+                <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
                   <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
                     [nzLabel]="opgroupdata.csysCodemasterDesc">
                   </nz-option>
@@ -877,7 +877,7 @@
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始工序">
+                  <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序">
                     <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
                       [nzLabel]="timedata.label">
                     </nz-option>
@@ -887,7 +887,7 @@
               <nz-form-item>
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="16">
-                  <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标工序">
+                  <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序">
                     <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
                       [nzLabel]="timedata.label">
                     </nz-option>
@@ -971,7 +971,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select formControlName="potCurrentName" nzAllowClear nzPlaceHolder="请选择起始工序"
+            <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序"
               (ngModelChange)="checkModeChange()">
               <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
                 [nzLabel]="madedata.csysPotName">
@@ -982,7 +982,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-select formControlName="potPointName" nzAllowClear nzPlaceHolder="请选择目标工序"
+            <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序"
               (ngModelChange)="checkModeChange()">
               <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
                 [nzLabel]="madedata.csysPotName">
@@ -1000,7 +1000,7 @@
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">首件选择</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="16">
             <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" style="width: 100%" nzMode="multiple"
-              nzPlaceHolder="请选择首件" formControlName="firstSetting">
+              nzPlaceHolder="请选择首件" nzShowSearch nzAllowClear formControlName="firstSetting">
               <nz-option *ngFor="let option of firstData" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
               </nz-option>
             </nz-select>

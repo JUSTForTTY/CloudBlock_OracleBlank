@@ -245,9 +245,9 @@ export class FlowchartComponent implements OnInit {
     //初始化参数识别字串
     this.queryParamStr = '';
     for (const key in this.pageService.routeParams[this.path]) {
-        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-        }
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
     }
     //初始化代码
     this.baseInit();
@@ -506,10 +506,11 @@ export class FlowchartComponent implements OnInit {
   clickNodeData;
   resourceName;
   modeldata;
+  oldNodeName;
   //工序点击事件
   clickNode(data) {
     this.resourceData = [];
-
+    this.oldNodeName = data.label;
     console.log("点击数据", data)
     //获取当前节点的资源
     if (data.publicPotId) {
@@ -810,94 +811,108 @@ export class FlowchartComponent implements OnInit {
   flowPointMark = "none";
   //新增工序
   insertFlowPoint() {
-    this.flowPointMark = "insert";
-    let opId = this.insertForm.value.opPot;
-    //let rId = this.insertForm.value.resource;
-    let skillIds = this.insertForm.value.potSkill;
-    let isExcrete = this.insertForm.value.excrete;
-    //当选择资源的时候必须选择工序
-    // if (rId && !opId) {
-    //   this.msg.error("选择资源，必须选工序");
-    //   this.submitting = false;
-    //   this.isGraphSpinning = false;
-    //   return;
-    // }
-    if (isExcrete) isExcrete = 1; else isExcrete = 0;
-    //第一步从公共工序获取样式名称
-    this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
-      let ruleparam = {
+    let potData = {
+      "csysPotName": this.insertForm.value.addNodeName1,
+      "csysWorkflowId": this.workflowId
+    }
+    this.httpService.postHttp("csyspot/condition", potData).subscribe((data: any) => {
+      if (data.data.length != 0) {
+        this.submitting = false;
+        this.isGraphSpinning = false;
+        this.msg.error("工序名称重复");
+        return;
+      } else {
+        this.flowPointMark = "insert";
+        let opId = this.insertForm.value.opPot;
+        //let rId = this.insertForm.value.resource;
+        let skillIds = this.insertForm.value.potSkill;
+        let isExcrete = this.insertForm.value.excrete;
+        //当选择资源的时候必须选择工序
+        // if (rId && !opId) {
+        //   this.msg.error("选择资源，必须选工序");
+        //   this.submitting = false;
+        //   this.isGraphSpinning = false;
+        //   return;
+        // }
+        if (isExcrete) isExcrete = 1; else isExcrete = 0;
+        //第一步从公共工序获取样式名称
+        this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
+          let ruleparam = {
 
-        "csysPotStyleId": data1.data.csysPotStyleId,
-        "csysTrsRuleIsmain": "1",
-      }
-      console.log("检测是否存在规则", ruleparam)
-      //查询节点主规则
-      this.httpService.postHttp("/csystrsrule/condition", ruleparam).subscribe((ruleData: any) => {
-        let params = {};
-        console.log("规则数据attribute", this.insertForm.value.potAttribute)
-        if (ruleData.data.length > 0) {
-          params = {
-            "csysPotPublicId": this.insertForm.value.addNodeName,
-            "csysPotName": this.insertForm.value.addNodeName1,
-            "csysPotType": this.insertForm.value.addNodeName2,
-            "csysPotAtrribute": this.insertForm.value.potAttribute,
-            "csysWorkflowId": this.workflowId,
             "csysPotStyleId": data1.data.csysPotStyleId,
-            "csysPotGroupId": data1.data.csysPotGroupId,
-            "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
-            "csysPotIsExcrete": isExcrete
+            "csysTrsRuleIsmain": "1",
           }
-        } else {
-          params = {
-            "csysPotPublicId": this.insertForm.value.addNodeName,
-            "csysPotName": this.insertForm.value.addNodeName1,
-            "csysPotType": this.insertForm.value.addNodeName2,
-            "csysPotAtrribute": this.insertForm.value.potAttribute,
-            "csysWorkflowId": this.workflowId,
-            "csysPotStyleId": data1.data.csysPotStyleId,
-            "csysPotGroupId": data1.data.csysPotGroupId,
-            "csysPotIsExcrete": isExcrete
-          }
-        }
+          console.log("检测是否存在规则", ruleparam)
+          //查询节点主规则
+          this.httpService.postHttp("/csystrsrule/condition", ruleparam).subscribe((ruleData: any) => {
+            let params = {};
+            console.log("规则数据attribute", this.insertForm.value.potAttribute)
+            if (ruleData.data.length > 0) {
+              params = {
+                "csysPotPublicId": this.insertForm.value.addNodeName,
+                "csysPotName": this.insertForm.value.addNodeName1,
+                "csysPotType": this.insertForm.value.addNodeName2,
+                "csysPotAtrribute": this.insertForm.value.potAttribute,
+                "csysWorkflowId": this.workflowId,
+                "csysPotStyleId": data1.data.csysPotStyleId,
+                "csysPotGroupId": data1.data.csysPotGroupId,
+                "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
+                "csysPotIsExcrete": isExcrete
+              }
+            } else {
+              params = {
+                "csysPotPublicId": this.insertForm.value.addNodeName,
+                "csysPotName": this.insertForm.value.addNodeName1,
+                "csysPotType": this.insertForm.value.addNodeName2,
+                "csysPotAtrribute": this.insertForm.value.potAttribute,
+                "csysWorkflowId": this.workflowId,
+                "csysPotStyleId": data1.data.csysPotStyleId,
+                "csysPotGroupId": data1.data.csysPotGroupId,
+                "csysPotIsExcrete": isExcrete
+              }
+            }
 
-        console.log("新增节点参数", params)
-        this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
-          console.log("工序新增成功", data);
-          let nodeId = data.data;
+            console.log("新增节点参数", params)
+            this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
+              console.log("工序新增成功", data);
+              let nodeId = data.data;
 
-          // if (this.insertForm.value.addNodeName2 == '0') {
-          //   //如果是头结点，需要给头结点加入默认迁移
-          //   let targetParams = {
-          //     "csysWorkflowId": this.workflowId,
-          //     "csysPotTrsPointId": nodeId,//迁移目标
-          //     "csysPotTrsPointName": this.insertForm.value.addNodeName1
-          //   };
-          //   this.httpService.postHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+              // if (this.insertForm.value.addNodeName2 == '0') {
+              //   //如果是头结点，需要给头结点加入默认迁移
+              //   let targetParams = {
+              //     "csysWorkflowId": this.workflowId,
+              //     "csysPotTrsPointId": nodeId,//迁移目标
+              //     "csysPotTrsPointName": this.insertForm.value.addNodeName1
+              //   };
+              //   this.httpService.postHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
 
-          //   });
-          // }
+              //   });
+              // }
 
 
-          //重新获取目标工序
-          //this.getFlowTargetNodes();
-          //新增途程工序
-          this.insertNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, skillIds);
-          //新增工序组 
-          if (opId) {
-            this.insertOpPot(nodeId, opId);
-          }
-          // if (rId && opId) {
-          //   this.insertPotrs(nodeId, opId, rId);
-          // }
-          //新增资源
-          if (skillIds) {
-            this.insertPotSkill(nodeId, skillIds)
-          }
+              //重新获取目标工序
+              //this.getFlowTargetNodes();
+              //新增途程工序
+              this.insertNodes(nodeId, this.insertForm.value.addNodeName2, data1.data.csysPotStyleId, opId, skillIds);
+              //新增工序组 
+              if (opId) {
+                this.insertOpPot(nodeId, opId);
+              }
+              // if (rId && opId) {
+              //   this.insertPotrs(nodeId, opId, rId);
+              // }
+              //新增资源
+              if (skillIds) {
+                this.insertPotSkill(nodeId, skillIds)
+              }
 
-          //this.insertTsrPage(nodeId);
+              //this.insertTsrPage(nodeId);
+            });
+          });
         });
-      });
-    });
+
+      }
+    })
 
   }
 
@@ -1036,6 +1051,28 @@ export class FlowchartComponent implements OnInit {
   }
   //修改工序
   updateFlowPoint() {
+    if (this.oldNodeName != this.editForm.value.nodeEditName) {
+      let potData = {
+        "csysPotName": this.editForm.value.nodeEditName,
+        "csysWorkflowId": this.workflowId
+      }
+      this.httpService.postHttp("csyspot/condition", potData).subscribe((data: any) => {
+        if (data.data.length != 0) {
+          this.submitting = false;
+          this.isGraphSpinning = false;
+          this.msg.error("工序名称重复");
+          return;
+        } else {
+          this.updateFlowPointSubClass();
+        }
+      })
+    } else {
+      this.updateFlowPointSubClass();
+    }
+
+  }
+  //更新子类
+  updateFlowPointSubClass(): void {
     this.flowPointMark = "update"
     //当前工序编号
     let nodeId = this.editForm.value.id;
@@ -3086,7 +3123,7 @@ export class FlowchartComponent implements OnInit {
   }
   getTableData(): void {
     this.pottrsconData = []
-    this.httpService.postHttp("/csyspottrscon/condition",{"csysPotTrsId":this.csysPointTrsId}).subscribe((data: any) => {
+    this.httpService.postHttp("/csyspottrscon/condition", { "csysPotTrsId": this.csysPointTrsId }).subscribe((data: any) => {
       console.log("zeq123", this.csysPointTrsId)
       console.log("zeq123", data.data)
       this.pottrsconData = data.data;

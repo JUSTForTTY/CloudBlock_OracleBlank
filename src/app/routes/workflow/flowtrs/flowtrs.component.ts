@@ -70,7 +70,7 @@ export class FlowtrsComponent implements OnInit {
     // this._getWorkFlowListData(this.currentPage);
     // this.getFlowGroup();
     // this.getPot();
-    this.init(); 
+    this.init();
     this._getWorkFlowListData(this.currentPage);
     this.path = this.pageService.getPathByRoute(this.activatedRoute);
     //监听路径参数
@@ -318,11 +318,14 @@ export class FlowtrsComponent implements OnInit {
                       }
                     })
                   }
+                } else {
+                  console.log("这里是1");
+
                 }
               }
             })
           }
-          //当不存在布标工序组时候
+          //当不存在目标工序组时候
         } else {
           //编辑保存途程
           if (workGroupValue.length != 0) {
@@ -349,6 +352,17 @@ export class FlowtrsComponent implements OnInit {
                 }
               })
             }
+          } else {
+            console.log("这里是2");
+            this.httpService.putHttp(this.workflowUrl, params).subscribe((data4: any) => {
+              this.isOkLoading = false;
+              this.msg.create("success", "编辑成功");
+              this.isVisible = false;
+              this._getWorkFlowListData(this.pageId);
+              this.getFlowGroup()
+              this.init();
+            })
+
           }
         }
 

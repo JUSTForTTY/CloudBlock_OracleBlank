@@ -146,7 +146,9 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
         console.log("查询数据")
         //判断是否需要刷新
         if (this.setService.pageDatas['table_modal']['isNeedRefresh'] && this.setService.pageDatas['table_modal']['blockid']!="") {
-          this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch")
+          this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch",{
+            reset:false
+          })
         }
 
       }

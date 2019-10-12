@@ -3547,8 +3547,12 @@ export class FlowchartComponent implements OnInit {
 
     /*新增工作流迁移条件*/
 
-    //1、查询是否存在规则设定
+    // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则
 
+    if(targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702054042833000054"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20191008063649676000084"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702021800988000038"){
+
+    //1、查询是否存在规则设定
+    
     if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
 
       //如果设置了规则，自动添加迁移条件
@@ -3620,6 +3624,29 @@ export class FlowchartComponent implements OnInit {
 
       });
     }
+
+   }else{
+    let conditionData = {
+      "csysWorkflowId": this.workflowId,
+      "csysPotTrsId": transferId,
+      "csysPotTrsConRawData": "select count(*)  as RAWDATA from POT_TEST where   PRO_WO_BARCODE_ID = '@id' and  PASS_OR_FAIL = '2'",
+      "csysPotTrsConMethod": "=",
+      "csysPotTrsConContrastData": "0",
+      "csysPotTrsConInfo": "",
+      "csysPotTrsConType": "0",
+
+    }
+    console.log("conditionData", JSON.stringify(conditionData))
+    this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+      //this.msg.create("success", "创建成功");
+
+    },
+      (err) => {
+        this.msg.create("error", "发生错误，请稍后重试！");
+
+      });
+
+   }
 
   }
 

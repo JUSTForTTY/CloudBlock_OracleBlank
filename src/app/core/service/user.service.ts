@@ -142,7 +142,7 @@ export class UserService {
               next: x => {
                 this.httpService.postHttpAllUrl(this.cyhttp + '/csyssimplepage/condition', { csysPageType: 1 }).subscribe(
                   (pagedata: any) => {
-                    let pageData=[]
+                    let pageData = []
                     console.log("内置页面-未组装数据加载完毕2", pagedata, JSON.stringify(pagedata));
                     pagedata.data.forEach(element => {
 
@@ -152,17 +152,33 @@ export class UserService {
                           link: element['csysPageRouthPath'],
                         }
                       )
-                      console.log("link",element['csysPageRouthPath'])
+                      console.log("link", element['csysPageRouthPath'])
                     });
+                    let serverPage = [
+                      {
+                        text: "途程图",
+                        link: "/default/pages/workflow/flowchart"
+                      },
+                      {
+                        text: "组织变更",
+                        link: "/default/pages/authority/organizationalchart"
+                      }
+                    ]
                     menuData.push(
                       {
                         text: '内置页面',
-                        group:true,
+                        group: true,
                         hide: true,
-                        children:pageData
+                        children: pageData
+                      },
+                      {
+                        text: '内置页面',
+                        group: true,
+                        hide: true,
+                        children: serverPage
                       }
                     )
-                    console.log("菜单数据",menuData)
+                    console.log("菜单数据", menuData)
 
                     this.menuService.add([
                       {
@@ -191,7 +207,7 @@ export class UserService {
 
 
 
-            
+
             menuData.forEach(element => {
               if (element.children.length > 0) {
 

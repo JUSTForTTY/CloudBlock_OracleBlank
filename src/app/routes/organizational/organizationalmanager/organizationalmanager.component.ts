@@ -27,7 +27,7 @@ export class OrganizationalmanagerComponent implements OnInit {
     private httpService: HttpService,
     private router: Router,
     private activatedRoute: ActivatedRoute, private pageService: PageService,
-    private modalService: NzModalService,) { }
+    private modalService: NzModalService, ) { }
 
   logo = "assets/img/icon-zu.png";
 
@@ -70,9 +70,9 @@ export class OrganizationalmanagerComponent implements OnInit {
     //初始化参数识别字串
     this.queryParamStr = '';
     for (const key in this.pageService.routeParams[this.path]) {
-        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-        }
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
     }
     //之后是你原来的初始化代码，比如：
     this.baseInit();
@@ -279,7 +279,7 @@ export class OrganizationalmanagerComponent implements OnInit {
     }
     this.httpService.putHttp(this.organizeUrl, params).subscribe((data: any) => {
       let pageData = this.pageList;
-      
+
       let length = pageData.length;
       if (length > 0) {
         for (let i = 0; i < length; i++) {
@@ -291,7 +291,7 @@ export class OrganizationalmanagerComponent implements OnInit {
               "csysPageId": pageDetail.value,
               "csysPageName": pageDetail.label
             }
-            console.log("ceshiceshi",params);
+            console.log("ceshiceshi", params);
             this.httpService.postHttp(this.permissionUrl, params).subscribe((data: any) => {
               this.updateComplete(i, length);
             });
@@ -347,7 +347,7 @@ export class OrganizationalmanagerComponent implements OnInit {
       //确认删除
       nzOnOk: () => new Promise((resolve, reject) => {
         this.deleteOrganize(resolve);
-        console.log("12223",resolve)
+        console.log("12223", resolve)
       }).catch(() => console.log('Oops errors!'))
     });
   }
@@ -359,50 +359,60 @@ export class OrganizationalmanagerComponent implements OnInit {
 
   //确认删除组织架构
   deleteOrganize(resolve) {
-    //新写入数据
-    let params = {
-      "csysOrgStruceId": this.organizeId,
-      "csysOrgStruceIsDelete": "1",
-    }
-    //删除页面
-    this.httpService.putHttp(this.organizeUrl, params).subscribe((data: any) => {
-      //关闭弹窗
-      resolve();
-      //根据组织架构编号编号查询权限页面
-      let params = {
-        "csysOrgStruceId": this.organizeId,
-      }
-      this.httpService.postHttp(this.permissionUrl + "/listCondition", params).subscribe((data: any) => {
-        data = data.data.list;
-        if (data.length > 0) {
-          for (let i = 0; i < data.length; i++) {
-            let params = {
-              "csysOrgAuthId  ": data[i].cySysOrganizationalStructurePermissionId,
-              "csysOrgAuthIsDelete": "1"
-            }
-            //删除组织架构权限页面
-            this.httpService.putHttp(this.permissionUrl, params).subscribe((data: any) => {
-              if (i == data.length - 1) this.msg.create('success', `删除成功！`);
-            });
-          }
-        } else this.msg.create('success', `删除成功！`);
-      });
-      //删除架构下节点
-      this.httpService.postHttp("csysorgpot/condition", { "csysOrgStruceId": this.organizeId}).subscribe((struceData: any) => {
-        struceData = struceData.data; 
-        for (let index = 0; index < struceData.length; index++) {
-          const element = struceData[index];
-          let deleteData = {
-            "csysOrgPotId": element.csysOrgPotId,
-            "csysOrgPotIsDelete": "1",
-          }
-          this.httpService.putHttp("csysorgpot/condition",deleteData).subscribe((data: any) => {})
+    this.httpService.postHttp("csysorgpot/condition", { "csysOrgStruceId": this.organizeId }).subscribe((data: any) => {
+      if (data.data.length != 0) {
+        this.isDeleteVisible = false;
+        //关闭弹窗
+        resolve();
+        this.msg.error("该架构下存在节点");
+        return;
+      } else {
+        //新写入数据
+        let params = {
+          "csysOrgStruceId": this.organizeId,
+          "csysOrgStruceIsDelete": "1",
         }
-      })
-      this.isDeleteVisible = false;
-      //重新获取工作流
-      this.getOrganize(1);
-    });
+        //删除页面
+        this.httpService.putHttp(this.organizeUrl, params).subscribe((data: any) => {
+          //关闭弹窗
+          resolve();
+          //根据组织架构编号编号查询权限页面
+          let params = {
+            "csysOrgStruceId": this.organizeId,
+          }
+          this.httpService.postHttp(this.permissionUrl + "/listCondition", params).subscribe((data: any) => {
+            data = data.data.list;
+            if (data.length > 0) {
+              for (let i = 0; i < data.length; i++) {
+                let params = {
+                  "csysOrgAuthId  ": data[i].cySysOrganizationalStructurePermissionId,
+                  "csysOrgAuthIsDelete": "1"
+                }
+                //删除组织架构权限页面
+                this.httpService.putHttp(this.permissionUrl, params).subscribe((data: any) => {
+                  if (i == data.length - 1) this.msg.create('success', `删除成功！`);
+                });
+              }
+            } else this.msg.create('success', `删除成功！`);
+          });
+          //删除架构下节点
+          // this.httpService.postHttp("csysorgpot/condition", { "csysOrgStruceId": this.organizeId }).subscribe((struceData: any) => {
+          //   struceData = struceData.data;
+          //   for (let index = 0; index < struceData.length; index++) {
+          //     const element = struceData[index];
+          //     let deleteData = {
+          //       "csysOrgPotId": element.csysOrgPotId,
+          //       "csysOrgPotIsDelete": "1",
+          //     }
+          //     this.httpService.putHttp("csysorgpot/condition", deleteData).subscribe((data: any) => { })
+          //   }
+          // })
+          this.isDeleteVisible = false;
+          //重新获取工作流
+          this.getOrganize(1);
+        });
+      }
+    })
   }
 
   handleOk(): void {
@@ -456,7 +466,7 @@ export class OrganizationalmanagerComponent implements OnInit {
     console.log("zeq", item.csysOrgStruceId);
   }
 
-  
+
   searchOrganizationalList(): void {
     let temporayArray;
     let temporayArray1 = [];
@@ -464,7 +474,7 @@ export class OrganizationalmanagerComponent implements OnInit {
       temporayArray = data.data.list;
       if (this.searchContent != "") {
         for (let i = 0; i < temporayArray.length; i++) {
-         // this._logger.info("data", temporayArray[i].cySysOrganizationalStructureName);
+          // this._logger.info("data", temporayArray[i].cySysOrganizationalStructureName);
           if (temporayArray[i].csysOrgStruceName.indexOf(this.searchContent) != -1) {
             temporayArray1.push(temporayArray[i]);
           }

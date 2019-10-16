@@ -57,7 +57,7 @@
   "menu.exception.server-error": "500",
   "menu.account": "个人页",
   "menu.account.center": "修改密码",
-  "menu.account.settings": "个人设置",
+  "menu.account.settings": "修改头像",
   "menu.account.logout": "退出登录",
   "menu.more": "更多",
   "menu.report": "报表",

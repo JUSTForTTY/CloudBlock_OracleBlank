@@ -7,57 +7,6 @@ import { HttpService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
-
-const titles = [
-  '页面一',
-  '页面二',
-  '页面三',
-  '页面四',
-  '页面五',
-  '页面六',
-  '页面七',
-  '页面八',
-];
-
-const avatars = [
-  'assets/img/icon-quan.png', // Alipay
-  'assets/img/icon-quan.png', // Angular
-  'assets/img/icon-quan.png', // Ant Design
-  'assets/img/icon-quan.png', // Ant Design Pro
-  'assets/img/icon-quan.png', // Bootstrap
-  'assets/img/icon-quan.png', // React
-  'assets/img/icon-quan.png', // Vue
-  'assets/img/icon-quan.png', // Webpack
-];
-const covers = [
-  'https://gw.alipayobjects.com/zos/rmsportal/HrxcVbrKnCJOZvtzSqjN.png',
-  'https://gw.alipayobjects.com/zos/rmsportal/alaPpKWajEbIYEUvvVNf.png',
-  'https://gw.alipayobjects.com/zos/rmsportal/RLwlKSYGSXGHuWSojyvp.png',
-  'https://gw.alipayobjects.com/zos/rmsportal/gLaIAoVWTtLbBWZNYEMg.png',
-];
-const desc = [
-  '页面，用户信息交流的核心',
-  '页面，用户信息交流的核心',
-  '页面，用户信息交流的核心',
-  '页面，用户信息交流的核心',
-  '页面，用户信息交流的核心',
-];
-
-const user = [
-  '天天',
-  '小tree',
-  '荣耀',
-  '青龙',
-  '降龙',
-  '斌斌',
-  'cy',
-  '泛游',
-  '绿萝哥',
-  '小石',
-  '大古',
-  'hansel',
-];
-
 @Component({
   selector: 'rolepage',
   templateUrl: './rolepage.component.html',

@@ -130,6 +130,7 @@ export class RolemanagerComponent implements OnInit {
           "csysRoleId": id,
           "csysRoleIsDelete": "1"
         }
+        console.log("role",delRole)
         this.httpService.putHttp("csysrole", delRole).subscribe((data: any) => {
           //判断当前页是否还有数据，没有返回上一步
           if (this.roleList.length == 1 && this.pagenum > 5) {
@@ -163,8 +164,6 @@ export class RolemanagerComponent implements OnInit {
   transferchange(ret: {}): void {
     console.log('nzChange', ret);
   }
-
-
   //确认
   handleOk(): void {
     this.isOkLoading = true;
@@ -173,8 +172,8 @@ export class RolemanagerComponent implements OnInit {
 
     if (this.userMenuDemo.length != 0) {
 
-      this.httpService.getHttp("csysmenuauth").subscribe((data: any) => {
-        let userMenu = data.data.list;
+      this.httpService.postHttp("csysmenuauth/condition").subscribe((data: any) => {
+        let userMenu = data.data;
         let userMenuId = [];
         for (const key in userMenu) {
           if (userMenu[key].csysRoleId == this.roleId) {
@@ -398,8 +397,8 @@ export class RolemanagerComponent implements OnInit {
   serachRoleList(): void {
     let temporayArray;
     let temporayArray1 = [];
-    this.httpService.getHttp("/csysrole").subscribe((data: any) => {
-      temporayArray = data.data.list;
+    this.httpService.postHttp("csysrole/condition").subscribe((data: any) => {
+      temporayArray = data.data;
       if (this.searchContent != "") {
         for (let i = 0; i < temporayArray.length; i++) {
           if ((temporayArray[i].csysRoleName + "").indexOf(this.searchContent) != -1) {
@@ -455,8 +454,8 @@ export class RolemanagerComponent implements OnInit {
     let roleMenuList = [];
     this.userMenu = [];
     this.defaultCheckedKeys = [""];
-    this.httpService.getHttp("/csysmenuauth").subscribe((data: any) => {
-      roleMenuList = data.data.list;
+    this.httpService.postHttp("csysmenuauth/condition").subscribe((data: any) => {
+      roleMenuList = data.data;
       for (const key in roleMenuList) {
         if (roleMenuList[key].csysRoleId == roleid && roleMenuList[key].csysMenuAuthHaschild != "1") {
           let data = {

@@ -126,10 +126,28 @@
     <!-- <div *ngIf="windowShow == 'adduser'"> -->
     <form nz-form [formGroup]="addUserForm">
       <nz-form-item>
+        <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">头像</nz-form-label>
+        <nz-form-control nzSpan="10">
+          <nz-upload [nzAction]="imgUrl" nzListType="picture-card" [nzShowUploadList]="showUploadList"
+            [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 1" [nzPreview]="handlePreview"
+            [nzBeforeUpload]="beforeUpload" (nzChange)="handleChange($event)">
+            <i nz-icon nzType="plus"></i>
+            <div class="ant-upload-text">Upload</div>
+            <!-- <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar" />   -->
+          </nz-upload>
+          <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+            (nzOnCancel)="previewVisible = false">
+            <ng-template #modalContent>
+              <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+            </ng-template>
+          </nz-modal>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
         <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">账号</nz-form-label>
         <nz-form-control nzSpan="10" [nzValidateStatus]="addUserForm.get('username')">
           <input nz-input formControlName="username" (ngModelChange)="usernameInspect($event)" placeholder="请输入账号">
-         <nz-form-explain *ngIf="uInspect && !editState" style="color: red">账号已存在</nz-form-explain>
+          <nz-form-explain *ngIf="uInspect && !editState" style="color: red">账号已存在</nz-form-explain>
           <!-- <span *ngIf="uInspect" style="color: red;padding: 0;margin: 0">账号已存在</span> -->
           <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">
             账号不能存在中文或者特殊字符

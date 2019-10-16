@@ -20,7 +20,7 @@ const data_url = environment.DATA_SERVER_URL;
 
 @Injectable()
 export class UserService {
-
+  HeadUrl = "";
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable();
 
@@ -36,6 +36,7 @@ export class UserService {
   ) { }
 
   cyhttp = environment.SERVER_URL;
+  resourceHttp = environment.RESOURCE_SERVER_URL;
   // Verify JWT in localstorage with server & load user's info.
   // This runs once on application startup.
   populate() {
@@ -48,8 +49,11 @@ export class UserService {
       console.log("原始数据", credentials)
       this.httpService.postHttpAllUrl(this.cyhttp + '/csysuser/condition', credentials)
         .subscribe(
-          (data: any) => {
 
+          (data: any) => {
+            if(data.data.csysUserHeadimage){
+              this.HeadUrl = environment.RESOURCE_SERVER_URL + data.data.csysUserHeadimage;
+            }
             if (data.data.length > 0) {
 
               console.log("存在用户，无需重新登录", data.data);
@@ -119,7 +123,6 @@ export class UserService {
   }
 
   getCurrentUser() {
-
     return this.cacheService.getNone('userdata' + server_name);
   }
 

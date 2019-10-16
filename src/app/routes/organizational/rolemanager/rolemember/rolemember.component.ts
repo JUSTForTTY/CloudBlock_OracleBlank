@@ -1,5 +1,5 @@
 import { Component, Directive, OnInit, ViewContainerRef, Input, NgModule, OnDestroy } from "@angular/core";
-import { NzMessageService, NzModalService, NzTreeNode } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService, NzTreeNode, UploadFile } from 'ng-zorro-antd';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { _HttpClient } from '@delon/theme';
 import { tap, map } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { PageService } from 'ngx-block-core';
 import {
   STComponent, STColumn, STData
 } from '@delon/abc';
+import { Observable, Observer } from 'rxjs';
+import { environment } from '@env/environment';
 
 
 const list = [];
@@ -70,6 +72,7 @@ export class RolememberComponent implements OnInit {
   queryParamStr = '';
   path;
   roleDisabled = true;
+  imgUrl = environment.SERVER_URL + "v1/photoUpload";
   constructor(private fb: FormBuilder, private http: _HttpClient,
     public msg: NzMessageService,
     private modalSrv: NzModalService,
@@ -83,7 +86,7 @@ export class RolememberComponent implements OnInit {
     this.path = this.pageService.getPathByRoute(this.route);
     //  path 可不传
     //  this.activatedRoute 需保证准确
-    this.roleId=this.pageService.getRouteParams(this.route, 'roleId',this.path)
+    this.roleId = this.pageService.getRouteParams(this.route, 'roleId', this.path)
 
     // this.getData();
     // this.getUsersList();
@@ -98,9 +101,9 @@ export class RolememberComponent implements OnInit {
     //初始化参数识别字串
     this.queryParamStr = '';
     for (const key in this.pageService.routeParams[this.path]) {
-        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-        }
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
     }
     //初始化代码
     this.baseInit();
@@ -174,6 +177,7 @@ export class RolememberComponent implements OnInit {
 
 
   showModal(): void {
+    this.fileList = []
     this.editState = false;
     this.uInspect = false;
     this.nzTitle = "添加成员";
@@ -267,7 +271,7 @@ export class RolememberComponent implements OnInit {
   // }
   editState = false;
   submitEdit(userId): void {
-    
+    let imgUrl = "";
     let userData
     this.submitNum = 0;
     //校验控件
@@ -284,6 +288,17 @@ export class RolememberComponent implements OnInit {
     this.editOrginzation(userId);
     this.editUserRole(userId);
     //this.//editUserRs(userId);
+    //判断头像是否重置
+    if (this.fileList.length == 0) {
+      imgUrl = ""
+    } else {
+      console.log("fill", this.fileList);
+      if (this.fileList[0].response) {
+        imgUrl = this.fileList[0].response[0].fileUrl     
+      } else {
+        imgUrl = this.fileList[0].url;
+      }
+    }
     let abc = "SSSfffss123_"
     console.log("当前密码", abc.toUpperCase())
     //判断密码是否修改
@@ -298,6 +313,7 @@ export class RolememberComponent implements OnInit {
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
         "csysUserGender": this.addUserForm.controls.gender.value,//性别
+        "csysUserHeadimage": imgUrl,//头像
         "csysUserAge": this.addUserForm.controls.age.value,//年龄
         "csysUserEmail": this.addUserForm.controls.email.value,//邮箱
         "csysUserAddress": this.addUserForm.controls.address.value//地址
@@ -312,6 +328,7 @@ export class RolememberComponent implements OnInit {
         "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
         "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
         "csysUserGender": this.addUserForm.controls.gender.value,//性别
+        "csysUserHeadimage": imgUrl,//头像
         "csysUserAge": this.addUserForm.controls.age.value,//年龄
         "csysUserEmail": this.addUserForm.controls.email.value,//邮箱
         "csysUserAddress": this.addUserForm.controls.address.value//地址
@@ -324,7 +341,7 @@ export class RolememberComponent implements OnInit {
       this.submitNum++;
     });
     this.submitTimer = setInterval(() => {
-      console.log("sb1",this.num)
+      console.log("sb1", this.num)
       if (this.submitNum == 3) {
         this.urValue = this.roleId;
         this.nzBtnLoding = false;
@@ -359,16 +376,16 @@ export class RolememberComponent implements OnInit {
           if (i == organizationArray.length - 1) {
             console.log("department", department);
             //for (let i = 0; i < department.length; i++) {
-              let organization = {
-                "csysUserId": userId,
-                "csysOrgPotId": department
-              }
-              console.log("123321", organization);
-              this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-                //if (i == department.length - 1) {
-                  this.submitNum++;
-                //}
-              });
+            let organization = {
+              "csysUserId": userId,
+              "csysOrgPotId": department
+            }
+            console.log("123321", organization);
+            this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
+              //if (i == department.length - 1) {
+              this.submitNum++;
+              //}
+            });
             //}
           }
         });
@@ -376,16 +393,16 @@ export class RolememberComponent implements OnInit {
       //当改用户不存在组织架构时候
       if (organizationArray.length == 0) {
         //for (let i = 0; i < department.length; i++) {
-          let organization = {
-            "csysUserId": userId,
-            "csysOrgPotId": department
-          }
-          console.log("123321", organization);
-          this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-            //if (i == department.length - 1) {
-              this.submitNum++;
-            //}
-          });
+        let organization = {
+          "csysUserId": userId,
+          "csysOrgPotId": department
+        }
+        console.log("123321", organization);
+        this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
+          //if (i == department.length - 1) {
+          this.submitNum++;
+          //}
+        });
         //}
       }
     });
@@ -503,6 +520,7 @@ export class RolememberComponent implements OnInit {
       "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserHp": this.addUserForm.controls.numType.value,
+      "csysUserHeadimage": this.fileList[0].response[0].fileUrl,
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
       "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号
@@ -512,7 +530,6 @@ export class RolememberComponent implements OnInit {
       "csysUserAddress": this.addUserForm.controls.address.value//地址
     }
     //添加用户
-    
     this.httpService.postHttp("/csysuser/condition", { "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase() }).subscribe((udata: any) => {
       if (udata.data.length != 0) {
         this.nzBtnLoding = false;
@@ -527,7 +544,7 @@ export class RolememberComponent implements OnInit {
           //this.insertUserRs(userId);
         });
         this.insertTimer = setInterval(() => {
-          console.log("sb3",this.num)
+          console.log("sb3", this.num)
           if (this.insertNum == 3) {
             this.nzBtnLoding = false;
             this.msg.create("success", "创建成功");
@@ -560,18 +577,18 @@ export class RolememberComponent implements OnInit {
   insertUserOr(userId): void {
     //新增用户组织架构
     let department = this.addUserForm.controls.department.value;//组织（部门）
-    console.log("department",department);
+    console.log("department", department);
     //for (let i = 0; i < department.length; i++) {
-      let organization = {
-        "csysUserId": userId,
-        "csysOrgPotId": department
-      }
-      //console.log("123321", organization);
-      this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
-        //if (i == department.length - 1) {
-          this.insertNum++;
-        //}
-      });
+    let organization = {
+      "csysUserId": userId,
+      "csysOrgPotId": department
+    }
+    //console.log("123321", organization);
+    this.httpService.postHttp("/csysorgpotauth", organization).subscribe((data: any) => {
+      //if (i == department.length - 1) {
+      this.insertNum++;
+      //}
+    });
     //}
   }
 
@@ -631,10 +648,10 @@ export class RolememberComponent implements OnInit {
           }
           this.roleDisabled = false;
           this.usersData = [...this.usersData];
-          this.happenUser = this.usersListData;
+          this.happenUser = data1.data;
           this.changeCategory(this.roleId);
-          console.log("sb",this.num)
-        
+          console.log("sb", this.num)
+
         }
       }, 500);
 
@@ -649,7 +666,7 @@ export class RolememberComponent implements OnInit {
   getUserOrganization(userId, index): void {
     let userOrganization = [];
     let Organization = [];
-    let OrganizationId ;
+    let OrganizationId;
     let userIdOrganization;
     this.httpService.postHttp("csysorgpotauth/condition", { "csysUserId": userId }).subscribe((data: any) => {
       this.httpService.getHttp("/csysorgpot").subscribe((data1: any) => {
@@ -748,7 +765,14 @@ export class RolememberComponent implements OnInit {
     }
     console.log("userData", userData)
     this.password = userData.csysUserPassword;
-
+    this.fileList = [
+      {
+        uid: -1,
+        name: '头像',
+        status: 'done',
+        url: environment.RESOURCE_SERVER_URL + userData.csysUserHeadimage
+      }
+    ];
     this.addUserForm = this.fb.group({
       name: [userData.csysUserRealname, [Validators.required]],
       username: [userData.csysUserUsername, [Validators.required, Validators.pattern(/^[a-zA-Z0-9_]{0,}$/)]],
@@ -919,6 +943,8 @@ export class RolememberComponent implements OnInit {
     this.urValue = "allRole";
     this.searchData = [];
     if (this.searchContent) {
+      console.log("this.happenUser", this.happenUser);
+
       for (let index = 0; index < this.happenUser.length; index++) {
         const element = this.happenUser[index];
         if ((element.csysUserUsername).indexOf(this.searchContent) != -1) {
@@ -945,15 +971,15 @@ export class RolememberComponent implements OnInit {
     this.searchContent = value;
   }
   //监听键盘的回车
-  keytest(event){
+  keytest(event) {
     console.log(event.key);
-    if(event.key == "Enter"){
+    if (event.key == "Enter") {
       this.serchUserList();
     }
   }
   uInspect = false;
   //用户名异步校验
-  usernameInspect(value):void{
+  usernameInspect(value): void {
     this.uInspect = false;
     let type = typeof value;
     if (type == "string") {
@@ -963,13 +989,111 @@ export class RolememberComponent implements OnInit {
         value = value.toLocaleUpperCase();
       }
     }
-    console.log("用户名",value)
-    this.httpService.postHttp("csysuser/condition", {"csysUserUsername": value}).subscribe((data1: any) => {
-      if(data1.data.length != 0){
+    console.log("用户名", value)
+    this.httpService.postHttp("csysuser/condition", { "csysUserUsername": value }).subscribe((data1: any) => {
+      if (data1.data.length != 0) {
         this.uInspect = true;
       }
     })
-  } 
- 
+  }
+  showUploadList = {
+    showPreviewIcon: true,
+    showRemoveIcon: true,
+    hidePreviewIconInNonImage: true
+  };
+  fileList = [
+    // {
+    //   uid: -1,
+    //   name: '头像',
+    //   status: 'done',
+    //   url: environment.RESOURCE_SERVER_URL + "photofiles/20191015025738789-1-1405161AK3[1] - 副本.jpg"
+    // }
+  ];
+  imageUrl;
+  previewImage: string | undefined = '';
+  previewVisible = false;
+
+  handlePreview = (file: UploadFile) => {
+    this.previewImage = file.url || file.thumbUrl;
+    this.previewVisible = true;
+  };
+  onloading = false;
+  avatarUrl: string;
+
+
+  beforeUpload = (file: File) => {
+    console.log(file);
+    return new Observable((observer: Observer<boolean>) => {
+      const isJPG = file.type === 'image/jpeg';
+      const isJPG1 = file.type === 'image/png';
+      if (!isJPG) {
+        console.log(file);
+        if (!isJPG1) {
+          this.msg.error('图片必需是jpg货这png格式!');
+          observer.complete();
+          return;
+        }
+      }
+      const isLt2M = file.size / 1024 / 1024 < 5;
+      if (!isLt2M) {
+        this.msg.error('图片必需小于5MB!');
+        observer.complete();
+        return;
+      }
+      // check height
+      this.checkImageDimension(file).then(dimensionRes => {
+        if (!dimensionRes) {
+          this.msg.error('Image only 300x300 above');
+          observer.complete();
+          return;
+        }
+
+        observer.next((isJPG || isJPG1) && isLt2M && dimensionRes);
+        observer.complete();
+      });
+    });
+  };
+
+  private getBase64(img: File, callback: (img: string) => void): void {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result!.toString()));
+    reader.readAsDataURL(img);
+  }
+
+  private checkImageDimension(file: File): Promise<boolean> {
+    return new Promise(resolve => {
+      const img = new Image(); // create image
+      img.src = window.URL.createObjectURL(file);
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        window.URL.revokeObjectURL(img.src!);
+        resolve(width >= 100 && height >= 100);
+      };
+    });
+  }
+
+  handleChange(info: { file: UploadFile }): void {
+    console.log("fileListinfo", info);
+    //this.imageUrl = this.fileList[0].response[0].fileUrl;
+    // this.imageUrl = info.fileList[0].response[0].fileUrl;
+    console.log("fifileUrlleList", this.fileList);
+    switch (info.file.status) {
+      case 'uploading':
+        this.onloading = true;
+        break;
+      case 'done':
+        // Get this url from response in real world.
+        this.getBase64(info.file!.originFileObj!, (img: string) => {
+          this.onloading = false;
+          this.avatarUrl = img;
+        });
+        break;
+      case 'error':
+        this.msg.error('Network error');
+        this.onloading = false;
+        break;
+    }
+  }
 
 }

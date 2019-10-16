@@ -11,9 +11,10 @@ import { YieldDashboardComponent } from './yield-dashboard/yield-dashboard.compo
 import { YieldTableComponent } from './yield-table/yield-table.component';
 import { YieldBarlineComponent } from './yield-barline/yield-barline.component';
 import { YieldGaugeComponent } from './yield-gauge/yield-gauge.component';
+import { ProlineErrormsgComponent } from './proline-errormsg/proline-errormsg.component';
 
 @NgModule({
-  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent],
+  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

@@ -1,6 +1,7 @@
 
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { HttpService } from 'ngx-block-core';
+import { HttpService,PageService } from 'ngx-block-core';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-yield-dashboard',
   templateUrl: './yield-dashboard.component.html',
@@ -16,9 +17,12 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   dataSet = [];
   dataSetTable = [];
   dataSetGauge = [];
-
+  userData=['PE:张三','QE:李四','IT:王二','QC:小明','操作员:小李'];
+  currentUser;
+  path;
+  prolineCode;
   pageSize = 6;
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService,private pageService: PageService,private route: ActivatedRoute) {
     this.timer = setTimeout(this.setData, 0);
   }
 
@@ -26,13 +30,19 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.getYieldData();
-    this.getYieldAllData();
-
-    this.timer = setTimeout(this.setData, 10000);
+    // this.getYieldData();
+    // this.getYieldAllData();
+    this.getUser();
+    this.timer = setTimeout(this.setData, 3000);
   }
 
+
   ngOnInit() {
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
+
 
 
   }
@@ -108,7 +118,13 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     });
 
   }
-  ngOnDestroy(): void {
+  getUser(){
 
+    this.currentUser=this.userData[Math.floor((Math.random()*this.userData.length))];
+
+  }
+  ngOnDestroy(): void {
+    clearInterval(this.timer);
+     
   }
 }

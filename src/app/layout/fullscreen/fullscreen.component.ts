@@ -6,6 +6,7 @@ import { LayoutService } from 'ngx-block-core';
 @Component({
   selector: 'layout-fullscreen',
   templateUrl: './fullscreen.component.html',
+  styleUrls: ['./fullscreen.component.less'],
   host: {
     '[class.alain-fullscreen]': 'true',
   },

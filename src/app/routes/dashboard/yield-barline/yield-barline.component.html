@@ -1,15 +1,41 @@
-<nz-card style="background:#101638;" [nzBordered]="false" [nzTitle]="salesTitle">
+<nz-card style="background:#192B53;" [nzBordered]="false" [nzTitle]="salesTitle">
   <ng-template #salesTitle>
-    <div style="background:#101638;color:#1e91de;font-size: 18px">
+    <div style="background:#192B53;color:#1e91de;font-size: 18px">
       <i nz-icon nzType="double-right" nzTheme="outline"></i>
       良率柱状图看板
       <small class="text-sm font-weight-normal">共{{dataSet.length}}条工单</small>
     </div>
 
   </ng-template>
-  <v-chart [forceFit]="forceFit" [height]="height" [data]="dataSet" [scale]="scale" [theme]="theme">
+  <v-chart [forceFit]="forceFit" [height]="height"    [animate]="true" [theme]="theme">
     <v-tooltip></v-tooltip>
-    <v-axis></v-axis>
-    <v-bar position="WO_CODE*FLAG1"></v-bar>
+    <v-axis dataKey="value" [show]="false"></v-axis>
+    <v-legend></v-legend>
+
+    <v-view [data]="prolineGBsourceData">
+      <v-stack-bar position="类型*产出" [color]="color" [label]="stackLabel"></v-stack-bar>
+     
+    </v-view>
+
+     <v-view [data]="yieldData">
+      <v-line position="time*value"></v-line>
+      <v-point position="time*value" shape="circle" [label]="pointLabel"></v-point>
+    </v-view>
+<!--  
+    <v-view [data]="standardOutputSourceData">
+      <v-line position="year*value" ></v-line>
+      <v-point position="year*value" shape="circle" ></v-point>
+    </v-view>   -->
+
   </v-chart>
+  <!-- <v-chart [forceFit]="forceFit" [height]="height" [padding]="[20, 160, 80, 60]" [data]="data" [scale]="scale">
+      <v-tooltip></v-tooltip>
+      <v-legend position="right" ></v-legend>
+      <v-axis dataKey="population" [label]="axisOpts.label"></v-axis>
+      <v-interval position="State*population"
+        [color]="polygonOpts.color"
+        [tooltip]="polygonOpts.tooltip"
+        [adjust]="polygonOpts.adjust"
+        ></v-interval>
+    </v-chart> -->
 </nz-card>

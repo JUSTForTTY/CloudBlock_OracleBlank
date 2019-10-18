@@ -22,7 +22,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   dataSetTable = [];
   dataSetGauge = [];
   //班组信息
-  shiftInfo = [];
+  shiftInfo ;
   //领班
   userData_foreman = [];
   //领班头像

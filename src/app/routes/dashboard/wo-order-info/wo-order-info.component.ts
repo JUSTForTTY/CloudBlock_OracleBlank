@@ -14,7 +14,14 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   nzPageIndex = 0;
   nzTotal;
   nzTotalPage;
-  currentWoInfo={};
+  currentWoInfo={
+    "woCode":"无",
+    "productCode":"无",
+    "planNumber":"无",
+    "inputNumber":"无",
+    "produceNumber":"无",
+    "smtWoState":"无",
+  };
 
 
   woWipTableData = [];

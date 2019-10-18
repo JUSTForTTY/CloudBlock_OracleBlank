@@ -1,4 +1,4 @@
-<nz-card style="background:#192B53;" [nzBordered]="false" [nzTitle]="salesTitle">
+<nz-card style="background:#192B53" [nzBordered]="false" [nzTitle]="salesTitle">
     <ng-template #salesTitle>
       <div style="background:#192B53;color:#1e91de;font-size: 18px">
         <i nz-icon nzType="double-right" nzTheme="outline"></i>
@@ -8,12 +8,12 @@
   
     </ng-template>
     
-    <nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading">
+    <nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading" >
         <ng-template #item let-item>
           <nz-list-item>
             <nz-list-item-meta
               [nzTitle]="nzTitle"
-              nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team"
+              nzDescription="Ant Design, a design language for background applications,"
             >
               <ng-template #nzTitle>
                 <a href="https://ng.ant.design">{{ item.title }}</a>

@@ -12,9 +12,10 @@ import { YieldTableComponent } from './yield-table/yield-table.component';
 import { YieldBarlineComponent } from './yield-barline/yield-barline.component';
 import { YieldGaugeComponent } from './yield-gauge/yield-gauge.component';
 import { ProlineErrormsgComponent } from './proline-errormsg/proline-errormsg.component';
+import { WoOrderInfoComponent } from './wo-order-info/wo-order-info.component';
 
 @NgModule({
-  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent],
+  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

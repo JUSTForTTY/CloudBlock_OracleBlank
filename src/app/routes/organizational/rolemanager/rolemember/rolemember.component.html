@@ -126,7 +126,7 @@
     <!-- <div *ngIf="windowShow == 'adduser'"> -->
     <form nz-form [formGroup]="addUserForm">
       <nz-form-item>
-        <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">头像</nz-form-label>
+        <nz-form-label nzSpan="5" nzFor="username" [nzOffset]="2">头像</nz-form-label>
         <nz-form-control nzSpan="10">
           <nz-upload [nzAction]="imgUrl" nzListType="picture-card" [nzShowUploadList]="showUploadList"
             [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 1" [nzPreview]="handlePreview"

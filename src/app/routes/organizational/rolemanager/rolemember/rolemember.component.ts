@@ -516,11 +516,15 @@ export class RolememberComponent implements OnInit {
   ustarus = false;
   insertUser(): void {
     this.insertNum = 0;
+    let a = "";
+    if(this.fileList.length != 0){
+      a = this.fileList[0].response[0].fileUrl
+    }
     let userData = {
       "csysUserUsername": this.addUserForm.controls.username.value.toUpperCase(),//用户名
       "csysUserPassword": this.addUserForm.controls.password.value,//密码
       "csysUserHp": this.addUserForm.controls.numType.value,
-      "csysUserHeadimage": this.fileList[0].response[0].fileUrl,
+      "csysUserHeadimage": a,
       "csysUserPhone": this.addUserForm.controls.phone.value,//手机号
       "csysUserRealname": this.addUserForm.controls.name.value,//真实姓名
       "csysUserNumber": this.addUserForm.controls.employeeId.value,//员工号

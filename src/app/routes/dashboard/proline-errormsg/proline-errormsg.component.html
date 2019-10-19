@@ -8,15 +8,18 @@
   
     </ng-template>
     
-    <nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading" >
-        <ng-template #item let-item>
+    <nz-list [nzDataSource]="prolineErrorData" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading" >
+        <ng-template #item let-item >
           <nz-list-item>
             <nz-list-item-meta
               [nzTitle]="nzTitle"
-              nzDescription="Ant Design, a design language for background applications,"
+              [nzDescription]="nzDescription"
             >
+            <ng-template #nzDescription>
+               {{ item.lossReason }}
+            </ng-template>
               <ng-template #nzTitle>
-                <a href="https://ng.ant.design">{{ item.title }}</a>
+                <a href="https://ng.ant.design">产线异常信息</a>
               </ng-template>
             </nz-list-item-meta>
           </nz-list-item>

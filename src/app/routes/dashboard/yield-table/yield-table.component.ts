@@ -60,7 +60,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode).subscribe((woWipData: any) => {
 
       this.woWipTableData = woWipData.data;
-      console.log("在制工单数据", this.woWipTableData)
+      console.log("产线报表-在制工单数据", this.woWipTableData)
       this.woWipDataTransform();
     });
 

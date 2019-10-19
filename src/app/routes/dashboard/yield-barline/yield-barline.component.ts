@@ -165,7 +165,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
     this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode).subscribe((prolineData: any) => {
 
-      console.log("产线良率数据", prolineData)
+      console.log("产线报表-产线良率数据", prolineData)
       this.prolineGBsourceData = [];
       this.prolineGBsourceData.push(prolineData.data.productBads);
       this.prolineGBsourceData.push(prolineData.data.productGoods);

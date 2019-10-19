@@ -3798,7 +3798,8 @@ export class FlowchartComponent implements OnInit {
       }
     }
     if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
-      this.msg.error("必须输入一个时间!")
+      this.timeLoading = false;
+      this.msg.error("必须输入一个时间!");     
       return;
     } else {
       if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
@@ -3861,7 +3862,7 @@ export class FlowchartComponent implements OnInit {
       this.httpService.putHttp("csyspotcontime", insertData).subscribe((data: any) => {
         this.initTimeForm();
         this.shiftTime = false;
-        this.getTimeMage();
+        this.getTimeMage(); 
         this.timeLoading = false;
         this.msg.success("创建成功");
       })

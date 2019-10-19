@@ -10,6 +10,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
   @Input() dataSet = [];
   @Input() prolineCode;
   timer: any;
+  wotimer: any;
   nzPageSize = 5;
   nzPageIndex = 1;
   nzTotal;
@@ -20,6 +21,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
   constructor(private httpService: HttpService) {
     this.timer = setTimeout(this.setData, 0);
+    this.wotimer = setTimeout(this.getWipData, 0);
   }
 
   setData = () => {
@@ -35,6 +37,16 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     console.log("分页信息", this.nzPageIndex)
     
     this.timer = setTimeout(this.setData, 8000);
+  }
+
+  getWipData = () => {
+    if (this.wotimer) {
+      clearTimeout(this.wotimer);
+    }
+    
+    this.getWoWipData();
+
+    this.wotimer = setTimeout(this.getWipData, 120000);
   }
 
   ngOnInit() {
@@ -85,7 +97,8 @@ export class YieldTableComponent implements OnInit, OnDestroy {
   }
     ngOnDestroy(): void {
       clearInterval(this.timer);
-
+      clearInterval(this.wotimer);
+       
     }
 
   }

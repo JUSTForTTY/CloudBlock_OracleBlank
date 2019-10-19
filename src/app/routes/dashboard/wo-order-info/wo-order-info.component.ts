@@ -60,7 +60,10 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
 
       this.woWipTableData = woWipData.data;
       console.log("在制工单数据", this.woWipTableData)
-      this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
+      if(this.woWipTableData.length>0){
+        this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
+      }
+      
     });
 
   }

@@ -77,6 +77,8 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       }
 
       this.currentGroupData = this.userGroupData[this.currentGroupIndex];
+    }else{
+
     }
 
 
@@ -169,6 +171,12 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     this.httpService.getHttp("/yieldDashboard/shiftData/" + this.prolineCode).subscribe((shiftData: any) => {
 
       console.log("产线班组数据", shiftData);
+      this.userData_foreman=[];
+      this.userData_pe=[];
+      this.userData_te=[];
+      this.userData_qa=[];
+      this.foremanHeadimage="";
+      
       if (shiftData.data.foreman.length > 0) {
         this.userData_foreman = shiftData.data.foreman;
       }

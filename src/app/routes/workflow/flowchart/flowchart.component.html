@@ -847,8 +847,8 @@
             <tr>
               <th>起始工序</th>
               <th>目标工序</th>
-              <th>最短时间/分</th>
-              <th>最长时间/分</th>
+              <th>停留时间/分</th>
+              <th>超时时间/分</th>
               <th>描述</th>
               <th>操作</th>
             </tr>
@@ -895,7 +895,7 @@
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">最短时间</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">停留时间</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="16">
                   <nz-input-group nzCompact>
                     <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
@@ -905,10 +905,11 @@
                       <nz-option nzLabel="时" nzValue="h"></nz-option>
                     </nz-select>
                   </nz-input-group>
+                  <span style="color: red">设置起始工序到目标工序停留时间</span>
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potLongestTime">最长时间</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potLongestTime">超时时间</nz-form-label>
                 <nz-form-control [nzSm]="14" [nzXs]="24">
                   <nz-input-group nzCompact>
                     <nz-input-number formControlName="potLongestTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
@@ -918,6 +919,7 @@
                       <nz-option nzLabel="时" nzValue="h"></nz-option>
                     </nz-select>
                   </nz-input-group>
+                  <span style="color: red">设置起始工序到目标工序不能超过时间</span>
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>

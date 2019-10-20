@@ -1057,6 +1057,7 @@ export class FlowchartComponent implements OnInit {
         "csysWorkflowId": this.workflowId,
         "csysPotAtrribute": this.editForm.value.potAttribute
       }
+      //this.msg.error("bug测试3");
       this.httpService.postHttp("csyspot/condition", potData).subscribe((data: any) => {
         if (data.data.length != 0) {
           this.submitting = false;
@@ -1064,10 +1065,12 @@ export class FlowchartComponent implements OnInit {
           this.msg.error("工序名称重复");
           return;
         } else {
+          //this.msg.error("bug测试1");
           this.updateFlowPointSubClass();
         }
       })
     } else {
+      console.log("bug测试2");
       this.updateFlowPointSubClass();
     }
 
@@ -1108,7 +1111,7 @@ export class FlowchartComponent implements OnInit {
       //修改途程工序
       console.log("修改工序2");
       if (this.clickNodeData.op) {
-        console.log("修改工序oppot2"); 
+        console.log("修改工序oppot2");
         //if (this.clickNodeData.op != opPotId) 
         this.updateOpPot(opPotId, this.editForm.value.potAttribute);
         if (!opPotId) this.deleteOpPot(this.clickNodeData.id);
@@ -1604,7 +1607,7 @@ export class FlowchartComponent implements OnInit {
         }
       }
     }
-    this.drawWorkFlow();
+    // this.drawWorkFlow();
 
   }
 
@@ -1838,23 +1841,23 @@ export class FlowchartComponent implements OnInit {
   //修改工序组
   updateOpPot(newId, potAttribute): void {
     console.log("修改oppot");
-    
+
     //现获取再修改
     if (potAttribute == null) potAttribute = "";
-    this.httpService.postHttp("/oppot/condition").subscribe((data: any) => {
+    this.httpService.postHttp("/oppot/condition", { "csysPotId": this.clickNodeData.id }).subscribe((data: any) => {
       data = data.data
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        if (element.csysPotId == this.clickNodeData.id) {
-          let updateData = {
-            "opPotId": element.opPotId,
-            "opId": newId,
-            "csysPotAtrribute": potAttribute
-          }
-          this.httpService.putHttp("/oppot", updateData).subscribe((data: any) => {
-          })
-          break;
+        //if (element.csysPotId == this.clickNodeData.id) {
+        let updateData = {
+          "opPotId": element.opPotId,
+          "opId": newId,
+          "csysPotAtrribute": potAttribute
         }
+        this.httpService.putHttp("/oppot", updateData).subscribe((data: any) => {
+        })
+        //break;
+        //}
       }
     })
   }
@@ -2017,10 +2020,9 @@ export class FlowchartComponent implements OnInit {
       auto = formData[autocontrol];
       pages = formData[control.pageIds]
     }
-
     /*查询目标节点信息 */
     this.httpService.getHttp("/csyspot/" + control.value).subscribe((targetPot: any) => {
-
+      
       /*查询源节点信息 */
       this.httpService.getHttp("/csyspot/" + nodeId).subscribe((sourcePot: any) => {
 
@@ -2463,25 +2465,18 @@ export class FlowchartComponent implements OnInit {
                 //this.saveTransferPage(transferId, control.pageData);
                 //更新页面
                 //this.updateTsrPage(transferId, pageId)
-
                 this.potTransferRule(sourcePot, targetPot, transferId);
-
-
-
                 //工序迁移全部操作完后保存途程
                 if (i == length) {
                   this.saveWorkFlow();
                 }
               });
-
-
             }
-
             /*自动判断节点类型*/
+            console.log("bug测试1");
+            
             this.potAutoChangeType(sourcePot, targetPot);
             /*自动判断节点类型 */
-
-
           });
         } else {
           let autocontrol = control.autoExcuteControl;
@@ -3549,104 +3544,104 @@ export class FlowchartComponent implements OnInit {
 
     // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则
 
-    if(targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702054042833000054"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20191008063649676000084"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702021800988000038"){
+    if (targetPot.data.csysPotPublicId != "LHCsysPotPublic20190702054042833000054" && targetPot.data.csysPotPublicId != "LHCsysPotPublic20191008063649676000084" && targetPot.data.csysPotPublicId != "LHCsysPotPublic20190702021800988000038") {
 
-    //1、查询是否存在规则设定
-    
-    if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
+      //1、查询是否存在规则设定
 
-      //如果设置了规则，自动添加迁移条件
+      if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
 
-      let ruleparam = {
-        csysTrsRuleId: sourcePot.data.csysTrsRuleId,
-        csysTrsRuledlCurStyleid: sourcePot.data.csysPotStyleId,
-        csysTrsRuledlTargetStyleid: targetPot.data.csysPotStyleId
-      }
-      console.log("规则包装参数", ruleparam);
-      this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
+        //如果设置了规则，自动添加迁移条件
 
-        console.log("规则信息", ruleData);
-        let ruleDataCurrent = ruleData.data;
-
-        //查询当前规则是否是原规则
-        let checkParam = {
-          "csysWorkflowId": this.workflowId,
-          "csysPotTrsId": transferId,
-          "csysPotTrsConType": "1"
-
+        let ruleparam = {
+          csysTrsRuleId: sourcePot.data.csysTrsRuleId,
+          csysTrsRuledlCurStyleid: sourcePot.data.csysPotStyleId,
+          csysTrsRuledlTargetStyleid: targetPot.data.csysPotStyleId
         }
-        this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
+        console.log("规则包装参数", ruleparam);
+        this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
+
+          console.log("规则信息", ruleData);
+          let ruleDataCurrent = ruleData.data;
+
+          //查询当前规则是否是原规则
+          let checkParam = {
+            "csysWorkflowId": this.workflowId,
+            "csysPotTrsId": transferId,
+            "csysPotTrsConType": "1"
+
+          }
+          this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
 
 
-          //清空规则条件数据，进行新增
-          trsconData.data.forEach(trsElement => {
+            //清空规则条件数据，进行新增
+            trsconData.data.forEach(trsElement => {
 
-            this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
+              this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
 
-              console.log("删除成功", trsElement.csysPotTrsConId);
-            });
-
-          });
-
-
-
-          ruleDataCurrent.forEach(currentElement => {
-            let conditionData = {
-              "csysWorkflowId": this.workflowId,
-              "csysPotTrsId": transferId,
-              "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
-              "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
-              "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
-              "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
-              "csysPotTrsConType": "1",
-              "csysTrsRuleId": currentElement.csysTrsRuleId,
-              "csysTrsRuledlId": currentElement.csysTrsRuledlId,
-              "csysTrsRulesqlId": currentElement.csysTrsRulesqlId
-            }
-            console.log("conditionData", JSON.stringify(conditionData))
-            this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
-              //this.msg.create("success", "创建成功");
-
-            },
-              (err) => {
-                this.msg.create("error", "发生错误，请稍后重试！");
-
+                console.log("删除成功", trsElement.csysPotTrsConId);
               });
 
+            });
+
+
+
+            ruleDataCurrent.forEach(currentElement => {
+              let conditionData = {
+                "csysWorkflowId": this.workflowId,
+                "csysPotTrsId": transferId,
+                "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
+                "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
+                "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
+                "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
+                "csysPotTrsConType": "1",
+                "csysTrsRuleId": currentElement.csysTrsRuleId,
+                "csysTrsRuledlId": currentElement.csysTrsRuledlId,
+                "csysTrsRulesqlId": currentElement.csysTrsRulesqlId
+              }
+              console.log("conditionData", JSON.stringify(conditionData))
+              this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+                //this.msg.create("success", "创建成功");
+
+              },
+                (err) => {
+                  this.msg.create("error", "发生错误，请稍后重试！");
+
+                });
+
+            });
+
+
           });
+
+
+
 
 
         });
+      }
 
+    } else {
+      let conditionData = {
+        "csysWorkflowId": this.workflowId,
+        "csysPotTrsId": transferId,
+        "csysPotTrsConRawData": "select count(*)  as RAWDATA from POT_TEST where   PRO_WO_BARCODE_ID = '@id' and  PASS_OR_FAIL = '2'",
+        "csysPotTrsConMethod": "=",
+        "csysPotTrsConContrastData": "0",
+        "csysPotTrsConInfo": "",
+        "csysPotTrsConType": "0",
 
+      }
+      console.log("conditionData", JSON.stringify(conditionData))
+      this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+        //this.msg.create("success", "创建成功");
 
+      },
+        (err) => {
+          this.msg.create("error", "发生错误，请稍后重试！");
 
+        });
 
-      });
     }
-
-   }else{
-    let conditionData = {
-      "csysWorkflowId": this.workflowId,
-      "csysPotTrsId": transferId,
-      "csysPotTrsConRawData": "select count(*)  as RAWDATA from POT_TEST where   PRO_WO_BARCODE_ID = '@id' and  PASS_OR_FAIL = '2'",
-      "csysPotTrsConMethod": "=",
-      "csysPotTrsConContrastData": "0",
-      "csysPotTrsConInfo": "",
-      "csysPotTrsConType": "0",
-
-    }
-    console.log("conditionData", JSON.stringify(conditionData))
-    this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
-      //this.msg.create("success", "创建成功");
-
-    },
-      (err) => {
-        this.msg.create("error", "发生错误，请稍后重试！");
-
-      });
-
-   }
 
   }
 
@@ -3774,6 +3769,10 @@ export class FlowchartComponent implements OnInit {
     })
   }
   insertTimeMag(item): void {
+    if (this.timeForm.value.potCurrentName == this.timeForm.value.potPointName) {
+      this.msg.error("起始工序不能等于目标工序！");
+      return;
+    }
     this.timeLoading = true;
     //检验为空
     for (const i in this.timeForm.controls) {
@@ -3799,7 +3798,7 @@ export class FlowchartComponent implements OnInit {
     }
     if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
       this.timeLoading = false;
-      this.msg.error("必须输入一个时间!");     
+      this.msg.error("必须输入一个时间!");
       return;
     } else {
       if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
@@ -3862,7 +3861,7 @@ export class FlowchartComponent implements OnInit {
       this.httpService.putHttp("csyspotcontime", insertData).subscribe((data: any) => {
         this.initTimeForm();
         this.shiftTime = false;
-        this.getTimeMage(); 
+        this.getTimeMage();
         this.timeLoading = false;
         this.msg.success("创建成功");
       })

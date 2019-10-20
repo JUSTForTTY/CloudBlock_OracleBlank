@@ -1289,9 +1289,10 @@ export class FlowchartComponent implements OnInit {
     } else {
 
       this.autoCreateRepairPot(nodeId);
+      this.saveWorkFlow();
     }
-    //开启第三步：保存途程
-    this.saveWorkFlow();
+    
+     
 
 
   }
@@ -1472,6 +1473,7 @@ export class FlowchartComponent implements OnInit {
 
 
   getOpPot() {
+    let dateBegin = new Date();
 
     this.hierarchialGraphSimple.clusters = [];
     //查询工序组工序信息
@@ -1509,7 +1511,9 @@ export class FlowchartComponent implements OnInit {
       });
       console.log("处理组信息", this.hierarchialGraphSimple.clusters);
 
-
+   let dateEnd = new Date();
+    let check=dateEnd.getTime()-dateBegin.getTime();
+    console.log("效率检测---处理工序组绘制花费",check);
 
     });
   }
@@ -1840,8 +1844,8 @@ export class FlowchartComponent implements OnInit {
   }
   //修改工序组
   updateOpPot(newId, potAttribute): void {
-    console.log("修改oppot");
-
+    
+    let dateBegin = new Date();
     //现获取再修改
     if (potAttribute == null) potAttribute = "";
     this.httpService.postHttp("/oppot/condition", { "csysPotId": this.clickNodeData.id }).subscribe((data: any) => {
@@ -1859,7 +1863,11 @@ export class FlowchartComponent implements OnInit {
         //break;
         //}
       }
-    })
+    });
+
+    let dateEnd = new Date();
+    let check=dateEnd.getTime()-dateBegin.getTime();
+    console.log("效率检测---修改oppot花费",check);
   }
 
   // updateResource(potId, opId, rId): void {
@@ -2786,7 +2794,7 @@ export class FlowchartComponent implements OnInit {
 
   //重绘途程图
   drawWorkFlow() {
-
+    let dateBegin = new Date();
 
     this.hierarchialGraph.links = [...this.hierarchialGraph.links];
     this.hierarchialGraph.nodes = [...this.hierarchialGraph.nodes];
@@ -2830,7 +2838,9 @@ export class FlowchartComponent implements OnInit {
 
       }
     );
-
+    let dateEnd = new Date();
+    let check=dateEnd.getTime()-dateBegin.getTime();
+    console.log("效率检测---重汇表格花费",check);
     this.getOpPot();
 
   }
@@ -3540,6 +3550,7 @@ export class FlowchartComponent implements OnInit {
   /*节点迁移规则 */
   potTransferRule(sourcePot, targetPot, transferId) {
 
+    let dateBegin = new Date();
     /*新增工作流迁移条件*/
 
     // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则
@@ -3643,12 +3654,16 @@ export class FlowchartComponent implements OnInit {
 
     }
 
+    let dateEnd = new Date();
+    let check=dateEnd.getTime()-dateBegin.getTime();
+    console.log("效率检测---节点迁移规则花费",check);
   }
 
   /*自动创建节点（只针对普通测试站点）-维修站自动创建 */
 
   autoCreateRepairPot(currentPot) {
 
+    let dateBegin = new Date();
     let potName = this.insertForm.value.addNodeName1;
     //如果当前不是测试节点不进行创建
     this.httpService.getHttp("/csyspot/" + currentPot).subscribe((potData: any) => {
@@ -3697,6 +3712,9 @@ export class FlowchartComponent implements OnInit {
           });
       }
     });
+    let dateEnd = new Date();
+    let check=dateEnd.getTime()-dateBegin.getTime();
+    console.log("效率检测---自动创建节点花费",check);
   }
 
 

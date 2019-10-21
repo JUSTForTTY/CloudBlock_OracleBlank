@@ -18,7 +18,7 @@
                 orient="auto">
                 <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
               </svg:marker>
-            </ng-template>
+            </ng-template> 
 
 
             <ng-template #nodeTemplate let-node>
@@ -73,7 +73,7 @@
           </ngx-graph>
         </nz-spin>
       </nz-card>
-      <ng-template #extraTemplate>
+      <ng-template #extraTemplate *ngIf="operationShow">
         <a (click)="styleSetting()">风格设置</a>
         <nz-divider nzType="vertical"></nz-divider>
         <a (click)="timeManger()">时间管控</a>
@@ -83,8 +83,6 @@
         <a (click)="opList()">新增制程段</a>
       </ng-template>
     </div>
-
-
     <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
       <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate1">
         <div class="active-chart">

@@ -16,7 +16,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   nzTotal;
   nzTotalPage;
   currentWoInfo={
-    "woCode":"无",
+    "woCode":"RDPV7RTLSModule-007SMT验证",
     "productCode":"无",
     "planNumber":"无",
     "inputNumber":"无",

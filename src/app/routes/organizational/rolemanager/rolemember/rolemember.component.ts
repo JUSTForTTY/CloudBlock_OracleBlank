@@ -95,7 +95,7 @@ export class RolememberComponent implements OnInit {
     // this.initializeFromControl();
     // this.getMenuList();
     // this.getTreeData();
-    this.path = this.pageService.getPathByRoute(this.route);
+    // this.path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, this.path);
     //初始化参数识别字串
@@ -120,6 +120,8 @@ export class RolememberComponent implements OnInit {
   }
   _onReuseInit() {
     let newStr = '';
+    this.path = this.pageService.getPathByRoute(this.route);
+    this.roleId = this.pageService.getRouteParams(this.route, 'roleId', this.path)
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
         newStr = newStr + this.pageService.routeParams[this.path][key];

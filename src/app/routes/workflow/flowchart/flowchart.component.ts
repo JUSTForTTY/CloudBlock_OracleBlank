@@ -215,8 +215,8 @@ export class FlowchartComponent implements OnInit {
     //  path 可不传
     //  this.activatedRoute 需保证准确
     this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
-    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path)
-    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path)
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
     if (this.workflowType == "inoperation") {
       this.nzLg = 24;
       this.operationShow = false;
@@ -392,6 +392,12 @@ export class FlowchartComponent implements OnInit {
   }
   _onReuseInit() {
     let newStr = '';
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
         newStr = newStr + this.pageService.routeParams[this.path][key];
@@ -2030,7 +2036,7 @@ export class FlowchartComponent implements OnInit {
     }
     /*查询目标节点信息 */
     this.httpService.getHttp("/csyspot/" + control.value).subscribe((targetPot: any) => {
-      
+
       /*查询源节点信息 */
       this.httpService.getHttp("/csyspot/" + nodeId).subscribe((sourcePot: any) => {
 
@@ -2482,7 +2488,7 @@ export class FlowchartComponent implements OnInit {
             }
             /*自动判断节点类型*/
             console.log("bug测试1");
-            
+
             this.potAutoChangeType(sourcePot, targetPot);
             /*自动判断节点类型 */
           });
@@ -3263,14 +3269,12 @@ export class FlowchartComponent implements OnInit {
   //获取工序组
   getOpData() {
     this.opData = [];
-    if (this.workflowType == "operation") {
-      let opparam = {
-        csysWorkflowId: this.workflowId
-      }
-      this.httpService.postHttp("/op/condition", opparam).subscribe((data: any) => {
-        this.opData = data.data;
-      })
+    let opparam = {
+      csysWorkflowId: this.workflowId
     }
+    this.httpService.postHttp("/op/condition", opparam).subscribe((data: any) => {
+      this.opData = data.data;
+    })
   }
   //获取当前点击工序组名称
   opChange(event) {
@@ -3324,10 +3328,10 @@ export class FlowchartComponent implements OnInit {
   opListTitle = "工序组列表";
   editOpId = "";
   opList(): void {
+    this.getOpData();
+    this.getOpGroup();
     if (this.workflowType == "operation") {
       this.opVisible = true;
-      this.getOpData();
-      this.getOpGroup();
     }
   }
   //
@@ -3728,11 +3732,8 @@ export class FlowchartComponent implements OnInit {
   timeVisible = false
   //打开事件管控窗口
   timeManger(): void {
-    if (this.workflowType == "operation") {
-      console.log("测试log", this.hierarchialGraph.nodes)
-      this.getTimeMage();
-      this.timeVisible = true;
-    }
+    this.getTimeMage();
+    this.timeVisible = true;
   }
   timeData = [];
   timeSpin = false;
@@ -3915,11 +3916,11 @@ export class FlowchartComponent implements OnInit {
   madeVisible = false;
   madeType = false;
   madeSetting(): void {
+    this.getModeData();
     if (this.workflowType == "operation") {
       this.madeType = false;
-      this.madeVisible = true;
-      this.getModeData();
-    }
+      this.madeVisible = true;     
+    } 
   }
   madeCancel(): void {
     if (!this.shiftMade) {

@@ -52,7 +52,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   pageSize = 6;
   constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute) {
     this.timer = setTimeout(this.setData, 0);
-    this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
+    //this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
   }
 
   setData = () => {
@@ -62,7 +62,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldData();
     // this.getYieldAllData();
     this.getShiftData();
-    this.timer = setTimeout(this.setData, 60000);
+    this.timer = setTimeout(this.setData, 6000);
   }
 
   getCurrentUserGroup = () => {
@@ -80,9 +80,8 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     }else{
 
     }
-
-
-    this.usertimer = setTimeout(this.getCurrentUserGroup, 6000);
+ 
+    this.usertimer = setTimeout(this.getCurrentUserGroup, 20000);
   }
 
   ngOnInit() {
@@ -90,9 +89,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     //  path 可不传
     //  this.activatedRoute 需保证准确
     this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
-
-
-
+  
   }
 
   getYieldData() {
@@ -175,6 +172,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       this.userData_pe=[];
       this.userData_te=[];
       this.userData_qa=[];
+      this.userData_worker=[];
       this.foremanHeadimage="";
 
       if (shiftData.data.foreman.length > 0) {
@@ -198,7 +196,8 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
        
       this.onDuty = this.userData_foreman.length + this.userData_pe.length + this.userData_te.length + this.userData_qa.length + this.userData_worker.length;
 
-      this.shiftDataTransfer();
+       
+      //this.shiftDataTransfer();
     });
 
     //this.currentUser=this.userData[Math.floor((Math.random()*this.userData.length))];
@@ -209,15 +208,15 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
     let userData = this.userData_worker;
     let newUserData = [];
-    if (userData.length <= 3) {
+    if (userData.length <= 10) {
       newUserData.push(userData.slice(0, userData.length));
 
 
     } else {
 
       console.log("用户数据", userData);
-      for (var i = 0; i < userData.length; i += 3) {
-        newUserData.push(userData.slice(i, i + 3));
+      for (var i = 0; i < userData.length; i += 10) {
+        newUserData.push(userData.slice(i, i + 10));
       }
 
     }

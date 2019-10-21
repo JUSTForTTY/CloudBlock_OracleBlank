@@ -129,7 +129,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
   yieldData = [];
 
   forceFit: boolean = true;
-  height: number = 522;
+  height: number = 480;
   color = color;
   potcolor = potcolor;
   stackLabel = stackLabel;

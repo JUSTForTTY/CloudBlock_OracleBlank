@@ -18,7 +18,7 @@
                 orient="auto">
                 <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
               </svg:marker>
-            </ng-template> 
+            </ng-template>
 
 
             <ng-template #nodeTemplate let-node>
@@ -73,14 +73,16 @@
           </ngx-graph>
         </nz-spin>
       </nz-card>
-      <ng-template #extraTemplate *ngIf="workflowType == 'operation'">
-        <a (click)="styleSetting()">风格设置</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a (click)="timeManger()">时间管控</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a (click)="madeSetting()">首件设置</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a (click)="opList()">新增制程段</a>
+      <ng-template #extraTemplate>
+        <div *ngIf="workflowType == 'operation'">
+          <a (click)="styleSetting()">风格设置</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="timeManger()">时间管控</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="madeSetting()">首件设置</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="opList()">新增制程段</a>
+        </div>
       </ng-template>
     </div>
     <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
@@ -363,7 +365,7 @@
                   <nz-form-item>
                     <nz-form-label nzXs="24" nzSm="7" nzFor="rule">规则设定</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select formControlName="rule" nzShowSearch nzAllowClear nzPlaceHolder="请选择规则" >
+                      <nz-select formControlName="rule" nzShowSearch nzAllowClear nzPlaceHolder="请选择规则">
                         <nz-option *ngFor="let ruleOption of ruleData" [nzValue]="ruleOption.csysTrsRuleId"
                           [nzLabel]="ruleOption.csysTrsRuleName"></nz-option>
                       </nz-select>

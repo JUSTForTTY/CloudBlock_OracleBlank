@@ -204,6 +204,12 @@ export class FlowchartComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.path = this.pageService.getPathByRoute(this.route);
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
     this.isGraphSpinning = true;
     //this.workflowId = this.route.snapshot.paramMap.get("workFlowId");
     // this.route.queryParams.subscribe(queryParams => {
@@ -211,12 +217,7 @@ export class FlowchartComponent implements OnInit {
     //   this.workflowType = queryParams['workflowType'];
     //   this.workflowName = queryParams['workflowName'];
     // });
-    this.path = this.pageService.getPathByRoute(this.route);
-    //  path 可不传
-    //  this.activatedRoute 需保证准确
-    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
-    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
-    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
+
     if (this.workflowType == "inoperation") {
       this.nzLg = 24;
       this.operationShow = false;

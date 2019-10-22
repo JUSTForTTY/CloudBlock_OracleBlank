@@ -73,7 +73,7 @@
           </ngx-graph>
         </nz-spin>
       </nz-card>
-      <ng-template #extraTemplate *ngIf="operationShow">
+      <ng-template #extraTemplate *ngIf="workflowType == 'operation'">
         <a (click)="styleSetting()">风格设置</a>
         <nz-divider nzType="vertical"></nz-divider>
         <a (click)="timeManger()">时间管控</a>

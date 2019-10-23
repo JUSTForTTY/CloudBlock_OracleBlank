@@ -3902,8 +3902,8 @@ export class FlowchartComponent implements OnInit {
     this.getModeData();
     if (this.workflowType == "operation") {
       this.madeType = false;
-      this.madeVisible = true;     
-    } 
+      this.madeVisible = true;
+    }
   }
   madeCancel(): void {
     if (!this.shiftMade) {
@@ -3986,7 +3986,9 @@ export class FlowchartComponent implements OnInit {
     })
   }
   insertMade(): void {
+    this.madeType = false;
     this.initMadeForm();
+    this.editFirstId = "";
     this.shiftMade = true;
   }
 
@@ -3998,6 +4000,7 @@ export class FlowchartComponent implements OnInit {
 
   subStatu = false;
   checkModeChange(): void {
+    console.log("data答应", this.nodeData)
     let formData = {
       "firstSetting": null
     }
@@ -4036,7 +4039,13 @@ export class FlowchartComponent implements OnInit {
         console.log("区间测试1", element)
         console.log("区间测试2", typeof (element.csysPotSort))
         if (cint[0] <= element.csysPotSort && cint[1] >= element.csysPotSort && typeof (element.csysPotSort) == "number") {
-          this.firstData.push(element)
+          //当节点存在首件时候，该节点不允许选择
+          if (element.csysPotConFirstId == this.editFirstId) {
+            this.firstData.push(element)
+          } else if (element.csysPotIsFirstPiece == 0) {
+            this.firstData.push(element)
+          }
+
         }
       }
       console.log("区间测试", this.firstData)
@@ -4064,7 +4073,7 @@ export class FlowchartComponent implements OnInit {
     if (!this.potConFirstIsShift) {
       openMade = 0;
     }
-    console.log("potConFirstIsShift", this.potConFirstIsShift)
+    //console.log("potConFirstIsShift", this.potConFirstIsShift)
     let insertData = {
       "csysWorkflowId": this.workflowId,
       "csysWorkflowName": this.workflowName,
@@ -4075,9 +4084,10 @@ export class FlowchartComponent implements OnInit {
       "csysPotConFirstDesc": this.potConTimeDesc,
       "csysPotConFirstIsShift": openMade
     }
-    console.log("insertData", insertData)
+    //console.log("insertData", insertData)
     this.httpService.postHttp("csyspotconfirst", insertData).subscribe((data: any) => {
       //更新首件
+      //console.log("this.firstData",this.firstData);
       for (let index = 0; index < this.firstSetting.length; index++) {
         const element = this.firstSetting[index];
         let uData = {
@@ -4085,9 +4095,11 @@ export class FlowchartComponent implements OnInit {
           "csysPotIsFirstPiece": 1
         }
         this.httpService.putHttp("csyspot", uData).subscribe((data1: any) => {
+          console.log("pot新增成功")
         })
       }
       //更新自制段
+      // console.log("this.firstData",this.firstData);
       for (let index = 0; index < this.firstData.length; index++) {
         const element = this.firstData[index];
         let uData = {
@@ -4095,12 +4107,14 @@ export class FlowchartComponent implements OnInit {
           "csysPotConFirstId": data.data
         }
         this.httpService.putHttp("csyspot", uData).subscribe((data2: any) => {
+          console.log("pot新增成功2")
           if (index == this.firstData.length - 1) {
+            console.log("pot新增成功3")
             this.shiftMade = false;
             this.madeOkLoading = false;
             this.getModeData();
+            this.getNodeData();
           }
-
         })
       }
     })
@@ -4119,7 +4133,7 @@ export class FlowchartComponent implements OnInit {
       potConTimeDesc: [item.csysPotConFirstDesc]
     })
     this.checkModeChange();
-    this.httpService.postHttp("csyspot/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+    this.httpService.postHttp("csyspot/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": this.editFirstId }).subscribe((data: any) => {
       data = data.data
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
@@ -4133,7 +4147,9 @@ export class FlowchartComponent implements OnInit {
       } else {
         firstPiece = true;
       }
+
       console.log("数值检查1", item.csysPotConFirstIsShift)
+      console.log("数值检查2", firstdata)
       this.madeForm = this.fb.group({
         potCurrentName: [item.csysPotCurrentId, [Validators.required]],
         potPointName: [item.csysPotPointId, [Validators.required]],
@@ -4149,7 +4165,6 @@ export class FlowchartComponent implements OnInit {
     //更新原来数据
     let cname;
     let pname;
-
     let openMade = 1;
     //取节点值
     for (const key in this.nodeData) {
@@ -4217,6 +4232,7 @@ export class FlowchartComponent implements OnInit {
                   this.shiftMade = false;
                   this.madeOkLoading = false;
                   this.getModeData();
+                  this.getNodeData();
                 }
               })
             }

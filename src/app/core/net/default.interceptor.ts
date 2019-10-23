@@ -80,7 +80,9 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                 console.log("回调处理body", body.code)
                 if (body.code == 401) {
-                    console.log(event);
+                    this.notification.create('warning', '系统提示',
+                    '对不起，该账户已过期或者已在其他设备登录！');
+
                     this.goTo('/login');
 
                 }
@@ -94,7 +96,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                 } else if (body.code == 500) {
 
                     this.notification.create('error', '系统提示',
-                        '系统故障，请停止操作并联系管理员"。');
+                        '系统维护中，请稍后进行操作"。');
                     //更新token信息
                     if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
                         console.log("过期，存储新的token：" + body.param.access_token)

@@ -224,7 +224,7 @@ export class FlowchartComponent implements OnInit {
     }
 
 
-    
+
     this.form = this.fb.group({
       colorTheme: ['', [Validators.required]],
       lineStyle: ['', [Validators.required]],
@@ -1106,7 +1106,7 @@ export class FlowchartComponent implements OnInit {
       //修改途程工序
       console.log("修改工序2");
       if (this.clickNodeData.op) {
-        console.log("修改工序oppot2"); 
+        console.log("修改工序oppot2");
         //if (this.clickNodeData.op != opPotId) 
         this.updateOpPot(opPotId, this.editForm.value.potAttribute);
         if (!opPotId) this.deleteOpPot(this.clickNodeData.id);
@@ -1447,7 +1447,7 @@ export class FlowchartComponent implements OnInit {
       //this.hierarchialGraph.links=[{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""}{"source":"SUCUCsysPot20190225000050","target":"SUCUCsysPot20190225000051","label":"","id":"SUCUCsysPotTrs20190225000047","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000052","label":"","id":"SUCUCsysPotTrs20190225000048","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000052","target":"SUCUCsysPot20190225000053","label":"","id":"SUCUCsysPotTrs20190225000049","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000053","target":"SUCUCsysPot20190225000054","label":"","id":"SUCUCsysPotTrs20190225000050","stroke":"red","strokeWidth":"3","strokeDash":"10"},{"source":"SUCUCsysPot20190225000054","target":"SUCUCsysPot20190225000055","label":"","id":"SUCUCsysPotTrs20190225000051","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000056","label":"","id":"SUCUCsysPotTrs20190225000052","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000057","label":"","id":"SUCUCsysPotTrs20190225000053","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000058","label":"","id":"SUCUCsysPotTrs20190225000054","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000051","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000055","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000055","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000056","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000056","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000057","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190225000057","target":"SUCUCsysPot20190225000059","label":"","id":"SUCUCsysPotTrs20190225000058","stroke":"","strokeWidth":"","strokeDash":""},{"source":"SUCUCsysPot20190226000067","target":"SUCUCsysPot20190225000050","label":"","id":"SUCUCsysPotTrs20190226000068","stroke":"","strokeWidth":"","strokeDash":""}];
       //工序数据
       /*console.log(this.hierarchialGraph.nodes)*/
- 
+
       //设置主题
       this.setColorScheme(workFolowData.csysWorkflowColortheme != null && workFolowData.csysWorkflowColortheme != "" ? workFolowData.csysWorkflowColortheme : 'cool');
       //设置线性，垂直，自然等等
@@ -1460,7 +1460,7 @@ export class FlowchartComponent implements OnInit {
       this.isGraphSpinning = false;
 
     });
-    
+
     this.getOpPot();
   }
 
@@ -1835,7 +1835,7 @@ export class FlowchartComponent implements OnInit {
   //修改工序组
   updateOpPot(newId, potAttribute): void {
     console.log("修改oppot");
-    
+
     //现获取再修改
     if (potAttribute == null) potAttribute = "";
     this.httpService.postHttp("/oppot/condition").subscribe((data: any) => {
@@ -3544,104 +3544,132 @@ export class FlowchartComponent implements OnInit {
 
     // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则
 
-    if(targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702054042833000054"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20191008063649676000084"&&targetPot.data.csysPotPublicId!="LHCsysPotPublic20190702021800988000038"){
+    if (targetPot.data.csysPotPublicId != "LHCsysPotPublic20190702054042833000054" && targetPot.data.csysPotPublicId != "LHCsysPotPublic20191008063649676000084" && targetPot.data.csysPotPublicId != "LHCsysPotPublic20190702021800988000038") {
 
-    //1、查询是否存在规则设定
-    
-    if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
+      //1、查询是否存在规则设定
 
-      //如果设置了规则，自动添加迁移条件
+      if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
 
-      let ruleparam = {
-        csysTrsRuleId: sourcePot.data.csysTrsRuleId,
-        csysTrsRuledlCurStyleid: sourcePot.data.csysPotStyleId,
-        csysTrsRuledlTargetStyleid: targetPot.data.csysPotStyleId
-      }
-      console.log("规则包装参数", ruleparam);
-      this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
+        //如果设置了规则，自动添加迁移条件
 
-        console.log("规则信息", ruleData);
-        let ruleDataCurrent = ruleData.data;
+        let ruleparam = {
+          csysTrsRuleId: sourcePot.data.csysTrsRuleId,
 
-        //查询当前规则是否是原规则
-        let checkParam = {
-          "csysWorkflowId": this.workflowId,
-          "csysPotTrsId": transferId,
-          "csysPotTrsConType": "1"
-
+          csysTrsRuledlCurStyleid: sourcePot.data.csysPotStyleId,
+          csysTrsRuledlTargetStyleid: targetPot.data.csysPotStyleId
         }
-        this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
+        console.log("规则包装参数", ruleparam);
+        this.httpService.postHttp("/csystrsruleview/condition", ruleparam).subscribe((ruleData: any) => {
+
+          console.log("规则信息", ruleData);
+          let ruleDataCurrent = ruleData.data;
+
+          //查询当前规则是否是原规则
+          let checkParam = {
+            "csysWorkflowId": this.workflowId,
+            "csysPotTrsId": transferId,
+            "csysPotTrsConType": "1"
+
+          }
+          this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
 
 
-          //清空规则条件数据，进行新增
-          trsconData.data.forEach(trsElement => {
+            //清空规则条件数据，进行新增
+            trsconData.data.forEach(trsElement => {
 
-            this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
+              this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
 
-              console.log("删除成功", trsElement.csysPotTrsConId);
-            });
-
-          });
-
-
-
-          ruleDataCurrent.forEach(currentElement => {
-            let conditionData = {
-              "csysWorkflowId": this.workflowId,
-              "csysPotTrsId": transferId,
-              "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
-              "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
-              "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
-              "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
-              "csysPotTrsConType": "1",
-              "csysTrsRuleId": currentElement.csysTrsRuleId,
-              "csysTrsRuledlId": currentElement.csysTrsRuledlId,
-              "csysTrsRulesqlId": currentElement.csysTrsRulesqlId
-            }
-            console.log("conditionData", JSON.stringify(conditionData))
-            this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
-              //this.msg.create("success", "创建成功");
-
-            },
-              (err) => {
-                this.msg.create("error", "发生错误，请稍后重试！");
-
+                console.log("删除成功", trsElement.csysPotTrsConId);
               });
 
+            });
+
+
+
+            ruleDataCurrent.forEach(currentElement => {
+              let conditionData = {
+                "csysWorkflowId": this.workflowId,
+                "csysPotTrsId": transferId,
+                "csysPotTrsConRawData": currentElement.csysTrsRulesqlRawData,
+                "csysPotTrsConMethod": currentElement.csysTrsRulesqlMethod,
+                "csysPotTrsConContrastData": currentElement.csysTrsRulesqlContrastData,
+                "csysPotTrsConInfo": currentElement.csysTrsRulesqlInfo,
+                "csysPotTrsConType": "1",
+                "csysTrsRuleId": currentElement.csysTrsRuleId,
+                "csysTrsRuledlId": currentElement.csysTrsRuledlId,
+                "csysTrsRulesqlId": currentElement.csysTrsRulesqlId
+              }
+              console.log("conditionData", JSON.stringify(conditionData))
+              this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+                //this.msg.create("success", "创建成功");
+
+              },
+                (err) => {
+                  this.msg.create("error", "发生错误，请稍后重试！");
+
+                });
+
+            });
+
+
           });
+
+
+
 
 
         });
+      }
+
+    } else {
+
+      //删除迁移条件
+      //查询当前规则是否是自动生成条件
+      let checkParam = {
+        "csysWorkflowId": this.workflowId,
+        "csysPotTrsId": transferId,
+        "csysPotTrsConType": "1"
+
+      }
+      this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
 
 
+        //清空规则条件数据，进行新增
+        trsconData.data.forEach(trsElement => {
+
+          this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
+
+            console.log("删除成功", trsElement.csysPotTrsConId);
+          });
+
+        });
+        let conditionData = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": transferId,
+          "csysPotTrsConRawData": "select count(*)  as RAWDATA from POT_TEST where   PRO_WO_BARCODE_ID = '@id' and  PASS_OR_FAIL = '2'",
+          "csysPotTrsConMethod": "=",
+          "csysPotTrsConContrastData": "0",
+          "csysPotTrsConInfo": "",
+          "csysPotTrsConType": "1",
+
+        }
+        console.log("conditionData", JSON.stringify(conditionData))
+        this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
+          //this.msg.create("success", "创建成功");
+
+        },
+          (err) => {
+            this.msg.create("error", "发生错误，请稍后重试！");
+
+          });
 
 
 
       });
-    }
 
-   }else{
-    let conditionData = {
-      "csysWorkflowId": this.workflowId,
-      "csysPotTrsId": transferId,
-      "csysPotTrsConRawData": "select count(*)  as RAWDATA from POT_TEST where   PRO_WO_BARCODE_ID = '@id' and  PASS_OR_FAIL = '2'",
-      "csysPotTrsConMethod": "=",
-      "csysPotTrsConContrastData": "0",
-      "csysPotTrsConInfo": "",
-      "csysPotTrsConType": "0",
+
 
     }
-    console.log("conditionData", JSON.stringify(conditionData))
-    this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
-      //this.msg.create("success", "创建成功");
-
-    },
-      (err) => {
-        this.msg.create("error", "发生错误，请稍后重试！");
-
-      });
-
-   }
 
   }
 
@@ -3791,7 +3819,7 @@ export class FlowchartComponent implements OnInit {
     }
     if (!this.timeForm.value.potLeastTime && !this.timeForm.value.potLongestTime) {
       this.timeLoading = false;
-      this.msg.error("必须输入一个时间!");     
+      this.msg.error("必须输入一个时间!");
       return;
     } else {
       if (this.timeForm.value.potLeastTime > 0 && this.timeForm.value.potLongestTime > 0) {
@@ -3854,7 +3882,7 @@ export class FlowchartComponent implements OnInit {
       this.httpService.putHttp("csyspotcontime", insertData).subscribe((data: any) => {
         this.initTimeForm();
         this.shiftTime = false;
-        this.getTimeMage(); 
+        this.getTimeMage();
         this.timeLoading = false;
         this.msg.success("创建成功");
       })
@@ -3893,8 +3921,8 @@ export class FlowchartComponent implements OnInit {
     this.getModeData();
     if (this.workflowType == "operation") {
       this.madeType = false;
-      this.madeVisible = true;     
-    } 
+      this.madeVisible = true;
+    }
   }
   madeCancel(): void {
     if (!this.shiftMade) {

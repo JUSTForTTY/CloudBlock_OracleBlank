@@ -3771,10 +3771,6 @@ export class FlowchartComponent implements OnInit {
     })
   }
   insertTimeMag(item): void {
-    if (this.timeForm.value.potCurrentName == this.timeForm.value.potPointName) {
-      this.msg.error("起始工序不能等于目标工序！");
-      return;
-    }
     this.timeLoading = true;
     //检验为空
     for (const i in this.timeForm.controls) {

@@ -95,6 +95,11 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                     this.notification.create('error', '系统提示',
                         '系统故障，请停止操作并联系管理员"。');
+                    //更新token信息
+                    if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
+                        console.log("过期，存储新的token：" + body.param.access_token)
+                        this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
+                    }
                     //this.goTo(`/${ev.status}`);
                 }
 
@@ -113,8 +118,8 @@ export class DefaultInterceptor implements HttpInterceptor {
                 if (ev instanceof HttpErrorResponse) {
                     console.warn('未可知错误，大部分是由于后端不支持CORS或无效配置引起', ev);
                     this.notification.create('error', '系统提示',
-                    ev.message);
-                    
+                        ev.message);
+
                 }
                 break;
         }

@@ -10,12 +10,13 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   @Input() dataSet = [];
   @Input() prolineCode;
   timer: any;
+  wiptimer: any;
   nzPageSize = 5;
   nzPageIndex = 0;
   nzTotal;
   nzTotalPage;
   currentWoInfo={
-    "woCode":"无",
+    "woCode":"RDPV7RTLSModule-007SMT验证",
     "productCode":"无",
     "planNumber":"无",
     "inputNumber":"无",
@@ -28,6 +29,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
 
   constructor(private httpService: HttpService) {
     this.timer = setTimeout(this.setData, 0);
+    this.wiptimer = setTimeout(this.getWipData, 0);
   }
 
   setData = () => {
@@ -48,6 +50,17 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
     this.timer = setTimeout(this.setData, 8000);
   }
 
+  getWipData = () => {
+    if (this.wiptimer) {
+      clearTimeout(this.wiptimer);
+    }
+     
+    this.getWoWipData();
+
+    this.wiptimer = setTimeout(this.getWipData, 60000);
+  }
+
+
   ngOnInit() {
 
 
@@ -59,8 +72,11 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
     this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode).subscribe((woWipData: any) => {
 
       this.woWipTableData = woWipData.data;
-      console.log("在制工单数据", this.woWipTableData)
-      this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
+      console.log("产线报表-在制工单数据", this.woWipTableData)
+      if(this.woWipTableData.length>0){
+        this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
+      }
+      
     });
 
   }
@@ -71,6 +87,8 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     clearInterval(this.timer);
+    clearInterval(this.wiptimer);
+     
 
   }
 

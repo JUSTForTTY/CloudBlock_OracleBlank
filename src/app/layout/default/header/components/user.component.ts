@@ -98,7 +98,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   }
   ngOnInit() {
     this.userService.populate();
-    console.log("aass",this.userService.resourceHttp + this.userService.getCurrentUser()['csysUserHeadimage']);
+     
   }
 
   logout() {

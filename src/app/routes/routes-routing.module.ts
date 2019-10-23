@@ -70,7 +70,7 @@ const routes: Routes = [
         path: '',
         component: LayoutPassportComponent,
         children: [
-            //{ path: '', redirectTo: 'login',pathMatch:'full' },
+            { path: '', redirectTo: 'login',pathMatch:'full' },
             { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
             { path: 'register', component: UserRegisterComponent },
             { path: 'register-result', component: UserRegisterResultComponent }

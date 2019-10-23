@@ -129,7 +129,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
   yieldData = [];
 
   forceFit: boolean = true;
-  height: number = 522;
+  height: number = 480;
   color = color;
   potcolor = potcolor;
   stackLabel = stackLabel;
@@ -149,7 +149,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
     }
 
     this.getProlineData();
-    this.timer = setTimeout(this.setData, 3000);
+    this.timer = setTimeout(this.setData, 8000);
   }
 
   ngOnInit() {
@@ -165,7 +165,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
     this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode).subscribe((prolineData: any) => {
 
-      console.log("产线良率数据", prolineData)
+      console.log("产线报表-产线良率数据", prolineData)
       this.prolineGBsourceData = [];
       this.prolineGBsourceData.push(prolineData.data.productBads);
       this.prolineGBsourceData.push(prolineData.data.productGoods);

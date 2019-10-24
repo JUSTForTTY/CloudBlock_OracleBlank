@@ -1,7 +1,13 @@
 <div nz-row class="chartContainer">
   <div nz-col [nzSpan]="24" >
     <div nz-row [nzGutter]="24">
-      <div nz-col nzSpan="16" nzOffset="4">
+        <div nz-col nzSpan="4"  >
+           
+            <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzTitle]="'苏州利华科技股份有限公司'" [nzPrefix]="prefixTpl"></nz-statistic>
+            <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+
+          </div>
+      <div nz-col nzSpan="16"  >
         
         <h1 style="color:#1e91de;text-align: center;font-size: 40px;"> 
             <img class="logo" src="./assets/img/logo-full.png">

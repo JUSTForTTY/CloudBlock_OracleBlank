@@ -123,7 +123,7 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   handleCancel(): void {
-    console.log("关闭弹窗方法");
+
     this.router.navigate(['/default/pages', { outlets: { modal: null } }]);
     this.router.navigateByUrl(this.layoutService.nzRoutePath);
     this.layoutService.isVisible = false;
@@ -135,15 +135,12 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
       this.router.navigateByUrl(this.layoutService.nzRoutePath);
     }
 
-    console.log("弹窗已经完全关闭");
-
     console.log("table_modal", this.setService.pageDatas['table_modal']);
     //延时 防止路由串参数 
     setTimeout(() => {
       //查看是否需要执行额外事件
       if (typeof this.setService.pageDatas['table_modal'] != 'undefined') {
-
-        console.log("查询数据")
+ 
         //判断是否需要刷新
         if (this.setService.pageDatas['table_modal']['isNeedRefresh'] && this.setService.pageDatas['table_modal']['blockid']!="") {
           this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch",{

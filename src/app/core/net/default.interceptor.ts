@@ -11,6 +11,7 @@ import { _HttpClient, SettingsService } from '@delon/theme';
 import { environment } from '@env/environment';
 import { HttpService, JwtService } from 'ngx-block-core';
 import { CacheService } from '@delon/cache';
+import { UserService } from './../service/user.service';
 
 const loginHttpUrl = environment.SERVER_URL + "/v1/authlogin";
 const registerHttpUrl = environment.SERVER_URL + "/cloudblock/v1/register";
@@ -43,11 +44,8 @@ const CODEMESSAGE = {
 export class DefaultInterceptor implements HttpInterceptor {
 
     constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService, private notification: NzNotificationService,
-        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService, private router: Router) { }
-
-
-
-
+        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService,private userService:UserService ,private router: Router) { }
+ 
     get msg(): NzMessageService {
         return this.injector.get(NzMessageService);
     }
@@ -80,9 +78,10 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                 console.log("回调处理body", body.code)
                 if (body.code == 401) {
+                    this.notification.remove();
                     this.notification.create('warning', '系统提示',
-                    '对不起，该账户已过期或者已在其他设备登录！');
-
+                        '对不起，该账户已过期或者已在其他设备登录！');
+                    this.userService.purgeAuth();
                     this.goTo('/login');
 
                 }
@@ -90,18 +89,21 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                     //更新token信息
                     if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
-                        console.log("过期，存储新的token：" + body.param.access_token)
+
                         this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
                     }
                 } else if (body.code == 500) {
 
-                    this.notification.create('error', '系统提示',
-                        '系统维护中，请稍后进行操作"。');
+                    // this.notification.create('error', '系统提示',
+                    //     '系统维护中，请稍后进行操作"。');
                     //更新token信息
                     if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
-                        console.log("过期，存储新的token：" + body.param.access_token)
+
                         this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
                     }
+                    this.notification.remove();
+                    this.notification.create('warning', '系统提示',
+                    '对不起，系统正在维护或网络波动，请稍后再试！');
                     //this.goTo(`/${ev.status}`);
                 }
 
@@ -119,8 +121,11 @@ export class DefaultInterceptor implements HttpInterceptor {
             default:
                 if (ev instanceof HttpErrorResponse) {
                     console.warn('未可知错误，大部分是由于后端不支持CORS或无效配置引起', ev);
-                    this.notification.create('error', '系统提示',
-                        ev.message);
+                    // this.notification.create('error', '系统提示',
+                    //     ev.message);
+                    this.notification.remove();
+                    this.notification.create('warning', '系统提示',
+                    '对不起，系统正在维护或网络波动，请稍后再试！');
 
                 }
                 break;

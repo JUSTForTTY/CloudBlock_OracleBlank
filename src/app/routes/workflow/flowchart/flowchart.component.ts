@@ -382,7 +382,7 @@ export class FlowchartComponent implements OnInit {
 
 
   }
-  _onReuseInit() {
+  _onReuseInit() { 
     let newStr = '';
     this.path = this.pageService.getPathByRoute(this.route);
     //  path 可不传

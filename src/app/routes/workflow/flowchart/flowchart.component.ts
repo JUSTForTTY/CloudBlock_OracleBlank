@@ -313,7 +313,7 @@ export class FlowchartComponent implements OnInit {
     let paramsend = {
       csysWorkflowId: this.workflowId,
       csysPotPublicId: "LHCsysPotPublic20190625092513130000031"
-    }
+    } 
     this.httpService.postHttp(this.nodeTargertUrl, paramsend).subscribe((data: any) => {
       console.log("结束节点数据", data.data.length);
       if (data.data.length == 0) {
@@ -390,6 +390,10 @@ export class FlowchartComponent implements OnInit {
     this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
     this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
     this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
+    if (this.workflowType == "inoperation") {
+      this.nzLg = 24;
+      this.operationShow = false;
+    }
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
         newStr = newStr + this.pageService.routeParams[this.path][key];

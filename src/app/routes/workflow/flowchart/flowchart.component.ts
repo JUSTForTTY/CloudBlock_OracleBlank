@@ -4255,7 +4255,7 @@ export class FlowchartComponent implements OnInit {
         this.msg.success("删除成功！")
         this.getModeData();
         this.getNodeData();
-      })
+      }) 
     })
   }
   opGroup

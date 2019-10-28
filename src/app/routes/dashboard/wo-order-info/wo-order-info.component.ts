@@ -9,19 +9,20 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
 
   @Input() dataSet = [];
   @Input() prolineCode;
+  @Input() prolineType;
   timer: any;
   wiptimer: any;
   nzPageSize = 5;
   nzPageIndex = 0;
   nzTotal;
   nzTotalPage;
-  currentWoInfo={
-    "woCode":"RDPV7RTLSModule-007SMT验证",
-    "productCode":"无",
-    "planNumber":"无",
-    "inputNumber":"无",
-    "produceNumber":"无",
-    "smtWoState":"无",
+  currentWoInfo = {
+    "woCode": "无",
+    "productCode": "无",
+    "planNumber": "无",
+    "inputNumber": "无",
+    "produceNumber": "无",
+    "smtWoState": "无",
   };
 
 
@@ -44,6 +45,16 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
       }
       this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
 
+    } else {
+
+      this.currentWoInfo = {
+        "woCode": "无",
+        "productCode": "无",
+        "planNumber": "无",
+        "inputNumber": "无",
+        "produceNumber": "无",
+        "smtWoState": "无",
+      };
     }
 
 
@@ -54,7 +65,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
     if (this.wiptimer) {
       clearTimeout(this.wiptimer);
     }
-     
+
     this.getWoWipData();
 
     this.wiptimer = setTimeout(this.getWipData, 60000);
@@ -69,14 +80,14 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   }
 
   getWoWipData() {
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode).subscribe((woWipData: any) => {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode+"?prolineType="+this.prolineType).subscribe((woWipData: any) => {
 
       this.woWipTableData = woWipData.data;
       console.log("产线报表-在制工单数据", this.woWipTableData)
-      if(this.woWipTableData.length>0){
+      if (this.woWipTableData.length > 0) {
         this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
       }
-      
+
     });
 
   }
@@ -88,7 +99,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.timer);
     clearInterval(this.wiptimer);
-     
+
 
   }
 

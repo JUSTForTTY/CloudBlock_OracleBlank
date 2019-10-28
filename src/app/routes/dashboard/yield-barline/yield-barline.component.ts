@@ -111,6 +111,7 @@ const axisOpts = {
 export class YieldBarlineComponent implements OnInit, OnDestroy {
   @Input() dataSet = [];
   @Input() prolineCode;
+  @Input() prolineType;
   timer: any;
   scale = [{
     dataKey: 'FLAG1',
@@ -162,8 +163,10 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
   //获取产线数据
   getProlineData() {
 
+    console.log("获取参数",this.prolineCode);
+    console.log("获取参数",this.prolineType);
 
-    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode).subscribe((prolineData: any) => {
+    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode+"?prolineType="+this.prolineType).subscribe((prolineData: any) => {
 
       console.log("产线报表-产线良率数据", prolineData)
       this.prolineGBsourceData = [];

@@ -17,6 +17,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   timer: any;
   usertimer: any;
+  clocktimer:any;
   currentPageSize = 1;
   dataSet = [];
   dataSetTable = [];
@@ -45,13 +46,19 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   resource_url=resource_url;
 
-  userData = ['PE:张三', 'QE:李四', 'IT:王二', 'QC:小明', '操作员:小李'];
   currentUser;
   path;
+  queryParamStr = '';
   prolineCode;
+  prolineType;
+  prolineName;
   pageSize = 6;
+
+  nowTime = Date.now();
+
   constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute) {
     this.timer = setTimeout(this.setData, 0);
+    this.clocktimer=setTimeout(this.getClock, 0);
     //this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
   }
 
@@ -63,6 +70,15 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldAllData();
     this.getShiftData();
     this.timer = setTimeout(this.setData, 6000);
+  }
+  getClock = () => {
+    if (this.clocktimer) {
+      clearTimeout(this.clocktimer);
+    }
+    // this.getYieldData();
+    // this.getYieldAllData();
+    this.nowTime=Date.now();
+    this.clocktimer = setTimeout(this.getClock, 1000);
   }
 
   getCurrentUserGroup = () => {
@@ -86,9 +102,31 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.path = this.pageService.getPathByRoute(this.route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.route, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
+    }
     //  path 可不传
     //  this.activatedRoute 需保证准确
     this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
+
+    this.prolineType= this.pageService.getRouteParams(this.route, 'prolineType', this.path);
+    if(this.prolineType!=""){
+       if(this.prolineType=="smt"){
+        this.prolineName="前道"+this.prolineCode
+       }else if(this.prolineType=="be"){
+        this.prolineName="后道"+this.prolineCode
+       }else{
+        this.prolineName="总线"+this.prolineCode
+       }
+    }else{
+      this.prolineName="总线"+this.prolineCode
+    }
   
   }
 
@@ -233,6 +271,8 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.timer);
     clearInterval(this.usertimer);
+    clearInterval(this.clocktimer);
+     
 
 
   }

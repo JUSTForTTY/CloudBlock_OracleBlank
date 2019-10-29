@@ -13,9 +13,11 @@
   <i class="anticon anticon-copyright"></i> 2017
   <a href="//szcyerp.com" target="_blank">创游科技</a>出品 -->
   <!-- </global-footer> -->
-  <nz-modal *ngIf="layoutService.isVisible" [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth"
+  <nz-modal [(nzVisible)]="layoutService.isVisible" [nzTitle]="layoutService.nzTitle" [nzWidth]="layoutService.nzWidth"
     [nzFooter]="modalFooter" (nzOnCancel)="handleCancel()" (nzAfterClose)="handleAfterClose()">
-    <router-outlet name="modal"></router-outlet>
+    <ng-container *ngIf="layoutService.isVisible">
+      <router-outlet name="modal"></router-outlet>
+    </ng-container>
 
     <ng-template #modalFooter>
       <div style="text-align: left;">

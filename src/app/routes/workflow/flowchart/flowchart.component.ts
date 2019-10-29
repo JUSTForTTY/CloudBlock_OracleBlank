@@ -4258,7 +4258,8 @@ export class FlowchartComponent implements OnInit {
       "csysPotConFirstIsDelete": "1"
     }
     this.httpService.putHttp("csyspotconfirst", deleteData).subscribe((data2: any) => {
-      this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": item.conFirstId }).subscribe((data: any) => {
+      console.log("bug检测",item);
+      this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": item }).subscribe((data: any) => {
         data = data.data;
         for (let index = 0; index < data.length; index++) {
           const element = data[index];

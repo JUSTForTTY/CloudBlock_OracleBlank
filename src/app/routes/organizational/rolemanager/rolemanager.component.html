@@ -34,10 +34,10 @@
       <nz-list [nzDataSource]="roleList" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
 
         <ng-template #item let-item>
-          <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit,op]">
-            <ng-template #useredit>
+          <nz-list-item [nzContent]="nzContent" [nzActions]="[menuedit,op]">
+            <!-- <ng-template #useredit>
               <a (click)="navigatedetail(item)">用户组成员</a>
-            </ng-template>
+            </ng-template> -->
             <ng-template #menuedit>
               <a (click)="showModal(item.csysRoleId,item.csysRoleName)">用户组菜单</a>
             </ng-template>
@@ -45,7 +45,11 @@
           <a (click)= "navigatedetail1(item)">用户组权限</a>
         </ng-template> -->
             <ng-template #op>
-              <nz-dropdown>
+              <a (click)="editRole(item.csysRoleId,item.csysRoleName,item.csysRoleDesc)">编辑</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a nz-popconfirm nzTitle="是否确认删除用户组{{item.csysRoleName}}"
+                (nzOnConfirm)="deleteRole(item.csysRoleId)">删除</a>
+              <!-- <nz-dropdown>
                 <a class="ant-dropdown-link" nz-dropdown>
                   更多
                   <i class="anticon anticon-down"></i>
@@ -55,7 +59,7 @@
                   <li nz-menu-item nz-popconfirm nzTitle="是否确认删除用户组{{item.csysRoleName}}"
                     (nzOnConfirm)="deleteRole(item.csysRoleId)">删除</li>
                 </ul>
-              </nz-dropdown>
+              </nz-dropdown> -->
             </ng-template>
             <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.csysRoleDesc" [nzAvatar]="nzAvatar">
               <ng-template #nzTitle>

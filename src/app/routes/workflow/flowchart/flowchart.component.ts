@@ -393,6 +393,9 @@ export class FlowchartComponent implements OnInit {
     if (this.workflowType == "inoperation") {
       this.nzLg = 24;
       this.operationShow = false;
+    } else {
+      this.nzLg = 18;
+      this.operationShow = false;
     }
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {

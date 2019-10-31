@@ -220,7 +220,7 @@ export class PublicworkflowComponent implements OnInit {
     cySysFlowpointPublicId == "LHCsysPotPublic20190702054042833000054" ||
     cySysFlowpointPublicId == "LHCsysPotPublic20191008063649676000084" 
     ) {
-      this.msg.error("系统工序禁止删除！");
+      this.msg.error("系统工序禁止编辑！");
       return;
     }
     this.spinning = true;

@@ -1,0 +1,104 @@
+<nz-layout>
+  <nz-header>
+    <div class="logo"></div>
+
+  </nz-header>
+  <nz-content>
+    <div nz-row nzJustify="space-around">
+      <div nz-col nzSpan="8" >
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前归属进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始归属</button>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col nzSpan="8"  style="text-align:center">
+      
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前SPI采集进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始SPI采集</button>
+          </nz-card>
+        </div>
+      </div>
+
+     
+      <div nz-col nzSpan="8" >
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前AOI采集进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始AOI采集</button>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+    <div nz-row nzJustify="space-around">
+      <div nz-col nzSpan="8" >
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前归属进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始归属</button>
+          </nz-card>
+        </div>
+      </div>
+      <div nz-col nzSpan="8"  style="text-align:center">
+      
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前SPI采集进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始SPI采集</button>
+          </nz-card>
+        </div>
+      </div>
+
+     
+      <div nz-col nzSpan="8" >
+        <div >
+          <nz-card>
+            <div class="text-right text-grey">
+              <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
+              <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+            </div>
+            <h3 class="h3">{{currentNumber}}</h3>
+            <div class="text-grey" style="font-size:24px">当前AOI采集进度</div>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="startSchedule()">开始AOI采集</button>
+          </nz-card>
+        </div>
+      </div>
+    </div>
+
+  </nz-content>
+  <nz-footer style="text-align:center">性能测试平台 ©2019 Implement By 创游</nz-footer>
+</nz-layout>

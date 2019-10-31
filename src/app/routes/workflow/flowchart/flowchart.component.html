@@ -74,7 +74,11 @@
         </nz-spin>
       </nz-card>
       <ng-template #extraTemplate>
+
         <div *ngIf="workflowType == 'operation'">
+          <a>途程状态：</a>
+          <nz-badge [nzStatus]="workflowStatus"></nz-badge>
+          <nz-divider nzType="vertical"></nz-divider>
           <a (click)="styleSetting()">风格设置</a>
           <nz-divider nzType="vertical"></nz-divider>
           <a (click)="timeManger()">时间管控</a>

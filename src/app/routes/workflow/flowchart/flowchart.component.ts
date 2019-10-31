@@ -4567,7 +4567,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 工作流完整性检测，检测项目：头结点、ppa条件设定
+   * 工作流完整性检测，检测项目：头结点、ppa条件设定、xray检查
    */
 
   workflowCheck() {
@@ -4604,10 +4604,9 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       }
     });
 
-    //2、ppa条件设定
+    //2-1、ppa条件设定
 
     //查询是否存在ppa节点
-    //1、头结点校验
     let checkPpaPot = {
       csysWorkflowId: this.workflowId,
       csysPotStyleId: "LHCsysPotStyle20190723111446098000016"
@@ -4681,10 +4680,156 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
       }
     });
+
+    //2-2、ppa维修条件设定
+
+    //查询是否存在ppa维修节点
+    let checkPpatsPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotStyleId: "LHCsysPotStyle20190803014643552000017"
+    }
+    this.httpService.postHttp("/csyspot/condition", checkPpatsPot).subscribe((ppaPotdata: any) => {
+
+      console.log("工作流检测-当前ppa维修节点数据", ppaPotdata);
+
+      let ppaPotList = ppaPotdata.data;
+
+      if (ppaPotList.length > 0) {
+        ppaPotList.forEach(ppaElement => {
+          //查询ppa的迁移数据
+
+          let ppatrs = {
+            csysWorkflowId: this.workflowId,
+            csysPotCurrentId: ppaElement.csysPotId
+          }
+
+          this.httpService.postHttp("/csyspottrs/condition", ppatrs).subscribe((potTrsdata: any) => {
+
+            console.log("工作流检测-当前ppa维修节点的迁移数据", potTrsdata);
+
+            let potTrsList = potTrsdata.data;
+            if (potTrsList.length >= 2) {
+
+              potTrsList.forEach(potTrsElement => {
+                //查询是否设置了过站条件
+                let ppatrscon = {
+                  csysWorkflowId: this.workflowId,
+                  csysPotTrsId: potTrsElement.csysPotTrsId
+                }
+
+                this.httpService.postHttp("/csyspottrscon/condition", ppatrscon).subscribe((ppatrscondata: any) => {
+
+                  console.log("工作流检测-当前ppa节点的迁移条件", ppatrscondata);
+                  if (ppatrscondata.data.length == 1) {
+
+                  } else {
+                    this.notification.create(
+                      'error',
+                      '工作流检测异常',
+                      'PPA维修节点迁移条件："' + potTrsElement.csysPotCurrentName + '->' + potTrsElement.csysPotTrsPointName + '"设置有误，请检查!',
+                      { nzDuration: 0 }
+                    );
+                    this.workflowStatus = "error";
+                    console.log("工作流检测-当前ppa维修节点的迁移条件设置异常");
+                  }
+
+                });
+
+
+              });
+
+
+            } else {
+
+              this.notification.create(
+                'error',
+                '工作流检测异常',
+                'PPA维修站节点迁移条件数量不足，请检查!',
+                { nzDuration: 0 }
+              );
+              this.workflowStatus = "error";
+              console.log("工作流检测-PPA维修迁移条件数量不足");
+            }
+
+          });
+
+        });
+
+      }
+    });
+
+
+    //3、xray检查
+    this.xraypotCheck("LHCsysPotPublic20190702054042833000054");
+
+    this.xraypotCheck("LHCsysPotPublic20191008063649676000084");
+
+
+
+
+
+  }
+
+  xraypotCheck(publicId) {
+    let checkXrayBeSmtPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotPublicId: publicId
+    }
+    this.httpService.postHttp("/csyspot/condition", checkXrayBeSmtPot).subscribe((xraySmtPotdata: any) => {
+
+      if (xraySmtPotdata.data.length > 0) {
+
+        let xraySmtPotList = xraySmtPotdata.data;
+
+        xraySmtPotList.forEach(xraySmtElement => {
+          let xraySmtPotTrs = {
+            csysWorkflowId: this.workflowId,
+            csysPotCurrentId: xraySmtElement.csysPotId
+          }
+          this.httpService.postHttp("/csyspottrs/condition", xraySmtPotTrs).subscribe((xraySmtPottrsdata: any) => {
+            if (xraySmtPottrsdata.data.length > 0) {
+              let xraySmtPottrsList = xraySmtPottrsdata.data;
+              xraySmtPottrsList.forEach(xraySmtPottrsElement => {
+
+                //查询目标节点属性，不可以设置为非测试站和维修站
+                let xraypot = {
+                  csysWorkflowId: this.workflowId,
+                  csysPotId: xraySmtPottrsElement.csysPotTrsPointId
+                }
+
+                this.httpService.postHttp("/csyspot/condition", xraypot).subscribe((xraypotdata: any) => {
+
+                  console.log("工作流检测-xray目标节点", xraypotdata);
+
+                  if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
+                    this.notification.create(
+                      'error',
+                      '工作流检测异常',
+                      'XRAY目标节点不可以为非测试站，请检查!',
+                      { nzDuration: 0 }
+                    );
+
+                  }
+
+
+                });
+
+
+              });
+
+            }
+          });
+
+
+        });
+
+      }
+
+    });
   }
 
   ngOnDestroy(): void {
-    
+
     this.notification.remove();
 
   }

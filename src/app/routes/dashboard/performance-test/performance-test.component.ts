@@ -18,7 +18,7 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
   //工单总归属量
   woNumber=1500000;
   //当前归属量
-  currentNumber=277972;
+  currentNumber=1000000;
 
   percent=0;
   

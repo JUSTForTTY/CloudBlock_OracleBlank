@@ -1,15 +1,13 @@
 
 import { fromEvent as observableFromEvent, Subject } from 'rxjs';
-import { Component, OnInit, ViewEncapsulation, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import * as shape from 'd3-shape';
 import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { colorSets } from 'utils/color-sets';
 import { HttpService } from 'ngx-block-core';
 import { Router } from '@angular/router';
-import { CacheService } from '@delon/cache';
-import { CodeSandboxCircleFill } from '@ant-design/icons-angular/icons/public_api';
 import { PageService } from 'ngx-block-core';
 //通用
 const roleCurrencyList = [];
@@ -20,7 +18,7 @@ const roleCurrencyList = [];
 })
 
 
-export class FlowchartComponent implements OnInit {
+export class FlowchartComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.screenHeight = event.target.innerWidth + "px";
@@ -141,8 +139,12 @@ export class FlowchartComponent implements OnInit {
 
   private nzTimer;
   workflowName: any;
+  workflowStatus = "success";
 
-  constructor(private fb: FormBuilder, private router: Router, private msg: NzMessageService, private route: ActivatedRoute, private httpService: HttpService, private pageService: PageService) {
+  constructor(private fb: FormBuilder, private router: Router,
+    private msg: NzMessageService, private route: ActivatedRoute,
+    private httpService: HttpService, private pageService: PageService,
+    private notification: NzNotificationService) {
     //主题下拉框赋值
     Object.assign(this, {
       colorSchemes: colorSets,
@@ -251,9 +253,6 @@ export class FlowchartComponent implements OnInit {
       this.nzLg = 24;
       this.operationShow = false;
     }
-
-
-
     this.form = this.fb.group({
       colorTheme: ['', [Validators.required]],
       lineStyle: ['', [Validators.required]],
@@ -274,6 +273,8 @@ export class FlowchartComponent implements OnInit {
     this.getRuleData();
     //查询途程工序数据
     this.getWorkFlowNodes();
+    //校验工作流
+    this.workflowCheck();
     let paramsinit = {
       csysWorkflowId: this.workflowId,
       csysPotType: "3"
@@ -371,7 +372,9 @@ export class FlowchartComponent implements OnInit {
 
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.workType = data.data[0].csysWorkflowType;
-    })
+    });
+
+
 
 
   }
@@ -3459,17 +3462,42 @@ export class FlowchartComponent implements OnInit {
   potAutoChangeType(sourcePot, targetPot) {
 
     if (sourcePot.data.csysPotType == "3") {
-      /*-------start------  若当前节点为初始化节点，设置目标为头节点。---------start---------*/
+      /*-------start------  若当前节点为初始化节点，设置目标为头节点,并且删除其他头结点。---------start---------*/
 
-      //更改节点类型
-      let uppotparams = {
-        csysPotId: targetPot.data.csysPotId,
+      //查询是否存在头结点，存在的话更新为普通节点。
+      let checkHeadPot = {
+        csysWorkflowId: this.workflowId,
         csysPotType: "0"
       }
-      this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
-        console.log("节点类型智能识别-自动变更目标节点为头节点");
+      this.httpService.postHttp("/csyspot/condition", checkHeadPot).subscribe((headPotdata: any) => {
 
+        console.log("当前头结点数据", headPotdata);
+        headPotdata.data.forEach(headElement => {
+          //更改节点类型
+          let upheadpotparams = {
+            csysPotId: headElement.csysPotId,
+            csysPotType: "1"
+          }
+          this.httpService.putHttp(this.nodeUrl, upheadpotparams).subscribe((data: any) => {
+            console.log("节点类型智能识别-自动变更目标节点为头节点");
+
+          });
+
+        });
+
+        //更改节点类型
+        let uppotparams = {
+          csysPotId: targetPot.data.csysPotId,
+          csysPotType: "0"
+        }
+        this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+          console.log("节点类型智能识别-自动变更目标节点为头节点");
+
+        });
       });
+
+
+
       /*-------end------  若当前节点为初始化节点，设置目标为头节点。---------end---------*/
     } else {
       /*-------start------  若当前节点有后续节点，设置当前为普通节点。---------start---------*/
@@ -4269,7 +4297,7 @@ export class FlowchartComponent implements OnInit {
       "csysPotConFirstIsDelete": "1"
     }
     this.httpService.putHttp("csyspotconfirst", deleteData).subscribe((data2: any) => {
-      console.log("bug检测",item);
+      console.log("bug检测", item);
       this.httpService.postHttp(this.nodeUrl + "/condition", { "csysWorkflowId": this.workflowId, "csysPotConFirstId": item }).subscribe((data: any) => {
         data = data.data;
         for (let index = 0; index < data.length; index++) {
@@ -4548,6 +4576,275 @@ export class FlowchartComponent implements OnInit {
     }
 
   }
+
+  /**
+   * 工作流完整性检测，检测项目：头结点、ppa条件设定、xray检查
+   */
+
+  workflowCheck() {
+
+    //1、头结点校验
+    let checkHeadPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotType: "0"
+    }
+    this.httpService.postHttp("/csyspot/condition", checkHeadPot).subscribe((headPotdata: any) => {
+
+      console.log("工作流检测-当前头结点数据", headPotdata);
+      if (headPotdata.data.length == 0) {
+        console.log("工作流检测-无头结点");
+        this.workflowStatus = "error";
+        this.notification.create(
+          'error',
+          '工作流检测异常',
+          '请设置头结点！',
+          { nzDuration: 0 }
+        );
+
+      } else if (headPotdata.data.length == 1) {
+        console.log("工作流检测-头结点正常");
+      } else {
+        this.notification.create(
+          'error',
+          '工作流检测异常',
+          '头结点异常，请将‘开始’节点解绑，重新关联!',
+          { nzDuration: 0 }
+        );
+        console.log("工作流检测-头结点异常，请重新设置");
+        this.workflowStatus = "error";
+      }
+    });
+
+    //2-1、ppa条件设定
+
+    //查询是否存在ppa节点
+    let checkPpaPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotStyleId: "LHCsysPotStyle20190723111446098000016"
+    }
+    this.httpService.postHttp("/csyspot/condition", checkPpaPot).subscribe((ppaPotdata: any) => {
+
+      console.log("工作流检测-当前ppa节点数据", ppaPotdata);
+
+      let ppaPotList = ppaPotdata.data;
+
+      if (ppaPotList.length > 0) {
+        ppaPotList.forEach(ppaElement => {
+          //查询ppa的迁移数据
+
+          let ppatrs = {
+            csysWorkflowId: this.workflowId,
+            csysPotCurrentId: ppaElement.csysPotId
+          }
+
+          this.httpService.postHttp("/csyspottrs/condition", ppatrs).subscribe((potTrsdata: any) => {
+
+            console.log("工作流检测-当前ppa节点的迁移数据", potTrsdata);
+
+            let potTrsList = potTrsdata.data;
+            if (potTrsList.length >= 3) {
+
+              potTrsList.forEach(potTrsElement => {
+                //查询是否设置了过站条件
+                let ppatrscon = {
+                  csysWorkflowId: this.workflowId,
+                  csysPotTrsId: potTrsElement.csysPotTrsId
+                }
+
+                this.httpService.postHttp("/csyspottrscon/condition", ppatrscon).subscribe((ppatrscondata: any) => {
+
+                  console.log("工作流检测-当前ppa节点的迁移条件", ppatrscondata);
+                  if (ppatrscondata.data.length == 1) {
+
+                  } else {
+                    this.notification.create(
+                      'error',
+                      '工作流检测异常',
+                      'PPA节点迁移条件："' + potTrsElement.csysPotCurrentName + '->' + potTrsElement.csysPotTrsPointName + '"设置有误，请检查!',
+                      { nzDuration: 0 }
+                    );
+                    this.workflowStatus = "error";
+                    console.log("工作流检测-当前ppa节点的迁移条件设置异常");
+                  }
+
+                });
+
+
+              });
+
+
+            } else {
+
+              this.notification.create(
+                'error',
+                '工作流检测异常',
+                'PPA节点迁移条件数量不足，请检查!',
+                { nzDuration: 0 }
+              );
+              this.workflowStatus = "error";
+              console.log("工作流检测-迁移条件数量不足");
+            }
+
+          });
+
+        });
+
+      }
+    });
+
+    //2-2、ppa维修条件设定
+
+    //查询是否存在ppa维修节点
+    let checkPpatsPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotStyleId: "LHCsysPotStyle20190803014643552000017"
+    }
+    this.httpService.postHttp("/csyspot/condition", checkPpatsPot).subscribe((ppaPotdata: any) => {
+
+      console.log("工作流检测-当前ppa维修节点数据", ppaPotdata);
+
+      let ppaPotList = ppaPotdata.data;
+
+      if (ppaPotList.length > 0) {
+        ppaPotList.forEach(ppaElement => {
+          //查询ppa的迁移数据
+
+          let ppatrs = {
+            csysWorkflowId: this.workflowId,
+            csysPotCurrentId: ppaElement.csysPotId
+          }
+
+          this.httpService.postHttp("/csyspottrs/condition", ppatrs).subscribe((potTrsdata: any) => {
+
+            console.log("工作流检测-当前ppa维修节点的迁移数据", potTrsdata);
+
+            let potTrsList = potTrsdata.data;
+            if (potTrsList.length >= 2) {
+
+              potTrsList.forEach(potTrsElement => {
+                //查询是否设置了过站条件
+                let ppatrscon = {
+                  csysWorkflowId: this.workflowId,
+                  csysPotTrsId: potTrsElement.csysPotTrsId
+                }
+
+                this.httpService.postHttp("/csyspottrscon/condition", ppatrscon).subscribe((ppatrscondata: any) => {
+
+                  console.log("工作流检测-当前ppa节点的迁移条件", ppatrscondata);
+                  if (ppatrscondata.data.length == 1) {
+
+                  } else {
+                    this.notification.create(
+                      'error',
+                      '工作流检测异常',
+                      'PPA维修节点迁移条件："' + potTrsElement.csysPotCurrentName + '->' + potTrsElement.csysPotTrsPointName + '"设置有误，请检查!',
+                      { nzDuration: 0 }
+                    );
+                    this.workflowStatus = "error";
+                    console.log("工作流检测-当前ppa维修节点的迁移条件设置异常");
+                  }
+
+                });
+
+
+              });
+
+
+            } else {
+
+              this.notification.create(
+                'error',
+                '工作流检测异常',
+                'PPA维修站节点迁移条件数量不足，请检查!',
+                { nzDuration: 0 }
+              );
+              this.workflowStatus = "error";
+              console.log("工作流检测-PPA维修迁移条件数量不足");
+            }
+
+          });
+
+        });
+
+      }
+    });
+
+
+    //3、xray检查
+    this.xraypotCheck("LHCsysPotPublic20190702054042833000054");
+
+    this.xraypotCheck("LHCsysPotPublic20191008063649676000084");
+
+
+
+
+
+  }
+
+  xraypotCheck(publicId) {
+    let checkXrayBeSmtPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotPublicId: publicId
+    }
+    this.httpService.postHttp("/csyspot/condition", checkXrayBeSmtPot).subscribe((xraySmtPotdata: any) => {
+
+      if (xraySmtPotdata.data.length > 0) {
+
+        let xraySmtPotList = xraySmtPotdata.data;
+
+        xraySmtPotList.forEach(xraySmtElement => {
+          let xraySmtPotTrs = {
+            csysWorkflowId: this.workflowId,
+            csysPotCurrentId: xraySmtElement.csysPotId
+          }
+          this.httpService.postHttp("/csyspottrs/condition", xraySmtPotTrs).subscribe((xraySmtPottrsdata: any) => {
+            if (xraySmtPottrsdata.data.length > 0) {
+              let xraySmtPottrsList = xraySmtPottrsdata.data;
+              xraySmtPottrsList.forEach(xraySmtPottrsElement => {
+
+                //查询目标节点属性，不可以设置为非测试站和维修站
+                let xraypot = {
+                  csysWorkflowId: this.workflowId,
+                  csysPotId: xraySmtPottrsElement.csysPotTrsPointId
+                }
+
+                this.httpService.postHttp("/csyspot/condition", xraypot).subscribe((xraypotdata: any) => {
+
+                  console.log("工作流检测-xray目标节点", xraypotdata);
+
+                  if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
+                    this.notification.create(
+                      'error',
+                      '工作流检测异常',
+                      'XRAY目标节点不可以为非测试站，请检查!',
+                      { nzDuration: 0 }
+                    );
+
+                  }
+
+
+                });
+
+
+              });
+
+            }
+          });
+
+
+        });
+
+      }
+
+    });
+  }
+
+  ngOnDestroy(): void {
+
+    this.notification.remove();
+
+  }
+
 }
 
 

@@ -13,6 +13,7 @@
               <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
             </div>
             <h3 class="h3">{{currentNumber}}</h3>
+            <input nz-input placeholder="当前归属量" [(ngModel)]="currentNumber" />
             <div class="text-grey" style="font-size:24px">当前归属进度</div>
             <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
             <button nz-button nzType="primary"  (click)="startSchedule()">开始归属</button>
@@ -27,10 +28,11 @@
               <nz-statistic [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"   [nzPrefix]="prefixTpl"></nz-statistic>
               <ng-template #prefixTpl> <i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
             </div>
-            <h3 class="h3">{{currentNumber}}</h3>
+            <h3 class="h3">{{currentFlowNumber}}</h3>
+            <input nz-input placeholder="当前流水线采集量" [(ngModel)]="currentFlowNumber" />
             <div class="text-grey" style="font-size:24px">当前SPI采集进度</div>
-            <nz-progress [nzStatus]="'active'" [nzPercent]="percent" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
-            <button nz-button nzType="primary"  (click)="startSchedule()">开始SPI采集</button>
+            <nz-progress [nzStatus]="'active'" [nzPercent]="percentFlow" [nzShowInfo]="false" [nzStrokeWidth]="5"></nz-progress>
+            <button nz-button nzType="primary"  (click)="doFlow()">开始流水线采集</button>
           </nz-card>
         </div>
       </div>

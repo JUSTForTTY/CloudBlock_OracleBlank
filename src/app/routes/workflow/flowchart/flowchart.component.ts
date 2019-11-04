@@ -388,7 +388,8 @@ export class FlowchartComponent implements OnInit {
       this.operationShow = false;
     } else {
       this.nzLg = 18;
-      this.operationShow = false;
+      this.operationShow = true;
+      this.formEditStatus = false;
     }
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {

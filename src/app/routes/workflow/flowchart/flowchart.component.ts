@@ -856,6 +856,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotType": this.insertForm.value.addNodeName2,
                 "csysPotAtrribute": this.insertForm.value.potAttribute,
                 "csysWorkflowId": this.workflowId,
+                "csysWorkflowName": this.workflowName,
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
@@ -868,6 +869,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotType": this.insertForm.value.addNodeName2,
                 "csysPotAtrribute": this.insertForm.value.potAttribute,
                 "csysWorkflowId": this.workflowId,
+                "csysWorkflowName": this.workflowName,
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysPotIsExcrete": isExcrete

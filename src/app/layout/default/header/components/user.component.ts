@@ -31,7 +31,7 @@ import { environment } from '@env/environment.prod';
       </div>
     </div>
   </nz-dropdown>
-  <nz-modal [(nzVisible)]="isVisible" nzTitle="更新密码" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <div *ngIf="!tabView" nz-row>
     <div nz-col nzSpan="8"></div>
     <div nz-col nzSpan="8">
@@ -204,12 +204,13 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   resetting(): void {
     this.tabView = true;
     this.isVisible = true;
+    this.nzTitle = "修改密码";
     this.userid = this.userService.getCurrentUser()['csysUserId'];
     this.oldPassword1 = this.userService.getCurrentUser()['csysUserPassword'];
     this.handImg = this.userService.cyhttp + this.userService.getCurrentUser()['csysUserHeadimage'];
 
   }
-  confirm(): void {
+  confirm(): void { 
     this.confirmPd = true;
     if (this.password1 == this.password2) {
       this.confirmPd = false;

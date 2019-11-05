@@ -383,6 +383,17 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.path = this.pageService.getPathByRoute(this.route);
     //  path 可不传
     //  this.activatedRoute 需保证准确
+    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
+    if (this.workflowType == "inoperation") {
+      this.nzLg = 24;
+      this.operationShow = false;
+    } else {
+      this.nzLg = 18;
+      this.operationShow = true;
+      this.formEditStatus = false;
+    }
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
         newStr = newStr + this.pageService.routeParams[this.path][key];

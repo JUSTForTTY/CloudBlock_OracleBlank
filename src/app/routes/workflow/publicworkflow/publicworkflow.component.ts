@@ -214,6 +214,15 @@ export class PublicworkflowComponent implements OnInit {
     //   this.msg.error("系统工序禁止编辑！");
     //   return;
     // }
+    if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010" || 
+    cySysFlowpointPublicId == "LHCsysPotPublic20190803014907696000063" || 
+    cySysFlowpointPublicId == "LHCsysPotPublic20190815055541662000074" ||
+    cySysFlowpointPublicId == "LHCsysPotPublic20190702054042833000054" ||
+    cySysFlowpointPublicId == "LHCsysPotPublic20191008063649676000084" 
+    ) {
+      this.msg.error("系统工序禁止编辑！");
+      return;
+    }
     this.spinning = true;
     this.init();
     this.getResource();
@@ -323,7 +332,12 @@ export class PublicworkflowComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
-    if (resolve == "LHCsysPotPublic20190620043043486000010" || resolve == "LHCsysPotPublic20190803014907696000063" || resolve == "LHCsysPotPublic20190815055541662000074") {
+    if (resolve == "LHCsysPotPublic20190620043043486000010" || 
+    resolve == "LHCsysPotPublic20190803014907696000063" || 
+    resolve == "LHCsysPotPublic20190815055541662000074" ||
+    resolve == "LHCsysPotPublic20190702054042833000054" ||
+    resolve == "LHCsysPotPublic20191008063649676000084" 
+    ) {
       this.msg.error("系统工序禁止删除！");
       return;
     }

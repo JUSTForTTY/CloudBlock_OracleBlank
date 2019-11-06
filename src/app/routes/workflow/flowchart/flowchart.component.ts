@@ -383,6 +383,17 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.path = this.pageService.getPathByRoute(this.route);
     //  path 可不传
     //  this.activatedRoute 需保证准确
+    this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
+    this.workflowType = this.pageService.getRouteParams(this.route, 'workflowType', this.path);
+    this.workflowName = this.pageService.getRouteParams(this.route, 'workflowName', this.path);
+    if (this.workflowType == "inoperation") {
+      this.nzLg = 24;
+      this.operationShow = false;
+    } else {
+      this.nzLg = 18;
+      this.operationShow = true;
+      this.formEditStatus = false;
+    }
     for (const key in this.pageService.routeParams[this.path]) {
       if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
         newStr = newStr + this.pageService.routeParams[this.path][key];
@@ -845,6 +856,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotType": this.insertForm.value.addNodeName2,
                 "csysPotAtrribute": this.insertForm.value.potAttribute,
                 "csysWorkflowId": this.workflowId,
+                "csysWorkflowName": this.workflowName,
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
@@ -857,6 +869,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotType": this.insertForm.value.addNodeName2,
                 "csysPotAtrribute": this.insertForm.value.potAttribute,
                 "csysWorkflowId": this.workflowId,
+                "csysWorkflowName": this.workflowName,
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysPotIsExcrete": isExcrete
@@ -4759,13 +4772,16 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     });
 
 
-    //3、xray检查
+    //3-1、xray检查
     this.xraypotCheck("LHCsysPotPublic20190702054042833000054");
 
     this.xraypotCheck("LHCsysPotPublic20191008063649676000084");
 
+    this.xraypotCheck("LHCsysPotPublic20190702021800988000038");
 
 
+    //4、节点迁移条件校验
+    this.potTrsConCheck();
 
 
   }
@@ -4784,40 +4800,77 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         xraySmtPotList.forEach(xraySmtElement => {
           let xraySmtPotTrs = {
             csysWorkflowId: this.workflowId,
-            csysPotCurrentId: xraySmtElement.csysPotId
+            csysPotTrsPointId: xraySmtElement.csysPotId,
+            csysPotStyleId2: "SUCUCsysPotStyle20190225000007"
           }
-          this.httpService.postHttp("/csyspottrs/condition", xraySmtPotTrs).subscribe((xraySmtPottrsdata: any) => {
-            if (xraySmtPottrsdata.data.length > 0) {
-              let xraySmtPottrsList = xraySmtPottrsdata.data;
-              xraySmtPottrsList.forEach(xraySmtPottrsElement => {
+          this.httpService.postHttp("/csyspottrsdetail/condition", xraySmtPotTrs).subscribe((xraySmtPottrsdata: any) => {
+            //校验有多少节点指向xray，如果指向(只计算测试站)不大于1个，存在过站隐患
 
-                //查询目标节点属性，不可以设置为非测试站和维修站
-                let xraypot = {
-                  csysWorkflowId: this.workflowId,
-                  csysPotId: xraySmtPottrsElement.csysPotTrsPointId
-                }
+            let xraySmtPottrsList = xraySmtPottrsdata.data;
+            console.log("bug检测", xraySmtPottrsList)
+            xraySmtPottrsList.forEach(xraySmtPottrsElement => {
 
-                this.httpService.postHttp("/csyspot/condition", xraypot).subscribe((xraypotdata: any) => {
+              //查询来源节点属性，不可以设置为非测试站（xray节点只能被测试站和维修站连接）
+              let xraypot = {
+                csysWorkflowId: this.workflowId,
+                csysPotId: xraySmtPottrsElement.csysPotCurrentId
+              }
+              this.httpService.postHttp("/csyspot/condition", xraypot).subscribe((xraypotdata: any) => {
 
-                  console.log("工作流检测-xray目标节点", xraypotdata);
+                console.log("工作流检测-xray目标节点", xraypotdata);
 
-                  if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
-                    this.notification.create(
-                      'error',
-                      '工作流检测异常',
-                      'XRAY目标节点不可以为非测试站，请检查!',
-                      { nzDuration: 0 }
-                    );
+                if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
+                  this.workflowStatus = "error";
+                  this.notification.create(
+                    'error',
+                    '工作流检测异常',
+                    '指向' + xraySmtElement.csysPotName + '的节点不可以为非测试站，请检查!',
+                    { nzDuration: 0 }
+                  );
 
+
+
+
+                } else {
+
+                  console.log("工作流检测-xray源节点links数量", xraypotdata.data[0].csysPotName)
+                  //查询来源节点的迁移目标数量，如果数量小于等于3，则存在过站隐患
+                  let xraySourcePotTrs = {
+                    csysWorkflowId: this.workflowId,
+                    csysPotCurrentId: xraypotdata.data[0].csysPotId,
                   }
+                  this.httpService.postHttp("/csyspottrs/condition", xraySourcePotTrs).subscribe((xraySourcePottrsdata: any) => {
 
+                    let checkSourceLinks = xraySourcePottrsdata.data.length;
 
-                });
+                    console.log("工作流检测-xray源节点links数量", checkSourceLinks)
+                    if (checkSourceLinks >= 3) {
+
+                    } else {
+                      this.workflowStatus = "error";
+                      this.notification.create(
+                        'warning',
+                        '工作流检测异常',
+                        xraypotdata.data[0].csysPotName + '指向的节点可能不足，请检查！',
+                        { nzDuration: 0 }
+                      );
+
+                    }
+
+                  });
+                }
 
 
               });
 
-            }
+
+
+
+
+            });
+
+
+
           });
 
 
@@ -4826,6 +4879,43 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       }
 
     });
+  }
+
+  potTrsConCheck() {
+    let potTrs = {
+      "csysWorkflowId": this.workflowId,
+    }
+
+    this.httpService.postHttp("/csyspottrs/condition", potTrs).subscribe((pottrsdata: any) => {
+      //查询并校验迁移节点的条件是否大于1，大于出警报
+      pottrsdata.data.forEach(pottrsElement => {
+
+        let potTrsCon = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsId": pottrsElement.csysPotTrsId
+        }
+        this.httpService.postHttp("/csyspottrscon/condition", potTrsCon).subscribe((pottrscondata: any) => {
+
+          console.log("工作流检测-迁移条件数量", pottrscondata.data.length)
+          if (pottrscondata.data.length > 1) {
+            this.workflowStatus = "error";
+            this.notification.create(
+              'warning',
+              '工作流检测异常',
+              pottrsElement.csysPotCurrentName+'->'+pottrsElement.csysPotTrsPointName + '设置的迁移条件数量存在异常，请检查！',
+              { nzDuration: 0 }
+            );
+          }
+
+        });
+      });
+
+
+
+    });
+
+
+
   }
 
   ngOnDestroy(): void {

@@ -621,10 +621,10 @@
     (nzOnCancel)="conditionCancel()">
 
     <ng-container *ngIf="tableShow == 'table'">
-      <!-- <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+      <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
       <i class="anticon anticon-plus"></i>
       <span>自定义添加</span>
-    </button> -->
+    </button>
       <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190723111446098000016'">
         <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
           <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>

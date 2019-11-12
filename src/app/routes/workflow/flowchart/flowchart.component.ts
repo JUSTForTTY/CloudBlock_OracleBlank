@@ -1749,7 +1749,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         pageIds: `passenger${id}pageId`,
         checked: false,
         authority: [],//迁移权限数据初始化为空
-        pageData: { transferPageId: "", oldPageId: "", currentPageId: "" }//迁移页面数据初始化为空
+        pageData: { transferPageId: "", oldPageId: "", currentPageId: "" }//迁移�����面数据初始化为空
       };
       this.controlArray.push(control);
       this.saveFlowpointTransfer(nodeId);
@@ -3299,7 +3299,6 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.httpService.postHttp("/csyscodemaster/condition").subscribe((data: any) => {
       this.pointDescList = data.data;
     })
-
   }
 
   initOpForm(): void {
@@ -3561,7 +3560,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         }
 
       });
-      /*------end-------  判断目标节点是否有后续节点，若没有，自动设置为尾节点。---------end---------*/
+      /*------end-------  判断目标节点是否有后��节点，若没有，自动设置为尾节点。---------end---------*/
 
     }
 

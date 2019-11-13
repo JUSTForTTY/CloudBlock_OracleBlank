@@ -125,14 +125,15 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     this.isVisible = false;
     this.password1 = null;
     this.password2 = null;
+    this.oldPassword = null;
   }
   handleOk(): void {
-    if (this.nzTitle = "修改头像") {
+    if (this.nzTitle == "修改头像") {
       this.updateHeadImage();
     } else {
       this.updatePassword();
     }
-    this.isVisible = false;
+    
   }
   getHeadImg(): void {
 
@@ -169,9 +170,11 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     }
     this.httpService.putHttp("/csysuser", headImgData).subscribe((data: any) => {
       this.userService.populate();
+      this.isVisible = false;
     });
   }
   updatePassword(): void {
+    console.log("棉麻错误")
     if (this.password1 == null || this.password2 == null) {
       this.msg.error("密码不能为空");
       return;
@@ -193,10 +196,12 @@ export class HeaderUserComponent implements OnInit, DoCheck {
         this.isVisible = false;
         this.password1 = null;
         this.password2 = null;
+        this.oldPassword = null;
         this.userService.purgeAuth();
         //清理reuse
         this.reuseTabService.clear();
         this.router.navigateByUrl("/login");
+        this.isVisible = false;
       })
     }
   }

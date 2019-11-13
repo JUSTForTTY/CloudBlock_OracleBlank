@@ -977,7 +977,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序"
+            <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序(只允许设置测试站)"
               (ngModelChange)="checkModeChange()">
               <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
                 [nzLabel]="madedata.csysPotName">
@@ -988,7 +988,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序"
+            <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序(只允许设置测试站)"
               (ngModelChange)="checkModeChange()">
               <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
                 [nzLabel]="madedata.csysPotName">

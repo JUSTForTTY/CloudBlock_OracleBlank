@@ -4605,6 +4605,43 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         );
 
       } else if (headPotdata.data.length == 1) {
+
+        //查询连接头结点的源节点是否为开始站点
+        let potTrsHeadCheck = {
+          "csysWorkflowId": this.workflowId,
+          "csysPotTrsPointId": headPotdata.data[0].csysPotId
+        }
+        this.httpService.postHttp("/csyspottrs/condition", potTrsHeadCheck).subscribe((pottrscheckdata: any) => {
+
+          if (pottrscheckdata.data.length > 0) {
+
+            pottrscheckdata.data.forEach(element => {
+              let currentPot = {
+                "csysWorkflowId": this.workflowId,
+                "csysPotId": element.csysPotCurrentId
+              }
+              console.log("工作流检测bug-xx", currentPot);
+              this.httpService.postHttp("/csyspot/condition", currentPot).subscribe((trspot: any) => {
+                console.log("工作流检测bug-xx", trspot);
+                if (trspot.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190605000010'&&trspot.data[0].csysPotStyleId!='LHCsysPotStyle20190620042709661000002') {
+                  this.notification.create(
+                    'error',
+                    '工作流检测异常',
+                    '头结点异常，请将‘开始’节点解绑，重新关联!',
+                    { nzDuration: 0 }
+                  );
+
+                }
+
+              });
+
+            });
+
+
+          }
+
+        });
+
         console.log("工作流检测-头结点正常");
       } else {
         this.notification.create(

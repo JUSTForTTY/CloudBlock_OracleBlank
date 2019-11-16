@@ -767,6 +767,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   //移除目标工序
   removeField(i: { id: string, controlInstance: string, value: string, label: "", autoExcuteControl: string, autoExcute, pageIds, desc, flag: "", authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: "", oldPageId: "", currentPageId: "" } }, e: MouseEvent): void {
     e.preventDefault();
+    console.log("删除节点检测");
     //第一步
     if (this.controlArray.length > 0) {
       const index = this.controlArray.indexOf(i);
@@ -1221,26 +1222,124 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   }
   //删除工序
   deleteFlowPoint(nodeId) {
-    //获取工序信息
-    let params = {
 
-      "csysPotId": nodeId,
-      "csysPotIsDelete": "1"
-    };
-    //第一步：修改工序信息
-    this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
-      //console.log("工序删除成功," + data);
-      //重新获取工序
-      //this.getFlowTargetNodes();
-      //删除途程工序
-      this.deleteNodes(nodeId);
-      //删除工序组权限
-      //this.deleteOpPot(nodeId)
-      //删除oprs和potrs
-      //this.deleteRs(nodeId)
-      //开启第三步：保存途程
-      this.saveWorkFlow();
+    let checkxrayPot = {
+      csysWorkflowId: this.workflowId,
+      csysPotId: nodeId,
+
+    }
+    this.httpService.postHttp("/csyspot/condition", checkxrayPot).subscribe((xrayPotdata: any) => {
+
+      if (xrayPotdata.data.length > 0) {
+
+        if (xrayPotdata.data[0].csysPotStyleId == 'LHCsysPotStyle20191111014750540000023') {
+          //xray节点删除判定判定，如果当前途程有在制工单在使用，xray节点不允许删除
+          let woordercheck = {
+            csysWorkflowIdTure: this.workflowId,
+            woState: "已关单"
+
+          }
+          this.httpService.postHttp("/workorder/checkState", woordercheck).subscribe((workorderData: any) => {
+
+            if (workorderData.data.length > 0) {
+              this.deleting = false;
+              this.msg.warning("对不起，当前途程存在" + workorderData.data.length + "个在制工单，禁止删除xray节点！如需删除，请等待其他在制工单生成完成");
+            } else {
+              //判断有无在制产品sn
+              let workflowruncheck = {
+                csysWorkflowId: this.workflowId,
+                csysPotId: nodeId,
+                csysWorkflowRunTable: "PRO_WO_BARCODE"
+
+              }
+              this.httpService.postHttp("/csysworkflowrun/condition", workflowruncheck).subscribe((workflowrunData: any) => {
+
+                console.log("当前节点数据", workflowrunData);
+                if (workflowrunData.data.length > 0) {
+
+                  this.deleting = false;
+                  this.msg.warning("对不起，当前工序存在在制产品，禁止删除该节点！");
+
+                } else {
+                  //获取工序信息
+                  let params = {
+
+                    "csysPotId": nodeId,
+                    "csysPotIsDelete": "1"
+                  };
+                  //第一步：修改工序信息
+                  this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
+                    //console.log("工序删除成功," + data);
+                    //重新获取工序
+                    //this.getFlowTargetNodes();
+                    //删除途程工序
+                    this.deleteNodes(nodeId);
+                    //删除工序组权限
+                    //this.deleteOpPot(nodeId)
+                    //删除oprs和potrs
+                    //this.deleteRs(nodeId)
+                    //开启第三步：保存途程
+                    this.saveWorkFlow();
+                  });
+                }
+              });
+            }
+
+          });
+
+        } else {
+
+          //判断有无在制产品sn
+          let workflowruncheck = {
+            csysWorkflowId: this.workflowId,
+            csysPotId: nodeId,
+            csysWorkflowRunTable: "PRO_WO_BARCODE"
+
+          }
+          this.httpService.postHttp("/csysworkflowrun/condition", workflowruncheck).subscribe((workflowrunData: any) => {
+
+            console.log("当前节点数据", workflowrunData);
+            if (workflowrunData.data.length > 0) {
+
+              this.deleting = false;
+              this.msg.warning("对不起，当前工序存在"+workflowrunData.data.length+"在制产品，禁止删除该节点！");
+
+            } else {
+              //获取工序信息
+              let params = {
+
+                "csysPotId": nodeId,
+                "csysPotIsDelete": "1"
+              };
+              //第一步：修改工序信息
+              this.httpService.putHttp(this.nodeUrl, params).subscribe((data: any) => {
+                //console.log("工序删除成功," + data);
+                //重新获取工序
+                //this.getFlowTargetNodes();
+                //删除途程工序
+                this.deleteNodes(nodeId);
+                //删除工序组权限
+                //this.deleteOpPot(nodeId)
+                //删除oprs和potrs
+                //this.deleteRs(nodeId)
+                //开启第三步：保存途程
+                this.saveWorkFlow();
+              });
+            }
+          });
+        }
+
+
+
+
+      }
+
     });
+
+
+
+
+
   }
 
   //保存工序迁移
@@ -2279,6 +2378,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       //若无连接则删除工序
       this.deleteFlowPoint(nodeId);
     } catch (e) {
+
       this.deleting = false;
       this.msg.warning("对不起，当前工序存在源工序或目标工序，请删除后重试！");
     }
@@ -4623,7 +4723,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
               console.log("工作流检测bug-xx", currentPot);
               this.httpService.postHttp("/csyspot/condition", currentPot).subscribe((trspot: any) => {
                 console.log("工作流检测bug-xx", trspot);
-                if (trspot.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190605000010'&&trspot.data[0].csysPotStyleId!='LHCsysPotStyle20190620042709661000002') {
+                if (trspot.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190605000010' && trspot.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
                   this.notification.create(
                     'error',
                     '工作流检测异常',
@@ -4940,6 +5040,15 @@ export class FlowchartComponent implements OnInit, OnDestroy {
               { nzDuration: 0 }
             );
           }
+          // else if(pottrscondata.data.length == 0){
+          //   this.notification.create(
+          //     'warning',
+          //     '工作流检测异常',
+          //     pottrsElement.csysPotCurrentName + '->' + pottrsElement.csysPotTrsPointName + '设置的迁移条件为空，请检查（如当前不是测试站，请忽略）！',
+          //     { nzDuration: 0 }
+          //   );
+
+          // }
 
         });
       });

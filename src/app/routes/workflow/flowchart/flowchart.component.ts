@@ -1302,7 +1302,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
             if (workflowrunData.data.length > 0) {
 
               this.deleting = false;
-              this.msg.warning("对不起，当前工序存在"+workflowrunData.data.length+"在制产品，禁止删除该节点！");
+              this.msg.warning("对不起，当前工序存在" + workflowrunData.data.length + "在制产品，禁止删除该节点！");
 
             } else {
               //获取工序信息
@@ -2693,45 +2693,60 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         //删除迁移权限页面
         //this.deleteTransferPageByTransferId(transferId);
 
-        /*-------start------  若当前节点有后续节点，设置为普通节点。---------start---------*/
+        this.httpService.getHttp("/csyspot/" + potId).subscribe((currentPot: any) => {
 
-        let checkNextPot = {
-          "csysWorkflowId": this.workflowId,
-          "csysPotCurrentId": potId
-        }
-        this.httpService.postHttp("/csyspottrs/condition", checkNextPot).subscribe((data: any) => {
-          console.log("检测历史节点是否有后续节点", data)
-          if (data.data.length > 0) {
-            //更改节点类型
-            let uppotparams = {
-              csysPotId: potId,
-              csysPotType: "1"
-            }
-            this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
-              console.log("更新节点数据", data);
-              //工序迁移全部操作完后保存途程
-              if (i == length) {
-                this.saveWorkFlow();
-              }
-            });
+          console.log("当前节点", currentPot)
+          console.log("当前节点", currentPot.csysPotType)
+          if (currentPot.data.csysPotType == '0') {
+            
+            //当前节点为头结点，不做变更
           } else {
-            //更改节点类型
-            let uppotparams = {
-              csysPotId: potId,
-              csysPotType: "2"
+
+            /*-------start------  若当前节点有后续节点，设置为普通节点。---------start---------*/
+
+            let checkNextPot = {
+              "csysWorkflowId": this.workflowId,
+              "csysPotCurrentId": potId
             }
-            this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
-              console.log("更新节点数据", data);
-              //工序迁移全部操作完后保存途程
-              if (i == length) {
-                this.saveWorkFlow();
+            this.httpService.postHttp("/csyspottrs/condition", checkNextPot).subscribe((data: any) => {
+              console.log("检测历史节点是否有后续节点", data)
+              if (data.data.length > 0) {
+                //更改节点类型
+                let uppotparams = {
+                  csysPotId: potId,
+                  csysPotType: "1"
+                }
+                this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+                  console.log("更新节点数据", data);
+                  //工序迁移全部操作完后保存途程
+                  if (i == length) {
+                    this.saveWorkFlow();
+                  }
+                });
+              } else {
+                //更改节点类型
+                let uppotparams = {
+                  csysPotId: potId,
+                  csysPotType: "2"
+                }
+                this.httpService.putHttp(this.nodeUrl, uppotparams).subscribe((data: any) => {
+                  console.log("更新节点数据", data);
+                  //工序迁移全部操作完后保存途程
+                  if (i == length) {
+                    this.saveWorkFlow();
+                  }
+                });
               }
+
+
             });
+            /*-------end------  若当前节点有后续节点，设置为普通节点。---------end---------*/
           }
 
-
         });
-        /*-------end------  若当前节点有后续节点，设置为普通节点。---------end---------*/
+
+
+
 
       });
 

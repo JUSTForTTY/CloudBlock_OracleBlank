@@ -2698,7 +2698,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           console.log("当前节点", currentPot)
           console.log("当前节点", currentPot.csysPotType)
           if (currentPot.data.csysPotType == '0') {
-            
+
             //当前节点为头结点，不做变更
           } else {
 
@@ -4728,32 +4728,28 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         }
         this.httpService.postHttp("/csyspottrs/condition", potTrsHeadCheck).subscribe((pottrscheckdata: any) => {
 
+          let potflag = false;
           if (pottrscheckdata.data.length > 0) {
 
             pottrscheckdata.data.forEach(element => {
-              let currentPot = {
-                "csysWorkflowId": this.workflowId,
-                "csysPotId": element.csysPotCurrentId
+             
+              if (null == element.csysPotCurrentId || element.csysPotCurrentId == "") {
+
+                potflag = true;
               }
-              console.log("工作流检测bug-xx", currentPot);
-              this.httpService.postHttp("/csyspot/condition", currentPot).subscribe((trspot: any) => {
-                console.log("工作流检测bug-xx", trspot);
-                if (trspot.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190605000010' && trspot.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
-                  this.notification.create(
-                    'error',
-                    '工作流检测异常',
-                    '头结点异常，请将‘开始’节点解绑，重新关联!',
-                    { nzDuration: 0 }
-                  );
-
-                }
-
-              });
-
             });
 
-
           }
+          if (!potflag) {
+            this.notification.create(
+              'error',
+              '工作流检测异常',
+              '头结点异常，请将‘开始’节点解绑，重新关联!',
+              { nzDuration: 0 }
+            );
+          }
+
+
 
         });
 

@@ -45,6 +45,9 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       console.log("产线报表-异常信息", this.prolineErrorData);
       
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }

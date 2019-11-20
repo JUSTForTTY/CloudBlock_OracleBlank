@@ -1,7 +1,9 @@
 <div class="alain-default__header-logo">
   <a [routerLink]="['/default/workplace']" class="alain-default__header-logo-link">
-    <img class="alain-default__header-logo-expanded" src="./assets/img/logo-full.png" alt="{{settings.app.name}}" style="max-height:40px;" />
-    <img class="alain-default__header-logo-collapsed" src="./assets/img/logo-full.png" alt="{{settings.app.name}}" style="max-height:30px;" />
+    <img class="alain-default__header-logo-expanded" src="./assets/img/logo-full.png" alt="{{settings.app.name}}"
+      style="max-height:40px;" />
+    <img class="alain-default__header-logo-collapsed" src="./assets/img/logo-full.png" alt="{{settings.app.name}}"
+      style="max-height:30px;" />
   </a>
 </div>
 <div class="alain-default__nav-wrap">
@@ -68,4 +70,28 @@
       <header-user></header-user>
     </li>
   </ul>
+  <ng-template #template let-notification>
+    <div class="ant-notification-notice-content">
+      <div>
+        <div class="ant-notification-notice-message"><i nz-icon nzType="tool" nzTheme="twotone"></i>系统维护</div>
+
+        <div class="ant-notification-notice-description">
+          {{releaseData.releaseMsg}}
+        </div>
+        <br>
+        <div class="ant-notification-notice-description">
+          发布说明：{{releaseData.releaseDesc}}
+        </div>
+        <span class="ant-notification-notice-btn">
+          <button nz-button nzType="primary" nzSize="small" (click)="gotoAlternateServer(releaseUrl)">
+            <span>立即前往</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #tplContent>
+    <p>{{countdown}}</p>
+   
+  </ng-template>
 </div>

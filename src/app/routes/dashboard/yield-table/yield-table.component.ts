@@ -63,6 +63,9 @@ export class YieldTableComponent implements OnInit, OnDestroy {
       this.woWipTableData = woWipData.data;
       console.log("产线报表-在制工单数据", this.woWipTableData)
       this.woWipDataTransform();
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }

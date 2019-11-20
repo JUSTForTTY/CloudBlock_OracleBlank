@@ -4,7 +4,7 @@ import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@env/environment';
 
-const resource_url=environment.RESOURCE_SERVER_URL;
+const resource_url = environment.RESOURCE_SERVER_URL;
 @Component({
   selector: 'app-yield-dashboard',
   templateUrl: './yield-dashboard.component.html',
@@ -17,13 +17,13 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   timer: any;
   usertimer: any;
-  clocktimer:any;
+  clocktimer: any;
   currentPageSize = 1;
   dataSet = [];
   dataSetTable = [];
   dataSetGauge = [];
   //班组信息
-  shiftInfo ;
+  shiftInfo;
   //领班
   userData_foreman = [];
   //领班头像
@@ -44,7 +44,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   //员工-分组显示
   currentGroupData = [];
 
-  resource_url=resource_url;
+  resource_url = resource_url;
 
   currentUser;
   path;
@@ -58,7 +58,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute) {
     this.timer = setTimeout(this.setData, 0);
-    this.clocktimer=setTimeout(this.getClock, 0);
+    this.clocktimer = setTimeout(this.getClock, 0);
     //this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
   }
 
@@ -77,7 +77,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     }
     // this.getYieldData();
     // this.getYieldAllData();
-    this.nowTime=Date.now();
+    this.nowTime = Date.now();
     this.clocktimer = setTimeout(this.getClock, 1000);
   }
 
@@ -93,10 +93,10 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       }
 
       this.currentGroupData = this.userGroupData[this.currentGroupIndex];
-    }else{
+    } else {
 
     }
- 
+
     this.usertimer = setTimeout(this.getCurrentUserGroup, 20000);
   }
 
@@ -115,19 +115,19 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     //  this.activatedRoute 需保证准确
     this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
 
-    this.prolineType= this.pageService.getRouteParams(this.route, 'prolineType', this.path);
-    if(this.prolineType!=""){
-       if(this.prolineType=="smt"){
-        this.prolineName="前道"+this.prolineCode
-       }else if(this.prolineType=="be"){
-        this.prolineName="后道"+this.prolineCode
-       }else{
-        this.prolineName="总线"+this.prolineCode
-       }
-    }else{
-      this.prolineName="总线"+this.prolineCode
+    this.prolineType = this.pageService.getRouteParams(this.route, 'prolineType', this.path);
+    if (this.prolineType != "") {
+      if (this.prolineType == "smt") {
+        this.prolineName = "前道" + this.prolineCode
+      } else if (this.prolineType == "be") {
+        this.prolineName = "后道" + this.prolineCode
+      } else {
+        this.prolineName = "总线" + this.prolineCode
+      }
+    } else {
+      this.prolineName = "总线" + this.prolineCode
     }
-  
+
   }
 
   getYieldData() {
@@ -174,6 +174,9 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
 
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }
@@ -198,6 +201,9 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
       console.log("所有数据", data.data.list)
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }
@@ -206,12 +212,12 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     this.httpService.getHttp("/yieldDashboard/shiftData/" + this.prolineCode).subscribe((shiftData: any) => {
 
       console.log("产线报表-产线班组数据", shiftData);
-      this.userData_foreman=[];
-      this.userData_pe=[];
-      this.userData_te=[];
-      this.userData_qa=[];
-      this.userData_worker=[];
-      this.foremanHeadimage="";
+      this.userData_foreman = [];
+      this.userData_pe = [];
+      this.userData_te = [];
+      this.userData_qa = [];
+      this.userData_worker = [];
+      this.foremanHeadimage = "";
 
       if (shiftData.data.foreman.length > 0) {
         this.userData_foreman = shiftData.data.foreman;
@@ -227,15 +233,18 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       }
       this.userData_worker = shiftData.data.worker;
       this.shiftInfo = shiftData.data.shiftData;
-      if(null!=shiftData.data.foremanHeadimage&&shiftData.data.foremanHeadimage!=""){
-        this.foremanHeadimage=this.resource_url+shiftData.data.foremanHeadimage;
+      if (null != shiftData.data.foremanHeadimage && shiftData.data.foremanHeadimage != "") {
+        this.foremanHeadimage = this.resource_url + shiftData.data.foremanHeadimage;
 
       }
-       
+
       this.onDuty = this.userData_foreman.length + this.userData_pe.length + this.userData_te.length + this.userData_qa.length + this.userData_worker.length;
 
-       
+
       //this.shiftDataTransfer();
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
     //this.currentUser=this.userData[Math.floor((Math.random()*this.userData.length))];
@@ -272,7 +281,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     clearInterval(this.timer);
     clearInterval(this.usertimer);
     clearInterval(this.clocktimer);
-     
+
 
 
   }

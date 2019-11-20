@@ -10,6 +10,7 @@ import {
   ElementRef,
   Renderer2,
   Inject,
+  TemplateRef
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -19,14 +20,15 @@ import {
   NavigationError,
   NavigationCancel,
 } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { updateHostClass } from '@delon/util';
 import { SettingsService } from '@delon/theme';
 import { LayoutService, SetService } from 'ngx-block-core';
-import { environment } from '@env/environment';
 import { SettingDrawerComponent } from './setting-drawer/setting-drawer.component';
+import { environment } from '@env/environment';
+ 
 
 @Component({
   selector: 'layout-default',
@@ -35,8 +37,13 @@ import { SettingDrawerComponent } from './setting-drawer/setting-drawer.componen
 export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   @ViewChild('settingHost', { read: ViewContainerRef })
+  @ViewChild('template')
+  tplRef: TemplateRef<any>;
   private settingHost: ViewContainerRef;
   isFetching = false;
+  releaseData;
+  placement = 'topRight';
+  versiontimer: any;
 
   links = [
     {
@@ -61,8 +68,8 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     private el: ElementRef,
     private renderer: Renderer2,
     public layoutService: LayoutService,
-
     public setService: SetService,
+    private notification: NzNotificationService,
     @Inject(DOCUMENT) private doc: any,
   ) {
     // scroll to top in change page
@@ -84,8 +91,9 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
         this.isFetching = false;
       }, 100);
     });
+    
   }
-
+ 
   private setClass() {
     const { el, doc, renderer, settings } = this;
     const layout = settings.layout;
@@ -140,11 +148,11 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     setTimeout(() => {
       //查看是否需要执行额外事件
       if (typeof this.setService.pageDatas['table_modal'] != 'undefined') {
- 
+
         //判断是否需要刷新
-        if (this.setService.pageDatas['table_modal']['isNeedRefresh'] && this.setService.pageDatas['table_modal']['blockid']!="") {
-          this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch",{
-            reset:false
+        if (this.setService.pageDatas['table_modal']['isNeedRefresh'] && this.setService.pageDatas['table_modal']['blockid'] != "") {
+          this.setService.sendEvent(this.setService.pageDatas['table_modal']['blockid'], "simpleSearch", {
+            reset: false
           })
         }
 
@@ -155,6 +163,9 @@ export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy 
     }, 50);
 
   }
+
+  
+
   ngOnDestroy() {
     const { unsubscribe$ } = this;
     unsubscribe$.next();

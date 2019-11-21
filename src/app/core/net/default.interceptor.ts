@@ -37,6 +37,13 @@ const CODEMESSAGE = {
     503: '服务不可用，服务器暂时过载或维护。',
     504: '网关超时。',
 };
+const NOTFILTER = [
+    "release/info",
+    "yieldDashboard/goodsBadsData",
+    "yieldDashboard/woWipData",
+    "yieldDashboard/shiftData",
+    "yieldDashboard/errorData",
+]
 /**
  * 默认HTTP拦截器，其注册细节见 `app.module.ts`
  */
@@ -44,8 +51,8 @@ const CODEMESSAGE = {
 export class DefaultInterceptor implements HttpInterceptor {
 
     constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService, private notification: NzNotificationService,
-        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService,private userService:UserService ,private router: Router) { }
- 
+        @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService, private userService: UserService, private router: Router) { }
+
     get msg(): NzMessageService {
         return this.injector.get(NzMessageService);
     }
@@ -72,6 +79,7 @@ export class DefaultInterceptor implements HttpInterceptor {
         // 业务处理：一些通用操作
 
         console.log("回调处理", ev);
+        let noticeflag = true;
         switch (ev.status) {
             case 200:
                 const body: any = ev instanceof HttpResponse && ev.body;
@@ -102,8 +110,17 @@ export class DefaultInterceptor implements HttpInterceptor {
                         this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
                     }
                     this.notification.remove();
-                    this.notification.create('warning', '系统提示',
-                    '对不起，系统正在维护或网络波动，请稍后再试！');
+
+                    NOTFILTER.forEach(element => {
+                        if (ev.url.indexOf(element) != -1) {
+                            noticeflag = false;
+                        }
+
+                    });
+                    if (noticeflag) {
+                        this.notification.create('warning', '系统提示',
+                            '对不起，系统正在维护或网络波动，请稍后再试！');
+                    }
                     //this.goTo(`/${ev.status}`);
                 }
 
@@ -124,8 +141,17 @@ export class DefaultInterceptor implements HttpInterceptor {
                     // this.notification.create('error', '系统提示',
                     //     ev.message);
                     this.notification.remove();
-                    this.notification.create('warning', '系统提示',
-                    '对不起，系统正在维护或网络波动，请稍后再试！');
+                    NOTFILTER.forEach(element => {
+                        if (ev.url.indexOf(element) != -1) {
+                            noticeflag = false;
+                        }
+
+                    });
+                    if (noticeflag) {
+                        this.notification.create('warning', '系统提示',
+                            '对不起，系统正在维护或网络波动，请稍后再试！');
+                    }
+
 
                 }
                 break;

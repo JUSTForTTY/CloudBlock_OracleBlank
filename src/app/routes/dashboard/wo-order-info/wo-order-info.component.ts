@@ -88,6 +88,9 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
         this.currentWoInfo = this.woWipTableData[this.nzPageIndex];
       }
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }

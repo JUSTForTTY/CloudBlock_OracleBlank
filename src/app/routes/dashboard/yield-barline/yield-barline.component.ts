@@ -179,6 +179,9 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
       console.log("产线良率数据-时段", this.timeslot);
 
       this.prolineDataTransform();
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
   }

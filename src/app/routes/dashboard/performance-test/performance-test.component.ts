@@ -88,6 +88,9 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
       this.percent = this.currentNumber / this.woNumber * 100;
       this.doAscription();
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
 
@@ -129,6 +132,9 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
 
       this.autoAoiCollect();
 
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
     });
 
 
@@ -169,6 +175,9 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
       this.percentFlow = this.currentFlowNumber / this.woNumber * 100;
 
       this.autoAoi2Collect();
+
+    }, (err) => {
+      console.log("看板数据-接口异常");
 
     });
 

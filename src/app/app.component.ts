@@ -5,6 +5,10 @@ import { TitleService } from '@delon/theme';
 import { VERSION as VERSION_ALAIN } from '@delon/theme';
 import { VERSION as VERSION_ZORRO, NzModalService } from 'ng-zorro-antd';
 import { UserService } from '@core';
+import { environment } from '@env/environment';
+
+
+const home_url=environment.HOME_URL;
 
 @Component({
   selector: 'app-root',
@@ -30,7 +34,6 @@ export class AppComponent implements OnInit {
       VERSION_ZORRO.full,
     );
   }
-
   ngOnInit() {
     this.router.events
       .pipe(filter(evt => evt instanceof NavigationEnd))
@@ -52,6 +55,9 @@ export class AppComponent implements OnInit {
     // }
 
     // this.userService.populate();
-
+ 
   }
+
+ 
+
 }

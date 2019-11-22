@@ -4,10 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-    HOME_URL:`http://172.16.8.112:8091/`,
+    HOME_URL:`http://172.16.8.112:81/`,
     SERVER_NAME:`lh_mes`,
     chore: false,
-    SERVER_URL: `http://localhost:8080/`,
+    SERVER_URL: `http://172.16.8.112:81/cloudblock_lhoracle/`,
     RESOURCE_SERVER_URL: `http://172.16.8.112:81/`,
     DATA_SERVER_URL:`http://172.16.8.107:8082/cloudblock_datapull/`,
     //SERVER_URL: `http://192.168.200.149:8080/cloudblock_spring_boot_oracle_war_exploded/`,

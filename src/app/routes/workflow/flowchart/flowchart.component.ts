@@ -3747,6 +3747,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
               console.log("conditionData", JSON.stringify(conditionData))
               this.httpService.postHttp("/csyspottrscon", conditionData).subscribe((data: any) => {
                 //this.msg.create("success", "创建成功");
+                this.getTableData();
 
               },
                 (err) => {
@@ -4695,6 +4696,58 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
   }
 
+
+  /**
+   * 迁移条件修复（对于旧途程或者添加异常迁移条件，通过此方法可以进行快速修复） 
+   */
+
+  repairTrsCon() {
+
+    console.log("迁移修复-迁移编号", this.csysPointTrsId);
+
+
+    //删除所有迁移规则
+    let checkParam = {
+      "csysWorkflowId": this.workflowId,
+      "csysPotTrsId": this.csysPointTrsId,
+
+    }
+    this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
+
+
+      //清空规则条件数据，进行新增
+      trsconData.data.forEach(trsElement => {
+
+        this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
+
+          console.log("删除成功", trsElement.csysPotTrsConId);
+          this.getTableData();
+        });
+
+      });
+
+      //查询源节点、查询目标节点
+      this.httpService.getHttp("/csyspottrs/" + this.csysPointTrsId).subscribe((trsData: any) => {
+
+        console.log("迁移修复-迁移数据", trsData);
+        this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
+          this.httpService.getHttp("/csyspot/" + trsData.data.csysPotTrsPointId).subscribe((targetPot: any) => {
+            //新增迁移规则
+            this.potTransferRule(sourcePot, targetPot, this.csysPointTrsId);
+
+          });
+
+        });
+
+      });
+
+    });
+
+
+
+  }
+
+
   /**
    * 工作流完整性检测，检测项目：头结点、ppa条件设定、xray检查
    */
@@ -4732,7 +4785,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           if (pottrscheckdata.data.length > 0) {
 
             pottrscheckdata.data.forEach(element => {
-             
+
               if (null == element.csysPotCurrentId || element.csysPotCurrentId == "") {
 
                 potflag = true;

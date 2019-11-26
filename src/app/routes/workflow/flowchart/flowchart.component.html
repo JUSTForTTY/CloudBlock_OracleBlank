@@ -398,7 +398,7 @@
                     <nz-form-item>
                       <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
                       <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                        <nz-select  formControlName="addNodeName2" nzAllowClear>
+                        <nz-select formControlName="addNodeName2" nzAllowClear>
                           <nz-option nzValue="0" nzLabel="头工序"></nz-option>
                           <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
                           <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
@@ -622,9 +622,13 @@
 
     <ng-container *ngIf="tableShow == 'table'">
       <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-      <i class="anticon anticon-plus"></i>
-      <span>自定义添加</span>
-    </button>
+        <i class="anticon anticon-plus"></i>
+        <span>自定义添加</span>
+      </button>
+      <button  nz-button (click)="repairTrsCon()" [nzType]="'primary'" class="ant-btn__block mb-sm">
+        <i nz-icon nzType="tool" nzTheme="twotone"></i>
+        <span>迁移条件修复</span>
+      </button>
       <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190723111446098000016'">
         <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
           <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
@@ -681,10 +685,10 @@
               </p>
             </td>
             <td>
-              <a
+              <!-- <a
                 (click)="editCondition(data.csysPotTrsConId,data.csysPotTrsConRawData,data.csysPotTrsConMethod,data.csysPotTrsConContrastData,data.csysPotTrsConInfo)">编辑</a>
               <nz-divider nzType="vertical"></nz-divider>
-              <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a>
+              <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a> -->
             </td>
           </tr>
         </tbody>

@@ -11,7 +11,8 @@ const home_url = environment.HOME_URL;
 @Component({
   selector: 'layout-header',
   templateUrl: './header.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers:[NzNotificationService]
 })
 export class HeaderComponent implements OnInit {
   searchToggleStatus: boolean;

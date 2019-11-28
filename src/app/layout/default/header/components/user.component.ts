@@ -52,21 +52,21 @@ import { environment } from '@env/environment.prod';
   </div>
   <div *ngIf="tabView">
     <div nz-row>
-      <div nz-col nzSpan="4"></div>
+      <div nz-col nzSpan="4">旧密码：</div>
       <div nz-col nzSpan="16">
       <input nz-input type="password" autocomplete="new-password" placeholder="输入旧密码" [(ngModel)]="oldPassword" />
       </div>
       <div nz-col nzSpan="4"></div>
     </div>
     <div nz-row style="margin-top:20px">
-      <div nz-col nzSpan="4"></div>
+      <div nz-col nzSpan="4">新密码：</div>
       <div nz-col nzSpan="16">
       <input nz-input type="password" autocomplete="new-password" placeholder="输入密码" [(ngModel)]="password1" />
       </div>
       <div nz-col nzSpan="4"></div>
     </div>
     <div nz-row style="margin-top:20px">
-      <div nz-col nzSpan="4"></div>
+      <div nz-col nzSpan="4">确认密码：</div>
       <div nz-col nzSpan="16">
       <input nz-input type="password" autocomplete="new-password" placeholder="确认密码" [(ngModel)]="password2" (ngModelChange)="confirm()"/>
       <p *ngIf="confirmPd" style="color:red">两次输入密码不相同，请重新输入！</p>
@@ -98,7 +98,10 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   }
   ngOnInit() {
     this.userService.populate();
-     
+
+    //检测用户是否为初始化状态，如果是则需要修改密码
+    this.getUserStatus();
+
   }
 
   logout() {
@@ -108,7 +111,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     this.reuseTabService.clear();
     this.router.navigateByUrl("/login");
   }
-  headUrl=""
+  headUrl = ""
   isVisible = false;
   confirmPd = false;
   password1: string;
@@ -133,7 +136,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     } else {
       this.updatePassword();
     }
-    
+
   }
   getHeadImg(): void {
 
@@ -174,7 +177,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     });
   }
   updatePassword(): void {
-    console.log("棉麻错误")
+
     if (this.password1 == null || this.password2 == null) {
       this.msg.error("密码不能为空");
       return;
@@ -189,7 +192,8 @@ export class HeaderUserComponent implements OnInit, DoCheck {
       }
       let pData = {
         "csysUserId": this.userid,
-        "csysUserPassword": this.password1
+        "csysUserPassword": this.password1,
+        "csysUserMeno":"1"
       }
       this.httpService.putHttp("/csysuser", pData).subscribe((data: any) => {
         this.msg.success("修改成功");
@@ -215,7 +219,16 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     this.handImg = this.userService.cyhttp + this.userService.getCurrentUser()['csysUserHeadimage'];
 
   }
-  confirm(): void { 
+  resetPassword(): void {
+    this.tabView = true;
+    this.isVisible = true;
+    this.nzTitle = "您的账户存在安全问题，请及时修改密码！";
+    this.userid = this.userService.getCurrentUser()['csysUserId'];
+    this.oldPassword1 = this.userService.getCurrentUser()['csysUserPassword'];
+    this.handImg = this.userService.cyhttp + this.userService.getCurrentUser()['csysUserHeadimage'];
+
+  }
+  confirm(): void {
     this.confirmPd = true;
     if (this.password1 == this.password2) {
       this.confirmPd = false;
@@ -321,6 +334,14 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     }
   }
   headImgChange(): void {
+
+  }
+
+  getUserStatus() {
+
+    if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
+      this.resetPassword();
+    }
 
   }
 }

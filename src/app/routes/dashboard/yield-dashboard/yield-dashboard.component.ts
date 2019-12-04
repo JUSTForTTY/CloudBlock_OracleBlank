@@ -22,6 +22,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   dataSet = [];
   dataSetTable = [];
   dataSetGauge = [];
+  prolineColor = "#52c41a"
   //班组信息
   shiftInfo;
   //领班
@@ -69,6 +70,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldData();
     // this.getYieldAllData();
     this.getShiftData();
+    this.getWoWipData();
     this.timer = setTimeout(this.setData, 6000);
   }
   getClock = () => {
@@ -118,14 +120,14 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     this.prolineType = this.pageService.getRouteParams(this.route, 'prolineType', this.path);
     if (this.prolineType != "") {
       if (this.prolineType == "smt") {
-        this.prolineName = "前道" + this.prolineCode
+        this.prolineName = this.prolineCode
       } else if (this.prolineType == "be") {
-        this.prolineName = "后道" + this.prolineCode
+        this.prolineName = this.prolineCode
       } else {
-        this.prolineName = "总线" + this.prolineCode
+        this.prolineName = this.prolineCode
       }
     } else {
-      this.prolineName = "总线" + this.prolineCode
+      this.prolineName = this.prolineCode
     }
 
   }
@@ -200,6 +202,25 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
       this.dataSet = data.data.list;
 
       console.log("所有数据", data.data.list)
+
+    }, (err) => {
+      console.log("看板数据-接口异常");
+
+    });
+
+  }
+  getWoWipData() {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
+
+      console.log("在制工单检测",woWipData.data);
+      if (woWipData.data.length > 0) {
+
+        this.prolineColor = "#52c41a";
+
+      } else {
+        this.prolineColor = "#ffec3d";
+      }
+
 
     }, (err) => {
       console.log("看板数据-接口异常");

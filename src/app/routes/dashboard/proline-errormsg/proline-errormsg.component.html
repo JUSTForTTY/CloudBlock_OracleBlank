@@ -10,16 +10,24 @@
     
     <nz-list [nzDataSource]="prolineErrorData" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading" >
         <ng-template #item let-item >
-          <nz-list-item>
+          <nz-list-item > 
             <nz-list-item-meta
               [nzTitle]="nzTitle"
               [nzDescription]="nzDescription"
             >
             <ng-template #nzDescription>
-               {{ item.lossReason }}
+              <p>{{ item.lossReason }}</p> 
             </ng-template>
               <ng-template #nzTitle>
-                <a href="https://ng.ant.design">产线异常信息</a>
+                  <nz-avatar
+                  [ngStyle]="{ 'background-color': '#ffbf00' }"
+                  [nzText]="mesType[item.lossType]"
+                  nzSize="large"
+                  style="vertical-align: middle;"
+                ></nz-avatar>
+                
+                <nz-tag *ngIf="item.lossLogType=='1'" style="margin-left:10px" [nzColor]="'#108ee9'">{{mesrange[item.lossLogType]}}</nz-tag>
+                <nz-tag *ngIf="item.lossLogType=='2'" style="margin-left:10px" [nzColor]="'#f50'">{{mesrange[item.lossLogType]}}</nz-tag>
               </ng-template>
             </nz-list-item-meta>
           </nz-list-item>

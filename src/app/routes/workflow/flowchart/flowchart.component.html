@@ -141,8 +141,9 @@
               <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序属性</nz-form-label>
               <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                 <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
-                  <nz-option nzLabel="组结束点" nzValue="8">
-
+                  <nz-option nzLabel="产出点" nzValue="8">
+                  </nz-option>
+                  <nz-option nzLabel="投入点" nzValue="9">
                   </nz-option>
                 </nz-select>
                 <!-- <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
@@ -341,8 +342,9 @@
                     <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序属性</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
-                        <nz-option nzLabel="组结束点" nzValue="8">
-                        </nz-option>
+                        <nz-option nzLabel="产出点" nzValue="8"></nz-option>
+                        <nz-option nzLabel="投入点" nzValue="9"></nz-option>
+
                       </nz-select>
                     </nz-form-control>
                   </nz-form-item>
@@ -625,7 +627,7 @@
         <i class="anticon anticon-plus"></i>
         <span>自定义添加</span>
       </button>
-      <button  nz-button (click)="repairTrsCon()" [nzType]="'primary'" class="ant-btn__block mb-sm">
+      <button nz-button (click)="repairTrsCon()" [nzType]="'primary'" class="ant-btn__block mb-sm">
         <i nz-icon nzType="tool" nzTheme="twotone"></i>
         <span>迁移条件修复</span>
       </button>

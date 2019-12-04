@@ -1,17 +1,18 @@
-<div nz-row class="chartContainer">
-  <div nz-col [nzSpan]="24" >
-    <div nz-row [nzGutter]="24">
-        <div nz-col nzSpan="4"  >
-           
-            <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzTitle]="'苏州利华科技股份有限公司'" [nzPrefix]="prefixTpl"></nz-statistic>
-            <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+<div nz-row class="chartContainer" style="overflow-x: hidden;">
+  <div nz-col [nzSpan]="24">
+    <div nz-row>
+      <div nz-col nzSpan="4">
 
-          </div>
-      <div nz-col nzSpan="16"  >
-        
-        <h1 style="color:#1e91de;text-align: center;font-size: 40px;"> 
-            <img class="logo" src="./assets/img/logo-full.png">
-          {{prolineName}} 看板
+        <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
+        </nz-statistic>
+        <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+
+      </div>
+      <div nz-col nzSpan="16">
+
+        <h1 style="color:#1e91de;text-align: center;font-size: 40px;">
+          <img class="logo" src="./assets/img/logo-full.png">
+          {{prolineName}} 产线看板
         </h1>
       </div>
       <div nz-col nzSpan="4">
@@ -20,31 +21,35 @@
             产线状态:
           </div>
           <div nz-col nzSpan="12" class="proline-status">
-            <nz-badge nzStatus="processing" [nzColor]="'#52c41a'"></nz-badge>
+            <nz-badge nzStatus="processing" [nzColor]="prolineColor"></nz-badge>
           </div>
         </div>
       </div>
     </div>
 
 
-    <div nz-row [nzGutter]="24" style="margin-bottom:20px">
-      <div nz-col nzSpan="20">
-        <app-yield-table [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-table>
-      </div>
-      <div nz-col nzSpan="4" style="background:#192B53;">
-      <app-wo-order-info  [prolineCode]=prolineCode [prolineType]=prolineType></app-wo-order-info>
+    <div nz-row [nzGutter]="12" style="margin-bottom:20px">
+      <div nz-col nzSpan="24">
+        <div nz-col nzSpan="20">
+          <app-yield-table [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-table>
+        </div>
+        <div nz-col nzSpan="4" style="background:#192B53;">
+          <app-wo-order-info [prolineCode]=prolineCode [prolineType]=prolineType></app-wo-order-info>
+
+        </div>
 
       </div>
+
     </div>
 
-    <div nz-row [nzGutter]="24">
+
+    <div nz-row [nzGutter]="8">
       <div nz-col nzSpan="4">
         <app-proline-errormsg [prolineCode]=prolineCode></app-proline-errormsg>
 
-
       </div>
       <div nz-col nzSpan="16">
-        <app-yield-barline [prolineCode]=prolineCode  [prolineType]=prolineType></app-yield-barline>
+        <app-yield-barline [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-barline>
       </div>
       <div nz-col nzSpan="4" class="shiftInfo">
 
@@ -66,7 +71,7 @@
           <div nz-col nzSpan="8">
             PE技术员
           </div>
-          <div nz-col nzSpan="14" nzOffset="2" >
+          <div nz-col nzSpan="14" nzOffset="2">
 
             <ng-container *ngIf="userData_pe.length > 0">
               {{userData_pe[0].workerName}}
@@ -78,7 +83,7 @@
           <div nz-col nzSpan="8">
             TE技术员
           </div>
-          <div nz-col nzSpan="14" nzOffset="2" >
+          <div nz-col nzSpan="14" nzOffset="2">
             <ng-container *ngIf="userData_te.length > 0">
               {{userData_te[0].workerName}}
             </ng-container>
@@ -89,7 +94,7 @@
           <div nz-col nzSpan="8">
             QA巡检员
           </div>
-          <div nz-col nzSpan="14" nzOffset="2" >
+          <div nz-col nzSpan="14" nzOffset="2">
             <ng-container *ngIf="userData_qa.length > 0">
               {{userData_qa[0].workerName}}
             </ng-container>
@@ -100,24 +105,24 @@
           <div nz-col nzSpan="8">
             员工
           </div>
-          <div nz-col nzSpan="14" nzOffset="2"> 
+          <div nz-col nzSpan="14" nzOffset="2">
 
-            <marquee  loop="-1" scrollamount="4"> 
-            <ng-container *ngIf="userData_worker.length > 0">
-              <ng-container *ngFor="let item of userData_worker">
-                {{item.workerPost}}({{item.workerName}})、
+            <marquee loop="-1" scrollamount="4">
+              <ng-container *ngIf="userData_worker.length > 0">
+                <ng-container *ngFor="let item of userData_worker">
+                  {{item.workerPost}}({{item.workerName}})、
+                </ng-container>
+
               </ng-container>
-
-            </ng-container>
-          </marquee>
+            </marquee>
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="8">
             在岗人数
           </div>
-          <div nz-col nzSpan="14" nzOffset="2" >
-                        {{onDuty}}
+          <div nz-col nzSpan="14" nzOffset="2">
+            {{onDuty}}
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
@@ -142,8 +147,10 @@
         </div>
         <div nz-row>
           <div nz-col nzSpan="24">
-            <img width=98% height=245
-              [src]="foremanHeadimage" />
+
+            <img *ngIf="foremanHeadimage!=''&&foremanHeadimage!=null" width=98% height=265 [src]="foremanHeadimage" />
+            <img *ngIf="foremanHeadimage==''||foremanHeadimage==null" width=98% height=265
+              [src]="'assets/img/worker.jpg'" />
           </div>
         </div>
 

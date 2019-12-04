@@ -130,7 +130,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
   yieldData = [];
 
   forceFit: boolean = true;
-  height: number = 480;
+  height: number = 490;
   color = color;
   potcolor = potcolor;
   stackLabel = stackLabel;
@@ -163,10 +163,10 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
   //获取产线数据
   getProlineData() {
 
-    console.log("获取参数",this.prolineCode);
-    console.log("获取参数",this.prolineType);
+    console.log("获取参数", this.prolineCode);
+    console.log("获取参数", this.prolineType);
 
-    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode+"?prolineType="+this.prolineType).subscribe((prolineData: any) => {
+    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((prolineData: any) => {
 
       console.log("产线报表-产线良率数据", prolineData)
       this.prolineGBsourceData = [];
@@ -179,6 +179,9 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
       console.log("产线良率数据-时段", this.timeslot);
 
       this.prolineDataTransform();
+
+      this.prolineYieldDataTransform();
+
     }, (err) => {
       console.log("看板数据-接口异常");
 
@@ -224,6 +227,47 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
     this.prolineGBsourceData = dv.rows;
 
     console.log("产线良率数据处理", this.prolineGBsourceData)
+  }
+
+  prolineYieldDataTransform() {
+
+    let dv = new DataSet.View().source(this.yieldData);
+
+    dv.transform({
+      type: 'fold',
+      fields: ['良率', '效率'],
+      key: 'type',
+      value: 'value',
+    });
+
+    this.pointLabel = ['value', function (val) {
+
+      return {
+        position: 'middle',
+        offset: 0,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 12,
+          shadowBlur: 2,
+          shadowColor: 'rgba(0, 0, 0, .45)'
+        },
+        formatter: function formatter(text) {
+    
+          text = text + "%"
+    
+          return text;
+        }
+      };
+    }]
+
+    this.potcolor = ['type', function (val) {
+      if (val === '良率') {
+        return '#7cb305';
+      }
+      return '#13c2c2';
+    }]
+
+    this.yieldData = dv.rows;
   }
 
   ngOnDestroy(): void {

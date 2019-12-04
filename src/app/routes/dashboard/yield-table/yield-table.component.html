@@ -4,12 +4,12 @@
       <th>序号</th>
       <th>工单代码</th>
       <th>产品代码</th>
+      <th>工段</th>
       <th>工单数量</th>
       <th>待投入</th>
       <th>已投入</th>
       <th>产出</th>
-      <th>计划开始</th>
-      <th>计划结束</th>
+      <!-- <th>虚拟产出</th> -->
       <th>实际开始</th>
       <th>实际结束</th>
       <th>状态</th>
@@ -21,14 +21,14 @@
       <td>{{i+1}}</td>
       <td>{{ data.woCode }}</td>
       <td>{{ data.productCode }}</td>
+      <td>{{ data.opCode }}</td>
       <td>{{ data.planNumber }}</td>
       <td>{{ data.waitNumber }}</td>
       <td>{{ data.inputNumber }}</td>
       <td>{{ data.produceNumber }}</td>
-      <td>{{ data.planWorkDate | date:'MM-dd HH:mm' }}  </td>
-      <td>{{ data.planCompleteWorkDate | date:'MM-dd HH:mm' }}</td>
-      <td>{{ data.smtRealWorkDate | date:'MM-dd HH:mm' }}</td>
-      <td>{{ data.smtCompleteWorkDate | date:'MM-dd HH:mm' }}</td>
+      <!-- <td>{{ data.produceAllNumber }}</td> -->
+      <td>{{ data.smtRealWorkDate | date:'yyyy-MM-dd HH:mm' }}</td>
+      <td>{{ data.smtCompleteWorkDate | date:'yyyy-MM-dd HH:mm' }}</td>
       <td>{{ data.smtWoState }}</td>
 
        

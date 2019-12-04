@@ -8,9 +8,15 @@ import { HttpService, PageService } from 'ngx-block-core';
 })
 export class ProlineErrormsgComponent implements OnInit, OnDestroy {
   @Input() prolineCode;
-  
+
   loading = false;
   prolineErrorData = [];
+  mesType = {
+    0: "人", 1: "机", 2: "料", 3: "法", 4: "环"
+  }
+  mesrange={
+    1:"计划内",2:"计划外"
+  }
   data = [
     {
       title: '产线异常信息 1'
@@ -43,7 +49,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       console.log("产线报表-异常信息产线", errorData);
       this.prolineErrorData = errorData.data;
       console.log("产线报表-异常信息", this.prolineErrorData);
-      
+
 
     }, (err) => {
       console.log("看板数据-接口异常");
@@ -53,7 +59,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  
+
 
 
   }

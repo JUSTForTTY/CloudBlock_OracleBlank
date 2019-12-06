@@ -3709,28 +3709,14 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           console.log("规则信息", ruleData);
           let ruleDataCurrent = ruleData.data;
 
-          //查询当前规则是否是原规则
-          let checkParam = {
+          let deletebean = {
             "csysWorkflowId": this.workflowId,
-            "csysPotTrsId": transferId,
-            "csysPotTrsConType": "1"
-
+            "csysPotTrsId": transferId
           }
-          this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
+          //清空规则条件数据，进行新增
+          this.httpService.postHttp("/csyspottrscon/deleteCondition", deletebean).subscribe((data: any) => {
 
-
-            //清空规则条件数据，进行新增
-            trsconData.data.forEach(trsElement => {
-
-              this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
-
-                console.log("删除成功", trsElement.csysPotTrsConId);
-              });
-
-            });
-
-
-
+            console.log("删除成功", data);
             ruleDataCurrent.forEach(currentElement => {
               let conditionData = {
                 "csysWorkflowId": this.workflowId,
@@ -3757,10 +3743,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
             });
 
-
           });
-
-
 
 
 
@@ -3770,25 +3753,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     } else {
 
       //删除迁移条件
-      //查询当前规则是否是自动生成条件
-      let checkParam = {
+
+      let deletebean = {
         "csysWorkflowId": this.workflowId,
-        "csysPotTrsId": transferId,
-        "csysPotTrsConType": "1"
-
+        "csysPotTrsId": transferId
       }
-      this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
-
-
-        //清空规则条件数据，进行新增
-        trsconData.data.forEach(trsElement => {
-
-          this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
-
-            console.log("删除成功", trsElement.csysPotTrsConId);
-          });
-
-        });
+      //清空规则条件数据，进行新增
+      this.httpService.postHttp("/csyspottrscon/deleteCondition", deletebean).subscribe((data: any) => {
         let conditionData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": transferId,
@@ -3809,9 +3780,9 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
           });
 
-
-
       });
+
+
 
 
 
@@ -4705,43 +4676,21 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     console.log("迁移修复-迁移编号", this.csysPointTrsId);
 
+    //查询源节点、查询目标节点
+    this.httpService.getHttp("/csyspottrs/" + this.csysPointTrsId).subscribe((trsData: any) => {
 
-    //删除所有迁移规则
-    let checkParam = {
-      "csysWorkflowId": this.workflowId,
-      "csysPotTrsId": this.csysPointTrsId,
-
-    }
-    this.httpService.postHttp("/csyspottrscon/condition", checkParam).subscribe((trsconData: any) => {
-
-
-      //清空规则条件数据，进行新增
-      trsconData.data.forEach(trsElement => {
-
-        this.httpService.deleteHttp("/csyspottrscon/" + trsElement.csysPotTrsConId).subscribe((data: any) => {
-
-          console.log("删除成功", trsElement.csysPotTrsConId);
-          this.getTableData();
-        });
-
-      });
-
-      //查询源节点、查询目标节点
-      this.httpService.getHttp("/csyspottrs/" + this.csysPointTrsId).subscribe((trsData: any) => {
-
-        console.log("迁移修复-迁移数据", trsData);
-        this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
-          this.httpService.getHttp("/csyspot/" + trsData.data.csysPotTrsPointId).subscribe((targetPot: any) => {
-            //新增迁移规则
-            this.potTransferRule(sourcePot, targetPot, this.csysPointTrsId);
-
-          });
+      console.log("迁移修复-迁移数据", trsData);
+      this.httpService.getHttp("/csyspot/" + trsData.data.csysPotCurrentId).subscribe((sourcePot: any) => {
+        this.httpService.getHttp("/csyspot/" + trsData.data.csysPotTrsPointId).subscribe((targetPot: any) => {
+          //新增迁移规则
+          this.potTransferRule(sourcePot, targetPot, this.csysPointTrsId);
 
         });
 
       });
 
     });
+
 
 
 

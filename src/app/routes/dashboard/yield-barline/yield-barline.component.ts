@@ -216,8 +216,8 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
         }
       };
     }]
-
-    this.color = ['name', function (val) {
+ 
+    this.potcolor = ['name', function (val) {
       if (val === '不良品') {
         return '#ff4d4f';
       }

@@ -36,17 +36,7 @@ const standardOutputSourceData = [
   { year: '19:30-20:30.', value: 8 },
 ];
 
-const color = ['name', function (val) {
-  if (val === '不良品') {
-    return '#ff4d4f';
-  }
-  return '#2194ff';
-}]
-const potcolor = ['value', function (val) {
-
-  return '#ff4d4f';
-
-}]
+ 
 
 
 
@@ -131,8 +121,8 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
   forceFit: boolean = true;
   height: number = 490;
-  color = color;
-  potcolor = potcolor;
+  color ;
+  potcolor;
   stackLabel = stackLabel;
   pointLabel = pointLabel;
   axisOpts = axisOpts;
@@ -155,7 +145,6 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    console.log("柱状图颜色", color);
     this.getProlineData();
   }
 
@@ -217,7 +206,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
       };
     }]
  
-    this.potcolor = ['name', function (val) {
+    this.color = ['name', function (val) {
       if (val === '不良品') {
         return '#ff4d4f';
       }

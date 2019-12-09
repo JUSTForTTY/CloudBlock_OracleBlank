@@ -207,7 +207,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
         offset: 0,
         textStyle: {
           fill: '#fff',
-          fontSize: 12,
+          fontSize: 16,
           shadowBlur: 2,
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
@@ -221,7 +221,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
       if (val === '不良品') {
         return '#ff4d4f';
       }
-      return '#2194ff';
+      return '#92D050';
     }]
 
     this.prolineGBsourceData = dv.rows;
@@ -247,7 +247,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
         offset: 0,
         textStyle: {
           fill: '#fff',
-          fontSize: 12,
+          fontSize: 16,
           shadowBlur: 2,
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
@@ -262,9 +262,9 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
     this.potcolor = ['type', function (val) {
       if (val === '良率') {
-        return '#7cb305';
+        return '#389e0d';
       }
-      return '#13c2c2';
+      return '#d48806';
     }]
 
     this.yieldData = dv.rows;

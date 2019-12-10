@@ -339,9 +339,12 @@ export class HeaderUserComponent implements OnInit, DoCheck {
 
   getUserStatus() {
 
-    if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
-      this.resetPassword();
+    if(null!=this.userService.getCurrentUser()){
+      if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
+        this.resetPassword();
+      }
     }
+    
 
   }
 }

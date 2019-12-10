@@ -1580,12 +1580,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.httpService.postHttp("/op/condition", opparam).subscribe((opData: any) => {
 
       console.log("工序组显示", opData);
+
       opData.data.forEach(element => {
 
         let item = {
           id: element.opId,
           data: { color: "#8796c0" },
-          label: element.opCode,
+          label: element.opDesc,
           childNodeIds: []
         }
         //查询组节点
@@ -3251,20 +3252,23 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   }
   getTableData(): void {
     this.pottrsconData = []
-    this.httpService.postHttp("/csyspottrscon/condition", { "csysPotTrsId": this.csysPointTrsId }).subscribe((data: any) => {
-      console.log("zeq123", this.csysPointTrsId)
-      console.log("zeq123", data.data)
-      this.pottrsconData = data.data;
-      // for (let index = 0; index < data.data.length; index++) {
-      //   const element = data.data[index];
-      //   if (element.csysPotTrsId == this.csysPointTrsId) {
-      //     this.pottrsconData.push(element);
-      //   }
-      // }
-      //重新强制转换赋值
-      //this.pottrsconData = [...this.pottrsconData]
-      console.log("zzz", this.pottrsconData)
-    })
+    if (typeof (this.csysPointTrsId) != "undefined") {
+      this.httpService.postHttp("/csyspottrscon/condition", { "csysPotTrsId": this.csysPointTrsId }).subscribe((data: any) => {
+        console.log("zeq123", this.csysPointTrsId)
+        console.log("zeq123", data.data)
+        this.pottrsconData = data.data;
+        // for (let index = 0; index < data.data.length; index++) {
+        //   const element = data.data[index];
+        //   if (element.csysPotTrsId == this.csysPointTrsId) {
+        //     this.pottrsconData.push(element);
+        //   }
+        // }
+        //重新强制转换赋值
+        //this.pottrsconData = [...this.pottrsconData]
+        console.log("zzz", this.pottrsconData)
+      })
+    }
+
   }
   //权限弹框取消
   conditionCancel(): void {

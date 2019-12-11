@@ -3435,7 +3435,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   opVisible;
   opDiv = "list";
   isOpLoding = false;
-  opListTitle = "工序组列表";
+  opListTitle = "制成段列表";
   editOpId = "";
   opList(): void {
     this.getOpData();
@@ -3457,13 +3457,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       this.opVisible = false;
       return;
     }
-    if (this.opListTitle == "工序组列表") {
+    if (this.opListTitle == "制成段列表") {
       this.opVisible = false;
       this.initOpForm();
     } else {
-      if (this.opListTitle == "新增工序组") {
+      if (this.opListTitle == "新增制成段") {
         this.insertOpData();
-      } else if (this.opListTitle == "编辑工序组") {
+      } else if (this.opListTitle == "编辑制成段") {
         this.editOpData();
       }
     }
@@ -3471,7 +3471,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   insertOp(): void {
     this.initOpForm();
     this.opDiv = "insertOpData";
-    this.opListTitle = "新增工序组";
+    this.opListTitle = "新增制成段";
 
   }
   //新增工序组信息
@@ -3508,7 +3508,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   editOp(event): void {
     this.editOpId = event.opId;
     this.opDiv = "insertOpData";
-    this.opListTitle = "编辑工序组";
+    this.opListTitle = "编辑制成段";
     console.log("event", event);
     this.httpService.getHttp("/csysworkflow/" + this.workflowId).subscribe((data: any) => {
       this.opForm = this.fb.group({
@@ -3544,7 +3544,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   }
   opBack(): void {
     this.opDiv = "list";
-    this.opListTitle = "工序组列表";
+    this.opListTitle = "制成段列表";
     console.log("执行了op取消")
   }
   opDelete(id): void {

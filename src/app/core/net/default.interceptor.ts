@@ -64,11 +64,11 @@ export class DefaultInterceptor implements HttpInterceptor {
     private checkStatus(ev: HttpResponseBase) {
         if (ev.status >= 200 && ev.status < 300) return;
 
-        const errortext = CODEMESSAGE[ev.status] || ev.statusText;
-        this.injector.get(NzNotificationService).error(
-            `请求错误 ${ev.status}: ${ev.url}`,
-            errortext
-        );
+        // const errortext = CODEMESSAGE[ev.status] || ev.statusText;
+        // this.injector.get(NzNotificationService).error(
+        //     `请求错误 ${ev.status}: ${ev.url}`,
+        //     errortext
+        // );
     }
     private handleData(ev: HttpResponseBase): Observable<any> {
         // 可能会因为 `throw` 导出无法执行 `_HttpClient` 的 `end()` 操作

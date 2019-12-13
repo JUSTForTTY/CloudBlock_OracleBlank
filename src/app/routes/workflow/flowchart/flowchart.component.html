@@ -787,11 +787,23 @@
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">制程段代码</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
-                  <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
-                    [nzLabel]="opgroupdata.csysCodemasterDesc">
-                  </nz-option>
-                </nz-select>
+               
+                <ng-container *ngIf="opListTitle == '编辑制成段'">
+                  <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
+                    <nz-option *ngFor="let opgroupdata of opGroup" nzDisabled [nzValue]="opgroupdata.csysCodemasterCode"
+                      [nzLabel]="opgroupdata.csysCodemasterDesc">
+                    </nz-option>
+                  </nz-select>
+                </ng-container>
+                <ng-container *ngIf="opListTitle == '新增制成段'">
+                  <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
+                    <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
+                      [nzLabel]="opgroupdata.csysCodemasterDesc">
+                    </nz-option>
+                  </nz-select>
+                </ng-container>
+
+
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>

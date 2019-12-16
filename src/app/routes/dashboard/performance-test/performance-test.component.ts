@@ -14,7 +14,7 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
   clocktimer: any;
   ascriptiontimer: any;
   nowTime = Date.now();
-  snsubffer = "ADW-TEST";
+  snsubffer = "TY";
   //工单总归属量
   woNumber = 30000000;
   //当前归属量
@@ -66,15 +66,15 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
   //自动归属工单
   autoAscription() {
 
-    let snbegin = this.snsubffer + this.PrefixInteger(this.currentNumber, 8);
+    let snbegin = this.snsubffer + this.PrefixInteger(this.currentNumber, 9);
     this.currentNumber = Number(this.currentNumber) + 9999;
-    let snend = this.snsubffer + this.PrefixInteger(this.currentNumber, 8);
+    let snend = this.snsubffer + this.PrefixInteger(this.currentNumber, 9);
 
     let body = {
       "dynamicSql": null, "paramMap":
-        [{ "name": "SUCUCySysBlockSucu08searchweiget001000120190427002512", "columnName": "WO_CODE", "value": "ADW7708711-01(GM)-034BE" },
-        { "name": "SUCUCySysBlockSucu08searchweiget001000120190427002509", "columnName": "PRODUCT_CODE", "value": "ADW7708711-01(GM)" },
-        { "name": "SUCUCySysBlockSucu08searchweiget001000120190626002966", "columnName": "REMARK", "value": "ADW-TEST@@@@@@@@" },
+        [{ "name": "SUCUCySysBlockSucu08searchweiget001000120190427002512", "columnName": "WO_CODE", "value": "MAJ200003458-0406BE" },
+        { "name": "SUCUCySysBlockSucu08searchweiget001000120190427002509", "columnName": "PRODUCT_CODE", "value": "MAJ200003458" },
+        { "name": "SUCUCySysBlockSucu08searchweiget001000120190626002966", "columnName": "REMARK", "value": "TY@@@@@@@@@" },
         { "name": "SUCUCySysBlockSucu08searchweiget001000120190427002513", "columnName": "BARCODE_START", "value": snbegin },
         { "name": "SUCUCySysBlockSucu08searchweiget001000120190427002514", "columnName": "BARCODE_END", "value": snend },
         { "name": "&userid&", "columnName": "", "value": "SUCUCsysUser20190227000022" },

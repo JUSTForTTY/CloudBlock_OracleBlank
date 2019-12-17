@@ -3497,6 +3497,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         this.isOpLoding = false;
         this.initOpForm();
         this.getOpData();
+        this.drawWorkFlow();
         this.opDiv = "list";
       } else {
         this.msg.error("请稍后再试");
@@ -3535,6 +3536,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         this.opDiv = "list";
         this.initOpForm();
         this.getOpData();
+        this.drawWorkFlow();
         this.opDiv = "list";
       } else {
         this.msg.error("请稍后再试");

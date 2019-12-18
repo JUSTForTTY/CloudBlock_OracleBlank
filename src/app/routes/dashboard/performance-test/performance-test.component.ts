@@ -16,7 +16,7 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
   nowTime = Date.now();
   snsubffer = "TY";
   //工单总归属量
-  woNumber = 30000000;
+  woNumber = 300000000;
   //当前归属量
   currentNumber: number = 1;
 

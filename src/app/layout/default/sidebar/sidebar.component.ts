@@ -5,6 +5,7 @@ import { UserService } from '@core';
 @Component({
   selector: 'layout-sidebar',
   templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {

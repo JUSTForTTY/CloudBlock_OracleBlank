@@ -98,7 +98,7 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
 
   //自动spi采集
   autoSpiCollect() {
-    let sn = this.snsubffer + this.PrefixInteger(this.currentFlowNumber, 8);
+    let sn = this.snsubffer + this.PrefixInteger(this.currentFlowNumber, 9);
 
     let body = {
       "dynamicSql": null,
@@ -113,8 +113,8 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002864", "columnName": "SHIFT_TYPE_CODE", "value": "2Shfit" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002865", "columnName": "SHIFT_CODE", "value": "Day Shift(白班)" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002866", "columnName": "TIME_SLOT_CODE", "value": "白班" },
-      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002296", "columnName": "PRODUCT_CODE", "value": "ADW7708711-01(GM)" },
-      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002297", "columnName": "WO_CODE", "value": "ADW7708711-01(GM)-034BE" },
+      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002296", "columnName": "PRODUCT_CODE", "value": "MAJ200003458" },
+      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002297", "columnName": "WO_CODE", "value": "MAJ200003458-0406BE" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002299", "columnName": "PRO_BAR_CODE", "value": sn },
       { "name": "SUCUCySysBlockSucu04weight009000120190523000076", "columnName": "BARCODE_GOOD_BADE", "value": "PASS" },
       { "name": "SUCUCySysBlockSucu04weight009000120190531000077", "columnName": "FLAG1", "value": "0" },
@@ -186,7 +186,7 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
 
   //自动aoi采集
   autoAoiCollect() {
-    let sn = this.snsubffer + this.PrefixInteger(this.currentFlowNumber, 8);
+    let sn = this.snsubffer + this.PrefixInteger(this.currentFlowNumber, 9);
 
     let body = {
       "dynamicSql": null,
@@ -201,8 +201,8 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002864", "columnName": "SHIFT_TYPE_CODE", "value": "2Shfit" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002865", "columnName": "SHIFT_CODE", "value": "Day Shift(白班)" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190618002866", "columnName": "TIME_SLOT_CODE", "value": "白班" },
-      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002296", "columnName": "PRODUCT_CODE", "value": "ADW7708711-01(GM)" },
-      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002297", "columnName": "WO_CODE", "value": "ADW7708711-01(GM)-034BE" },
+      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002296", "columnName": "PRODUCT_CODE", "value": "MAJ200003458" },
+      { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002297", "columnName": "WO_CODE", "value": "MAJ200003458-0406BE" },
       { "name": "SUCUCySysBlockSucu08searchweiget001000120190327002299", "columnName": "PRO_BAR_CODE", "value": sn },
       { "name": "SUCUCySysBlockSucu04weight009000120190523000076", "columnName": "BARCODE_GOOD_BADE", "value": "PASS" },
       { "name": "SUCUCySysBlockSucu04weight009000120190531000077", "columnName": "FLAG1", "value": "0" },
@@ -218,7 +218,8 @@ export class PerformanceTestComponent implements OnInit, OnDestroy {
       console.log("自动aoi过站", spiData);
       this.percentFlow = this.currentFlowNumber / this.woNumber * 100;
 
-      this.autoQcCollect();
+      //this.autoQcCollect();
+      this.doFlow();
     });
 
 

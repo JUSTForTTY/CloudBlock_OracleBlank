@@ -16,7 +16,10 @@
               [nzDescription]="nzDescription"
             >
             <ng-template #nzDescription>
-              <p>{{ item.lossReason }}</p> 
+              <marquee loop="-1" scrollamount="4">
+                <p>{{ item.lossReason }}</p> 
+                </marquee>
+            
             </ng-template>
               <ng-template #nzTitle>
                   <nz-avatar

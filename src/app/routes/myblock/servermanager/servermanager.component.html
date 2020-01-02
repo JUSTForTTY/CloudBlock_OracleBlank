@@ -34,10 +34,9 @@
       </td>
       <td>{{ data.spare4 }}</td>
       <td>
-          <a nz-popconfirm nzPopconfirmTitle="Are you sure?" nzOkText="ok" nzCancelText="cancel"
-          (nzOnConfirm)="restartServer(data.csysDatabaseinfoServername,'stop')">关闭</a>
-          <a nz-popconfirm nzPopconfirmTitle="Are you sure?" nzOkText="ok" nzCancelText="cancel"
-          (nzOnConfirm)="restartServer(data.csysDatabaseinfoServername,'start')">启动</a>
+        <a nz-popconfirm nzPopconfirmTitle="Are you sure?" nzOkText="ok" nzCancelText="cancel"
+          (nzOnConfirm)="restartServer(data.csysDatabaseinfoServername,'restart')">重启</a>
+          
       </td>
     </tr>
   </tbody>

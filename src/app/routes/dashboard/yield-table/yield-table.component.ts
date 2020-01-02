@@ -95,8 +95,6 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
 
 
-
-
     }
   }
     ngOnDestroy(): void {

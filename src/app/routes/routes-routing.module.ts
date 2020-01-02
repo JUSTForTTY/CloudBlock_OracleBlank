@@ -47,6 +47,13 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
 
     },
+    //模块管理
+    {
+
+        path: 'block', loadChildren: './myblock/myblock.module#MyblockModule', data: { title: '模块管理' },
+        component: LayoutDefaultComponent,
+
+    },
     //组织权限
     {
 

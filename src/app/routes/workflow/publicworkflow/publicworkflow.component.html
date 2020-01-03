@@ -15,10 +15,10 @@
       <h3 class="flex-1 text-lg">公共工序列表</h3>
       <div>
         <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-          <input type="text" nz-input placeholder="公共工序名称" [(ngModel)]="searchContent">
+          <input type="text" nz-input (keyup.enter)="serchWorkFlow(1)" placeholder="公共工序名称" [(ngModel)]="searchContent">
         </nz-input-group>
         <ng-template #suffixButton>
-          <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow(1)">查询</button>
+          <button nz-button nzType="primary" nzSearch   (click)="serchWorkFlow(1)">查询</button>
         </ng-template>
 
       </div>
@@ -30,7 +30,7 @@
       <i class="anticon anticon-plus"></i>
       <span>添加</span>
     </button>
-    <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+    <nz-list [nzDataSource]="data" nzSize="small" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
       <ng-template #item let-item>
         <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
           <ng-template #edit>
@@ -173,14 +173,15 @@
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowPage">工序页面组</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowPage">工序页面组</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-select formControlName="workFlowPage" nzAllowClear nzShowSearch nzPlaceHolder="请选择工序页面 ">
               <nz-option *ngFor="let item of groupData" [nzValue]="item.csysPageGroupCode"
                 [nzLabel]="item.csysPageGroupDesc">
               </nz-option>
-            </nz-select>
+            </nz-select>   
           </nz-form-control>
+          
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowResource" nzShowSearch>工序资源</nz-form-label>

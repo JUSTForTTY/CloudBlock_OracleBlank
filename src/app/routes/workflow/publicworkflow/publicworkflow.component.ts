@@ -100,7 +100,7 @@ export class PublicworkflowComponent implements OnInit {
       workFlowStyle: [null, [Validators.required]],
       workFlowGroup: [null, [Validators.required]],
       workDataGroup: [null],
-      workFlowPage: [null],
+      workFlowPage: [null, [Validators.required]],
       workFlowResource: [null],
       workFlowDesc: [null],
     });
@@ -115,7 +115,7 @@ export class PublicworkflowComponent implements OnInit {
     let searchData = {
       "csysPotPublicName": this.searchContent
     }
-    this.httpService.postHttp("/csyspotpublic/listSearchCondition?size=5&page=" + currentPage).subscribe((data: any) => {
+    this.httpService.postHttp("/csyspotpublic/listSearchCondition?size=10&page=" + currentPage).subscribe((data: any) => {
       ////console.log(data)
       this.totalRecords = data.data.total;
       this.total = data.data.total;
@@ -273,7 +273,7 @@ export class PublicworkflowComponent implements OnInit {
             workFlowGroup: [data.csysPotGroupId, [Validators.required]],
             workDataGroup: [data.csysPotDataGroup],
             workFlowResource: [potrs],
-            workFlowPage: [potPage]
+            workFlowPage: [potPage,[Validators.required]]
           });
           this.form.updateValueAndValidity()
           this.spinning = false;

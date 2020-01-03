@@ -559,7 +559,7 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
     // });
 
     console.log("最终节点数据", this.controlArray);
-
+    this.drawOrganize()
   }
 
   addPoint() {
@@ -669,7 +669,8 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
           })
           //若无连接则删除节点
           this.deleteFlowPoint(nodeId);
-          this.deleteAuthorityByTransferId(nodeId)
+          this.deleteAuthorityByTransferId(nodeId);
+          this.deleting = false;
         } catch (e) {
           this.deleting = false;
           this.msg.warning("对不起，当前节点存在源节点或目标节点，请删除后重试！");
@@ -820,22 +821,38 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
   //新增节点
   insertPoint() {
     let nodeName = this.insertForm.value.addNodeName;
-    let params = {
+    //重名校验
+    let checkName = {
       "csysOrgPotName": nodeName,
-      "csysOrgStruceId": this.organizeId,
-      "csysOrgPotParentId": "-1"
+      "csysOrgStruceId": this.organizeId
     }
-    this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
-      console.log("节点新增成功", data);
-      let nodeId = data.data;
-      console.log("zeq", data)
-      //保存父节点用户和下面保存组织架构的先后顺序没有影响
-      this.saveUser(nodeId);
-      //新增组织架构节点
-      this.insertNodes(nodeId, nodeName);
-      //第三步：保存目标节点
-      this.saveTargetEevent.emit(nodeId);
+    this.httpService.postHttp("csysorgpot/condition", checkName).subscribe((checkData: any) => {
+
+      if (checkData.data.length > 0) {
+        this.msg.success(`请勿重复添加！`);
+        this.submitting = false;
+      } else {
+        let params = {
+          "csysOrgPotName": nodeName,
+          "csysOrgStruceId": this.organizeId,
+          "csysOrgPotParentId": "-1"
+        }
+        this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
+          console.log("节点新增成功", data);
+          let nodeId = data.data;
+          console.log("zeq", data)
+          //保存父节点用户和下面保存组织架构的先后顺序没有影响
+          this.saveUser(nodeId);
+          //新增组织架构节点
+          this.insertNodes(nodeId, nodeName);
+          //第三步：保存目标节点
+          this.saveTargetEevent.emit(nodeId);
+        });
+      }
+
     });
+
+
   }
 
   //新增组织架构节点
@@ -895,33 +912,48 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
         //根据标记设置父节点值，若为更新则设置为当前节点，否则父节点为-1
         let parentId = flag == "update" || flag == "insert" ? nodeId : "-1";
         //修改子节点的父节点
-        this.updateParentFlowpoint(currentControlArray[i].value, parentId, flag, i, currentControlArray.length - 1);
+         this.updateParentFlowpoint(currentControlArray[i].value, parentId, flag, i, currentControlArray.length - 1)
+       
+         
       }
     } else {
       //保存组织架构
       this.saveOragnize();
     }
   }
+ 
 
   //修改父节点（参数：子节点编号，父节点编号）
-  updateParentFlowpoint(id, parentId, flag, i, length) {
+  updateParentFlowpoint = (id, parentId, flag, i, length) =>{
     let targetParams = {
       "csysOrgPotId": id,
       "csysOrgPotParentId": parentId,//迁移目标
     };
-    this.httpService.putHttp(this.nodeUrl, targetParams).subscribe((data: any) => {
-      //console.log("父节点修改成功", data);
-      //更新组织架构连接
-      this.updateLinks(parentId, id, flag);
-      //保存父节点权限
-      /*  this.saveAuthority(transferId, control.authority);
-       //保存父节点权限页面
-       this.saveTransferPage(transferId, control.pageData); */
-      //父节点全部操作完后保存组织架构
-      if (i == length) {
-        this.saveOragnize();
+
+    //校验是否已经连接
+    this.httpService.postHttp("csysorgpot/condition", targetParams).subscribe((checkData: any) => {
+      console.log("bug检测", checkData)
+      if (checkData.data.length > 0) {
+        this.msg.success(`请勿重复连接！`);
+      } else {
+        this.httpService.putHttp(this.nodeUrl, targetParams).subscribe((data: any) => {
+          //console.log("父节点修改成功", data);
+          //更新组织架构连接
+          this.updateLinks(parentId, id, flag);
+          //保存父节点权限
+          /*  this.saveAuthority(transferId, control.authority);
+           //保存父节点权限页面
+           this.saveTransferPage(transferId, control.pageData); */
+          //父节点全部操作完后保存组织架构
+          if (i == length) {
+            this.saveOragnize();
+          }
+        });
       }
     });
+
+
+
   }
 
   //修改组织架构节点
@@ -995,15 +1027,28 @@ export class OrganizationalchartComponent implements OnInit, OnDestroy {
       "csysOrgPotId": targetId,//节点编号
       "csysOrgPotParentId": nodeId//父节点编号
     };
-    this.httpService.putHttp(this.nodeUrl, targetParams).subscribe((data: any) => {
-      console.log("父节点设置成功", data);
-      //组织架构添加节点连接
-      this.insertLinks(nodeId, targetId);
-      //父节点全部操作完后保存组织架构
-      if (i == length) {
-        this.OrganizeEevent.emit();
+
+    //校验是否已经完成连接
+    this.httpService.postHttp("csysorgpot/condition", targetParams).subscribe((checkData: any) => {
+      console.log("bug检测tty", checkData)
+      if (checkData.data.length > 0) {
+        this.msg.success(`请勿重复连接！`);
+      } else {
+        this.httpService.putHttp(this.nodeUrl, targetParams).subscribe((data: any) => {
+          console.log("父节点设置成功", data);
+          //组织架构添加节点连接
+          this.insertLinks(nodeId, targetId);
+          //父节点全部操作完后保存组织架构
+          if (i == length) {
+            this.OrganizeEevent.emit();
+          }
+        });
       }
     });
+
+
+
+
   }
 
 

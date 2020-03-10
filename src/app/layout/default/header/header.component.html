@@ -75,16 +75,16 @@
       <div>
         <div class="ant-notification-notice-message"><i nz-icon nzType="tool" nzTheme="twotone"></i>系统维护</div>
 
-        <div class="ant-notification-notice-description">
+        <!-- <div class="ant-notification-notice-description">
           {{releaseData.releaseMsg}}
-        </div>
+        </div> -->
         <br>
         <div class="ant-notification-notice-description">
-          发布说明：{{releaseData.releaseDesc}}
+          发布说明：系统已完成升级,请刷新页面完成升级，如已完成升级，请忽略。
         </div>
         <span class="ant-notification-notice-btn">
           <button nz-button nzType="primary" nzSize="small" (click)="gotoAlternateServer(releaseUrl)">
-            <span>立即前往</span>
+            <span>立即升级</span>
           </button>
         </span>
       </div>

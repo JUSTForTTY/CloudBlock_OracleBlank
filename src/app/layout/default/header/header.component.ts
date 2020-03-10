@@ -42,6 +42,7 @@ export class HeaderComponent implements OnInit {
 
     this.pathName = this.location.pathname + this.location.search;
     console.log("当前路由", this.pathName)
+    
   }
 
   getClock = () => {
@@ -135,7 +136,7 @@ export class HeaderComponent implements OnInit {
 
   gotoAlternateServer(url) {
 
-    window.open(url, '_self');
+    window.location.reload();
 
 
   }

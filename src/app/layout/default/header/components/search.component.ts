@@ -63,7 +63,7 @@ export class HeaderSearchComponent implements AfterViewInit,OnInit {
     if(!this.q){
       this.menuService.add([
         {
-          text: 'MES智能制造系统',
+          text: '利华生产系统',
           group: true,
           children: this.menuData
         }]);

@@ -119,7 +119,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                     });
                     if (noticeflag) {
                         this.notification.create('warning', '系统提示',
-                            '对不起，系统正在维护或网络波动，请稍后再试！');
+                            '对不起，系统正在维护或网络波动，请尝试刷新浏览器再进行使用！');
                     }
                     //this.goTo(`/${ev.status}`);
                 }
@@ -149,7 +149,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                     });
                     if (noticeflag) {
                         this.notification.create('warning', '系统提示',
-                            '对不起，系统正在维护或网络波动，请稍后再试！');
+                            '对不起，系统正在维护或网络波动，请尝试刷新浏览器再进行使用！');
                     }
 
 

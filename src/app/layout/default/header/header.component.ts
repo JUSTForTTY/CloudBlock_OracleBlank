@@ -60,10 +60,11 @@ export class HeaderComponent implements OnInit {
         console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
         if (!this.versionShow) {
           this.versionShow = true;
-          this.modalService.warning({
+          this.modalService.info({
             nzTitle: '系统升级',
             nzContent: "检测到系统有升级，请尽快刷新。点击确定按钮可自动刷新。",
             nzMaskClosable:true,
+            nzClosable:true,
             nzOnOk: () => this.gotoAlternateServer(),
             nzOnCancel: () => { this.versionShow = false; }
           });

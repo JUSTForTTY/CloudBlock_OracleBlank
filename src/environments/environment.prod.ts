@@ -11,5 +11,6 @@ export const environment = {
     useHash: false,
     logger:{
         level:2
-    }
+    },
+    version:`1`
 };

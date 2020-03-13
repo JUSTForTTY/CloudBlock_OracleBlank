@@ -12,7 +12,7 @@ const home_url = environment.HOME_URL;
   selector: 'layout-header',
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers:[NzNotificationService]
+  providers: [NzNotificationService]
 })
 export class HeaderComponent implements OnInit {
   searchToggleStatus: boolean;
@@ -27,6 +27,8 @@ export class HeaderComponent implements OnInit {
   tplRef: TemplateRef<any>;
   @ViewChild('tplContent')
   tplContentRef: TemplateRef<any>;
+  //定时器
+  private nzTimer;
 
 
   constructor(public settings: SettingsService,
@@ -35,14 +37,45 @@ export class HeaderComponent implements OnInit {
     private modalService: NzModalService,
     private route: ActivatedRoute,
     private location: PlatformLocation) {
-    this.versiontimer = setTimeout(this.getClock, 0);
+    // this.versiontimer = setTimeout(this.getClock, 0);
   }
-
+  version = environment.version;
+  versionShow = false;
   ngOnInit() {
 
     this.pathName = this.location.pathname + this.location.search;
     console.log("当前路由", this.pathName)
-    
+    this.versionUpdate();
+    this.nzTimer = setInterval(() => this.versionUpdate(), 60 * 1000)
+  }
+  versionUpdate() {
+
+    let version = {
+    };
+    console.log("版本发布-本地", this.version);
+    this.httpService.postHttpAllUrl("http://172.16.8.107/cloudblock_oracle/release/info", version).subscribe((data: any) => {
+      console.log("版本发布", data)
+
+      if (data.data.csysReleaseVersion !== this.version) {
+        console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
+        if (!this.versionShow) {
+          this.versionShow = true;
+          this.modalService.warning({
+            nzTitle: '系统升级',
+            nzContent: "检测到系统有升级，请尽快刷新。点击确定按钮可自动刷新。",
+            nzMaskClosable:true,
+            nzOnOk: () => this.gotoAlternateServer(),
+            nzOnCancel: () => { this.versionShow = false; }
+          });
+        }
+
+      }
+
+    }, (err) => {
+      console.log("版本发布检测-接口异常");
+
+    });
+
   }
 
   getClock = () => {
@@ -83,12 +116,13 @@ export class HeaderComponent implements OnInit {
     let version = {
       home_url: home_url
     };
+    console.log("版本发布", version);
     this.httpService.postHttpAllUrl("http://172.16.8.107/cloudblock_oracle/release/info", version).subscribe((data: any) => {
 
       this.releaseData = data.data;
       this.releaseUrl = this.releaseData.releaseUrl + this.pathName;
       console.log("版本发布数据", this.releaseData);
-      
+
       switch (this.releaseData.switchSystem) {
         //提醒
         case "1":
@@ -134,10 +168,15 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  gotoAlternateServer(url) {
+  gotoAlternateServer(url?) {
 
     window.location.reload();
 
 
+  }
+  ngOnDestroy() {
+    if (this.nzTimer) {
+      clearInterval(this.nzTimer);
+    }
   }
 }

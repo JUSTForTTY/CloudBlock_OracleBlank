@@ -16,5 +16,6 @@ export const environment = {
     useHash: false,
     logger:{
         level:5                                 
-    }
+    },
+    version:`1`
 };

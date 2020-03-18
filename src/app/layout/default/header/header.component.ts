@@ -55,21 +55,27 @@ export class HeaderComponent implements OnInit {
     console.log("版本发布-本地", this.version);
     this.httpService.postHttpAllUrl("http://172.16.8.107/cloudblock_oracle/release/info", version).subscribe((data: any) => {
       console.log("版本发布", data)
+      //线上版本大于本地，则提醒升级
+      try {
+        if (parseInt(data.data.csysReleaseVersion) > parseInt(this.version)) {
+          console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
+          if (!this.versionShow) {
+            this.versionShow = true;
+            this.modalService.create({
+              nzTitle: '系统升级',
+              nzContent: "检测到系统有升级，请尽快刷新。点击确定按钮可自动刷新。",
+              nzClosable: true,
+              nzOnOk: () => this.gotoAlternateServer(),
+              nzOnCancel: () => { this.versionShow = false; }
+            });
+          }
 
-      if (data.data.csysReleaseVersion !== this.version) {
-        console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
-        if (!this.versionShow) {
-          this.versionShow = true;
-          this.modalService.warning({
-            nzTitle: '系统升级',
-            nzContent: "检测到系统有升级，请尽快刷新。点击确定按钮可自动刷新。",
-            nzMaskClosable:true,
-            nzOnOk: () => this.gotoAlternateServer(),
-            nzOnCancel: () => { this.versionShow = false; }
-          });
         }
-
+      } catch (error) {
+        console.error('升级检测error',error);
+        
       }
+
 
     }, (err) => {
       console.log("版本发布检测-接口异常");

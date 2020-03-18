@@ -3693,9 +3693,9 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     /*新增工作流迁移条件*/
 
-    // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则
+    // 目标为X-RAY_SMT、X-RAY_PTH、FPT，不需要自动生成规则；当前节点为PPA、PPA-TS不需要自动生成规则
 
-    if (targetPot.data.csysPotStyleId != "LHCsysPotStyle20191111014750540000023") {
+    if (targetPot.data.csysPotStyleId != "LHCsysPotStyle20191111014750540000023"&&sourcePot.data.csysPotStyleId!="LHCsysPotStyle20190723111446098000016"&&sourcePot.data.csysPotStyleId!="LHCsysPotStyle20190803014643552000017") {
 
       //1、查询是否存在规则设定
 

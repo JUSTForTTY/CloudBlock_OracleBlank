@@ -14,9 +14,10 @@ import { YieldGaugeComponent } from './yield-gauge/yield-gauge.component';
 import { ProlineErrormsgComponent } from './proline-errormsg/proline-errormsg.component';
 import { WoOrderInfoComponent } from './wo-order-info/wo-order-info.component';
 import { PerformanceTestComponent } from './performance-test/performance-test.component';
+import { YieldBarlineV2Component } from './yield-barline-v2/yield-barline-v2.component';
 
 @NgModule({
-  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent],
+  declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent, YieldBarlineV2Component],
   imports: [
     CommonModule,
     DashboardRoutingModule,

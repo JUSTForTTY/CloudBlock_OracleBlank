@@ -1,0 +1,36 @@
+<nz-card style="background:#192B53;" [nzBordered]="false" [nzTitle]="salesTitle">
+  <ng-template #salesTitle>
+    <div style="background:#192B53;color:#1e91de;font-size: 18px">
+      <i nz-icon nzType="double-right" nzTheme="outline"></i>
+      质量效率看板
+      <!-- <small class="text-sm font-weight-normal">共{{dataSet.length}}条工单</small> -->
+    </div>
+
+  </ng-template>
+  <v-chart [forceFit]="forceFit" [height]="height" [animate]="true" [theme]="theme">
+    <v-tooltip></v-tooltip>
+    <v-axis dataKey="value" [show]="false"></v-axis>
+    <v-legend></v-legend>
+
+    <v-view [data]="data">
+      
+      <!-- <v-stack-bar position="类型*产出" [color]="color" [label]="stackLabel"></v-stack-bar> -->
+      <v-interval position="time*数量" [label]="stackLabel"
+      [color]="polygonOpts.color"
+      [adjust]="polygonOpts.adjust"
+      ></v-interval>
+      
+
+    </v-view>
+
+    <v-view [data]="yieldData">
+      <v-axis  [show]="false"></v-axis> <!-- 用来更改legend -->
+      <v-smooth-line position="time*value"  [color]="potcolor" shape="smooth"></v-smooth-line>
+      <v-point position="time*value"  [color]="potcolor"  shape="circle" [label]="pointLabel"></v-point>
+    </v-view>
+ 
+
+
+  </v-chart>
+
+</nz-card>

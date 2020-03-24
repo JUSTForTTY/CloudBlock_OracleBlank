@@ -122,6 +122,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   show = true;
   queryParamStr = '';
   path;
+  isNeedRcVisible=false;
+  isNeedRcValue=false;
   //定义途程图数据
   hierarchialGraph = { nodes: [], links: [], clusters: [] };
 
@@ -429,6 +431,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       potAttribute: [null],
       potSkill: [null],
       excrete: [false],
+      isNeedRc:[false],
       addNodeName: [null, [Validators.required]],
       addNodeName1: [null, [Validators.required]],
       addNodeName2: ["1", [Validators.required]],
@@ -438,6 +441,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       nodeEditName: [null, [Validators.required]],
       addNodeName2: [null],
       excrete: [false],
+      isNeedRc:[false],
       opPot: [null],
       potAttribute: [null],
       potSkill: [null],
@@ -513,7 +517,12 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   clickNode(data) {
     this.resourceData = [];
     this.oldNodeName = data.label;
-    console.log("点击数据", data)
+    console.log("点击数据", data);
+    if(data.styleId=='LHCsysPotStyle20191111014750540000023'){
+      this.isNeedRcVisible=true;
+    }else{
+      this.isNeedRcVisible=false;
+    }
     //获取当前节点的资源
     if (data.publicPotId) {
       this.httpService.postHttp("/tresource/condition", { "csysPotPublicId": data.publicPotId }).subscribe((data: any) => {
@@ -552,6 +561,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       } else {
         potdata.data[0].csysPotIsExcrete = false;
       }
+      let needRcFlag=false;
+      console.log("查询不良送检标记",potdata.data[0].csysPotReworkIsrc.toString())
+      if(potdata.data[0].csysPotReworkIsrc.toString()=='1'){
+        this.isNeedRcValue=true;
+        needRcFlag=true;
+      }
+      console.log("查询不良送检标记需要",needRcFlag)
       //初始化
       this.editForm = this.fb.group({
         //addNodeName: [null, [Validators.required]],
@@ -564,6 +580,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
         excrete: [potdata.data[0].csysPotIsExcrete],
+        isNeedRc:[needRcFlag]
         //nodeEditName1: [data.label, [Validators.required]]
       });
 
@@ -641,7 +658,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         });
 
       });
-      this.isSpinning = false;
+       
 
     });
 
@@ -651,6 +668,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     //控制站点显示隐藏
     this.workflowFilter(data);
 
+    this.isGraphSpinning=false;
   }
 
   //获取当前工序的目标工序
@@ -691,6 +709,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   //点击新建工序
   addPoint() {
     this.formEditStatus = false;
+    this.isNeedRcVisible=false;
     this.formInit();
   }
 
@@ -830,6 +849,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         //let rId = this.insertForm.value.resource;
         let skillIds = this.insertForm.value.potSkill;
         let isExcrete = this.insertForm.value.excrete;
+        let isNeedRcFlag=this.insertForm.value.isNeedRc;
         //当选择资源的时候必须选择工序
         // if (rId && !opId) {
         //   this.msg.error("选择资源，必须选工序");
@@ -838,6 +858,9 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         //   return;
         // }
         if (isExcrete) isExcrete = 1; else isExcrete = 0;
+        console.log("检测bug数据",isNeedRcFlag);
+        if (isNeedRcFlag) isNeedRcFlag = 1; else isNeedRcFlag = 0;
+        console.log("检测bug数据",isNeedRcFlag);
         //第一步从公共工序获取样式名称
         this.httpService.getHttp("/csyspotpublic/" + this.insertForm.value.addNodeName).subscribe((data1: any) => {
           let ruleparam = {
@@ -861,7 +884,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
-                "csysPotIsExcrete": isExcrete
+                "csysPotIsExcrete": isExcrete,
+                "csysPotReworkIsrc":isNeedRcFlag
               }
             } else {
               params = {
@@ -873,7 +897,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysWorkflowName": this.workflowName,
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
-                "csysPotIsExcrete": isExcrete
+                "csysPotIsExcrete": isExcrete,
+                "csysPotReworkIsrc":isNeedRcFlag
               }
             }
 
@@ -1088,9 +1113,14 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     let opPotId = this.editForm.value.opPot;
     let skillIds = this.editForm.value.potSkill;
     let isExcrete = this.editForm.value.excrete;
+    let isNeedRcFlag=this.editForm.value.isNeedRc;
+
     if (this.editForm.value.potAttribute == null) this.editForm.value.potAttribute = "";
     console.log('nodeRule', this.editForm)
     if (isExcrete) isExcrete = 1; else isExcrete = 0;
+    console.log("检测新增数据",isNeedRcFlag);
+    if (isNeedRcFlag) isNeedRcFlag = 1; else isNeedRcFlag = 0;
+    console.log("检测新增数据",isNeedRcFlag);
     console.log("isExcrete", isExcrete);
     let params = {
       "csysPotId": nodeId,
@@ -1098,7 +1128,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       "csysPotType": nodeType,
       "csysPotAtrribute": this.editForm.value.potAttribute,
       "csysTrsRuleId": nodeRule,
-      "csysPotIsExcrete": isExcrete
+      "csysPotIsExcrete": isExcrete,
+      "csysPotReworkIsrc":isNeedRcFlag
     };
     console.log("put1", JSON.parse(JSON.stringify(params)))
     //第一步：修改工序信息
@@ -3207,6 +3238,14 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.targetNodeList1 = []
     this.httpService.getHttp("csyspotpublic" + "/" + potid).subscribe((potdata: any) => {
       let groupToId = []
+      console.log("公共节点数据",potdata)
+      //xray节点默认支持不良品送检
+      if(potdata.data.csysPotStyleId=='LHCsysPotStyle20191111014750540000023'){
+        this.isNeedRcVisible=true;
+        this.isNeedRcValue=true;
+      }else{
+        this.isNeedRcVisible=false;
+      }
       //用工序组id去工序组权限表中拿取目标工序组id
       let gropreparams = {
         csysPotGroupFromId: potdata.data.csysPotGroupId
@@ -4932,8 +4971,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     //3-1、xray检查
     this.xraypotCheck("LHCsysPotStyle20191111014750540000023");
 
-    //3-2、xray目标检查
-    this.xraytrsPotCheck("LHCsysPotStyle20191111014750540000023");
+    //3-2、xray目标检查,此逻辑去除，允许抽检站点连接抽检站
+    //this.xraytrsPotCheck("LHCsysPotStyle20191111014750540000023");
 
     //4、节点迁移条件校验
     this.potTrsConCheck();
@@ -4976,7 +5015,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
                 console.log("工作流检测-xray目标节点", xraypotdata);
 
-                if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002') {
+                if (xraypotdata.data[0].csysPotStyleId != 'SUCUCsysPotStyle20190225000007' && xraypotdata.data[0].csysPotStyleId != 'LHCsysPotStyle20190620042709661000002'&&xraypotdata.data[0].csysPotStyleId!='LHCsysPotStyle20191111014750540000023') {
                   this.workflowStatus = "error";
                   this.notification.create(
                     'error',

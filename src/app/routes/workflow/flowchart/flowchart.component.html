@@ -207,6 +207,12 @@
               </nz-form-control>
             </nz-form-item>
 
+            <nz-form-item *ngIf="isNeedRcVisible">
+              <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+              </nz-form-control>
+            </nz-form-item>
 
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               {{control.potType}}
@@ -404,6 +410,13 @@
                     <nz-form-label nzXs="24" nzSm="7">是否拆件</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <nz-switch formControlName="excrete" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
+                    </nz-form-control>
+                  </nz-form-item>
+
+                  <nz-form-item *ngIf="isNeedRcVisible">
+                    <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
+                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                      <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
                     </nz-form-control>
                   </nz-form-item>
 

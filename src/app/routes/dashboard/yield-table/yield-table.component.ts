@@ -29,14 +29,14 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    
-    if(this.nzPageIndex<this.nzTotalPage){
+
+    if (this.nzPageIndex < this.nzTotalPage) {
       this.nzPageIndex++;
-    }else{
-      this.nzPageIndex=1;
+    } else {
+      this.nzPageIndex = 1;
     }
     console.log("分页信息", this.nzPageIndex)
-    
+
     this.timer = setTimeout(this.setData, 8000);
   }
 
@@ -44,7 +44,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     if (this.wotimer) {
       clearTimeout(this.wotimer);
     }
-    
+
     this.getWoWipData();
 
     this.wotimer = setTimeout(this.getWipData, 120000);
@@ -57,17 +57,55 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
   }
 
+  waitTableData = [];
+  woWipData = [];
   getWoWipData() {
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode+"?prolineType="+this.prolineType).subscribe((woWipData: any) => {
+    //在制
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
+      this.woWipData = woWipData.data;
 
-      this.woWipTableData = woWipData.data;
-      console.log("产线报表-在制工单数据", this.woWipTableData)
-      this.woWipDataTransform();
+      console.log("产线报表-工单在制数据", this.woWipTableData)
+      //待排
+      this.httpService.getHttp("/yieldDashboard/woPlanData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((waitData: any) => {
+
+        console.log("产线报表-工单待排数据2", JSON.parse(JSON.stringify(waitData.data)))
+        this.waitTableData = waitData.data;
+        //组合数据
+        this.groupData();
+        this.woWipDataTransform();
+      }, (err) => {
+        console.log("看板数据-接口异常2");
+
+      });
+
     }, (err) => {
-      console.log("看板数据-接口异常");
+      console.log("看板数据-接口异常1");
 
     });
 
+
+
+  }
+  groupData() {
+    let woCodes = [];
+    this.woWipData.forEach(element => {
+      woCodes.push(element['woCode']);
+    });
+    for (let index = 0; index < this.waitTableData.length; index++) {
+      const element = this.waitTableData[index];
+      if (woCodes.indexOf(element['woCode'])>=0) {
+        this.waitTableData.splice(index, 1);
+        index--;
+      } else {
+        element['opCode'] = element['sectionCode']
+        element['produceNumber'] = element['outputNumber']
+        element['smtWoState'] = "待排产"
+        element['smtRealWorkDate'] =element['wiStartTime']==''?"———— ————":element['wiStartTime']
+        element['smtCompleteWorkDate'] = element['wiOverTime']==''?"———— ————":element['wiStartTime']
+        
+      }
+    }
+    this.woWipTableData = [...this.waitTableData, ...this.woWipData]
   }
 
   woWipDataTransform() {
@@ -76,7 +114,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     //当数据为空时，填充数据
     if (wpDatalength == 0) {
       for (let i = 0; i < 5; i++) {
-        this.woWipTableData.push({});i
+        this.woWipTableData.push({}); i
       }
     } else {
       let mode = wpDatalength % this.nzPageSize;
@@ -97,10 +135,10 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
     }
   }
-    ngOnDestroy(): void {
-      clearInterval(this.timer);
-      clearInterval(this.wotimer);
-       
-    }
+  ngOnDestroy(): void {
+    clearInterval(this.timer);
+    clearInterval(this.wotimer);
 
   }
+
+}

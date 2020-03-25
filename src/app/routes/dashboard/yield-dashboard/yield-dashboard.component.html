@@ -49,7 +49,7 @@
 
       </div>
       <div nz-col nzSpan="16">
-        <app-yield-barline [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-barline>
+        <app-yield-barline-v2 [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-barline-v2>
       </div>
       <div nz-col nzSpan="4" class="shiftInfo">
 
@@ -63,7 +63,7 @@
             班次
           </div>
           <div nz-col nzSpan="14" nzOffset="2">
-            {{shiftInfo.shiftCode}}
+            {{shiftInfo?.shiftCode}}
           </div>
         </div>
 

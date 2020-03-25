@@ -186,9 +186,8 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
       //new
       this.data = [];
       this.timeslot.forEach(timename => {
-        let dataitem = {
-          "计划": Math.floor(Math.random() * (1 - 80)) + 80
-        }
+        let dataitem = {}
+        dataitem['计划'] = prolineData.data.productPlans[timename]
         dataitem['time'] = timename
         dataitem['不良品'] = prolineData.data.productBads[timename]
         dataitem['良品'] = prolineData.data.productGoods[timename]
@@ -211,7 +210,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   }];
 
   colorMap = {
-    '计划': '#DBDBDB',
+    '计划': '#63B8FF',
     '良品': '#92D050',
     '不良品': '#ff4d4f',
   };

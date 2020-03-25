@@ -15,6 +15,7 @@ import { ProlineErrormsgComponent } from './proline-errormsg/proline-errormsg.co
 import { WoOrderInfoComponent } from './wo-order-info/wo-order-info.component';
 import { PerformanceTestComponent } from './performance-test/performance-test.component';
 import { YieldBarlineV2Component } from './yield-barline-v2/yield-barline-v2.component';
+import { PipeModule } from 'ngx-block-core';
 
 @NgModule({
   declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent, YieldBarlineV2Component],
@@ -22,7 +23,7 @@ import { YieldBarlineV2Component } from './yield-barline-v2/yield-barline-v2.com
     CommonModule,
     DashboardRoutingModule,
     CommonModule,
-    ColorPickerModule,NgxGraphModule, NgxChartsModule,FormsModule,SharedModule
+    ColorPickerModule,NgxGraphModule, NgxChartsModule,FormsModule,SharedModule,PipeModule
     
   ]
 })

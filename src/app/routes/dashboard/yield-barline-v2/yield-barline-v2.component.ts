@@ -105,8 +105,8 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   height: number = 490;
   color;
   potcolor;
-  stackLabel  = ['数量*类型', function (val,类型) {
-    if(类型=='计划'){
+  stackLabel = ['数量*类型', function (val, 类型) {
+    if (类型 == '计划') {
       return {
         offset: -20,
         textStyle: {
@@ -116,11 +116,11 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
         formatter: function formatter(text) {
-          if(text==='0') return '';
+          if (text === '0') return '';
           return text;
         }
       };
-    }else{
+    } else if (类型 == '良品') {
       return {
         position: 'middle',
         offset: 0,
@@ -131,12 +131,26 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
         formatter: function formatter(text) {
-          if(text==='0') return '';
+          if (text === '0') return '';
+          return text;
+        }
+      };
+    } else {
+      return {
+        offset: 0,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 16,
+          shadowBlur: 2,
+          shadowColor: 'rgba(0, 0, 0, .45)'
+        },
+        formatter: function formatter(text) {
+          if (text === '0') return '';
           return text;
         }
       };
     }
-    
+
   }];
   pointLabel = pointLabel;
   axisOpts = axisOpts;
@@ -158,7 +172,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    
+
     this.getProlineData();
   }
 

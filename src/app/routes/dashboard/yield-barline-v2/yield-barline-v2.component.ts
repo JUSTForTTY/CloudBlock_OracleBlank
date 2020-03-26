@@ -116,6 +116,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
         formatter: function formatter(text) {
+          if(text==='0') return '';
           return text;
         }
       };
@@ -130,6 +131,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
         formatter: function formatter(text) {
+          if(text==='0') return '';
           return text;
         }
       };

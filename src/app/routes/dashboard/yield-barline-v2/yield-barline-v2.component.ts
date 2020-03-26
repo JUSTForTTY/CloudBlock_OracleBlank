@@ -40,22 +40,7 @@ const standardOutputSourceData = [
 
 
 
-const stackLabel = ['产出', function (val) {
 
-  return {
-    position: 'middle',
-    offset: 0,
-    textStyle: {
-      fill: '#fff',
-      fontSize: 12,
-      shadowBlur: 2,
-      shadowColor: 'rgba(0, 0, 0, .45)'
-    },
-    formatter: function formatter(text) {
-      return text;
-    }
-  };
-}]
 
 const pointLabel = ['value', function (val) {
 
@@ -120,7 +105,37 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   height: number = 490;
   color;
   potcolor;
-  stackLabel = stackLabel;
+  stackLabel  = ['数量*类型', function (val,类型) {
+    if(类型=='计划'){
+      return {
+        offset: -20,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 16,
+          shadowBlur: 2,
+          shadowColor: 'rgba(0, 0, 0, .45)'
+        },
+        formatter: function formatter(text) {
+          return text;
+        }
+      };
+    }else{
+      return {
+        position: 'middle',
+        offset: 0,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 16,
+          shadowBlur: 2,
+          shadowColor: 'rgba(0, 0, 0, .45)'
+        },
+        formatter: function formatter(text) {
+          return text;
+        }
+      };
+    }
+    
+  }];
   pointLabel = pointLabel;
   axisOpts = axisOpts;
   adjust = [{
@@ -141,22 +156,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.stackLabel = ['数量', function (val) {
-
-      return {
-        position: 'middle',
-        offset: 0,
-        textStyle: {
-          fill: '#fff',
-          fontSize: 16,
-          shadowBlur: 2,
-          shadowColor: 'rgba(0, 0, 0, .45)'
-        },
-        formatter: function formatter(text) {
-          return text;
-        }
-      };
-    }]
+    
     this.getProlineData();
   }
 

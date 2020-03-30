@@ -207,10 +207,42 @@
               </nz-form-control>
             </nz-form-item>
 
+            <nz-form-item >
+              <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair"  nzShowSearch nzAllowClear>
+                  <nz-option nzLabel="支持" nzValue="1">
+                  </nz-option>
+                  <nz-option nzLabel="不支持" nzValue="0">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item >
+              <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair"  nzShowSearch nzAllowClear>
+                  <nz-option nzLabel="支持" nzValue="1">
+                  </nz-option>
+                  <nz-option nzLabel="不支持" nzValue="0">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+
             <nz-form-item *ngIf="isNeedRcVisible">
               <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
               <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc"  nzShowSearch nzAllowClear>
+                  <nz-option nzLabel="支持" nzValue="1">
+                  </nz-option>
+                  <nz-option nzLabel="不支持" nzValue="0">
+                  </nz-option>
+                </nz-select>
               </nz-form-control>
             </nz-form-item>
 
@@ -413,11 +445,44 @@
                     </nz-form-control>
                   </nz-form-item>
 
+
+                  <nz-form-item >
+                    <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
+                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                      <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                      <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair"  nzShowSearch nzAllowClear>
+                        <nz-option nzLabel="支持" nzValue="1">
+                        </nz-option>
+                        <nz-option nzLabel="不支持" nzValue="0">
+                        </nz-option>
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+      
+                  <nz-form-item >
+                    <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
+                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                      <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                      <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair"  nzShowSearch nzAllowClear>
+                        <nz-option nzLabel="支持" nzValue="1">
+                        </nz-option>
+                        <nz-option nzLabel="不支持" nzValue="0">
+                        </nz-option>
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+
                   <nz-form-item *ngIf="isNeedRcVisible">
                     <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+                      <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc" nzShowSearch nzAllowClear>
+                        <nz-option nzLabel="支持" nzValue="1">
+                        </nz-option>
+                        <nz-option nzLabel="不支持" nzValue="0">
+                        </nz-option>
+                      </nz-select>
                     </nz-form-control>
+                    
                   </nz-form-item>
 
                   <ng-container *ngIf="formEditEnabled">

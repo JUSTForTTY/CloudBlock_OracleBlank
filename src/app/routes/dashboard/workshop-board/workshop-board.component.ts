@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
+import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
 @Component({
   selector: 'app-workshop-board',
   templateUrl: './workshop-board.component.html',
@@ -9,16 +10,38 @@ import { ActivatedRoute } from '@angular/router';
 export class WorkshopBoardComponent implements OnInit {
   //时间定时器
   private nowTimeTimer;
-  nowTime= Date.now();
-  workshopName="abcc";
-  constructor(private pageService:PageService,private route:ActivatedRoute) { }
+  nowTime = Date.now();
+  workshopName = "abcc";
+  @ViewChild('yieldDiv') yieldDiv: ElementRef;
+  yieldDivHeight
+  constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.getRouteParam();
-    this.nowTimeTimer = setInterval(() => this.nowTime= Date.now(), 1000)
+    this.autoHeight();
+    this.nowTimeTimer = setInterval(() => this.nowTime = Date.now(), 1000)
+
+
   }
-  queryParamStr=""
-  getRouteParam(){
+  /**
+   * 自动设置图表高度
+   */
+  autoHeight() {
+    setTimeout(() => {
+      this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10;
+    }, 10);
+    console.log('yieldDivHeight', this.yieldDivHeight)
+    observableFromEvent(window, 'resize')
+      .subscribe((event) => {
+        // 操作
+        this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10;
+        console.log('yieldDivHeight', this.yieldDivHeight)
+
+      });
+  }
+  queryParamStr = ""
+
+  getRouteParam() {
     let path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, path);

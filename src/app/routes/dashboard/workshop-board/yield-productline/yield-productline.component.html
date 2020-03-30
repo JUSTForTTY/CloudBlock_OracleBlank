@@ -1,3 +1,6 @@
-<p>
-  yield-productline works!
-</p>
+<v-chart  [forceFit]="forceFit" [height]="height" [data]="goodBadData" [theme]="theme">
+  <v-tooltip></v-tooltip>
+  <v-axis></v-axis>
+  <v-legend></v-legend>
+  <v-stack-bar position="类型*产出" color="name"></v-stack-bar>
+</v-chart>

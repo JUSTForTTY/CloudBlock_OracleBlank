@@ -1,4 +1,4 @@
-<div class="chartContainer" style="overflow-x: hidden;">
+<div class="chartContainer" >
 
   <div nz-row style="height: 10%;">
     <!-- 头部 -->
@@ -27,28 +27,35 @@
       </div>
     </div>
   </div>
-  <div nz-row style="color: aliceblue;height: 50%; border:1px solid #c1eb06;">
+  <div  nz-row style="color: aliceblue;height: 50%; border:1px solid #c1eb06;">
     <!-- 上层  -->
-    <div nz-col nzSpan="12" style="height: 100%;">
+    <div #yieldDiv nz-col nzSpan="12" style=" height: 100%;border:1px solid #c1eb06;padding: 5px;">
       <!-- 上层 左  -->
-      1
+      <app-yield-productline [height]='yieldDivHeight'></app-yield-productline>
     </div>
-    <div nz-col nzSpan="12" style="height: 100%;">
+    <div nz-col nzSpan="12" style="height: 100%;border:1px solid #c1eb06;">
       <!-- 上层 右 再分左右  -->
       <div nz-row style="max-height: 40%;">
         <div nz-col nzSpan="12">
-          2
+          <app-bad-today></app-bad-today>
         </div>
         <div nz-col nzSpan="12">
-          3
+          <app-people-today></app-people-today>
         </div>
       </div>
       <div nz-row style="max-height: 60%;">
-        4
+        <app-yield-daily></app-yield-daily>
       </div>
     </div>
   </div>
   <div nz-row style="color: aliceblue;height: 40%; border:1px solid #c1eb06;">
 
+
+    <div nz-col nzSpan="12">
+      <app-plan-table></app-plan-table>
+    </div>
+    <div nz-col nzSpan="12">
+      <app-error-table></app-error-table>
+    </div>
   </div>
 </div>

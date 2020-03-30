@@ -20,7 +20,6 @@ import { PipeModule } from 'ngx-block-core';
 @NgModule({
   declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent, YieldBarlineV2Component],
   imports: [
-    CommonModule,
     DashboardRoutingModule,
     CommonModule,
     ColorPickerModule,NgxGraphModule, NgxChartsModule,FormsModule,SharedModule,PipeModule

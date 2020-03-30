@@ -13,6 +13,8 @@ export class WorkshopBoardComponent implements OnInit {
   nowTime = Date.now();
   workshopName = "abcc";
   @ViewChild('yieldDiv') yieldDiv: ElementRef;
+  @ViewChild('yieldDiv2') yieldDiv2: ElementRef;
+
   yieldDivHeight = 400;
   constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
@@ -28,13 +30,13 @@ export class WorkshopBoardComponent implements OnInit {
    */
   autoHeight() {
     setTimeout(() => {
-      this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10;
+      this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
       console.log('yieldDivHeight1', this.yieldDivHeight)
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
-        this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10;
+        this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
         console.log('yieldDivHeight2', this.yieldDivHeight)
 
       });

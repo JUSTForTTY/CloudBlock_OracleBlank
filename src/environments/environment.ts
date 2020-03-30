@@ -17,5 +17,5 @@ export const environment = {
     logger:{
         level:5                                 
     },
-    version:`1`
+    version:`10`
 };

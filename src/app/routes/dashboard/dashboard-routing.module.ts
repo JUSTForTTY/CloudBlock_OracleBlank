@@ -7,7 +7,7 @@ const routes: Routes = [
   { path: 'yieldDashboard', component: YieldDashboardComponent, data: { title: '良率报表' } },
   { path: 'performancetest', component: PerformanceTestComponent, data: { title: '性能测试' } },
   {
-    path: 'workshopBoard',
+    path: 'workshopboard',
     loadChildren: './workshop-board/workshop-board.module#WorkshopBoardModule'
   },
 ];

@@ -14,7 +14,6 @@ export class YieldProductlineComponent implements OnInit {
     return '#92D050';
   }]
   stackLabel = ['产出*name', function (val, line) {
-    console.log(val, line)
     if (line == '良品') {
       return {
         position: 'middle',

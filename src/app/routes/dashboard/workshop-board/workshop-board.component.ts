@@ -33,15 +33,17 @@ export class WorkshopBoardComponent implements OnInit {
   autoHeight() {
     setTimeout(() => {
       this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-      this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight - 5;
+      this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
       console.log('yieldDivHeight1', this.yieldDivHeight)
+      console.log('roundDivHeight', this.roundDivHeight)
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-        this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight - 5;
+        this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
         console.log('yieldDivHeight2', this.yieldDivHeight)
+        console.log('roundDivHeight', this.roundDivHeight)
 
       });
   }

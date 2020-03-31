@@ -48,15 +48,27 @@
     <div nz-col nzSpan="12" style=" height: 100%;border:0px solid #c1eb06;">
       <!-- 上层 右 再分左右  -->
 
-      <div #roundDiv nz-row style="height: 40%; background:#192B53;">
-        <div nz-col nzSpan="12" >
+      <div #roundDiv nz-row style="height: 50%; background:#192B53; border:1px solid #c1eb06;">
+        <div nz-col nzSpan="12" style="height: 100%; border:1px solid #c1eb06;">
+          <div style="height: 15%;">
+            <h2 style="color:#1e91de;text-align: center;font-size: 16px;">
+
+              今日线体良率情况
+            </h2>
+          </div>
           <app-bad-today [height]="roundDivHeight"></app-bad-today>
         </div>
         <div nz-col nzSpan="12">
-          <app-people-today></app-people-today>
+          <div style="height: 10%;">
+            <h2 style="color:#1e91de;text-align: center;font-size: 20px;">
+
+              <!-- 今日在岗情况 -->
+            </h2>
+          </div>
+          <!-- <app-people-today [height]="roundDivHeight"></app-people-today> -->
         </div>
       </div>
-      <div nz-row style="height: 60%;background:#192B53;">
+      <div nz-row style="height: 50%;background:#192B53;">
         <app-yield-daily></app-yield-daily>
       </div>
     </div>

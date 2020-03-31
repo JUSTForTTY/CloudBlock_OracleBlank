@@ -1,25 +1,23 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 const sourceData = [
-  { item: '事例一', count: 40 },
-  { item: '事例二', count: 21 },
-  { item: '事例三', count: 17 },
-  { item: '事例四', count: 13 },
-  { item: '事例五', count: 9 }
+  { item: '关键缺陷', count: 17 },
+  { item: '主要缺陷', count: 40 },
+  { item: '次要缺陷', count: 21 },
+
 ];
 
 const scale = [{
-  dataKey: 'percent',
+  dataKey: 'count',
   min: 0,
-  formatter: '.0%',
 }];
 
 const dv = new DataSet.View().source(sourceData);
 dv.transform({
-  type: 'percent',
+  type: 'count',
   field: 'count',
   dimension: 'item',
-  as: 'percent'
+  as: 'count'
 });
 const data = dv.rows;
 @Component({
@@ -31,7 +29,7 @@ const data = dv.rows;
 
 
 export class BadTodayComponent implements OnInit {
-
+  theme = require('assets/js/chartstheme.js');
   constructor() { }
 
   ngOnInit() {
@@ -44,8 +42,8 @@ export class BadTodayComponent implements OnInit {
     stroke: "#fff",
     lineWidth: 1
   };
-  labelConfig = ['percent', {
-    offset: -40,
+  labelConfig = ['count', {
+    offset: -30,
     textStyle: {
       rotate: 0,
       textAlign: 'center',

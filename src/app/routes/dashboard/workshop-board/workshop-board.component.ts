@@ -14,8 +14,10 @@ export class WorkshopBoardComponent implements OnInit {
   workshopName = "abcc";
   @ViewChild('yieldDiv') yieldDiv: ElementRef;
   @ViewChild('yieldDiv2') yieldDiv2: ElementRef;
+  @ViewChild('roundDiv') roundDiv: ElementRef;
 
   yieldDivHeight = 400;
+  roundDivHeight = 200;
   constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -31,12 +33,14 @@ export class WorkshopBoardComponent implements OnInit {
   autoHeight() {
     setTimeout(() => {
       this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
+      this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight - 5;
       console.log('yieldDivHeight1', this.yieldDivHeight)
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
+        this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight - 5;
         console.log('yieldDivHeight2', this.yieldDivHeight)
 
       });

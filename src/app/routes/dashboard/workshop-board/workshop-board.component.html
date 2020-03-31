@@ -48,9 +48,9 @@
     <div nz-col nzSpan="12" style=" height: 100%;border:0px solid #c1eb06;">
       <!-- 上层 右 再分左右  -->
 
-      <div nz-row style="height: 40%; background:#192B53;">
-        <div nz-col nzSpan="12">
-          <app-bad-today></app-bad-today>
+      <div #roundDiv nz-row style="height: 40%; background:#192B53;">
+        <div nz-col nzSpan="12" >
+          <app-bad-today [height]="roundDivHeight"></app-bad-today>
         </div>
         <div nz-col nzSpan="12">
           <app-people-today></app-people-today>

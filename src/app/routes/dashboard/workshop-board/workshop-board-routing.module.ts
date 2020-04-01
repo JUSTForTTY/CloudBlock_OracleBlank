@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WorkshopBoardComponent } from './workshop-board.component';
 const routes: Routes = [
-  { path: '', component: WorkshopBoardComponent, data: { title: '车间看板' } },
+  { path: 'v1', component: WorkshopBoardComponent, data: { title: '车间看板' } },
 
 ];
 @NgModule({

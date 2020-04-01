@@ -1,3 +1,28 @@
-<p>
-  yield-productline works!
-</p>
+<!-- 
+<v-chart [forceFit]="forceFit" [height]="height" [animate]="true" [theme]="theme" [scale]="scale">
+  <v-tooltip></v-tooltip>
+  <v-axis dataKey="value" [show]="false"></v-axis>
+  <v-legend></v-legend>
+  <v-view [data]="goodBadData">
+    <v-stack-bar position="line*产出" [color]="color" [label]="stackLabel"></v-stack-bar>
+  </v-view>
+  <v-view [data]="yieldData">
+    <v-axis [show]="false"></v-axis>
+    <v-smooth-line position="line*value" [color]="potcolor" shape="smooth"></v-smooth-line>
+    <v-point position="line*value" [color]="potcolor" shape="circle" [label]="pointLabel"></v-point>
+  </v-view>
+</v-chart> -->
+
+<v-chart [forceFit]="forceFit" [height]="height" [animate]="true" [theme]="theme" [scale]="scale">
+  <v-tooltip></v-tooltip>
+  <v-axis dataKey="value" [show]="false"></v-axis>
+  <v-legend></v-legend>
+  <v-view [data]="goodBadDataPercent">
+    <v-stack-bar position="line*percent" [color]="color" [label]="stackLabel"></v-stack-bar>
+  </v-view>
+  <v-view [data]="yieldData">
+    <v-axis [show]="false"></v-axis>
+    <!-- <v-smooth-line position="line*value" [color]="potcolor" shape="smooth"></v-smooth-line> -->
+    <v-point position="line*value" [color]="potcolor" shape="circle" [label]="pointLabel" ></v-point>
+  </v-view>
+</v-chart>

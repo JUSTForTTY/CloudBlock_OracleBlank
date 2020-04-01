@@ -522,12 +522,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     this.resourceData = [];
     this.oldNodeName = data.label;
     console.log("点击数据", data);
-    if (data.styleId == 'LHCsysPotStyle20191111014750540000023') {
-      this.isNeedRcVisible = true;
-    } else {
-      this.isNeedRcVisible = false;
-    }
-    console.log("是否可见", this.isNeedRcVisible);
+
     //获取当前节点的资源
     if (data.publicPotId) {
       this.httpService.postHttp("/tresource/condition", { "csysPotPublicId": data.publicPotId }).subscribe((data: any) => {
@@ -543,6 +538,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     })
     this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
+
+      if (potdata.data[0].csysPotStyleId == 'LHCsysPotStyle20191111014750540000023') {
+        this.isNeedRcVisible = true;
+      } else {
+        this.isNeedRcVisible = false;
+      }
+      console.log("是否可见", this.isNeedRcVisible);
 
       console.log("点击节点参数数据", potdata.data[0])
       if (potdata.data[0].csysPotType == '3') {
@@ -566,13 +568,13 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       } else {
         potdata.data[0].csysPotIsExcrete = false;
       }
-      let debugIsOnrepairValue=potdata.data[0].csysPotDebugIsonrepair;
-      let reworkIsOnrepairValue=potdata.data[0].csysPotReworkIsonrepair;
-      if(debugIsOnrepairValue==""){
-        debugIsOnrepairValue="0";
+      let debugIsOnrepairValue = potdata.data[0].csysPotDebugIsonrepair;
+      let reworkIsOnrepairValue = potdata.data[0].csysPotReworkIsonrepair;
+      if (debugIsOnrepairValue == "") {
+        debugIsOnrepairValue = "0";
       }
-      if(reworkIsOnrepairValue==""){
-        reworkIsOnrepairValue="0";
+      if (reworkIsOnrepairValue == "") {
+        reworkIsOnrepairValue = "0";
       }
       console.log("良品抽检值", potdata.data[0].csysPotReworkIsrc)
 
@@ -588,8 +590,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         potSkill: [data.skillIds],
         rule: [potdata.data[0].csysTrsRuleId],
         excrete: [potdata.data[0].csysPotIsExcrete],
-        debugIsOnrepair:[debugIsOnrepairValue],
-        reworkIsOnrepair:[reworkIsOnrepairValue],
+        debugIsOnrepair: [debugIsOnrepairValue],
+        reworkIsOnrepair: [reworkIsOnrepairValue],
         isNeedRc: [potdata.data[0].csysPotReworkIsrc]
         //nodeEditName1: [data.label, [Validators.required]]
       });
@@ -891,8 +893,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysTrsRuleId": ruleData.data[0].csysTrsRuleId,
                 "csysPotIsExcrete": isExcrete,
-                "csysPotDebugIsonrepair":this.insertForm.value.debugIsOnrepair,
-                "csysPotReworkIsonrepair":this.insertForm.value.reworkIsOnrepair,
+                "csysPotDebugIsonrepair": this.insertForm.value.debugIsOnrepair,
+                "csysPotReworkIsonrepair": this.insertForm.value.reworkIsOnrepair,
                 "csysPotReworkIsrc": this.insertForm.value.isNeedRc
               }
             } else {
@@ -906,8 +908,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
                 "csysPotStyleId": data1.data.csysPotStyleId,
                 "csysPotGroupId": data1.data.csysPotGroupId,
                 "csysPotIsExcrete": isExcrete,
-                "csysPotDebugIsonrepair":this.insertForm.value.debugIsOnrepair,
-                "csysPotReworkIsonrepair":this.insertForm.value.reworkIsOnrepair,
+                "csysPotDebugIsonrepair": this.insertForm.value.debugIsOnrepair,
+                "csysPotReworkIsonrepair": this.insertForm.value.reworkIsOnrepair,
                 "csysPotReworkIsrc": this.insertForm.value.isNeedRc
               }
             }
@@ -1138,8 +1140,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       "csysTrsRuleId": nodeRule,
       "csysPotIsExcrete": isExcrete,
       "csysPotReworkIsrc": isNeedRcFlag,
-      "csysPotDebugIsonrepair":this.editForm.value.debugIsOnrepair,
-      "csysPotReworkIsonrepair":this.editForm.value.reworkIsOnrepair,
+      "csysPotDebugIsonrepair": this.editForm.value.debugIsOnrepair,
+      "csysPotReworkIsonrepair": this.editForm.value.reworkIsOnrepair,
     };
     console.log("put1", JSON.parse(JSON.stringify(params)))
     //第一步：修改工序信息
@@ -3013,8 +3015,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       excrete: [false],
       opPot: [null],
       potAttribute: [null],
-      debugIsOnrepair:[null],
-      reworkIsOnrepair:[null],
+      debugIsOnrepair: [null],
+      reworkIsOnrepair: [null],
       isNeedRc: [null],
       resource: [null],
       potSkill: [null],
@@ -3028,8 +3030,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       excrete: [false],
       opPot: [null],
       potAttribute: [null],
-      debugIsOnrepair:[null],
-      reworkIsOnrepair:[null],
+      debugIsOnrepair: [null],
+      reworkIsOnrepair: [null],
       isNeedRc: [null],
       resource: [null],
       potSkill: [null],

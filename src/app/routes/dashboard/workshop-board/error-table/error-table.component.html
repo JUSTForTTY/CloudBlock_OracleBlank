@@ -1,3 +1,24 @@
-<p>
-  error-table works!
-</p>
+<nz-table #basicTable [nzData]="listOfData" style="background:#192B53;" nzShowPagination=false
+  [nzPageIndex]="nzPageIndex" nzSize="middle" [nzPageSize]="nzPageSize">
+  <thead>
+    <tr>
+      <th>产线</th>
+      <th>停线类型</th>
+      <th>停线原因</th>
+      <th>处理状态</th>
+      <th>责任人</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ data['产线'] }}</td>
+      <td>{{ data['停线类型'] }}</td>
+      <td>{{ data['停线原因'] }}</td>
+      <td>
+        <button nz-button nzType="primary" nzShape="circle" [style.background-color]="data['达成状态']"
+          nzSize="small" ></button>
+      </td>
+      <td>{{ data['责任人']}}</td>
+    </tr>
+  </tbody>
+</nz-table>

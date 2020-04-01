@@ -74,8 +74,17 @@
 
         </div>
       </div>
-      <div nz-row style="height: 60%;background:#192B53;">
-        <app-yield-daily></app-yield-daily>
+      <div #yieldDailydiv nz-row style="height: 60%;background:#192B53; padding-left: 5px; padding-right: 5px;">
+        
+        <div  style="height: 13.33%;text-align: center;">
+          <span style="color:#1e91de;text-align: center;font-size: 18px;">
+            每日良率趋势情况对比
+          </span>
+        </div>
+        <div style="background:#101638;">
+          <app-yield-daily [height$]="yieldDailydivHeight$"></app-yield-daily>
+        </div>
+        
       </div>
     </div>
   </div>

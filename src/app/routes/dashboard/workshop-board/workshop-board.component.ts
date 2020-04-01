@@ -16,10 +16,12 @@ export class WorkshopBoardComponent implements OnInit {
   @ViewChild('yieldDiv') yieldDiv: ElementRef;
   @ViewChild('yieldDiv2') yieldDiv2: ElementRef;
   @ViewChild('roundDiv') roundDiv: ElementRef;
+  @ViewChild('yieldDailydiv') yieldDailydiv: ElementRef;
 
   yieldDivHeight = 400;
   roundDivHeight$ = new ReplaySubject<number>();
-  roundDivHeight = 200;
+  yieldDailydivHeight$ = new ReplaySubject<number>();
+
   constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -35,19 +37,23 @@ export class WorkshopBoardComponent implements OnInit {
   autoHeight() {
     setTimeout(() => {
       this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-      this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
+
       console.log('yieldDivHeight1', this.yieldDivHeight)
-      console.log('roundDivHeight1', this.roundDivHeight)
-      this.roundDivHeight$.next(this.roundDivHeight);
+      console.log('roundDivHeight1', this.roundDiv.nativeElement.offsetHeight)
+      console.log('yieldDailydivHeight1', this.yieldDailydiv.nativeElement.offsetHeight*0.8667-10)
+      this.roundDivHeight$.next(this.roundDiv.nativeElement.offsetHeight);
+      this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight*0.8667-10);
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-        this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
+
         console.log('yieldDivHeight2', this.yieldDivHeight)
-        console.log('roundDivHeight2', this.roundDivHeight)
-        this.roundDivHeight$.next(this.roundDivHeight);
+        console.log('roundDivHeight2', this.roundDiv.nativeElement.offsetHeight)
+        console.log('yieldDailydivHeight2',this.yieldDailydiv.nativeElement.offsetHeight*0.8667-10)
+        this.roundDivHeight$.next(this.roundDiv.nativeElement.offsetHeight);
+        this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight*0.8667-10);
 
       });
   }

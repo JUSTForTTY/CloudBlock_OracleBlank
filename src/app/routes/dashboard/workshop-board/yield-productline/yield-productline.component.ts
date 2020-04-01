@@ -66,7 +66,7 @@ export class YieldProductlineComponent implements OnInit {
       },
       formatter: function formatter(text) {
         if (parseFloat(text) < 75)
-          text = text + "%"
+          text = text 
         else
           text = ""
         return text;
@@ -147,13 +147,13 @@ export class YieldProductlineComponent implements OnInit {
       dataKey: 'percent',
       min: 0,
       max: 1,
-      formatter: '.2%',
+      formatter: '.1%',
     },
     {
       dataKey: 'value',
       min: 0,
       max: 1,
-      formatter: '.2%',
+      formatter: '.1%',
     }];
   }
   initData() {
@@ -163,7 +163,7 @@ export class YieldProductlineComponent implements OnInit {
         this.goodBadData[1][key] = this.goodBadData[1][key] + (Math.floor(Math.random() * (1 - 200)) + 200);
         this.yieldData.forEach(element => {
           if (element.line === key) {
-            element.良率 = Math.floor(this.goodBadData[0][key] / (this.goodBadData[1][key] + this.goodBadData[0][key]) * 100) / 100
+            element.良率 = Math.floor(this.goodBadData[0][key] / (this.goodBadData[1][key] + this.goodBadData[0][key]) * 1000) / 1000
           }
         });
 

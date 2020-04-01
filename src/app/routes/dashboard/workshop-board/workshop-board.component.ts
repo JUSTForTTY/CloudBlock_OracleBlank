@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 @Component({
   selector: 'app-workshop-board',
   templateUrl: './workshop-board.component.html',
@@ -17,6 +18,7 @@ export class WorkshopBoardComponent implements OnInit {
   @ViewChild('roundDiv') roundDiv: ElementRef;
 
   yieldDivHeight = 400;
+  roundDivHeight$ = new ReplaySubject<number>();
   roundDivHeight = 200;
   constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
@@ -35,7 +37,8 @@ export class WorkshopBoardComponent implements OnInit {
       this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
       this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
       console.log('yieldDivHeight1', this.yieldDivHeight)
-      console.log('roundDivHeight', this.roundDivHeight)
+      console.log('roundDivHeight1', this.roundDivHeight)
+      this.roundDivHeight$.next(this.roundDivHeight);
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
@@ -43,7 +46,8 @@ export class WorkshopBoardComponent implements OnInit {
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
         this.roundDivHeight = this.roundDiv.nativeElement.offsetHeight;
         console.log('yieldDivHeight2', this.yieldDivHeight)
-        console.log('roundDivHeight', this.roundDivHeight)
+        console.log('roundDivHeight2', this.roundDivHeight)
+        this.roundDivHeight$.next(this.roundDivHeight);
 
       });
   }

@@ -33,11 +33,10 @@
       <!-- 上层 左  -->
       <div nz-row style="height: 100%;">
         <div nz-col nzSpan="24" style="height: 100%; background:#192B53;">
-          <div #yieldDiv2 style="height: 10%;">
-            <h2 style="color:#1e91de;text-align: center;font-size: 20px;">
-
+          <div #yieldDiv2 style="height: 8%;text-align: center;">
+            <span style="color:#1e91de;text-align: center;font-size: 18px;">
               今日线体良率情况
-            </h2>
+            </span>
           </div>
 
           <app-yield-productline [height]='yieldDivHeight'></app-yield-productline>
@@ -48,27 +47,34 @@
     <div nz-col nzSpan="12" style=" height: 100%;border:0px solid #c1eb06;">
       <!-- 上层 右 再分左右  -->
 
-      <div #roundDiv nz-row style="height: 50%; background:#192B53; border:1px solid #c1eb06;">
-        <div nz-col nzSpan="12" style="height: 100%; border:1px solid #c1eb06;">
-          <div style="height: 15%;">
-            <h2 style="color:#1e91de;text-align: center;font-size: 16px;">
-
-              今日线体良率情况
-            </h2>
+      <div nz-row [nzGutter]="8" style="height: 40%;  border:0px solid #c1eb06;">
+        <div nz-col nzSpan="12" style="height: 100%; background:#192B53; border:0px solid #c1eb06; ">
+          <div style="height: 20%; text-align:center;">
+            <span style="color:#1e91de;text-align: center;font-size: 18px;">
+              今日缺陷分布情况
+            </span>
           </div>
-          <app-bad-today [height]="roundDivHeight"></app-bad-today>
+          <div #roundDiv style="height: 80%; background:#101638;">
+            <app-bad-today [height$]="roundDivHeight$"></app-bad-today>
+          </div>
+
+
+
         </div>
-        <div nz-col nzSpan="12">
-          <div style="height: 10%;">
-            <h2 style="color:#1e91de;text-align: center;font-size: 20px;">
-
-              <!-- 今日在岗情况 -->
-            </h2>
+        <div nz-col nzSpan="12" style="height: 100%; background:#192B53; border:0px solid #c1eb06;">
+          <div style="height: 20%; text-align:center;">
+            <span style="color:#1e91de;text-align: center;font-size: 18px;">
+              今日在岗情况
+            </span>
           </div>
-          <!-- <app-people-today [height]="roundDivHeight"></app-people-today> -->
+          <div style="height: 80%; background:#101638;">
+            <app-people-today [height$]="roundDivHeight$"></app-people-today>
+          </div>
+
+
         </div>
       </div>
-      <div nz-row style="height: 50%;background:#192B53;">
+      <div nz-row style="height: 60%;background:#192B53;">
         <app-yield-daily></app-yield-daily>
       </div>
     </div>

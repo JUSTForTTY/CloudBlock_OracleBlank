@@ -12,10 +12,10 @@ export class YieldProductlineComponent implements OnInit {
     if (val === '不良品') {
       if (percent) {
         if (percent[0] < 0.75) {
-          return '#ff4d4f'
+          return '#FF0000'
         }
       }
-      return '#FFA500';
+      return '#FF7070';
     }
     return '#92D050';
   }]
@@ -54,24 +54,44 @@ export class YieldProductlineComponent implements OnInit {
 
   }];
   pointLabel = ['value', function (val) {
-
-    return {
-      // position: 'middle',
-      offset: 0,
-      textStyle: {
-        fill: '#fff',
-        fontSize: 15,
-        shadowBlur: 5,
-        shadowColor: 'rgba(0, 0, 0, .8)'
-      },
-      formatter: function formatter(text) {
-        if (parseFloat(text) < 75)
-          text = text 
-        else
-          text = ""
-        return text;
-      }
-    };
+    if(val<0.75){
+      return {
+        // position: 'middle',
+        offset: 12,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 15,
+          shadowBlur: 5,
+          shadowColor: 'rgba(0, 0, 0, .8)'
+        },
+        formatter: function formatter(text) {
+          // if (parseFloat(text) < 75)
+          //   text = text 
+          // else
+          //   text = ""
+          return text;
+        }
+      };
+    }else{
+      return {
+        // position: 'middle',
+        offset: -15,
+        textStyle: {
+          fill: '#fff',
+          fontSize: 15,
+          shadowBlur: 5,
+          shadowColor: 'rgba(0, 0, 0, .8)'
+        },
+        formatter: function formatter(text) {
+          // if (parseFloat(text) < 75)
+          //   text = text 
+          // else
+          //   text = ""
+          return text;
+        }
+      };
+    }
+    
   }]
   scale: any = [{
     dataKey: 'value',
@@ -160,7 +180,7 @@ export class YieldProductlineComponent implements OnInit {
     for (const key in this.goodBadData[0]) {
       if (this.goodBadData[0].hasOwnProperty(key) && key !== 'name') {
         this.goodBadData[0][key] = this.goodBadData[0][key] + (Math.floor(Math.random() * (1 - 500)) + 500);
-        this.goodBadData[1][key] = this.goodBadData[1][key] + (Math.floor(Math.random() * (1 - 200)) + 200);
+        this.goodBadData[1][key] = this.goodBadData[1][key] + (Math.floor(Math.random() * (1 - 180)) + 180);
         this.yieldData.forEach(element => {
           if (element.line === key) {
             element.良率 = Math.floor(this.goodBadData[0][key] / (this.goodBadData[1][key] + this.goodBadData[0][key]) * 1000) / 1000

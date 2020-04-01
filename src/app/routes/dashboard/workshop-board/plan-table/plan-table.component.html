@@ -1,3 +1,24 @@
-<p>
-  plan-table works!
-</p>
+<nz-table #basicTable [nzData]="listOfData" style="background:#192B53;" nzShowPagination=false
+  [nzPageIndex]="nzPageIndex" nzSize="middle" [nzPageSize]="nzPageSize">
+  <thead>
+    <tr>
+      <th>产线</th>
+      <th>达成状态</th>
+      <th>计划数量</th>
+      <th>产出数量</th>
+      <th>计划达成率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ data['产线'] }}</td>
+      <td>
+        <button nz-button nzType="primary" nzShape="circle" [style.background-color]="data['达成状态']"
+          nzSize="small" ></button>
+      </td>
+      <td>{{ data['计划数量'] }}</td>
+      <td>{{ data['产出数量'] }}</td>
+      <td>{{ data['计划达成率'] | percent:'1.2-2'}}</td>
+    </tr>
+  </tbody>
+</nz-table>

@@ -74,8 +74,8 @@
         </div>
       </div>
       <div #yieldDailydiv nz-row style="height: 60%;background:#192B53; padding-left: 5px; padding-right: 5px;">
-        
-        <div  style="height: 13.33%;text-align: center;">
+
+        <div style="height: 13.33%;text-align: center;">
           <span style="color:#1e91de;text-align: center;font-size: 18px;">
             每日良率趋势情况对比
           </span>
@@ -83,15 +83,23 @@
         <div style="background:#101638;">
           <app-yield-daily [height$]="yieldDailydivHeight$"></app-yield-daily>
         </div>
-        
+
       </div>
     </div>
   </div>
-  <div nz-row style="color: aliceblue;height: 40%; border:0px solid #c1eb06;">
+  <div nz-row style="color: aliceblue;height: 40%; border:0px solid #c1eb06;padding-top: 10px;">
 
 
-    <div nz-col nzXs="24" nzLg="12">
-      <app-plan-table></app-plan-table>
+    <div nz-col nzXs="24" nzLg="12" style="height:100%; background:#192B53;">
+
+      <div style="height: 9.6%; text-align:center;">
+        <span style="color:#1e91de;text-align: center;font-size: 18px;">
+          今日线体计划达成情况
+        </span>
+      </div>
+      <div #roundDiv style="height: 90.4%; background:#101638;">
+        <app-plan-table></app-plan-table>
+      </div>
     </div>
     <div nz-col nzXs="24" nzLg="12">
       <app-error-table></app-error-table>

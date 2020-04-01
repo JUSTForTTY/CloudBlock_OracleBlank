@@ -87,12 +87,12 @@
       </div>
     </div>
   </div>
-  <div nz-row style="color: aliceblue;height: 40%; border:0px solid #c1eb06;padding-top: 10px;">
+  <div nz-row [nzGutter]="8" style="color: aliceblue;height: 40%; border:0px solid #c1eb06;padding-top: 10px;">
 
 
-    <div nz-col nzXs="24" nzLg="12" style="height:100%; background:#192B53;">
+    <div nz-col nzXs="24" nzLg="12" style="height:100%;">
 
-      <div style="height: 9.6%; text-align:center;">
+      <div style="height: 9.6%; text-align:center; background:#192B53;">
         <span style="color:#1e91de;text-align: center;font-size: 18px;">
           今日线体计划达成情况
         </span>
@@ -101,8 +101,16 @@
         <app-plan-table></app-plan-table>
       </div>
     </div>
-    <div nz-col nzXs="24" nzLg="12">
-      <app-error-table></app-error-table>
+    <div nz-col nzXs="24" nzLg="12" style="height:100%;">
+
+      <div style="height: 9.6%; text-align:center;  background:#192B53;">
+        <span style="color:#1e91de;text-align: center;font-size: 18px;">
+          今日线体异常
+        </span>
+      </div>
+      <div #roundDiv style="height: 90.4%; background:#101638;">
+        <app-error-table></app-error-table>
+      </div>
     </div>
   </div>
 </div>

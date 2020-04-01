@@ -103,6 +103,7 @@ export class PublicworkflowComponent implements OnInit {
       workFlowPage: [null, [Validators.required]],
       workFlowResource: [null],
       workFlowDesc: [null],
+      isNeedOnRepair:["0"]
     });
   }
 
@@ -183,6 +184,7 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
       "csysPotDataGroup": this.form.controls.workDataGroup.value,
+      "csysPotPublicReIsonrepair":this.form.controls.isNeedOnRepair.value
     }
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
       if (wdata.data.length > 0) {
@@ -273,7 +275,8 @@ export class PublicworkflowComponent implements OnInit {
             workFlowGroup: [data.csysPotGroupId, [Validators.required]],
             workDataGroup: [data.csysPotDataGroup],
             workFlowResource: [potrs],
-            workFlowPage: [potPage,[Validators.required]]
+            workFlowPage: [potPage,[Validators.required]],
+            isNeedOnRepair:[data.csysPotPublicReIsonrepair]
           });
           this.form.updateValueAndValidity()
           this.spinning = false;
@@ -301,7 +304,8 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotPublicDesc": this.form.controls.workFlowDesc.value,
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
-      "csysPotDataGroup": this.form.value.workDataGroup
+      "csysPotDataGroup": this.form.value.workDataGroup,
+      "csysPotPublicReIsonrepair":this.form.controls.isNeedOnRepair.value
     }
     //console.log("123", params);
     //编辑保存途程

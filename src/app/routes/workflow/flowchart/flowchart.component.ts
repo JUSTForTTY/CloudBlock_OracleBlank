@@ -123,6 +123,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   queryParamStr = '';
   path;
   isNeedRcVisible = false;
+  isNeedOnRepairVisible = false;
   isNeedRcValue = false;
   //定义途程图数据
   hierarchialGraph = { nodes: [], links: [], clusters: [] };
@@ -721,6 +722,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   //点击新建工序
   addPoint() {
     this.formEditStatus = false;
+    this.isNeedOnRepairVisible=false;
     this.isNeedRcVisible = false;
     this.formInit();
   }
@@ -838,6 +840,12 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     if (csysPotPublicId) {
       this.httpService.getHttp("/csyspotpublic" + "/" + csysPotPublicId).subscribe((data: any) => {
         this.publickPotName = data.data.csysPotPublicName
+        //如果当前公共工序支持在线维修，需要显示功能框
+        if(data.data.csysPotPublicReIsonrepair=="1"){
+          this.isNeedOnRepairVisible=true;
+        }else{
+          this.isNeedOnRepairVisible=false;
+        }
         console.log("publickPotName", this.publickPotName);
       })
     }
@@ -3265,6 +3273,12 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       } else {
         this.isNeedRcVisible = false;
       }
+      if(potdata.data.csysPotPublicReIsonrepair=="1"){
+        this.isNeedOnRepairVisible=true;
+      }else{
+        this.isNeedOnRepairVisible=false;
+      }
+
       //用工序组id去工序组权限表中拿取目标工序组id
       let gropreparams = {
         csysPotGroupFromId: potdata.data.csysPotGroupId

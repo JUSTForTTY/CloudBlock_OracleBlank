@@ -201,6 +201,18 @@
           </nz-form-control>
 
         </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="isNeedOnRepair">是否支持在线维修</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">   
+            <nz-select nzPlaceHolder="是否支持在线维修" formControlName="isNeedOnRepair"  nzShowSearch nzAllowClear>
+              <nz-option nzLabel="支持" nzValue="1">
+              </nz-option>
+              <nz-option nzLabel="不支持" nzValue="0">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+
+        </nz-form-item>
         <ng-template #modalFooter>
           <button nz-button nzType="default" (click)="handleCancel()">取消</button>
           <button nz-button nzType="primary" type="submit" (click)="saveWorkFlow()" [disabled]="form.invalid"

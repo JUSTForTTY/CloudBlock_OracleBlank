@@ -207,7 +207,7 @@
               </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item >
+            <nz-form-item  *ngIf="isNeedOnRepairVisible">
               <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
               <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                 <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
@@ -220,7 +220,7 @@
               </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item >
+            <nz-form-item *ngIf="isNeedOnRepairVisible">
               <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
               <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                 <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
@@ -446,7 +446,7 @@
                   </nz-form-item>
 
 
-                  <nz-form-item >
+                  <nz-form-item *ngIf="isNeedOnRepairVisible" >
                     <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
@@ -459,7 +459,7 @@
                     </nz-form-control>
                   </nz-form-item>
       
-                  <nz-form-item >
+                  <nz-form-item *ngIf="isNeedOnRepairVisible">
                     <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
                     <nz-form-control nzXs="24" nzSm="17" nzMd="17">
                       <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->

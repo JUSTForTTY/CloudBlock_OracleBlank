@@ -53,7 +53,7 @@ export class PlanTableComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.changePage();
-    }, 8000)
+    }, 5000)
 
   }
   changeHeight(height) {

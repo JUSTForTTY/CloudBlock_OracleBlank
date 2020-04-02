@@ -56,7 +56,7 @@ export class ErrorTableComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.changePage();
-    }, 8000)
+    }, 5000)
   }
   changeHeight(height) {
     const tableHeight = this.basicTable['tableMainElement'].nativeElement.offsetHeight;

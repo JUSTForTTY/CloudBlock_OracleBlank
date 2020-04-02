@@ -24,17 +24,23 @@ export class WorkshopBoardComponent implements OnInit {
   roundDivHeight$ = new ReplaySubject<number>();
   yieldDailydivHeight$ = new ReplaySubject<number>();
   tableDivHeight$ = new ReplaySubject<number>();
+  fontSizeTitle1 = 42;//一级标题
+  fontSizeTitle2 = 18;//二级标题
+
   constructor(private pageService: PageService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.getRouteParam();
     this.autoHeight();
     this.nowTimeTimer = setInterval(() => this.nowTime = Date.now(), 1000)
-
-
+    console.log(window.screen.height)
+    if (window.screen.height <= 900) {
+      this.fontSizeTitle1 = 32;//一级标题
+      this.fontSizeTitle2 = 16;//二级标题
+    }
   }
   /**
-   * 自动设置图表高度
+   * 自动设置图表高度,自适应字体大小
    */
   autoHeight() {
     setTimeout(() => {
@@ -42,23 +48,31 @@ export class WorkshopBoardComponent implements OnInit {
 
       console.log('yieldDivHeight1', this.yieldDivHeight)
       console.log('roundDivHeight1', this.roundDiv.nativeElement.offsetHeight)
-      console.log('yieldDailydivHeight1', this.yieldDailydiv.nativeElement.offsetHeight * 0.8667 - 10)
+      console.log('yieldDailydivHeight1', this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10)
       console.log('tableDivHeight1', this.tableDiv.nativeElement.offsetHeight)
       this.roundDivHeight$.next(this.roundDiv.nativeElement.offsetHeight);
-      this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight * 0.8667 - 10);
+      this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10);
       this.tableDivHeight$.next(this.tableDiv.nativeElement.offsetHeight);
     }, 10);
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
+        if (window.innerHeight <= 900) {
+          this.fontSizeTitle1 = 32;//一级标题
+          this.fontSizeTitle2 = 16;//二级标题
+        } else {
+          this.fontSizeTitle1 = 42;//一级标题
+          this.fontSizeTitle2 = 18;//二级标题
+        }
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-
+        
+        console.log('window.innerHeight', window.innerHeight)
         console.log('yieldDivHeight2', this.yieldDivHeight)
         console.log('roundDivHeight2', this.roundDiv.nativeElement.offsetHeight)
-        console.log('yieldDailydivHeight2', this.yieldDailydiv.nativeElement.offsetHeight * 0.8667 - 10)
+        console.log('yieldDailydivHeight2', this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10)
         console.log('tableDivHeight2', this.tableDiv.nativeElement.offsetHeight)
         this.roundDivHeight$.next(this.roundDiv.nativeElement.offsetHeight);
-        this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight * 0.8667 - 10);
+        this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10);
         this.tableDivHeight$.next(this.tableDiv.nativeElement.offsetHeight);
 
       });

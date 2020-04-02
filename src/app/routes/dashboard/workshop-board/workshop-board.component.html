@@ -97,8 +97,8 @@
           今日线体计划达成情况
         </span>
       </div>
-      <div #roundDiv style="height: 90.4%; background:#101638;">
-        <app-plan-table></app-plan-table>
+      <div #tableDiv style="height: 90.4%; background:#101638;">
+        <app-plan-table [height$]="tableDivHeight$"></app-plan-table>
       </div>
     </div>
     <div nz-col nzXs="24" nzLg="12" style="height:100%;">
@@ -108,8 +108,8 @@
           今日线体异常
         </span>
       </div>
-      <div #roundDiv style="height: 90.4%; background:#101638;">
-        <app-error-table></app-error-table>
+      <div  style="height: 90.4%; background:#101638;">
+        <app-error-table [height$]="tableDivHeight$"></app-error-table>
       </div>
     </div>
   </div>

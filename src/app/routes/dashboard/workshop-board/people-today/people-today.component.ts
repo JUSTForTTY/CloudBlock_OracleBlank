@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Chart } from '@antv/g2/dist/g2.min.js';
 import { ReplaySubject, Subscription } from 'rxjs';
+import { HttpService } from 'ngx-block-core';
 @Component({
   selector: 'app-people-today',
   templateUrl: './people-today.component.html',
@@ -11,14 +12,33 @@ export class PeopleTodayComponent implements OnInit {
   public heightSub: Subscription;
   @Input() height$: ReplaySubject<number>;
   height = null;
-  chart: Chart
+  chart: Chart;
+  @Input() workshopCode = "SUZ21-2F";
+  @Input() shiftTypeCode = "2Shfit";
+  //定时器
+  private nzTimer;
 
-  constructor() { }
+  constructor(private http: HttpService) { }
 
   ngOnInit() {
     this.heightSub = this.height$.subscribe(height => {
       console.log('roundDivHeight-BadTodayComponent', height)
       this.render(height);
+    });
+    this.getData();
+    if (this.nzTimer) {
+      clearInterval(this.nzTimer);
+    }
+
+    this.nzTimer = setInterval(() => {
+      this.getData();
+    }, 60 * 1000)
+  }
+  getData() {
+    this.http.getHttp("/yieldDashboard/workshopShiftData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {
+
+      console.log('右上上-people-data', data)
+
     });
   }
   ngOnDestroy() {
@@ -28,6 +48,9 @@ export class PeopleTodayComponent implements OnInit {
     }
     if (this.heightSub) {
       this.heightSub.unsubscribe();
+    }
+    if (this.nzTimer) {
+      clearInterval(this.nzTimer);
     }
 
   }
@@ -75,7 +98,7 @@ export class PeopleTodayComponent implements OnInit {
           fontSize: 12,
           fill: '#eee',
           textAlign: 'center',
-          fontWeight:'200',
+          fontWeight: '200',
         },
         offsetY: -10,
       })
@@ -86,7 +109,7 @@ export class PeopleTodayComponent implements OnInit {
           fontSize: 12,
           fill: '#eee',
           textAlign: 'center',
-          fontWeight:'200'
+          fontWeight: '200'
         },
         offsetY: 10,
       })

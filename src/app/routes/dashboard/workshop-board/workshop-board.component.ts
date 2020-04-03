@@ -61,6 +61,7 @@ export class WorkshopBoardComponent implements OnInit {
 
     this.http.getHttp("/yieldDashboard/workshopAlarmSettingData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((alarmSettingData: any) => {
       console.log('yield-workshopAlarmSettingData', alarmSettingData)
+      //获取数据
       this.http.getHttp("/yieldDashboard/workshopYeildData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((yeildData: any) => {
         const leftData = {
           alarmSettingData: alarmSettingData,

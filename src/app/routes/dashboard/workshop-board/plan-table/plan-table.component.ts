@@ -43,6 +43,7 @@ export class PlanTableComponent implements OnInit {
     //   element['计划达成率'] = element.产出数量 / element.计划数量;
     //   element['达成状态'] = element['计划达成率'] >= this.okLine ? "#00EE00" : (element['计划达成率'] < this.badLine ? "red" : "#FFA500")
     // });
+    this.listOfData=[];
     for (let index = 0; index < this.nzPageSize; index++) {
       this.listOfData.push({})
     }
@@ -99,6 +100,11 @@ export class PlanTableComponent implements OnInit {
       setTimeout(() => {
         if (this.height) {
           console.log('yield-plan-changeHeight', this.height)
+          if (this.listOfData.length == 0) {
+            for (let index = 0; index < this.nzPageSize; index++) {
+              this.listOfData.push({})
+            }
+          }
           this.changeHeight(this.height);
         }
       }, 10);

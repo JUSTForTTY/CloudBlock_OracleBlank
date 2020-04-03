@@ -96,7 +96,7 @@ export class ErrorTableComponent implements OnInit {
       data.data.forEach(element => {
         let item = {
           资源点: element.resourceCode,
-          停线类型: element.productHlineResType,
+          停线类型: element.productHlineResType==='0'?'不良停线':'ECO停线',
           停线原因: element.productHlineResReason,
           处理状态: 处理状态[element.productHlineState],
           责任人: element.productHlineLongUser,

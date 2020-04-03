@@ -33,21 +33,22 @@ export class PeopleTodayComponent implements OnInit {
       this.getData();
     }, 60 * 1000)
   }
+  total=0;
   getData() {
     this.http.getHttp("/yieldDashboard/workshopShiftData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {
-
+      this.data=[];
       console.log('右上上-people-data', data)
-      let total = 0;
+      this.total = 0;
       data.data.forEach(element => {
         this.data.push({
           item: element.workerTypeName,
           count: parseInt(element.countNumber),
           percent: 0
         })
-        total = total + parseInt(element.countNumber)
+        this.total = this.total + parseInt(element.countNumber)
       });
       this.data.forEach(element => {
-        element.percent = Math.round(element.count / total * 100) / 100;
+        element.percent = Math.round(element.count / this.total * 100) / 100;
       });
       console.log('右上上-people-data2', this.data)
       this.render(this.height);
@@ -118,7 +119,7 @@ export class PeopleTodayComponent implements OnInit {
       })
       .text({
         position: ['50%', '50%'],
-        content: '100 人',
+        content: this.total+' 人',
         style: {
           fontSize: 12,
           fill: '#eee',

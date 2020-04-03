@@ -6,7 +6,7 @@ import { ReplaySubject, Subscription } from 'rxjs';
   styleUrls: ['./plan-table.component.less']
 })
 export class PlanTableComponent implements OnInit {
-  nzPageSize = 8;
+  nzPageSize = 5;
   nzPageIndex = 1;
   nzTotal;
   nzTotalPage;
@@ -19,6 +19,10 @@ export class PlanTableComponent implements OnInit {
   public heightSub: Subscription;
   @Input() height$: ReplaySubject<number>;
   height = null;
+
+  @Input() data$: ReplaySubject<any>;
+  public dataSub: Subscription;
+
   @ViewChild('basicTable') basicTable: ElementRef;
   constructor() { }
   listOfData: any[] = [
@@ -35,10 +39,13 @@ export class PlanTableComponent implements OnInit {
     { 产线: 'SUZ15SMT-K', 计划数量: 5245, 产出数量: 3456 },
   ];
   ngOnInit() {
-    this.listOfData.forEach(element => {
-      element['计划达成率'] = element.产出数量 / element.计划数量;
-      element['达成状态'] = element['计划达成率'] >= this.okLine ? "#00EE00" : (element['计划达成率'] < this.badLine ? "red" : "#FFA500")
-    });
+    // this.listOfData.forEach(element => {
+    //   element['计划达成率'] = element.产出数量 / element.计划数量;
+    //   element['达成状态'] = element['计划达成率'] >= this.okLine ? "#00EE00" : (element['计划达成率'] < this.badLine ? "red" : "#FFA500")
+    // });
+    for (let index = 0; index < this.nzPageSize; index++) {
+      this.listOfData.push({})
+    }
     this.newData = true;
     //自适应高度
     this.heightSub = this.height$.subscribe(height => {
@@ -54,7 +61,51 @@ export class PlanTableComponent implements OnInit {
     this.nzTimer = setInterval(() => {
       this.changePage();
     }, 5000)
+    this.getData();
 
+  }
+  getData() {
+    this.dataSub = this.data$.subscribe(leftData => {
+      this.listOfData = [];
+      console.log('yield-plan-leftData', leftData)
+      console.log('yield-plan-alarmSettingData', leftData.alarmSettingData)
+      const alarmSettingData = leftData.alarmSettingData.data;
+      let yieldAlarm = {};
+      const data = leftData.yeildData.data;
+      //组装报警信息
+      alarmSettingData.forEach(element => {
+        yieldAlarm[element.proLineCode] = {
+          okLine: element.wshopAlarmsettingSplan === '' ? 0 : element.wshopAlarmsettingSplan,
+          badLine: element.wshopAlarmsettingAplan === '' ? 0 : element.wshopAlarmsettingAplan
+        }
+      });
+      //组装列表数据
+      data.forEach(element => {
+        let item = {
+          产线: element.prolineCode,
+          计划数量: element.timeslotPlanNum,
+          产出数量: element.timeslotGoodsNum + element.timeslotBadsNum,
+        }
+        if (!item.计划数量 || item.计划数量 === 0) {
+          item['计划达成率'] = "无计划";
+          item['达成状态'] = "red";
+        } else {
+          const 计划达成率 = Math.floor(item.产出数量 / item.计划数量 * 100);
+          item['达成状态'] = 计划达成率 >= yieldAlarm[item.产线].okLine ? "#00EE00" : (计划达成率 < yieldAlarm[item.产线].badLine ? "red" : "#FFA500")
+          item['计划达成率'] = 计划达成率 + "%";
+        }
+        this.listOfData.push(item);
+      });
+      setTimeout(() => {
+        if (this.height) {
+          console.log('yield-plan-changeHeight', this.height)
+          this.changeHeight(this.height);
+        }
+      }, 10);
+
+      console.log('yield-plan-listOfData2', this.listOfData)
+
+    });
   }
   changeHeight(height) {
     const tableHeight = this.basicTable['tableMainElement'].nativeElement.offsetHeight;
@@ -89,6 +140,10 @@ export class PlanTableComponent implements OnInit {
     if (this.heightSub) {
       this.heightSub.unsubscribe();
     }
+    if (this.dataSub) {
+      this.dataSub.unsubscribe();
+    }
+
   }
 
 }

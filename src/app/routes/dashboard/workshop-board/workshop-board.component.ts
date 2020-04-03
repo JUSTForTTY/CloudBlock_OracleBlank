@@ -12,7 +12,8 @@ export class WorkshopBoardComponent implements OnInit {
   //时间定时器
   private nowTimeTimer;
   nowTime = Date.now();
-  workshopName = "abcc";
+  workshopCode = "SUZ21-2F";
+  shiftTypeCode = "2Shfit";
   @ViewChild('yieldDiv') yieldDiv: ElementRef;
   @ViewChild('yieldDiv2') yieldDiv2: ElementRef;
   @ViewChild('roundDiv') roundDiv: ElementRef;
@@ -27,7 +28,10 @@ export class WorkshopBoardComponent implements OnInit {
   fontSizeTitle1 = 42;//一级标题
   fontSizeTitle2 = 18;//二级标题
 
-  constructor(private pageService: PageService, private route: ActivatedRoute) { }
+  //传送数据
+  leftData$ = new ReplaySubject<any>();
+
+  constructor(private pageService: PageService, private route: ActivatedRoute, private http: HttpService) { }
 
   ngOnInit() {
     this.getRouteParam();
@@ -38,6 +42,26 @@ export class WorkshopBoardComponent implements OnInit {
       this.fontSizeTitle1 = 32;//一级标题
       this.fontSizeTitle2 = 16;//二级标题
     }
+    this.getLeftData();
+  }
+  /**
+   * 获取看板左侧两块的数据
+   */
+  getLeftData() {
+    //获取报警阀值
+
+    this.http.getHttp("/yieldDashboard/workshopAlarmSettingData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((alarmSettingData: any) => {
+      console.log('yield-workshopAlarmSettingData', alarmSettingData)
+      this.http.getHttp("/yieldDashboard/workshopYeildData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((yeildData: any) => {
+        const leftData = {
+          alarmSettingData: alarmSettingData,
+          yeildData: yeildData
+        }
+        console.log('yield-leftData',leftData)
+        this.leftData$.next(leftData)
+      });
+    });
+
   }
   /**
    * 自动设置图表高度,自适应字体大小
@@ -65,7 +89,7 @@ export class WorkshopBoardComponent implements OnInit {
           this.fontSizeTitle2 = 18;//二级标题
         }
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-        
+
         console.log('window.innerHeight', window.innerHeight)
         console.log('yieldDivHeight2', this.yieldDivHeight)
         console.log('roundDivHeight2', this.roundDiv.nativeElement.offsetHeight)
@@ -92,7 +116,11 @@ export class WorkshopBoardComponent implements OnInit {
     }
     //  path 可不传
     //  this.activatedRoute 需保证准确
-    this.workshopName = this.pageService.getRouteParams(this.route, 'prolineCode', path);
+    this.workshopCode = this.pageService.getRouteParams(this.route, 'workshopCode', path);
+    this.shiftTypeCode = this.pageService.getRouteParams(this.route, 'shiftTypeCode', path);
+    if (!this.shiftTypeCode || this.shiftTypeCode === '') this.shiftTypeCode = '2Shfit';
+    console.log('workshopCode,shiftTypeCode', this.workshopCode, this.shiftTypeCode);
+
   }
   ngOnDestroy() {
     if (this.nowTimeTimer) {

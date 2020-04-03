@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Chart } from '@antv/g2/dist/g2.min.js';
 import { ReplaySubject, Subscription } from 'rxjs';
+import { HttpService } from 'ngx-block-core';
 
 @Component({
   selector: 'app-yield-daily',
@@ -11,72 +12,100 @@ export class YieldDailyComponent implements OnInit {
   public heightSub: Subscription;
   @Input() height$: ReplaySubject<number>;
   height = 400;
-  chart: Chart
-
-  constructor() { }
+  chart: Chart;
+  @Input() workshopCode = "SUZ21-2F";
+  @Input() shiftTypeCode = "2Shfit";
+  //定时器
+  private nzTimer;
+  data = [];
+  constructor(private http: HttpService) { }
 
   ngOnInit() {
 
     this.heightSub = this.height$.subscribe(height => {
       console.log('roundDivHeight-YieldDailyComponent', height)
+      this.height = height;
       this.render(height);
+    });
+    setTimeout(() => {
+      this.getData();
+    }, 100);
+
+
+    this.nzTimer = setInterval(() => {
+      this.getData();
+    }, 1 * 60 * 60 * 1000)
+  }
+  getData() {
+    console.log('日良率1', this.data)
+    this.http.getHttp("/yieldDashboard/workshopYeildDataByDay/" + this.workshopCode + "/" + this.shiftTypeCode + "/15").subscribe((data: any) => {
+      console.log('日良率', data)
+      this.data=[];
+      data.data.forEach(element => {
+        let date=element.timeslotDate+'';
+        if(date.startsWith('0')) date=date.substring(1,6);
+        this.data.splice(0, 0, { date: date, value: element.timeslotYeild })
+      });
+
+      this.render(this.height);
     });
   }
   render(height) {
+    if (!this.height) return;
+    if (this.data.length == 0) return;
     if (this.chart) this.chart.destroy();
-    const data = [
-      { year: '3月3日', value: 21 },
-      { year: '3月4日', value: 31 },
-      { year: '3月5日', value: 41 },
-      { year: '3月6日', value: 40 },
-      { year: '3月7日', value: 60 },
-      { year: '3月8日', value: 20 },
-      { year: '3月9日', value: 40 },
-      { year: '3月10日', value: 77 },
-      { year: '3月11日', value: 65 },
-      { year: '3月12日', value: 40 },
-      { year: '3月13日', value: 60 },
-      { year: '3月14日', value: 80 },
-      { year: '3月15日', value: 85 },
-      { year: '3月16日', value: 88 },
-      { year: '3月17日', value: 66 },
-      { year: '3月18日', value: 77 },
-      { year: '3月19日', value: 21 },
-      { year: '3月20日', value: 40 },
-      { year: '3月21日', value: 60 },
-      { year: '3月22日', value: 20 },
-      { year: '3月23日', value: 40 },
-      { year: '3月24日', value: 20 },
-      { year: '3月25日', value: 20 },
-      { year: '3月26日', value: 40 },
-      { year: '3月27日', value: 60 },
-      { year: '3月28日', value: 80 },
-      { year: '3月29日', value: 85 },
-      { year: '3月30日', value: 88 },
-      { year: '3月31日', value: 66 },
-      { year: '4月1日', value: 77 },
-    ];
+    // const data = [
+    //   { date: '3月3日', value: 21 },
+    //   { date: '3月4日', value: 31 },
+    //   { date: '3月5日', value: 41 },
+    //   { date: '3月6日', value: 40 },
+    //   { date: '3月7日', value: 60 },
+    //   { date: '3月8日', value: 20 },
+    //   { date: '3月9日', value: 40 },
+    //   { date: '3月10日', value: 77 },
+    //   { date: '3月11日', value: 65 },
+    //   { date: '3月12日', value: 40 },
+    //   { date: '3月13日', value: 60 },
+    //   { date: '3月14日', value: 80 },
+    //   { date: '3月15日', value: 85 },
+    //   { date: '3月16日', value: 88 },
+    //   { date: '3月17日', value: 66 },
+    //   { date: '3月18日', value: 77 },
+    //   { date: '3月19日', value: 21 },
+    //   { date: '3月20日', value: 40 },
+    //   { date: '3月21日', value: 60 },
+    //   { date: '3月22日', value: 20 },
+    //   { date: '3月23日', value: 40 },
+    //   { date: '3月24日', value: 20 },
+    //   { date: '3月25日', value: 20 },
+    //   { date: '3月26日', value: 40 },
+    //   { date: '3月27日', value: 60 },
+    //   { date: '3月28日', value: 80 },
+    //   { date: '3月29日', value: 85 },
+    //   { date: '3月30日', value: 88 },
+    //   { date: '3月31日', value: 66 },
+    //   { date: '4月1日', value: 77 },
+    // ];
     this.chart = new Chart({
       container: 'yieldDaily',
       autoFit: true,
       height: height - 8
     });
 
-    this.chart.data(data);
+    this.chart.data(this.data);
     this.chart.scale({
       value: {
         min: 0,
-        max: 100,
-
+        max: 120,
       },
     });
-    this.chart.axis('year',{
+    this.chart.axis('date', {
       label: {
         style: {
           fill: '#ffffff',
         },
       },
-    }).axis('value',{
+    }).axis('value', {
       label: {
         style: {
           fill: '#ffffff',
@@ -89,15 +118,15 @@ export class YieldDailyComponent implements OnInit {
       shared: true,
     });
 
-    this.chart.line().position('year*value').label('value', {
+    this.chart.line().position('date*value').label('value', {
       style: {
-        fontSize: 13,
+        fontSize: 14,
         fill: '#fff',
         fontWeight: '1'
-        
+
       }
     }).shape('smooth');
-    // this.chart.point().position('year*value').shape('circle');
+    // this.chart.point().position('date*value').shape('circle');
 
     this.chart.render();
   }

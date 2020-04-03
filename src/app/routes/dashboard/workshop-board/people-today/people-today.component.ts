@@ -17,18 +17,17 @@ export class PeopleTodayComponent implements OnInit {
   @Input() shiftTypeCode = "2Shfit";
   //定时器
   private nzTimer;
+  data = [];
 
   constructor(private http: HttpService) { }
 
   ngOnInit() {
     this.heightSub = this.height$.subscribe(height => {
       console.log('roundDivHeight-BadTodayComponent', height)
+      this.height = height;
       this.render(height);
     });
     this.getData();
-    if (this.nzTimer) {
-      clearInterval(this.nzTimer);
-    }
 
     this.nzTimer = setInterval(() => {
       this.getData();
@@ -38,7 +37,20 @@ export class PeopleTodayComponent implements OnInit {
     this.http.getHttp("/yieldDashboard/workshopShiftData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {
 
       console.log('右上上-people-data', data)
-
+      let total = 0;
+      data.data.forEach(element => {
+        this.data.push({
+          item: element.workerTypeName,
+          count: parseInt(element.countNumber),
+          percent: 0
+        })
+        total = total + parseInt(element.countNumber)
+      });
+      this.data.forEach(element => {
+        element.percent = Math.round(element.count / total * 100) / 100;
+      });
+      console.log('右上上-people-data2', this.data)
+      this.render(this.height);
     });
   }
   ngOnDestroy() {
@@ -55,20 +67,22 @@ export class PeopleTodayComponent implements OnInit {
 
   }
   render(height) {
+    if (!this.height) return;
+    if (this.data.length == 0) return;
     if (this.chart) this.chart.destroy();
-    const data = [
-      { item: '领班', count: 40, percent: 0.4 },
-      { item: 'PE技术员', count: 21, percent: 0.21 },
-      { item: 'TE技术员', count: 17, percent: 0.17 },
-      { item: 'QA巡检员', count: 13, percent: 0.13 },
-      { item: '员工', count: 9, percent: 0.09 },
-    ];
+    // const data = [
+    //   { item: '领班', count: 40, percent: 0.4 },
+    //   { item: 'PE技术员', count: 21, percent: 0.21 },
+    //   { item: 'TE技术员', count: 17, percent: 0.17 },
+    //   { item: 'QA巡检员', count: 13, percent: 0.13 },
+    //   { item: '员工', count: 9, percent: 0.09 },
+    // ];
     this.chart = new Chart({
       container: 'people',
       autoFit: true,
       height: height - 10
     });
-    this.chart.data(data);
+    this.chart.data(this.data);
     this.chart.scale('percent', {
       formatter: (val) => {
         val = val * 100 + '%';

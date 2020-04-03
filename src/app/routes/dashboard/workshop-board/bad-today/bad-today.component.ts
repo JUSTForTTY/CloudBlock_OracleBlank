@@ -16,6 +16,8 @@ export class BadTodayComponent implements OnInit {
   chart: Chart;
   @Input() workshopCode = "SUZ21-2F";
   @Input() shiftTypeCode = "2Shfit";
+  //定时器
+  private nzTimer;
   data = [
     { item: '关键缺陷', count: 5, percent: 0.1 },
     { item: '主要缺陷', count: 15, percent: 0.3 },
@@ -31,6 +33,10 @@ export class BadTodayComponent implements OnInit {
       this.render(height);
     });
     this.getData();
+
+    this.nzTimer = setInterval(() => {
+      this.getData();
+    }, 60 * 1000)
 
   }
   getData() {
@@ -171,6 +177,9 @@ export class BadTodayComponent implements OnInit {
     }
     if (this.heightSub) {
       this.heightSub.unsubscribe();
+    }
+    if (this.nzTimer) {
+      clearInterval(this.nzTimer);
     }
 
   }

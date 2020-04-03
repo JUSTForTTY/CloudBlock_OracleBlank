@@ -13,7 +13,7 @@
     <tr *ngFor="let data of basicTable.data">
       <td>{{ data['资源点'] }}</td>
       <td>{{ data['停线类型'] }}</td>
-      <td >
+      <td *ngIf="data['停线原因']">
         <marquee *ngIf="data['停线原因'].length>21" scrollamount="10">
           {{ data['停线原因'] }} </marquee>
           <ng-container *ngIf="data['停线原因'].length<=21">

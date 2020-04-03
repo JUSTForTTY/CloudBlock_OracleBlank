@@ -70,9 +70,6 @@ export class YieldProductlineComponent implements OnInit {
   ];
   forceFit: boolean = true;
 
-  @Input() workshopCode = "SUZ21-2F";
-  @Input() shiftTypeCode = "2Shfit";
-
   @Input() height: number = 400;
   @Input() data$: ReplaySubject<any>;
   public dataSub: Subscription;

@@ -4,16 +4,22 @@
     <tr>
       <th>资源点</th>
       <th>停线类型</th>
-      <th>停线原因</th>
-      <th>处理状态</th>
-      <th>责任人</th>
+      <th nzWidth="45%">停线原因</th>
+      <th >处理状态</th>
+      <th >责任人</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
       <td>{{ data['资源点'] }}</td>
       <td>{{ data['停线类型'] }}</td>
-      <td>{{ data['停线原因'] }}</td>
+      <td >
+        <marquee *ngIf="data['停线原因'].length>21" scrollamount="9">
+          {{ data['停线原因'] }} </marquee>
+          <ng-container *ngIf="data['停线原因'].length<=21">
+            {{ data['停线原因'] }} {{ data['停线原因'] }} {{ data['停线原因'] }}
+          </ng-container>
+      </td>
       <td>
         {{data['处理状态']}}
       </td>

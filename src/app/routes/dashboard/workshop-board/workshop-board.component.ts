@@ -32,6 +32,8 @@ export class WorkshopBoardComponent implements OnInit {
   leftData$ = new ReplaySubject<any>();
 
   constructor(private pageService: PageService, private route: ActivatedRoute, private http: HttpService) { }
+  //定时器
+  private nzLeftTimer;
 
   ngOnInit() {
     this.getRouteParam();
@@ -42,7 +44,14 @@ export class WorkshopBoardComponent implements OnInit {
       this.fontSizeTitle1 = 32;//一级标题
       this.fontSizeTitle2 = 16;//二级标题
     }
+    if (this.nzLeftTimer) {
+      clearInterval(this.nzLeftTimer);
+    }
     this.getLeftData();
+    this.nzLeftTimer = setInterval(() => {
+      this.getLeftData();
+    }, 60 * 1000)
+
   }
   /**
    * 获取看板左侧两块的数据
@@ -57,7 +66,7 @@ export class WorkshopBoardComponent implements OnInit {
           alarmSettingData: alarmSettingData,
           yeildData: yeildData
         }
-        console.log('yield-leftData',leftData)
+        console.log('yield-leftData', leftData)
         this.leftData$.next(leftData)
       });
     });
@@ -125,6 +134,9 @@ export class WorkshopBoardComponent implements OnInit {
   ngOnDestroy() {
     if (this.nowTimeTimer) {
       clearInterval(this.nowTimeTimer);
+    }
+    if (this.nzLeftTimer) {
+      clearInterval(this.nzLeftTimer);
     }
   }
 

@@ -134,8 +134,8 @@ export class BadTodayComponent implements OnInit {
       itemValue: {
         style: {
           fill: '#eee',
-        },                                               // 配置 itemValue 样式
-        formatter: val => `${val * 100}%`                // 格式化 itemValue 内容
+        },                                             // 配置 itemValue 样式
+        formatter: val => `${Math.round(val * 100)}%`                // 格式化 itemValue 内容
       },
     });
 

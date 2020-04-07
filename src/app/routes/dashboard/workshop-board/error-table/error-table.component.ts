@@ -92,11 +92,11 @@ export class ErrorTableComponent implements OnInit {
   getData() {
     this.http.getHttp("/yieldDashboard/workshopHoldData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {
       console.log('停线信息', data)
-      this.listOfData=[];
+      this.listOfData = [];
       data.data.forEach(element => {
         let item = {
           资源点: element.resourceCode,
-          停线类型: element.productHlineResType==='0'?'不良停线':'ECO停线',
+          停线类型: element.productHlineResType === '0' ? '不良停线' : 'ECO停线',
           停线原因: element.productHlineResReason,
           处理状态: 处理状态[element.productHlineState],
           责任人: element.productHlineLongUser,
@@ -104,14 +104,14 @@ export class ErrorTableComponent implements OnInit {
         if (!item.处理状态) item.处理状态 = "已停线";
         this.listOfData.push(item);
       });
+      if (this.listOfData.length == 0) {
+        for (let index = 0; index < this.nzPageSize; index++) {
+          this.listOfData.push({})
+        }
+      }
       setTimeout(() => {
         if (this.height) {
-          console.log('停线信息-changeHeight', this.height,this.listOfData)
-          if (this.listOfData.length == 0) {
-            for (let index = 0; index < this.nzPageSize; index++) {
-              this.listOfData.push({})
-            }
-          }
+          console.log('停线信息-changeHeight', this.height, this.listOfData)
           this.changeHeight(this.height);
         }
       }, 10);

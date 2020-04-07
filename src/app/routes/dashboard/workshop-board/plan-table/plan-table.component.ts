@@ -97,14 +97,14 @@ export class PlanTableComponent implements OnInit {
         }
         this.listOfData.push(item);
       });
+      if (this.listOfData.length == 0) {
+        for (let index = 0; index < this.nzPageSize; index++) {
+          this.listOfData.push({})
+        }
+      }
       setTimeout(() => {
         if (this.height) {
           console.log('yield-plan-changeHeight', this.height)
-          if (this.listOfData.length == 0) {
-            for (let index = 0; index < this.nzPageSize; index++) {
-              this.listOfData.push({})
-            }
-          }
           this.changeHeight(this.height);
         }
       }, 10);

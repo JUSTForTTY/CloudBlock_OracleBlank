@@ -13,12 +13,12 @@
     <tr *ngFor="let data of basicTable.data">
       <td>{{ data['产线'] }}</td>
       <td>
-        <button nz-button nzType="primary" nzShape="circle" [style.background-color]="data['达成状态']"
+        <button *ngIf="data['达成状态']" nz-button nzType="primary" nzShape="circle" [style.background-color]="data['达成状态']"
           nzSize="small" ></button>
       </td>
       <td>{{ data['计划数量'] }}</td>
       <td>{{ data['产出数量'] }}</td>
-      <td>{{ data['计划达成率'] | percent:'1.2-2'}}</td>
+      <td>{{ data['计划达成率']}}</td>
     </tr>
   </tbody>
 </nz-table>

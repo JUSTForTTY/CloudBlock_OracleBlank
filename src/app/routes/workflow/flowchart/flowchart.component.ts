@@ -289,10 +289,60 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         this.spinningText = "途程初始化中......";
         this.isGraphSpinning = true;
 
-        this.insertForm.value.addNodeName = "SUCUCsysPotPublic20190412000031"
-        this.insertForm.value.addNodeName1 = "开始";
-        this.insertForm.value.addNodeName2 = "3";
-        this.insertFlowPoint();
+        //第一步从公共工序获取样式名称
+        this.httpService.getHttp("/csyspotpublic/SUCUCsysPotPublic20190412000031").subscribe((data1: any) => {
+          let params = {};
+          params = {
+            "csysPotPublicId": "SUCUCsysPotPublic20190412000031",
+            "csysPotName": "开始",
+            "csysPotType": "3",
+            "csysWorkflowId": this.workflowId,
+            "csysPotStyleId": data1.data.csysPotStyleId,
+            "csysPotGroupId": data1.data.csysPotGroupId,
+
+          }
+          console.log("新增节点参数", params)
+          this.httpService.postHttp(this.nodeUrl, params).subscribe((data: any) => {
+            console.log("工序新增成功", data);
+            let nodeId = data.data;
+
+            // if (this.insertForm.value.addNodeName2 == '0') {
+            //   //如果是头结点，需要给头结点加入默认迁移
+            //   let targetParams = {
+            //     "csysWorkflowId": this.workflowId,
+            //     "csysPotTrsPointId": nodeId,//迁移目标
+            //     "csysPotTrsPointName": this.insertForm.value.addNodeName1
+            //   };
+            //   this.httpService.postHttp(this.transferNodeUrl, targetParams).subscribe((data: any) => {
+
+            //   });
+            // }
+
+            //重新获取目标工序
+            //this.getFlowTargetNodes();
+            //新增途程工序
+            this.httpService.getHttp("/csyspotstyle/" + data1.data.csysPotStyleId).subscribe((data: any) => {
+              //途程工序数据添加新增工序
+              this.hierarchialGraph.nodes.push({
+                id: nodeId,
+                label: "开始",
+                position: { "x": 20, "y": 20 },
+                color: data.data.csysPotStyleColor,
+                shape: data.data.csysPotStyleDesc,
+                styleId: data.data.csysPotStyleId,
+                publicPotId: "SUCUCsysPotPublic20190412000031",
+                op: opId,
+                opName: this.opName,
+                skillIds: skillIds
+              });
+              //第二步：保存工序迁移
+              this.saveFlowpointTransfer(nodeId);
+            });
+            //this.insertTsrPage(nodeId);
+          });
+        });
+
+
 
       }
 

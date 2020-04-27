@@ -137,7 +137,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowName">公共工序名称</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('workFlowName')">
-            <input nz-input formControlName="workFlowName" id="workFlowName" placeholder="请输入公共工序名称">
+            <input nz-input formControlName="workFlowName" id="workFlowName"  placeholder="请输入公共工序名称">
             <nz-form-explain *ngIf="form.get('workFlowName').dirty && form.get('workFlowName').errors">请输入公共工序名称
             </nz-form-explain>
           </nz-form-control>

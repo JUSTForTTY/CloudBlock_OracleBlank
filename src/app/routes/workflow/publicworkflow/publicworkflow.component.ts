@@ -66,7 +66,7 @@ export class PublicworkflowComponent implements OnInit {
       // 此处是刷新逻辑 end
     }
   }
-    
+
   public ngOnInit(): void {
     this._getWorkFlowListData(this.currentPage);
     this.path = this.pageService.getPathByRoute(this.activatedRoute);
@@ -103,7 +103,7 @@ export class PublicworkflowComponent implements OnInit {
       workFlowPage: [null, [Validators.required]],
       workFlowResource: [null],
       workFlowDesc: [null],
-      isNeedOnRepair:["0"]
+      isNeedOnRepair: ["0"]
     });
   }
 
@@ -171,7 +171,8 @@ export class PublicworkflowComponent implements OnInit {
 
 
   //新增保存途程
-  insertWorkFlow(): void {
+  insertWorkFlow(): void { 
+    this.form.patchValue({workFlowName: this.trimValue(this.form.controls.workFlowName.value)});
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
       this.form.controls[i].updateValueAndValidity();
@@ -184,7 +185,7 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
       "csysPotDataGroup": this.form.controls.workDataGroup.value,
-      "csysPotPublicReIsonrepair":this.form.controls.isNeedOnRepair.value
+      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value
     }
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
       if (wdata.data.length > 0) {
@@ -216,11 +217,11 @@ export class PublicworkflowComponent implements OnInit {
     //   this.msg.error("系统工序禁止编辑！");
     //   return;
     // }
-    if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010" || 
-    cySysFlowpointPublicId == "LHCsysPotPublic20190803014907696000063" || 
-    cySysFlowpointPublicId == "LHCsysPotPublic20190815055541662000074" ||
-    cySysFlowpointPublicId == "LHCsysPotPublic20190702054042833000054" ||
-    cySysFlowpointPublicId == "LHCsysPotPublic20191008063649676000084" 
+    if (cySysFlowpointPublicId == "LHCsysPotPublic20190620043043486000010" ||
+      cySysFlowpointPublicId == "LHCsysPotPublic20190803014907696000063" ||
+      cySysFlowpointPublicId == "LHCsysPotPublic20190815055541662000074" ||
+      cySysFlowpointPublicId == "LHCsysPotPublic20190702054042833000054" ||
+      cySysFlowpointPublicId == "LHCsysPotPublic20191008063649676000084"
     ) {
       this.msg.error("系统工序禁止编辑！");
       return;
@@ -275,8 +276,8 @@ export class PublicworkflowComponent implements OnInit {
             workFlowGroup: [data.csysPotGroupId, [Validators.required]],
             workDataGroup: [data.csysPotDataGroup],
             workFlowResource: [potrs],
-            workFlowPage: [potPage,[Validators.required]],
-            isNeedOnRepair:[data.csysPotPublicReIsonrepair]
+            workFlowPage: [potPage, [Validators.required]],
+            isNeedOnRepair: [data.csysPotPublicReIsonrepair]
           });
           this.form.updateValueAndValidity()
           this.spinning = false;
@@ -287,6 +288,7 @@ export class PublicworkflowComponent implements OnInit {
 
   //编辑保存途程
   editWorkflow(): void {
+    this.form.patchValue({workFlowName: this.trimValue(this.form.controls.workFlowName.value)});
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
       this.form.controls[i].updateValueAndValidity();
@@ -305,7 +307,7 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
       "csysPotDataGroup": this.form.value.workDataGroup,
-      "csysPotPublicReIsonrepair":this.form.controls.isNeedOnRepair.value
+      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value
     }
     //console.log("123", params);
     //编辑保存途程
@@ -336,11 +338,11 @@ export class PublicworkflowComponent implements OnInit {
 
   //确认删除途程
   deleteWorkFlow(resolve) {
-    if (resolve == "LHCsysPotPublic20190620043043486000010" || 
-    resolve == "LHCsysPotPublic20190803014907696000063" || 
-    resolve == "LHCsysPotPublic20190815055541662000074" ||
-    resolve == "LHCsysPotPublic20190702054042833000054" ||
-    resolve == "LHCsysPotPublic20191008063649676000084" 
+    if (resolve == "LHCsysPotPublic20190620043043486000010" ||
+      resolve == "LHCsysPotPublic20190803014907696000063" ||
+      resolve == "LHCsysPotPublic20190815055541662000074" ||
+      resolve == "LHCsysPotPublic20190702054042833000054" ||
+      resolve == "LHCsysPotPublic20191008063649676000084"
     ) {
       this.msg.error("系统工序禁止删除！");
       return;
@@ -659,6 +661,11 @@ export class PublicworkflowComponent implements OnInit {
     this.httpService.postHttp("csyscodemaster/condition", { "csysCodemasterType": "data_group" }).subscribe((data1: any) => {
       this.dataGroup = data1.data
     })
+  }
+  trimValue(str) {
+     
+    return str.replace(/(^\s*)|(\s*$)/g, "");
+
   }
 }
 

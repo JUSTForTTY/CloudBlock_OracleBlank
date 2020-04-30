@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GeneralPipe,FormControlService,HttpService,MethodsService, EventService,SetService, JwtService,LayoutService,PageService } from 'ngx-block-core';
 import { DecimalPipe,DatePipe,DeprecatedPercentPipe } from '@angular/common';
+import { ACLService } from '@delon/acl';
+
 import { UserService } from '@core';
 // #region default language
 // 参考：https://ng-alain.com/docs/i18n
@@ -115,7 +117,7 @@ import { LayoutModule } from './layout/layout.module';
     ...GLOBAL_THIRD_MODULES,
     ...FORM_MODULES,
   ],
-  providers: [
+  providers: [ACLService,
     HttpService, EventService,UserService,LayoutService,JwtService,MethodsService, GeneralPipe,DecimalPipe,DatePipe,DeprecatedPercentPipe, SetService, FormControlService,PageService,
     ...LANG_PROVIDES,
     ...INTERCEPTOR_PROVIDES,

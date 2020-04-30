@@ -14,11 +14,11 @@ export class WorkshopBoardComponent implements OnInit {
   nowTime = Date.now();
   workshopCode = "SUZ21-2F";
   shiftTypeCode = "2Shfit";
-  @ViewChild('yieldDiv') yieldDiv: ElementRef;
-  @ViewChild('yieldDiv2') yieldDiv2: ElementRef;
-  @ViewChild('roundDiv') roundDiv: ElementRef;
-  @ViewChild('yieldDailydiv') yieldDailydiv: ElementRef;
-  @ViewChild('tableDiv') tableDiv: ElementRef;
+  @ViewChild('yieldDiv',{static:false}) yieldDiv: ElementRef;
+  @ViewChild('yieldDiv2',{static:false}) yieldDiv2: ElementRef;
+  @ViewChild('roundDiv',{static:false}) roundDiv: ElementRef;
+  @ViewChild('yieldDailydiv',{static:false}) yieldDailydiv: ElementRef;
+  @ViewChild('tableDiv',{static:false}) tableDiv: ElementRef;
 
 
   yieldDivHeight = 400;

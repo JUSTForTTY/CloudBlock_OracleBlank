@@ -23,7 +23,7 @@ export class PlanTableComponent implements OnInit {
   @Input() data$: ReplaySubject<any>;
   public dataSub: Subscription;
 
-  @ViewChild('basicTable') basicTable: ElementRef;
+  @ViewChild('basicTable',{static:false}) basicTable: ElementRef;
   constructor() { }
   listOfData: any[] = [
     { 产线: 'SUZ15SMT-A', 计划数量: 6888, 产出数量: 6800 },

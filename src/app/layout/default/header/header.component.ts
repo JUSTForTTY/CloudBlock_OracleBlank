@@ -23,9 +23,9 @@ export class HeaderComponent implements OnInit {
   countdown = 4;
   pathName = "";
   releaseUrl = "";
-  @ViewChild('template')
+  @ViewChild('template',{static:false})
   tplRef: TemplateRef<any>;
-  @ViewChild('tplContent')
+  @ViewChild('tplContent',{static:false})
   tplContentRef: TemplateRef<any>;
   //定时器
   private nzTimer;

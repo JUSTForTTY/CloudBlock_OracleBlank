@@ -41,7 +41,7 @@ export class ErrorTableComponent implements OnInit {
 
 
 
-  @ViewChild('basicTable') basicTable: ElementRef;
+  @ViewChild('basicTable',{static:false}) basicTable: ElementRef;
   constructor(private http: HttpService) { }
   listOfData: any[] = [
     { 产线: 'SUZ15SMT-A', 计划数量: 6888, 产出数量: 6800, 停线类型: '良率', 停线原因: '良率监测过低，设备调试导致。', 责任人: "张三" },

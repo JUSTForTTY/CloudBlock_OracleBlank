@@ -27,7 +27,8 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
         children: [
             { path: 'workplace', component: DashboardWorkplaceComponent, data: { title: '控制台' } },
-            { path: 'pages', loadChildren: './pages/pages.module#PagesModule' }//test测试页面
+            { path: 'pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) }//test测试页面
+
             // 业务子模块
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
         ]
@@ -46,6 +47,10 @@ const routes: Routes = [
         path: 'workflow', loadChildren: './workflow/workflow.module#WorkflowModule', data: { title: '工作流' },
         component: LayoutDefaultComponent,
 
+    },
+    {
+        path: 'workflow', loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule), data: { title: '工作流' },
+        component: LayoutDefaultComponent
     },
     //模块管理
     {
@@ -77,7 +82,7 @@ const routes: Routes = [
         path: '',
         component: LayoutPassportComponent,
         children: [
-            { path: '', redirectTo: 'login',pathMatch:'full' },
+            { path: '', redirectTo: 'login', pathMatch: 'full' },
             { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
             { path: 'register', component: UserRegisterComponent },
             { path: 'register-result', component: UserRegisterResultComponent }

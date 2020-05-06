@@ -125,16 +125,13 @@
           </nz-form-item> -->
             <nz-form-item>
               <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName">工序选择</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
                 <nz-select nzPlaceHolder="请选择公共工序" formControlName="addNodeName" nzShowSearch nzAllowClear
                   (ngModelChange)="chartChange($event)">
                   <nz-option *ngFor="let option of nodes" [nzLabel]="option.csysPotPublicName"
                     [nzValue]="option.csysPotPublicId"></nz-option>
 
                 </nz-select>
-                <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">
-                  请选择工序
-                </nz-form-explain>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -194,10 +191,8 @@
             </nz-form-control>
             <nz-form-item>
               <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName1">工序名称</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请输入工序名称">
                 <input nz-input formControlName="addNodeName1" id="addNodeName1" placeholder="请输入工序名称">
-                <nz-form-explain *ngIf="insertForm.get('addNodeName1').dirty && insertForm.get('addNodeName1').errors">
-                  请输入工序名称</nz-form-explain>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -402,12 +397,8 @@
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="nodeEditName">工序名称</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                    <nz-form-control nzXs="24" nzSm="17" nzMd="17"  nzErrorTip="请输入工序名称">
                       <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="输入工序名称">
-                      <nz-form-explain
-                        *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">
-                        请输入工序名称
-                      </nz-form-explain>
                     </nz-form-control>
                   </nz-form-item>
                   <nz-form-item>
@@ -488,16 +479,13 @@
                   <ng-container *ngIf="formEditEnabled">
                     <nz-form-item>
                       <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
-                      <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                      <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
                         <nz-select formControlName="addNodeName2" nzAllowClear nzDisabled>
                           <nz-option nzValue="0" nzLabel="头工序"></nz-option>
                           <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
                           <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
                           <nz-option nzValue="3" nzLabel="初始化"></nz-option>
                         </nz-select>
-                        <nz-form-explain
-                          *ngIf="insertForm.get('addNodeName2').dirty && insertForm.get('addNodeName2').errors">
-                          请选择工序</nz-form-explain>
                       </nz-form-control>
                     </nz-form-item>
 
@@ -686,7 +674,7 @@
         <!-- --{{ item.description }} -->
       </ng-template>
       <ng-template #footer let-direction>
-        <button nz-button (click)="reload(direction)" [nzSize]="'small'"
+        <button nz-button [nzSize]="'small'"
           style="float: right; margin: 5px;">reload</button>
       </ng-template>
     </nz-transfer>
@@ -1113,7 +1101,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">首件选择</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" style="width: 100%" nzMode="multiple"
+            <nz-select [nzMaxTagCount]="3" style="width: 100%" nzMode="multiple"
               nzPlaceHolder="请选择首件" nzShowSearch nzAllowClear formControlName="firstSetting">
               <nz-option *ngFor="let option of firstData" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
               </nz-option>

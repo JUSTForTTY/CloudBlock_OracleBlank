@@ -58,7 +58,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
   conditionForm: FormGroup;
   //目标工序数据，flag为标记（包含了insert：新增）
 
-  controlArray: Array<{ id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }> = [];
+  controlArray: Array<{ potType?:string,id: string, controlInstance: string, value: string, label: string, autoExcuteControl: string, autoExcute, pageIds, desc, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }>, pageData: { transferPageId: string, oldPageId: string, currentPageId: string } }> = [];
   //已删除的目标工序
   controlDeleteArray: Array<{ id: string, controlInstance: string, value: string, label: string, flag: string, authority: Array<{ key: string, title: string, direction: string, authorityId: string }> }> = [];
   //当前数据

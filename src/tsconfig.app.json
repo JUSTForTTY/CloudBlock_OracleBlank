@@ -9,9 +9,6 @@
     ],
     "paths": {
       "mjszip":["../node_modules/jszip/dist/jszip.min.js"],
-      "@base": [
-        "/"
-      ],
       "@shared": [
         "app/shared/index"
       ],

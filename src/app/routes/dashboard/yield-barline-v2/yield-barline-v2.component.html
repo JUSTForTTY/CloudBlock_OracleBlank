@@ -7,14 +7,13 @@
     </div>
 
   </ng-template>
-  <v-chart [forceFit]="forceFit" [height]="height" [animate]="true" [theme]="theme">
+  <!-- <v-chart [forceFit]="forceFit" [height]="height" [animate]="true" [theme]="theme">
     <v-tooltip></v-tooltip>
     <v-axis dataKey="value" [show]="false"></v-axis>
     <v-legend></v-legend>
 
     <v-view [data]="data">
       
-      <!-- <v-stack-bar position="类型*产出" [color]="color" [label]="stackLabel"></v-stack-bar> -->
       <v-interval position="time*数量" [label]="stackLabel"
       [color]="polygonOpts.color"
       [adjust]="polygonOpts.adjust"
@@ -24,13 +23,13 @@
     </v-view>
 
     <v-view [data]="yieldData">
-      <v-axis  [show]="false"></v-axis> <!-- 用来更改legend -->
+      <v-axis  [show]="false"></v-axis>
       <v-smooth-line position="time*value"  [color]="potcolor" shape="smooth"></v-smooth-line>
       <v-point position="time*value"  [color]="potcolor"  shape="circle" [label]="pointLabel"></v-point>
     </v-view>
  
 
 
-  </v-chart>
+  </v-chart> -->
 
 </nz-card>

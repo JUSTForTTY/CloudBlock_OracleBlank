@@ -23,7 +23,7 @@ import { SHARED_DELON_MODULES } from './shared-delon.module';
 import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 //
  
-import { ViserModule } from 'viser-ng';
+// import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
   NgZorroAntdModule,
@@ -32,7 +32,7 @@ const THIRDMODULES = [
   InfiniteScrollModule,
   DndModule,
   ImageCropperModule,
-  ViserModule
+  // ViserModule
 ];
 // #endregion
 

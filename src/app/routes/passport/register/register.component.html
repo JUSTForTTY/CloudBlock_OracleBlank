@@ -1,4 +1,4 @@
-<h3>注册</h3>
+<!-- <h3>注册</h3>
 <form nz-form [formGroup]="form" (ngSubmit)="submit()" role="form">
     <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
     <nz-form-item>
@@ -13,13 +13,12 @@
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-        <nz-form-control>
-            <nz-popover [nzPlacement]="'right'" [nzTrigger]="'focus'" [(nzVisible)]="visible"
+        <nz-form-control nzErrorTip="请输入密码！">
+            <nz-popover [nzPopoverPlacement]="'right'" [nzTrigger]="'focus'" [(nzVisible)]="visible"
                 nzOverlayClassName="register-password-cdk" [nzOverlayStyle]="{'width.px': 240}">
                 <nz-input-group nzSize="large" nz-popover nzAddonBeforeIcon="anticon anticon-lock">
                     <input nz-input type="password" formControlName="password" placeholder="至少6位密码，区分大小写">
                 </nz-input-group>
-                <nz-form-explain *ngIf="password.dirty && password.errors">请输入密码！</nz-form-explain>
                 <ng-template #nzTemplate>
                     <div style="padding: 4px 0;">
                         <ng-container [ngSwitch]="status">
@@ -41,18 +40,14 @@
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-        <nz-form-control>
+        <nz-form-control nzErrorTip="两次输入的密码不匹配！">
             <nz-input-group nzSize="large" nzAddonBeforeIcon="anticon anticon-lock">
                 <input nz-input type="password" formControlName="confirm" placeholder="确认密码">
             </nz-input-group>
-            <ng-container *ngIf="confirm.dirty && confirm.errors">
-                <nz-form-explain *ngIf="confirm.errors?.required">请确认密码！</nz-form-explain>
-                <nz-form-explain *ngIf="confirm.errors?.equar">两次输入的密码不匹配！</nz-form-explain>
-            </ng-container>
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-        <nz-form-control>
+        <nz-form-control nzErrorTip="请输入手机号！">
             <nz-input-group nzSize="large" [nzAddOnBefore]="addOnBeforeTemplate">
                 <ng-template #addOnBeforeTemplate>
                     <nz-select formControlName="mobilePrefix" style="width: 100px;">
@@ -62,7 +57,6 @@
                 </ng-template>
                 <input formControlName="mobile" nz-input>
             </nz-input-group>
-            <nz-form-explain *ngIf="mobile.dirty && mobile.errors">请输入手机号！</nz-form-explain>
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -86,4 +80,4 @@
         </button>
         <a class="login" routerLink="/passport/login">使用已有账户登录</a>
     </nz-form-item>
-</form>
+</form> -->

@@ -3,11 +3,10 @@
         <nz-tab nzTitle="账户密码登录">
             <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
             <nz-form-item>
-                <nz-form-control nzHasFeedback>
+                <nz-form-control nzHasFeedback nzErrorTip="请输入账户名且至少五个字符！">
                     <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-user">
                         <input nz-input formControlName="userName" (keyup.enter)="goPages($event)" placeholder="请输入账号" autofocus="autofocus">
                     </nz-input-group>
-                    <nz-form-explain *ngIf="userName.dirty && userName.errors">请输入账户名且至少五个字符！</nz-form-explain>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>

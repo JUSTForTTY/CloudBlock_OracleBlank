@@ -4,14 +4,14 @@
             <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
             <nz-form-item>
                 <nz-form-control nzHasFeedback nzErrorTip="请输入账户名且至少五个字符！">
-                    <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-user">
+                    <nz-input-group nzSize="large" nzPrefixIcon="user">
                         <input nz-input formControlName="userName" (keyup.enter)="goPages($event)" placeholder="请输入账号" autofocus="autofocus">
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control nzHasFeedback>
-                    <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-lock">
+                    <nz-input-group nzSize="large" nzPrefixIcon="lock">
                         <input nz-input type="password" formControlName="password" (keyup.enter)="goPages($event)"
                             placeholder="请输入密码">
                     </nz-input-group>

@@ -3,7 +3,7 @@
     <nz-alert *ngIf="error" [nzType]="'error'" [nzMessage]="error" [nzShowIcon]="true" class="mb-lg"></nz-alert>
     <nz-form-item>
         <nz-form-control>
-            <nz-input-group nzSize="large" nzAddonBeforeIcon="anticon anticon-user">
+            <nz-input-group nzSize="large" nzAddonBeforeIcon="user">
                 <input nz-input formControlName="mail" placeholder="邮箱">
             </nz-input-group>
             <ng-container *ngIf="mail.dirty && mail.errors">
@@ -16,7 +16,7 @@
         <nz-form-control nzErrorTip="请输入密码！">
             <nz-popover [nzPopoverPlacement]="'right'" [nzTrigger]="'focus'" [(nzVisible)]="visible"
                 nzOverlayClassName="register-password-cdk" [nzOverlayStyle]="{'width.px': 240}">
-                <nz-input-group nzSize="large" nz-popover nzAddonBeforeIcon="anticon anticon-lock">
+                <nz-input-group nzSize="large" nz-popover nzAddonBeforeIcon="lock">
                     <input nz-input type="password" formControlName="password" placeholder="至少6位密码，区分大小写">
                 </nz-input-group>
                 <ng-template #nzTemplate>
@@ -41,7 +41,7 @@
     </nz-form-item>
     <nz-form-item>
         <nz-form-control nzErrorTip="两次输入的密码不匹配！">
-            <nz-input-group nzSize="large" nzAddonBeforeIcon="anticon anticon-lock">
+            <nz-input-group nzSize="large" nzAddonBeforeIcon="lock">
                 <input nz-input type="password" formControlName="confirm" placeholder="确认密码">
             </nz-input-group>
         </nz-form-control>

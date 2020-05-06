@@ -34,14 +34,6 @@
       "@env/*": [
         "environments/*"
       ],
-      "ngx-block": [
-        "app/shared/block/block.module"
-      ],
-      "ngx-block/*": [
-        "app/shared/*"
-      ],
-      "ngx-block-core": ["../dist/ngx-block-core"],
-      "ngx-block-core/*": ["../dist/ngx-block-core/*"],
     }
   },
   "angularCompilerOptions": {

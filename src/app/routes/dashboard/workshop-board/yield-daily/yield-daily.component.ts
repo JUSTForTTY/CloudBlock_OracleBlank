@@ -125,7 +125,7 @@ export class YieldDailyComponent implements OnInit {
         fontWeight: '400'
 
       }
-    });
+    }).shape('smooth');
     // this.chart.point().position('date*value').shape('circle');
     console.log('this.data',this.height,this.data)
     this.chart.render();

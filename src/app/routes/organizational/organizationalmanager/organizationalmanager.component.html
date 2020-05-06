@@ -9,130 +9,122 @@
     </div>
   </div>
 </nz-card> -->
-  <nz-card [nzBordered]="false">
-    <div class="d-flex align-items-center mb-lg">
-      <h3 class="flex-1 text-lg">组织架构列表</h3>
-      <div>
+<nz-card [nzBordered]="false">
+  <div class="d-flex align-items-center mb-lg">
+    <h3 class="flex-1 text-lg">组织架构列表</h3>
+    <div>
         <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-          <input type="text" nz-input placeholder="请输入组织架构名称" [(ngModel)]="searchContent">
-        </nz-input-group>
-        <ng-template #suffixButton>
-          <button nz-button nzType="primary" nzSearch (click)="searchOrganizationalList()">查询</button>
-        </ng-template>
-      </div>
-      <div style="margin-left:8px;margin-right: 20px">
-        <button nz-button nzType="primary" nzSearch (click)="resetingOrganizationList()">重置</button>
-      </div>
-    </div>
-    <button nz-button (click)="addOrganize()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-      <i class="anticon anticon-plus"></i>
-      <span>添加</span>
-    </button>
-    <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
-      <ng-template #item let-item>
-        <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
-          <ng-template #edit>
-            <!-- <a routerLink="/authority/organizationalchart">组织变更</a> -->
-            <a (click)="navigatedetail(item)">组织变更</a>
+            <input type="text" nz-input placeholder="请输入组织架构名称" [(ngModel)]="searchContent">
+          </nz-input-group>
+          <ng-template #suffixButton>
+            <button nz-button nzType="primary" nzSearch (click)="searchOrganizationalList()">查询</button>
           </ng-template>
-          <ng-template #op>
+    </div>
+    <div style="margin-left:8px;margin-right: 20px">
+        <button nz-button nzType="primary" nzSearch (click)="resetingOrganizationList()" >重置</button>
+    </div>
+  </div>
+  <button nz-button (click)="addOrganize()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+    <i class="anticon anticon-plus"></i>
+    <span>添加</span>
+  </button>
+  <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
+        <ng-template #edit>
+          <!-- <a routerLink="/authority/organizationalchart">组织变更</a> -->
+          <a (click)="navigatedetail(item)">组织变更</a>
+        </ng-template>
+        <ng-template #op>
 
-            <nz-dropdown>
-              <a class="ant-dropdown-link" nz-dropdown>
-                更多
-                <i class="anticon anticon-down"></i>
-              </a>
+
+            <a class="ant-dropdown-link" nz-dropdown [nzDropdownMenu]="menu">
+              更多
+              <i class="anticon anticon-down"></i>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
               <ul nz-menu>
                 <li nz-menu-item (click)="editOrganizeInit(item)">编辑</li>
                 <li nz-menu-item (click)="deleteOrganizeInit(item)">删除</li>
               </ul>
-            </nz-dropdown>
+            </nz-dropdown-menu>
+        </ng-template>
+        <ng-template>
+          <a>{{item.csysOrgStruceId}}</a>
+        </ng-template>
+        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
+          <ng-template #nzTitle>
+            <a href="{{item.href}}" target="_blank">{{item.csysOrgStruceName}}</a>
           </ng-template>
-          <ng-template>
-            <a>{{item.csysOrgStruceId}}</a>
-          </ng-template>
-          <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
-            <ng-template #nzTitle>
-              <a href="{{item.href}}" target="_blank">{{item.csysOrgStruceName}}</a>
-            </ng-template>
-            <ng-template #nzAvatar>
-              <nz-avatar [nzSrc]="logo" nzSize="large" [nzShape]="'circle'">工</nz-avatar>
+          <ng-template #nzAvatar>
+            <nz-avatar [nzSrc]="logo" nzSize="large" [nzShape]="'circle'">工</nz-avatar>
 
-            </ng-template>
-          </nz-list-item-meta>
-          <ng-template #nzContent>
-            <div class="width-md">
-              <div class="d-flex text-grey-dark">
-                <div class="flex-1">
-                  创建人
-                  <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                    [nzTitle]="item.csysOrgStruceCreateUser">
-                    {{item.csysOrgStruceCreateUser}}</p>
-                </div>
-                <div class="text-right">
-                  创建时间
-                  <p>{{item.csysOrgStruceCreateTime | _date}}</p>
-                </div>
+          </ng-template>
+        </nz-list-item-meta>
+        <ng-template #nzContent>
+          <div class="width-md">
+            <div class="d-flex text-grey-dark">
+              <div class="flex-1">
+                创建人
+                <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTooltipTitle]="item.csysOrgStruceCreateUser">
+                {{item.csysOrgStruceCreateUser}}</p>
               </div>
-              <!-- <nz-progress [nzPercent]="item.percent" [nzStatus]="item.status" [nzStrokeWidth]="6"></nz-progress> -->
+              <div class="text-right">
+                创建时间
+                <p>{{item.csysOrgStruceCreateTime | _date}}</p>
+              </div>
             </div>
-          </ng-template>
-        </nz-list-item>
-      </ng-template>
-      <ng-template #pagination>
-        <nz-pagination [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage"
-          (nzPageIndexChange)="getOrganize($event)"></nz-pagination>
-      </ng-template>
-    </nz-list>
-  </nz-card>
-
-  <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title"
-    (nzOnCancel)="handleCancel()" [nzOkLoading]="isOkLoading" [nzFooter]="modalFooter">
-    <form nz-form [formGroup]="form">
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="organizeName">组织结构名称</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.get('organizeName')">
-          <input nz-input formControlName="organizeName" id="organizeName" placeholder="给目组织架构起个名称吧">
-          <nz-form-explain *ngIf="form.get('organizeName').dirty && form.get('organizeName').errors">请输入组织架构名称
-          </nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="oragnizeType" nzRequired>组织结构类型</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <nz-radio-group id="oragnizeType" formControlName="oragnizeType">
-            <label nz-radio nzValue="0">主组织</label>
-            <label nz-radio nzValue="1">分组织</label>
-          </nz-radio-group>
-          <nz-form-explain *ngIf="form.get('oragnizeType').dirty && form.get('oragnizeType').errors"></nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="isEnabled" nzRequired>是否启用</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <nz-switch [ngModel]="true" id="isEnabled" formControlName="isEnabled" nzCheckedChildren="开"
-            nzUnCheckedChildren="关"></nz-switch>
-          <nz-form-explain *ngIf="form.get('isEnabled').dirty && form.get('isEnabled').errors"></nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enablePages" nzRequired>生效页面</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-          <div style="border-bottom: 1px solid rgb(233, 233, 233);">
-            <label nz-checkbox [(ngModel)]="allChecked" id="pagesallcheck" formControlName="pagesallcheck"
-              (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate">
-              全选
-            </label>
+            <!-- <nz-progress [nzPercent]="item.percent" [nzStatus]="item.status" [nzStrokeWidth]="6"></nz-progress> -->
           </div>
-          <nz-checkbox-group id="enablePages" formControlName="enablePages" [(ngModel)]="pageList"
-            (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
-        </nz-form-control>
-      </nz-form-item>
-      <ng-template #modalFooter>
-        <button nz-button nzType="default" (click)="handleCancel()">取消</button>
-        <button nz-button nzType="primary" type="submit" (click)="saveOrganize()" [disabled]="form.invalid"
-          [nzLoading]="isOkLoading">确认</button>
-      </ng-template>
-    </form>
-  </nz-modal>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template #pagination>
+      <nz-pagination [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage" (nzPageIndexChange)="getOrganize($event)"></nz-pagination>
+    </ng-template>
+  </nz-list>
+</nz-card>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title" (nzOnCancel)="handleCancel()"
+  [nzOkLoading]="isOkLoading" [nzFooter]="modalFooter">
+  <form nz-form [formGroup]="form">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="organizeName">组织结构名称</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="form.get('organizeName')" nzErrorTip="请输入组织架构名称">
+        <input nz-input formControlName="organizeName" id="organizeName" placeholder="给目组织架构起个名称吧">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="oragnizeType" nzRequired>组织结构类型</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="error">
+        <nz-radio-group id="oragnizeType" formControlName="oragnizeType">
+          <label nz-radio nzValue="0">主组织</label>
+          <label nz-radio nzValue="1">分组织</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="isEnabled" nzRequired>是否启用</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <nz-switch [ngModel]="true" id="isEnabled" formControlName="isEnabled" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="enablePages" nzRequired>生效页面</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <div style="border-bottom: 1px solid rgb(233, 233, 233);">
+          <label nz-checkbox [(ngModel)]="allChecked" id="pagesallcheck" formControlName="pagesallcheck" (ngModelChange)="updateAllChecked()"
+            [nzIndeterminate]="indeterminate">
+            全选
+          </label>
+        </div>
+        <nz-checkbox-group id="enablePages" formControlName="enablePages" [(ngModel)]="pageList" (ngModelChange)="updateSingleChecked()"></nz-checkbox-group>
+      </nz-form-control>
+    </nz-form-item>
+    <ng-template #modalFooter>
+      <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+      <button nz-button nzType="primary" type="submit" (click)="saveOrganize()" [disabled]="form.invalid" [nzLoading]="isOkLoading">确认</button>
+    </ng-template>
+  </form>
+</nz-modal>
 </div>

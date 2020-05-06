@@ -20,6 +20,7 @@
     "start": "ng serve -o",
     "serve:hmr": "ng serve -o --hmr -e=hmr",
     "build": "npm run color-less && node --max_old_space_size=8196 ./node_modules/@angular/cli/bin/ng build  --prod --build-optimizer",
+    "build2": "npm run color-less && node --max_old_space_size=8196 ./node_modules/@angular/cli/bin/ng build  --prod --build-optimizer",
     "analyze": "ng build --prod --build-optimizer --stats-json",
     "lint": "run-s lint:ts lint:style",
     "lint:ts": "ng lint",

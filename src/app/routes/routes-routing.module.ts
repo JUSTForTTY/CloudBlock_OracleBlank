@@ -55,14 +55,14 @@ const routes: Routes = [
     //模块管理
     {
 
-        path: 'block', loadChildren: './myblock/myblock.module#MyblockModule', data: { title: '模块管理' },
+        path: 'block', loadChildren: () => import('./myblock/myblock.module').then(m => m.MyblockModule), data: { title: '模块管理' },
         component: LayoutDefaultComponent,
 
     },
     //组织权限
     {
 
-        path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' },
+        path: 'authority', loadChildren: () => import('./organizational/organizational.module').then(m => m.OrganizationalModule), data: { title: '组织权限' },
         component: LayoutDefaultComponent,
 
     },
@@ -71,8 +71,8 @@ const routes: Routes = [
         path: 'fullscreen',
         component: LayoutFullScreenComponent,
         children: [
-            { path: 'default/pages', loadChildren: './pages/pages.module#PagesModule' },
-            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+            { path: 'default/pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
+            { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },

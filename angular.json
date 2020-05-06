@@ -229,5 +229,8 @@
       }
     }
   },
-  "defaultProject": "CloudBlock_Blank_Oracle"
+  "defaultProject": "CloudBlock_Blank_Oracle",
+  "cli": {
+    "analytics": false
+  }
 }

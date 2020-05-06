@@ -25,11 +25,12 @@ import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
   NgZorroAntdModule,
-  CountdownModule,
   UEditorModule,
   NgxTinymceModule,
   InfiniteScrollModule,
   DndModule,
+  ImageCropperModule,
+  ViserModule
 ];
 // #endregion
 
@@ -49,9 +50,10 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
-    ViserModule,
     // third libs
     ...THIRDMODULES,
+    ...SHARED_DELON_MODULES,
+    ...SHARED_ZORRO_MODULES
   ],
   declarations: [
     // your components
@@ -68,7 +70,6 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
-    ViserModule,
     // i18n
     TranslateModule,
     // third libs
@@ -76,6 +77,8 @@ const DIRECTIVES = [];
     // your components
     ...COMPONENTS,
     ...DIRECTIVES,
+    ...SHARED_DELON_MODULES,
+    ...SHARED_ZORRO_MODULES
   ],
 })
 export class SharedModule {}

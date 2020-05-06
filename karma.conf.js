@@ -16,8 +16,8 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../coverage'),
-      reports: ['html', 'lcovonly'],
+      dir: require('path').join(__dirname, './coverage/CloudBlock_Blank_Oracle'),
+      reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
     reporters: ['progress', 'kjhtml'],
@@ -29,6 +29,7 @@ module.exports = function (config) {
     singleRun: false,
     browserNoActivityTimeout: 60000,
     browserDisconnectTimeout: 30000,
-    captureTimeout: 60000
+    captureTimeout: 60000,
+    restartOnFileChange: true
   });
 };

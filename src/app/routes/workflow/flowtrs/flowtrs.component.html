@@ -31,7 +31,7 @@
     </button>
     <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
       <ng-template #item let-item>
-        <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
+        <nz-list-item [nzContent]="nzContent" [nzActions]="[edit]">
           <ng-template #edit>
             <a (click)="showPot(item)">查看工序</a>
             <nz-divider nzType="vertical"></nz-divider>
@@ -83,10 +83,8 @@
       <form nz-form [formGroup]="form">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="flowGrpupName">工序组名称</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('flowGrpupName')">
+          <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('flowGrpupName')" nzErrorTip="请输入工序组名称">
             <input nz-input formControlName="flowGrpupName" id="workFlowName" placeholder="请输入公共工序名称">
-            <nz-form-explain *ngIf="form.get('flowGrpupName').dirty && form.get('flowGrpupName').errors">请输入工序组名称
-            </nz-form-explain>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>

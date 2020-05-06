@@ -4,7 +4,7 @@ import { HttpService } from 'ngx-block-core';
 import { environment } from '@env/environment';
 import { ActivatedRoute } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
-import { NzNotificationService, NzModalService } from 'ng-zorro-antd';
+import { NzNotificationService, NzModalService ,NzConfigService} from 'ng-zorro-antd';
 
 const home_url = environment.HOME_URL;
 
@@ -12,7 +12,7 @@ const home_url = environment.HOME_URL;
   selector: 'layout-header',
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NzNotificationService]
+  providers: [NzNotificationService,NzConfigService ]
 })
 export class HeaderComponent implements OnInit {
   searchToggleStatus: boolean;
@@ -36,6 +36,7 @@ export class HeaderComponent implements OnInit {
     private notification: NzNotificationService,
     private modalService: NzModalService,
     private route: ActivatedRoute,
+    private nzConfigService:NzConfigService,
     private location: PlatformLocation) {
     // this.versiontimer = setTimeout(this.getClock, 0);
   }
@@ -156,10 +157,11 @@ export class HeaderComponent implements OnInit {
 
   createBasicNotification(template: TemplateRef<{}>): void {
     this.notification.remove();
-    this.notification.config({
+    this.nzConfigService.set('notification',{
       nzDuration: 0,
-      nzPlacement: this.placement
-    });
+      nzPlacement: 'topRight'
+    })
+
     this.notification.template(template);
   }
 

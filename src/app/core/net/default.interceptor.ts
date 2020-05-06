@@ -4,7 +4,7 @@ import {
   HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse, HttpResponseBase, HttpResponse, HttpEvent,
 } from '@angular/common/http';
 import { ITokenService, DA_SERVICE_TOKEN } from '@delon/auth';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { mergeMap, catchError } from 'rxjs/operators';
 import { NzMessageService, NzNotificationService } from 'ng-zorro-antd';
 import { _HttpClient, SettingsService } from '@delon/theme';
@@ -12,7 +12,6 @@ import { environment } from '@env/environment';
 import { HttpService, JwtService } from 'ngx-block-core';
 import { CacheService } from '@delon/cache';
 import { UserService } from './../service/user.service';
-
 const loginHttpUrl = environment.SERVER_URL + "/v1/authlogin?_allow_anonymous=true";
 const registerHttpUrl = environment.SERVER_URL + "/cloudblock/v1/register";
 const getCodeHttpUrl = environment.SERVER_URL + "/system/postMessage";
@@ -50,11 +49,14 @@ const NOTFILTER = [
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
 
-  constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService, private notification: NzNotificationService,
+  constructor(private injector: Injector, private cacheService: CacheService, private settingService: SettingsService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService, private httpService: HttpService, private jwtService: JwtService,private userService: UserService, private router: Router) { }
 
   get msg(): NzMessageService {
     return this.injector.get(NzMessageService);
+  }
+  private get notification(): NzNotificationService {
+    return this.injector.get(NzNotificationService);
   }
 
   private goTo(url: string) {
@@ -65,10 +67,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     if (ev.status >= 200 && ev.status < 300) return;
 
     // const errortext = CODEMESSAGE[ev.status] || ev.statusText;
-    // this.injector.get(NzNotificationService).error(
-    //   `请求错误 ${ev.status}: ${ev.url}`,
-    //   errortext
-    // );
+    // this.notification.error(`请求错误 ${ev.status}: ${ev.url}`, errortext);
   }
   private handleData(ev: HttpResponseBase): Observable<any> {
     // 可能会因为 `throw` 导出无法执行 `_HttpClient` 的 `end()` 操作
@@ -77,7 +76,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     }
     this.checkStatus(ev);
     // 业务处理：一些通用操作
-
+    
     console.log("回调处理", ev);
     let noticeflag = true;
     switch (ev.status) {
@@ -156,23 +155,26 @@ export class DefaultInterceptor implements HttpInterceptor {
       }
         break;
     }
-    return of(ev);
-  }
+    if (ev instanceof HttpErrorResponse) {
+      return throwError(ev);
+    } else {
+      return of(ev);
+    }}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const headersConfig:any = {
 
     };
-
+    
     const token = this.jwtService.getToken(server_name);
 
-        if (token) {
-            console.log("头部token", token);
-            headersConfig['access_token'] = `${token['access_token']}`;
-            headersConfig['refresh_token'] = `${token['refresh_token']}`;
-        }
+    if (token) {
+      console.log("头部token", token);
+      headersConfig['access_token'] = `${token['access_token']}`;
+      headersConfig['refresh_token'] = `${token['refresh_token']}`;
+  }
 
-    console.log("headerconfig", headersConfig);
+console.log("headerconfig", headersConfig);
     // 统一加上服务端前缀
     let url = req.url;
     if (!url.startsWith('https://') && !url.startsWith('http://') && !url.startsWith('assets/')) {

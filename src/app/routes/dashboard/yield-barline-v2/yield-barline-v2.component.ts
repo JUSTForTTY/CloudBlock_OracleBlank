@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
 const DataSet = require('@antv/data-set');
+import { Chart } from '@antv/g2/dist/g2.min.js';
+
 
 const sourceData = [
   { name: '良品', '8:30-9:30.': 100, '9:30-10:30.': 128.8, '10:30-11:30.': 139.3, '11:30-12:30.': 181.4, '12:30-13:30': 147, '13:30-14:30.': 120.3, '14:30-15:30.': 124, '15:30-16:30.': 135.6, '16:30-17:30.': 135.6, '17:30-18:30.': 135.6, '18:30-19:30.': 135.6, '19:30-20:30.': 135.6 },
@@ -105,7 +107,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
   height: number = 490;
   color;
   potcolor;
-  stackLabel = ['数量*类型', function (val, 类型) {
+  stackLabel = ['number*类型', function (val, 类型) {
     if (类型 == '计划') {
       return {
         offset: -20,
@@ -212,8 +214,9 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
 
       console.log("图-data", this.data)
       console.log("图-group", this.group)
-      this.prolineDataTransform_V2();
-      this.prolineYieldDataTransform();
+      // this.prolineDataTransform_V2();
+      // this.prolineYieldDataTransform();
+      this.render();
     }, (err) => {
       console.log("图-看板数据-接口异常");
 
@@ -221,7 +224,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
 
   }
   scale = [{
-    dataKey: '数量',
+    dataKey: 'number',
     tickInterval: 1000000,
   }];
 
@@ -234,10 +237,10 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
     color: ['类型', (类型) => {
       return this.colorMap[类型];
     }],
-    tooltip: ['类型*数量', (类型, 数量) => {
+    tooltip: ['类型*number', (类型, number) => {
       return {
         name: 类型,
-        value: 数量
+        value: number
       };
     }],
     adjust: [
@@ -251,13 +254,217 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
       }
     ],
   };
+  chart: Chart;
+  render() {
+    if (this.chart) this.chart.destroy();
+    this.chart = new Chart({
+      container: 'yield2',
+      autoFit: true,
+      height: this.height
+    });
+    const ds = new DataSet();
+    const dv = ds
+      .createView()
+      .source(this.data)
+      .transform({
+        type: 'fold',
+        fields: this.group,
+        key: '类型',
+        value: 'number',
+        retains: ['time']
+      })
+      .transform({
+        type: 'map',
+        callback: obj => {
+          const key = obj.类型;
+          let type;
+          console.log("图-key", key)
+          if (key === '计划') {
+            type = 'a';
+          } else {
+            type = 'b';
+          }
+          obj.type = type;
+          return obj;
+        }
+      });
+      this.chart.scale( {
+        number:{
+          min:0,
+          tickCount:8
+        },
+        value: {
+          min: 0,
+        }
+      });
+      this.chart.legend({
+        itemName: {
+          style: {
+            fill: '#fff',
+          },
+        }
+      });
+      this.chart
+      .axis('time', {
+        title: null,
+        label: {
+          style: {
+            fill: '#ffffff',
+          },
+        }
+      })
+      .axis('number', {
+        label: {
+          style: {
+            fill: '#ffffff',
+          },
+        },
+        title: null,
+      })
+      .axis('value', {
+        grid:null,
+        label: {
+          style: {
+            fill: 'rgba(255, 255, 255, 0)'
+          },
+        },
+        title: null,
+      })
+    const view1 = this.chart.createView();
+    view1.data(dv.rows);
+    console.log('dv.rows',dv.rows);
+   
+    view1.tooltip({
+      showMarkers: false,
+      shared: true,
+    });
+    view1
+      .interval()
+      .position('time*number')
+      .color('类型', (类型) => {
+        return this.colorMap[类型];
+      }).
+      label('number*类型', function (val, 类型) {
+        if (类型 == '计划') {
+          return {
+            offset: -20,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            content: val+'' === '0'?'':val,
+          };
+        } else if (类型 == '良品') {
+          return {
+            position: 'middle',
+            offset: 0,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            content: val+'' === '0'?'':val,
+
+          };
+        } else {
+          return {
+            offset: 0,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            content: val+'' === '0'?'':val,
+
+          };
+        }
+    
+      })
+      .adjust({
+        type: 'dodge',
+        dodgeBy: 'type', // 按照 type 字段进行分组
+        marginRatio: 0 // 分组中各个柱子之间不留空隙
+      });
+
+    view1.interaction('active-region');
+
+    const view2 = this.chart.createView();
+    const ds2 = new DataSet();
+    const dv2 = ds2
+      .createView()
+      .source(this.yieldData)
+      .transform({
+        type: 'fold',
+        fields: ['良率', '效率'],
+        key: 'type',
+        value: 'value',
+      });
+    view2.data(dv2.rows);
+    view2
+      .line()
+      .position('time*value')
+      .color('type', function (val) {
+        if (val === '良率') {
+          return '#389e0d';
+        }
+        return '#d48806';
+      })
+      .shape('smooth');
+
+    view2
+      .point()
+      .position('time*value')
+      .color('type', function (val) {
+        if (val === '良率') {
+          return '#389e0d';
+        }
+        return '#d48806';
+      }).label('value', function (val) {
+        if(val>=98){
+          return {
+            position: 'middle',
+            offset: -5,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            content: val + '%',
+          };
+        }else{
+          return {
+            position: 'middle',
+            offset: 0,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            content: val + '%',
+          };
+        }
+        
+      })
+      .shape('circle');
+      view2.axis({
+        title: {},
+        label:{}
+      });
+    this.chart.render();
+  }
   prolineDataTransform_V2() {
     let dv = new DataSet.View().source(this.data);
     dv.transform({
       type: 'fold',
       fields: this.group,
       key: '类型',
-      value: '数量',
+      value: 'number',
       retains: ['time']
     })
       .transform({

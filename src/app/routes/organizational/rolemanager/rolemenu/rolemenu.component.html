@@ -24,7 +24,7 @@
           <span>已删除</span>
         </label>
       </nz-radio-group>
-      <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
+      <nz-input-group nzSuffixIcon="search" style="width: 270px;">
         <input type="text" nz-input placeholder="请输入" [(ngModel)]="q.q" name="q">
       </nz-input-group>
     </div>
@@ -68,7 +68,7 @@
       </nz-list-item>
     </ng-template>
     <ng-template #pagination>
-      <nz-pagination [nzTotal]="50" [nzPageSize]="5" (nzPageIndexChange)="getData()"></nz-pagination>
+      <nz-pagination [nzTotal]="50" [nzPageSize]="5" ></nz-pagination>
     </ng-template>
   </nz-list>
 </nz-card>
@@ -82,7 +82,7 @@
       {{ item.title }}-{{ item.description }}
     </ng-template>
     <ng-template #footer let-direction>
-      <button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">reload</button>
+      <button nz-button  [nzSize]="'small'" style="float: right; margin: 5px;">reload</button>
     </ng-template>
 
 

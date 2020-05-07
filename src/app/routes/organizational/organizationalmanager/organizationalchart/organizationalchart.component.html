@@ -48,10 +48,8 @@
           <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
             <nz-form-item>
               <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="addNodeName">部门名称</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="16" nzMd="16">
+              <nz-form-control nzXs="24" nzSm="16" nzMd="16" nzErrorTip="请输入部门名称">
                 <input nz-input formControlName="addNodeName" id="addNodeName" placeholder="给目标起个名字">
-                <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">
-                  请输入部门名称</nz-form-explain>
               </nz-form-control>
             </nz-form-item>
             <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
@@ -60,7 +58,7 @@
             </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
-              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7" nzErrorTip="Please input passenger's name or delete this field.">
                 <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id" [formControlName]="control.controlInstance"> -->
                 <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
                   (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
@@ -76,10 +74,6 @@
                 nzShape="circle">
                 <i class="anticon anticon-usergroup-add"></i>
               </button> -->
-                <nz-form-explain
-                  *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                  Please input passenger's name or delete this field.
-                </nz-form-explain>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -106,17 +100,15 @@
           <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
             <nz-form-item hidden>
               <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">部门编号</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+              <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请输入部门编号">
                 <input nz-input disabled="disabled" formControlName="id" id="id" placeholder="">
-                <nz-form-explain *ngIf="editForm.get('id').dirty && editForm.get('id').errors">请输入部门编号</nz-form-explain>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
               <nz-form-label nzXs="24" nzSm="8" nzRequired nzFor="nodeEditName">部门名称</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="16" nzMd="16">
+              <nz-form-control nzXs="24" nzSm="16" nzMd="16" nzErrorTip="请输入部门名称">
                 <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="给目部门起个名字">
-                <nz-form-explain *ngIf="editForm.get('nodeEditName').dirty && editForm.get('nodeEditName').errors">
-                  请输入部门名称</nz-form-explain>
+
               </nz-form-control>
             </nz-form-item>
             <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
@@ -125,7 +117,7 @@
             </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
-              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7" nzErrorTip="目标部门">
                 <!-- <input nz-input style="width: 60%; margin-right:8px;" placeholder="placeholder" [attr.id]="control.id
                 " [formControlName]="control.controlInstance"> -->
 
@@ -143,11 +135,6 @@
                 nzShape="circle">
                 <i class="anticon anticon-usergroup-add"></i>
               </button> -->
-
-                <nz-form-explain
-                  *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                  Please input passenger's name or delete this field.
-                </nz-form-explain>
               </nz-form-control>
             </nz-form-item>
 
@@ -291,59 +278,45 @@
       </nz-table>
     </div>
     <div *ngIf="windowShow == 'adduser'">
-      <form nz-form [formGroup]="addUserForm" (ngSubmit)="submitUserForm()">
+      <form nz-form [formGroup]="addUserForm">
         <nz-form-item>
           <nz-form-label nzSpan="5" nzRequired nzFor="username" [nzOffset]="2">用户名</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10"  nzErrorTip="用户名不能存在中文或者特殊字符">
             <input nz-input formControlName="username" placeholder="请输入用户名">
-            <nz-form-explain *ngIf="addUserForm.get('username').dirty && addUserForm.get('username').errors">
-              用户名不能存在中文或者特殊字符</nz-form-explain>
+
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzRequired nzFor="password" [nzOffset]="2">密码</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请输入密码">
             <input type="password" nz-input formControlName="password" placeholder="请输入密码">
-            <nz-form-explain *ngIf="addUserForm.get('password').dirty && addUserForm.get('password').errors">请输入密码
-            </nz-form-explain>
+
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzRequired nzFor="confitmPassword" [nzOffset]="2">确认密码</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="未输入密码或两次密码不相同，请重新输入！">
             <input type="password" nz-input formControlName="confitmPassword" placeholder="请再次输入密码">
-            <nz-form-explain
-              *ngIf="addUserForm.get('confitmPassword').dirty && addUserForm.get('confitmPassword').errors">
-              <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('required')">
-                请输入密码
-              </ng-container>
-              <ng-container *ngIf="addUserForm.get('confitmPassword').hasError('confirm')">
-                两次密码不相同，请重新输入！
-              </ng-container>
-            </nz-form-explain>
+
           </nz-form-control>
 
         </nz-form-item>
         <nz-divider nzDashed="true"></nz-divider>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzFor="position" [nzOffset]="2" nzRequired>用户组</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请选择用户组">
             <nz-select style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择用户组" formControlName="position">
               <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.csysRoleName"
                 [nzValue]="option.csysRoleId"></nz-option>
             </nz-select>
-            <nz-form-explain *ngIf="addUserForm.get('position').dirty && addUserForm.get('position').errors">请选择用户组
-            </nz-form-explain>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzFor="department" [nzOffset]="2" nzRequired>组织</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请选择组织">
             <nz-tree-select [nzNodes]="nodes1" [nzDefaultExpandAll]="true" [nzAllowClear]="false" nzPlaceHolder="请选择组织"
               [nzMultiple]="true" formControlName="department">
             </nz-tree-select>
-            <nz-form-explain *ngIf="addUserForm.get('department').dirty && addUserForm.get('department').errors">请选择组织
-            </nz-form-explain>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -355,10 +328,9 @@
         <nz-divider nzDashed="true"></nz-divider>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzRequired nzFor="name" [nzOffset]="2">姓名</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请输入姓名">
             <input nz-input formControlName="name" placeholder="请输入姓名">
-            <nz-form-explain *ngIf="addUserForm.get('name').dirty && addUserForm.get('name').errors">请输入姓名
-            </nz-form-explain>
+
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -379,18 +351,15 @@
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzRequired nzFor="phone" [nzOffset]="2">联系电话</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请输入联系电话">
             <input nz-input formControlName="phone" placeholder="请输入联系电话">
-            <nz-form-explain *ngIf="addUserForm.get('phone').dirty && addUserForm.get('phone').errors">请输入联系电话
-            </nz-form-explain>
+
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label nzSpan="5" nzFor="email" [nzOffset]="2">邮箱</nz-form-label>
-          <nz-form-control nzSpan="10">
+          <nz-form-control nzSpan="10" nzErrorTip="请输入正确的邮箱!">
             <input nz-input formControlName="email" id="email" placeholder="请输入邮箱">
-            <nz-form-explain *ngIf="addUserForm.get('email').dirty && addUserForm.get('email').errors">请输入正确的邮箱!
-            </nz-form-explain>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>

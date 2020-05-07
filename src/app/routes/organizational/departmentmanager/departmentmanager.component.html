@@ -6,7 +6,7 @@
       <span class="d-block display-2">8个部门</span>
       <em></em>
     </div>
-     
+
   </div>
 </nz-card>
 <nz-card [nzBordered]="false">
@@ -24,12 +24,12 @@
           <span>已删除</span>
         </label>
       </nz-radio-group>
-      <nz-input-group nzSuffixIcon="anticon anticon-search" style="width: 270px;">
+      <nz-input-group nzSuffixIcon="search" style="width: 270px;">
         <input type="text" nz-input placeholder="请输入" [(ngModel)]="q.q" name="q">
       </nz-input-group>
     </div>
   </div>
-  <button nz-button  [nzType]="'dashed'" class="ant-btn__block mb-sm">
+  <button nz-button [nzType]="'dashed'" class="ant-btn__block mb-sm">
     <i class="anticon anticon-plus"></i>
     <span>添加</span>
   </button>
@@ -37,29 +37,29 @@
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" [nzActions]="[useredit,menuedit, pageedit,op]">
         <ng-template #useredit>
-          <a  routerLink="/authority/rolemember" >用户组成员</a>
-          
+          <a routerLink="/authority/rolemember">用户组成员</a>
+
         </ng-template>
         <ng-template #menuedit>
-          
-          <a   (click)="showModal()" >用户组菜单</a>
+
+          <a (click)="showModal()">用户组菜单</a>
         </ng-template>
         <ng-template #pageedit>
-          
-          <a   routerLink="/authority/rolepage"  >用户组权限</a>
+
+          <a routerLink="/authority/rolepage">用户组权限</a>
         </ng-template>
         <ng-template #op>
-        
-          <nz-dropdown>
-            <a class="ant-dropdown-link" nz-dropdown>
-             更多
-              <i class="anticon anticon-down"></i>
-            </a>
+
+          <a class="ant-dropdown-link" nz-dropdown [nzDropdownMenu]="menu">
+            更多
+            <i class="anticon anticon-down"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
               <li nz-menu-item (click)="msg.success('编辑：' + item.title)">编辑</li>
               <li nz-menu-item (click)="msg.success('删除：' + item.title)">删除</li>
             </ul>
-          </nz-dropdown>
+          </nz-dropdown-menu>
         </ng-template>
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
           <ng-template #nzTitle>
@@ -67,7 +67,7 @@
           </ng-template>
           <ng-template #nzAvatar>
             <nz-avatar [nzSrc]="item.logo" nzSize="large" [nzShape]="'circle'"></nz-avatar>
-       
+
           </ng-template>
         </nz-list-item-meta>
         <ng-template #nzContent>
@@ -88,27 +88,24 @@
       </nz-list-item>
     </ng-template>
     <ng-template #pagination>
-      <nz-pagination [nzTotal]="50" [nzPageSize]="5" (nzPageIndexChange)="getData()"></nz-pagination>
+      <nz-pagination [nzTotal]="50" [nzPageSize]="5"></nz-pagination>
     </ng-template>
   </nz-list>
 </nz-card>
 
-<nz-modal nzWrapClassName="vertical-center-menu-modal"  [(nzVisible)]="isVisible" nzTitle="菜单分配" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading" >
-   
+<nz-modal nzWrapClassName="vertical-center-menu-modal" [(nzVisible)]="isVisible" nzTitle="菜单分配"
+  (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+
   <nz-input-group [nzSuffix]="suffixIcon">
     <input type="text" nz-input placeholder="搜索菜单" [(ngModel)]="searchValue">
   </nz-input-group>
   <ng-template #suffixIcon>
-    <i class="anticon anticon-search"></i>
+    <i nz-icon nzType="search"></i>
   </ng-template>
-  <nz-tree [(ngModel)]="nodes"
-           [nzSearchValue]="searchValue"
-           [nzCheckable]="true"
-           (nzOnSearchNode)="mouseAction('search',$event)"
-           (nzCheckBoxChange)="mouseAction('check',$event)"
-           (nzClick)="mouseAction('click', $event)"
-           (nzExpandChange)="mouseAction('expand',$event)"
-           (nzDblClick)="mouseAction('dblclick',$event)">
+  <nz-tree [(ngModel)]="nodes" [nzSearchValue]="searchValue" [nzCheckable]="true"
+    (nzSearchValueChange)="mouseAction('search',$event)" (nzCheckBoxChange)="mouseAction('check',$event)"
+    (nzClick)="mouseAction('click', $event)" (nzExpandChange)="mouseAction('expand',$event)"
+    (nzDblClick)="mouseAction('dblclick',$event)">
   </nz-tree>
-  
+
 </nz-modal>

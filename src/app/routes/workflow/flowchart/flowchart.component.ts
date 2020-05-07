@@ -3889,6 +3889,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       console.log("不需要进行规则生成");
       //删除迁移条件
 
+      if(targetPot.data.csysPotStyleId == 'LHCsysPotStyle20191111014750540000023'){
+      
       let deletebean = {
         "csysWorkflowId": this.workflowId,
         "csysPotTrsId": transferId
@@ -3916,7 +3918,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           });
 
       });
-
+   
+    }
 
 
 

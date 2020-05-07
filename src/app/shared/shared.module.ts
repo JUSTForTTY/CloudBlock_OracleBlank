@@ -16,7 +16,7 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
 import { UEditorModule } from 'ngx-ueditor';
 import { NgxTinymceModule } from 'ngx-tinymce';
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
+// import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { DndModule } from 'ngx-drag-drop';
 import { ImageCropperModule } from 'ngx-img-cropper';
 import { SHARED_DELON_MODULES } from './shared-delon.module';
@@ -29,7 +29,7 @@ const THIRDMODULES = [
   NgZorroAntdModule,
   UEditorModule,
   NgxTinymceModule,
-  InfiniteScrollModule,
+  // InfiniteScrollModule,
   DndModule,
   ImageCropperModule,
   // ViserModule

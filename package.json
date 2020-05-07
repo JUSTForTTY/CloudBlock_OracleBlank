@@ -32,7 +32,7 @@
     "color-less": "node scripts/color-less.js",
     "gc": "cd src/app/routes/pages && ng g c",
     "gclass": "cd src/app/routes/pages && ng g class",
-    "serve": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng serve --port 4203"
+    "serve": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng serve --port 4203"
   },
   "dependencies": {
     "@angular/animations": "~9.1.4",
@@ -66,7 +66,6 @@
     "ngx-block": "^9.1.5",
     "ngx-block-core": "^9.1.4",
     "ngx-countdown": "^3.1.0",
-    "ngx-infinite-scroll": "^0.8.4",
     "ngx-tinymce": "^7.0.0",
     "qrious": "^4.0.2",
     "rxjs": "~6.5.5",

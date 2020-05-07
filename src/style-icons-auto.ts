@@ -50,7 +50,20 @@ import {
   TrophyOutline,
   UsbOutline,
   UserOutline,
-  WeiboCircleOutline
+  WeiboCircleOutline,
+  QuestionCircleTwoTone,
+  FormOutline,
+  IssuesCloseOutline,
+  SwapOutline,
+  PoweroffOutline,
+  AppstoreAddOutline,
+  SyncOutline,
+  CloudServerOutline,
+  CloudUploadOutline,
+  CopyOutline,
+  DeleteOutline,
+  LeftOutline,
+  RightOutline
 } from '@ant-design/icons-angular/icons';
 
 export const ICONS_AUTO = [
@@ -100,5 +113,18 @@ export const ICONS_AUTO = [
   TrophyOutline,
   UsbOutline,
   UserOutline,
-  WeiboCircleOutline
+  WeiboCircleOutline,
+  QuestionCircleTwoTone,
+  FormOutline,
+  IssuesCloseOutline,
+  SwapOutline,
+  PoweroffOutline,
+  AppstoreAddOutline,
+  SyncOutline,
+  CloudServerOutline,
+  CloudUploadOutline,
+  CopyOutline,
+  DeleteOutline,
+  LeftOutline,
+  RightOutline
 ];

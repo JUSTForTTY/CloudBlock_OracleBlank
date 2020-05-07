@@ -50,7 +50,7 @@ export class PlanTableComponent implements OnInit {
     this.newData = true;
     //自适应高度
     this.heightSub = this.height$.subscribe(height => {
-      console.log(height, 'plan-tableDivHeight3', height, this.basicTable['tableMainElement'].nativeElement.offsetHeight)
+      console.log(height, 'plan-tableDivHeight3', height)
       this.height = height;
       this.changeHeight(height);
     });
@@ -114,7 +114,8 @@ export class PlanTableComponent implements OnInit {
     });
   }
   changeHeight(height) {
-    const tableHeight = this.basicTable['tableMainElement'].nativeElement.offsetHeight;
+    console.log('this.basicTable',this.basicTable)
+    const tableHeight = this.basicTable['elementRef'].nativeElement.offsetHeight;
     const lineHeight = (tableHeight - 5) / ((this.basicTable['data'] as Array<any>).length + 1);
 
     this.nzPageSize = parseInt((height + 5) / lineHeight + '') - 1;

@@ -12,12 +12,17 @@ import { environment } from '@env/environment.prod';
 @Component({
   selector: 'header-user',
   template: `
-  <nz-dropdown nzPlacement="bottomRight">
-    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
+  <div
+      class="alain-default__nav-item d-flex align-items-center px-sm"
+      nz-dropdown
+      nzPlacement="bottomRight"
+      [nzDropdownMenu]="userMenu"
+    >
     <nz-avatar *ngIf="userService.getCurrentUser()['csysUserHeadimage'] == ''" nzSize="default" [nzText]="userService.getCurrentUser()['csysUserRealname']" style="background-color:#87d068;" class="mr-sm"></nz-avatar>
     <nz-avatar *ngIf="userService.getCurrentUser()['csysUserHeadimage'] != ''" nzIcon="user" [nzSrc]="userService.resourceHttp + userService.getCurrentUser()['csysUserHeadimage']"></nz-avatar>
       {{userService.getCurrentUser()['csysUserUsername']}}
     </div>
+    <nz-dropdown-menu #userMenu="nzDropdownMenu">
     <div nz-menu class="width-sm">
       <div nz-menu-item (click)="resetting()"><i nz-icon type="user" class="mr-sm"></i>
         {{ 'menu.account.center' | translate }}
@@ -30,7 +35,8 @@ import { environment } from '@env/environment.prod';
         {{ 'menu.account.logout' | translate }}
       </div>
     </div>
-  </nz-dropdown>
+    </nz-dropdown-menu>
+    
   <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <div *ngIf="!tabView" nz-row>
     <div nz-col nzSpan="8"></div>
@@ -193,7 +199,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
       let pData = {
         "csysUserId": this.userid,
         "csysUserPassword": this.password1,
-        "csysUserMeno":"1"
+        "csysUserMeno": "1"
       }
       this.httpService.putHttp("/csysuser", pData).subscribe((data: any) => {
         this.msg.success("修改成功");
@@ -339,12 +345,12 @@ export class HeaderUserComponent implements OnInit, DoCheck {
 
   getUserStatus() {
 
-    if(null!=this.userService.getCurrentUser()){
+    if (null != this.userService.getCurrentUser()) {
       if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
         this.resetPassword();
       }
     }
-    
+
 
   }
 }

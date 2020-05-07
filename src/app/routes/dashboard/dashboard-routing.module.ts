@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'performancetest', component: PerformanceTestComponent, data: { title: '性能测试' } },
   {
     path: 'workshopboard',
-    loadChildren: './workshop-board/workshop-board.module#WorkshopBoardModule'
+    loadChildren: () => import('./workshop-board/workshop-board.module').then(m => m.WorkshopBoardModule)
   },
 ];
 

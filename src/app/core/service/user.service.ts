@@ -18,7 +18,9 @@ const server_url = environment.SERVER_URL;
 const resource_url = environment.RESOURCE_SERVER_URL;
 const data_url = environment.DATA_SERVER_URL;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
   HeadUrl = "";
   private isAuthenticatedSubject = new ReplaySubject<boolean>(1);

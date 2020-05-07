@@ -25,10 +25,10 @@
           <a> <i class="anticon anticon-eye-o"></i>预览 </a>
         </ng-template>
         <ng-template #save>
-          <a nz-popconfirm nzTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPlacement="bottom"><i
+          <a nz-popconfirm nzPopconfirmTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPopconfirmPlacement="bottom"><i
               class="anticon anticon-check"></i>保存 </a>
         </ng-template>
-        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription" [nzAvatar]="nzAvatar">
+        <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription">
           <ng-template #nzTitle>
             <!-- {{item.csysPageName}} -->
             <p lines="1" style="width: 150px;" class="text-truncate" nz-tooltip [nzTitle]="item.csysPageName">
@@ -42,10 +42,9 @@
         </nz-list-item-meta>
         <ng-template #nzContent>
           <div> 
-            <!-- <div class="d-flex text-grey-dark"> -->
-            <nz-checkbox-group [(ngModel)]="item.checkOptions" (ngModelChange)="checkboxlog(item.checkOptions)">
-            </nz-checkbox-group>
-          </div>
+          <nz-checkbox-group [(ngModel)]="item.checkOptions" (ngModelChange)="checkboxlog(item.checkOptions)">
+          </nz-checkbox-group>
+        </div>
         </ng-template>
       </nz-list-item>
     </ng-template>
@@ -66,8 +65,7 @@
       {{ item.title }}-{{ item.description }}
     </ng-template>
     <ng-template #footer let-direction>
-      <button nz-button (click)="reload(direction)" [nzSize]="'small'"
-        style="float: right; margin: 5px;">reload</button>
+      <button nz-button [nzSize]="'small'" style="float: right; margin: 5px;">reload</button>
     </ng-template>
 
 

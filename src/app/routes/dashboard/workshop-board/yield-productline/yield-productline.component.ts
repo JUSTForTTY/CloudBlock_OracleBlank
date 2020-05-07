@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { HttpService } from 'ngx-block-core';
 import { ReplaySubject, Subscription } from 'rxjs';
+import { Chart } from '@antv/g2/dist/g2.min.js';
 
 @Component({
   selector: 'app-yield-productline',
@@ -72,14 +73,24 @@ export class YieldProductlineComponent implements OnInit {
 
   @Input() height: number = 400;
   @Input() data$: ReplaySubject<any>;
+  @Input() height$: ReplaySubject<number>;
+  chart: Chart;
+  public heightSub: Subscription;
+
   public dataSub: Subscription;
   goodBadDataPercent = [];
   constructor(private http: HttpService) { }
   ngOnInit() {
     this.initData();
+    this.heightSub = this.height$.subscribe(height => {
+      console.log('roundDivHeight-YieldDailyComponent', height)
+      this.height = height;
+      this.render(height, this.yieldAlarm);
+    });
   }
+
   setChartOpt(yieldAlarm) {
-    this.color = ['name*percent*line', function (val, percent,line) {
+    this.color = ['name*percent*line', function (val, percent, line) {
       // console.log('setChartOpt',yieldAlarm,val,percent,line)
       if (val === '不良品') {
         if (percent) {
@@ -150,15 +161,16 @@ export class YieldProductlineComponent implements OnInit {
       formatter: '.1%',
     }];
   }
+  yieldAlarm = {};
   initData() {
     this.dataSub = this.data$.subscribe(leftData => {
-
       console.log('yield-workshopYeildData', leftData)
       console.log('yield-alarmSettingData', leftData.alarmSettingData)
       const alarmSettingData = leftData.alarmSettingData.data;
-      let yieldAlarm = {};
       const data = leftData.yeildData
       this.yieldData = [];
+      this.goodBadDataPercent = [];
+      this.yieldAlarm = {};
       this.goodBadData = [{ name: '不良品' }, { name: '良品' }];
       this.goodBadDataFields = [];
       data.data.forEach(lineData => {
@@ -172,10 +184,10 @@ export class YieldProductlineComponent implements OnInit {
       });
 
       alarmSettingData.forEach(element => {
-        yieldAlarm[element.proLineCode] = element.wshopAlarmsettingAyeild === '' ? 0 : element.wshopAlarmsettingAyeild;
+        this.yieldAlarm[element.proLineCode] = element.wshopAlarmsettingAyeild === '' ? 0 : element.wshopAlarmsettingAyeild;
       });
-      this.setChartOpt(yieldAlarm);
-      console.log('yield-yieldAlarm', yieldAlarm)
+      this.setChartOpt(this.yieldAlarm);
+      console.log('yield-yieldAlarm', this.yieldAlarm)
       for (const key in this.goodBadData[0]) {
         if (this.goodBadData[0].hasOwnProperty(key) && key !== 'name') {
           this.goodBadDataPercent.push({
@@ -197,13 +209,236 @@ export class YieldProductlineComponent implements OnInit {
 
       this.goodBadDataPercentTransform();
       this.prolineYieldDataTransform();
+      this.render(this.height, this.yieldAlarm);
       console.log('yield-yieldData', this.yieldData);
       console.log('yield-goodBadDataPercent', this.goodBadDataPercent);
 
     });
   }
+  render(height, yieldAlarm) {
+    if (!this.height) return;
+    if (this.goodBadDataFields.length === 0) return;
+    // if (this.data.length == 0) return;
+    if (this.chart) this.chart.destroy();
+    console.log('yield-yieldData', this.yieldData);
+    this.chart = new Chart({
+      container: 'productline',
+      autoFit: true,
+      height: height - 8
+    });
+    const ds = new DataSet();
+    const dv = ds
+      .createView()
+      .source(this.goodBadDataPercent)
+      .transform({
+        type: 'percent',
+        field: '产出',
+        dimension: 'name',
+        groupBy: ['line'],
+        as: 'percent',
+      });
+    console.log('yield-goodBadDataPercent11', this.goodBadDataPercent);
+    console.log('yield-goodBadDataPercent12', dv.rows);
 
+    this.chart.scale({
+      value: {
+        min: 0,
+        max: 1,
+        formatter(val) {
+          return (val * 100).toFixed(2) + '%';
+        },
+      },
+      percent: {
+        min: 0,
+        max: 1,
+        formatter(val) {
+          return (val * 100).toFixed(2) + '%';
+        },
+      }
+    });
+
+    this.chart.legend({
+      itemName: {
+        style: {
+          fill: '#fff',
+        },
+      }
+    });
+    this.chart.legend({
+      itemName: {
+        style: {
+          fill: '#fff',
+        },
+      }
+    });
+    this.chart.axis('line', {
+      label: {
+        style: {
+          fill: '#ffffff',
+        },
+      },
+    }).axis('percent', {
+      label: {
+        style: {
+          fill: '#ffffff',
+        },
+      },
+    }).axis('value', {
+      label: {
+        style: {
+          fill: '#ffffff',
+        },
+      },
+    });
+
+    const view1 = this.chart.createView();
+
+    view1.data(dv.rows);
+
+
+    view1.tooltip({
+      shared: true,
+      showMarkers: false,
+    });
+
+    view1
+      .interval()
+      .position('line*percent')
+      .color('name*percent*line', function (val, percent, line) {
+        // console.log('setChartOpt',yieldAlarm,val,percent,line)
+        if (val === '不良品') {
+          if (percent) {
+            if (percent[0] < yieldAlarm[line]) {
+              return '#FF0000'
+            }
+          }
+          return '#FF7070';
+        }
+        return '#92D050';
+      })
+      .label('产出*name', function (val, line) {
+        if (line == '良品') {
+          return {
+            position: 'middle',
+            offset: 0,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            formatter(text) {
+              if (text === '0') return '';
+              return 0.5;
+            }
+          };
+        } else {
+          return {
+            position: 'middle',
+            offset: 0,
+            style: {
+              fill: '#fff',
+              fontSize: 16,
+              shadowBlur: 2,
+              shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            formatter(text) {
+              if (text === '0') return '';
+              return 0.5;
+            }
+          };
+        }
+
+      })
+      .adjust('stack');
+
+    view1.interaction('active-region');
+    const view2 = this.chart.createView();
+    const ds2 = new DataSet();
+    const dv2 = ds2
+      .createView()
+      .source(this.yieldData)
+      .transform({
+        type: 'fold',
+        fields: ['良率'],
+        key: 'type',
+        value: 'value',
+      });
+    view2.data(dv2.rows);
+    view2
+      .line()
+      .position('line*value')
+      .color('type', function (val) {
+        return '#63B8FF';
+      })
+      .shape('smooth');
+
+    view2
+      .point()
+      .position('line*value')
+      .color('type', function (val) {
+        return '#63B8FF';
+      })
+      .label('value*line', function (val, line) {
+        if(val<0.01){
+          return {
+            // position: 'middle',
+            offset: 12,
+            style: {
+              fill: '#fff',
+              fontSize: 15,
+              shadowBlur: 5,
+              shadowColor: 'rgba(0, 0, 0, .8)'
+            },
+          };
+        }
+        else if (val < yieldAlarm[line]) {
+          return {
+            // position: 'middle',
+            offset: 12,
+            style: {
+              fill: '#fff',
+              fontSize: 15,
+              shadowBlur: 5,
+              shadowColor: 'rgba(0, 0, 0, .8)'
+            },
+            // formatter(val) {
+            //   console.log('text2', val);
+            //   if (val === 0) return '';
+            //   return val;
+            // }
+          };
+        } else {
+          return {
+            // position: 'middle',
+            offset: -15,
+            style: {
+              fill: '#fff',
+              fontSize: 15,
+              shadowBlur: 5,
+              shadowColor: 'rgba(0, 0, 0, .8)'
+            },
+            // formatter(val) {
+            //   console.log('text2', val);
+            //   if (val === 0) return '';
+            //   return val;
+            // }
+          };
+        }
+
+      })
+      .shape('circle');
+    view2.axis({
+      title: {},
+      label: {}
+    });
+
+    console.log('yield-yieldData11', this.yieldData);
+    console.log('yield-yieldData12', dv2.rows);
+    this.chart.render();
+  };
   goodBadDataTransform() {
+
     const dv = new DataSet.View().source(this.goodBadData);
     dv.transform({
       type: 'fold',
@@ -211,7 +446,7 @@ export class YieldProductlineComponent implements OnInit {
       key: 'line',
       value: '产出',
     });
-    this.goodBadData = dv.rows;
+    // this.goodBadData = dv.rows;
   }
   prolineYieldDataTransform() {
     const dv = new DataSet.View().source(this.yieldData);
@@ -221,7 +456,7 @@ export class YieldProductlineComponent implements OnInit {
       key: 'type',
       value: 'value',
     });
-    this.yieldData = dv.rows;
+    // this.yieldData = dv.rows;
   }
   potcolor = ['type', function (val) {
     // if (val === '良率') {
@@ -268,6 +503,7 @@ export class YieldProductlineComponent implements OnInit {
     console.log('yield-goodBadData', this.goodBadData);
     this.goodBadDataPercentTransform();
     this.prolineYieldDataTransform();
+    this.render(this.height, this.yieldAlarm);
     console.log('yield-goodBadDataPercent', this.goodBadDataPercent);
 
   }
@@ -275,6 +511,9 @@ export class YieldProductlineComponent implements OnInit {
 
     if (this.dataSub) {
       this.dataSub.unsubscribe();
+    }
+    if (this.heightSub) {
+      this.heightSub.unsubscribe();
     }
 
   }

@@ -27,7 +27,8 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
         children: [
             { path: 'workplace', component: DashboardWorkplaceComponent, data: { title: '控制台' } },
-            { path: 'pages', loadChildren: './pages/pages.module#PagesModule' }//test测试页面
+            { path: 'pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) }//test测试页面
+
             // 业务子模块
             // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
         ]
@@ -47,17 +48,21 @@ const routes: Routes = [
         component: LayoutDefaultComponent,
 
     },
+    {
+        path: 'workflow', loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule), data: { title: '工作流' },
+        component: LayoutDefaultComponent
+    },
     //模块管理
     {
 
-        path: 'block', loadChildren: './myblock/myblock.module#MyblockModule', data: { title: '模块管理' },
+        path: 'block', loadChildren: () => import('./myblock/myblock.module').then(m => m.MyblockModule), data: { title: '模块管理' },
         component: LayoutDefaultComponent,
 
     },
     //组织权限
     {
 
-        path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' },
+        path: 'authority', loadChildren: () => import('./organizational/organizational.module').then(m => m.OrganizationalModule), data: { title: '组织权限' },
         component: LayoutDefaultComponent,
 
     },
@@ -66,8 +71,8 @@ const routes: Routes = [
         path: 'fullscreen',
         component: LayoutFullScreenComponent,
         children: [
-            { path: 'default/pages', loadChildren: './pages/pages.module#PagesModule' },
-            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+            { path: 'default/pages', loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) },
+            { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },
@@ -77,7 +82,7 @@ const routes: Routes = [
         path: '',
         component: LayoutPassportComponent,
         children: [
-            { path: '', redirectTo: 'login',pathMatch:'full' },
+            { path: '', redirectTo: 'login', pathMatch: 'full' },
             { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
             { path: 'register', component: UserRegisterComponent },
             { path: 'register-result', component: UserRegisterResultComponent }

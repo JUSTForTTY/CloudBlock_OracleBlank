@@ -1,29 +1,21 @@
-import {
-  Component,
-  HostBinding,
-  Input,
-  ElementRef,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  OnInit,
-} from '@angular/core';
-import { MenuService } from '@delon/theme';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'header-search',
   template: `
-  <nz-input-group [nzAddOnBeforeIcon]="focus ? 'anticon anticon-arrow-down' : 'anticon anticon-search'">
-    <input nz-input [(ngModel)]="q" (focus)="qFocus()" (ngModelChange)="change()" (blur)="qBlur()"
-      [placeholder]="'menu.search.placeholder' | translate">
-  </nz-input-group>
+    <nz-input-group [nzAddOnBeforeIcon]="focus ? 'arrow-down' : 'search'">
+      <input
+        nz-input
+        [(ngModel)]="q"
+        (focus)="qFocus()"
+        (blur)="qBlur()"
+        [placeholder]="'menu.search.placeholder' | translate"
+      />
+    </nz-input-group>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderSearchComponent implements AfterViewInit,OnInit {
-  ngOnInit(): void {
-    this.menuData = this.menuService.menus;
-    console.log("menu",this.menuData)
-  }
+export class HeaderSearchComponent implements AfterViewInit {
   q: string;
 
   qIpt: HTMLInputElement;
@@ -36,18 +28,18 @@ export class HeaderSearchComponent implements AfterViewInit,OnInit {
 
   @Input()
   set toggleChange(value: boolean) {
-    if (typeof value === 'undefined') return;
+    if (typeof value === 'undefined') {
+      return;
+    }
     this.searchToggled = true;
     this.focus = true;
     setTimeout(() => this.qIpt.focus(), 300);
   }
 
-  constructor(private el: ElementRef,private menuService: MenuService,) {}
-  menuData;
+  constructor(private el: ElementRef) {}
+
   ngAfterViewInit() {
-    this.qIpt = (this.el.nativeElement as HTMLElement).querySelector('.ant-input');
-    
-   
+    this.qIpt = (this.el.nativeElement as HTMLElement).querySelector('.ant-input') as HTMLInputElement;
   }
 
   qFocus() {
@@ -57,16 +49,5 @@ export class HeaderSearchComponent implements AfterViewInit,OnInit {
   qBlur() {
     this.focus = false;
     this.searchToggled = false;
-  }
-  change():void{
- 
-    if(!this.q){
-      this.menuService.add([
-        {
-          text: '利华生产系统',
-          group: true,
-          children: this.menuData
-        }]);
-    }
   }
 }

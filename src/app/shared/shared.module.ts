@@ -18,18 +18,21 @@ import { UEditorModule } from 'ngx-ueditor';
 import { NgxTinymceModule } from 'ngx-tinymce';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { DndModule } from 'ngx-drag-drop';
-
+import { ImageCropperModule } from 'ngx-img-cropper';
+import { SHARED_DELON_MODULES } from './shared-delon.module';
+import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 //
  
-import { ViserModule } from 'viser-ng';
+// import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
   NgZorroAntdModule,
-  CountdownModule,
   UEditorModule,
   NgxTinymceModule,
   InfiniteScrollModule,
   DndModule,
+  ImageCropperModule,
+  // ViserModule
 ];
 // #endregion
 
@@ -49,9 +52,10 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
-    ViserModule,
     // third libs
     ...THIRDMODULES,
+    ...SHARED_DELON_MODULES,
+    ...SHARED_ZORRO_MODULES
   ],
   declarations: [
     // your components
@@ -68,7 +72,6 @@ const DIRECTIVES = [];
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
-    ViserModule,
     // i18n
     TranslateModule,
     // third libs
@@ -76,6 +79,8 @@ const DIRECTIVES = [];
     // your components
     ...COMPONENTS,
     ...DIRECTIVES,
+    ...SHARED_DELON_MODULES,
+    ...SHARED_ZORRO_MODULES
   ],
 })
 export class SharedModule {}

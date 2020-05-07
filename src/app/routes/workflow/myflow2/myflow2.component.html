@@ -49,7 +49,7 @@
   </button>
   <nz-list [nzDataSource]="data" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
     <ng-template #item let-item>
-      <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
+      <nz-list-item [nzContent]="nzContent" [nzActions]="[edit]">
         <ng-template #edit>
           <a (click)="navigatedetail(item)">途程变更 | </a>
           <a (click)="editWorkflowInit(item)">编辑 | </a>
@@ -137,10 +137,8 @@
   <form nz-form [formGroup]="form">
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowName">途程名称</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('workFlowName')">
+      <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('workFlowName')" nzErrorTip="请输入途程名称">
         <input nz-input formControlName="workFlowName" id="workFlowName" placeholder="给途程起个名称吧">
-        <nz-form-explain *ngIf="form.get('workFlowName').dirty && form.get('workFlowName').errors">请输入途程名称
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>

@@ -22,11 +22,11 @@
             (ngModelChange)="checkall(item.checkedall,item.checkOptions)">全选</label>
         </ng-template>
         <ng-template #preview>
-          <a> <i class="anticon anticon-eye-o"></i>预览 </a>
+          <a> <i nz-icon nzType="eye" nzTheme="outline" ></i>预览 </a>
         </ng-template>
         <ng-template #save>
           <a nz-popconfirm nzPopconfirmTitle="是否提交?" (nzOnConfirm)="confirm(item)" nzPopconfirmPlacement="bottom"><i
-              class="anticon anticon-check"></i>保存 </a>
+              nz-icon nzType="check" nzTheme="outline" ></i>保存 </a>
         </ng-template>
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="item.subDescription">
           <ng-template #nzTitle>

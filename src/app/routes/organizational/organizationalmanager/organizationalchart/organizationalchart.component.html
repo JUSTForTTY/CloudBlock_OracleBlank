@@ -54,7 +54,7 @@
             </nz-form-item>
             <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
               nzType="default" nzShape="circle" [disabled]="addUserBtn">
-              <i class="anticon anticon-usergroup-add"></i>
+              <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
             </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
@@ -68,18 +68,18 @@
                 </nz-select>
                 <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle"
                   (click)="removeField(control,$event)">
-                  <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
+                  <i nz-icon nzType="delete" nzTheme="outline" ></i>
                 </button>
                 <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
                 nzShape="circle">
-                <i class="anticon anticon-usergroup-add"></i>
+                <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
               </button> -->
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
               <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
                 <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                  <i class="anticon anticon-plus"></i> 增加目标部门</button>
+                  <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标部门</button>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -113,7 +113,7 @@
             </nz-form-item>
             <!-- <button nz-button nzTitle="设置用户" (click)="setUser()" type="button" nzPlacement="topLeft" nz-tooltip
               nzType="default" nzShape="circle">
-              <i class="anticon anticon-usergroup-add"></i>
+              <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
             </button> -->
             <nz-form-item *ngFor="let control of controlArray;let i = index">
               <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标部门</nz-form-label>
@@ -129,11 +129,11 @@
                 </nz-select>
                 <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle"
                   (click)="removeField(control,$event)">
-                  <i class="anticon anticon-minus-circle-o dynamic-delete-button"></i>
+                  <i nz-icon nzType="delete" nzTheme="outline" ></i>
                 </button>
                 <!-- <button nz-button nzTitle="设置用户" (click)="setUser(control)" type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
                 nzShape="circle">
-                <i class="anticon anticon-usergroup-add"></i>
+                <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
               </button> -->
               </nz-form-control>
             </nz-form-item>
@@ -141,7 +141,7 @@
             <nz-form-item>
               <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
                 <button nz-button nzType="dashed" style="width:80%" (click)="addField($event)">
-                  <i class="anticon anticon-plus"></i> 增加目标部门</button>
+                  <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标部门</button>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>

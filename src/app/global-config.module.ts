@@ -49,14 +49,14 @@ if (!environment.production) {
  *  ```
  */
 import { RouteReuseStrategy } from '@angular/router';
-import { ReuseTabService, ReuseTabStrategy } from '@delon/abc/reuse-tab';
+import { ReuseTabService, ReuseTabStrategy } from '@reuse-tab';
 // alainProvides.push({
 //   provide: RouteReuseStrategy,
 //   useClass: ReuseTabStrategy,
 //   deps: [ReuseTabService],
 // });
 // import { RouteReuseStrategy } from '@angular/router';
-// import { ReuseTabService, ReuseTabStrategy } from '@delon/abc/reuse-tab';
+// import { ReuseTabService, ReuseTabStrategy } from '@reuse-tab';
 // const REUSETAB_PROVIDES = [
 //   {
 //     provide: RouteReuseStrategy,

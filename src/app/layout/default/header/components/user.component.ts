@@ -4,7 +4,7 @@ import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { UserService } from '@core';
-import { ReuseTabService } from '@delon/abc/reuse-tab';
+import { ReuseTabService } from '@reuse-tab';
 import { HttpService } from 'ngx-block-core';
 import { Md5 } from "ts-md5/dist/md5";
 import { Observable, Observer } from 'rxjs';

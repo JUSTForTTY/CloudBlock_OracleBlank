@@ -8,7 +8,7 @@ import { environment } from '@env/environment';
 import { CacheService } from '@delon/cache';
 import { MenuService } from '@delon/theme';
 import { ACLService } from '@delon/acl';
-import { ReuseTabService } from '@delon/abc/reuse-tab';
+import { ReuseTabService } from '@reuse-tab';
 import { of as observableOf } from 'rxjs';
 
 

@@ -7,6 +7,7 @@ import { SEModule } from '@delon/abc/se';
 import { SidebarNavModule } from '@delon/abc/sidebar-nav';
 import { STModule } from '@delon/abc/st';
 import { SVModule } from '@delon/abc/sv';
+import { ReuseTabModule } from '@reuse-tab';
 
 export const SHARED_DELON_MODULES = [
   PageHeaderModule,
@@ -18,4 +19,5 @@ export const SHARED_DELON_MODULES = [
   STModule,
   SEModule,
   SVModule,
+  ReuseTabModule
 ];

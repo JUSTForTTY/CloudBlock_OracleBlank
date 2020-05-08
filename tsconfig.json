@@ -19,6 +19,9 @@
       "mjszip": [
         "../node_modules/jszip/dist/jszip.min.js"
       ],
+      "@reuse-tab":[
+        "app/shared/delon/abc/reuse-tab/index"
+      ],
       "@shared": [
         "app/shared/index"
       ],

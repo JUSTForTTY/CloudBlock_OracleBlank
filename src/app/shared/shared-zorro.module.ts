@@ -39,6 +39,11 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { NzCascaderModule } from 'ng-zorro-antd/cascader';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
 
 
 export const SHARED_ZORRO_MODULES = [
@@ -82,5 +87,10 @@ export const SHARED_ZORRO_MODULES = [
   NzListModule,
   NzUploadModule,
   NzDatePickerModule,
-  NzBreadCrumbModule
+  NzBreadCrumbModule,
+  NzNotificationModule,
+  NzStatisticModule,
+  NzTreeSelectModule,
+  NzCarouselModule,
+  NzTreeModule
 ];

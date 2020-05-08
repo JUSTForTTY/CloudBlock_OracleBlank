@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 // delon
 import { AlainThemeModule } from '@delon/theme';
-import { DelonABCModule } from '@delon/abc';
 import { DelonChartModule } from '@delon/chart';
 import { DelonACLModule } from '@delon/acl';
 import { DelonFormModule } from '@delon/form';
@@ -12,7 +11,7 @@ import { DelonFormModule } from '@delon/form';
 import { TranslateModule } from '@ngx-translate/core';
 
 // #region third libs
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+// import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
 import { UEditorModule } from 'ngx-ueditor';
 import { NgxTinymceModule } from 'ngx-tinymce';
@@ -26,7 +25,7 @@ import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
 // import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
-  NgZorroAntdModule,
+  // NgZorroAntdModule,
   UEditorModule,
   NgxTinymceModule,
   // InfiniteScrollModule,
@@ -48,7 +47,6 @@ const DIRECTIVES = [];
     RouterModule,
     ReactiveFormsModule,
     AlainThemeModule.forChild(),
-    DelonABCModule,
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
@@ -68,7 +66,6 @@ const DIRECTIVES = [];
     ReactiveFormsModule,
     RouterModule,
     AlainThemeModule,
-    DelonABCModule,
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,

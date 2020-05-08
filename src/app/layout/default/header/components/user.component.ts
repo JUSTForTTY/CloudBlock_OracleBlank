@@ -24,14 +24,14 @@ import { environment } from '@env/environment.prod';
     </div>
     <nz-dropdown-menu #userMenu="nzDropdownMenu">
     <div nz-menu class="width-sm">
-      <div nz-menu-item (click)="resetting()"><i nz-icon type="user" class="mr-sm"></i>
+      <div nz-menu-item (click)="resetting()"><i nz-icon nzType="user" class="mr-sm"></i>
         {{ 'menu.account.center' | translate }}
       </div>
-      <div nz-menu-item (click)="tabOption()"><i nz-icon type="setting" class="mr-sm"></i>
+      <div nz-menu-item (click)="tabOption()"><i nz-icon nzType="setting" class="mr-sm"></i>
         {{ 'menu.account.settings' | translate }}
       </div>
       <li nz-menu-divider></li>
-      <div nz-menu-item (click)="logout()"><i nz-icon type="logout" class="mr-sm"></i>
+      <div nz-menu-item (click)="logout()"><i nz-icon nzType="logout" class="mr-sm"></i>
         {{ 'menu.account.logout' | translate }}
       </div>
     </div>

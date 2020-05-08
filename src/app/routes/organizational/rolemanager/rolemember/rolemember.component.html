@@ -25,7 +25,7 @@
 
     <div style="margin-top:20px;margin-bottom: 30px">
       <button nz-button (click)="showModal()" [nzType]="'primary'">
-        <i class="anticon anticon-plus"></i>
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
         <span>添加用户</span>
       </button>
       <!-- <button nz-button [nzType]="'primary'">
@@ -38,7 +38,7 @@
   
       <button nz-button nz-dropdown class="ml-sm" [nzDropdownMenu]="menu">
         更多操作
-        <i class="anticon anticon-down"></i>
+        <i nz-icon nzType="down" nzTheme="outline"></i>
       </button>
       <nz-dropdown-menu #menu="nzDropdownMenu">
         <ul nz-menu>
@@ -106,20 +106,6 @@
   </nz-card>
 
 
-  <!-- 
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()"
-  (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
-  <nz-input-group [nzSuffix]="suffixIcon">
-    <input type="text" nz-input placeholder="Search Tree Node" [(ngModel)]="searchValue">
-  </nz-input-group>
-  <ng-template #suffixIcon>
-    <i class="anticon anticon-search"></i>
-  </ng-template>
-  <nz-tree [(ngModel)]="nodes" [nzSearchValue]="searchValue" [nzCheckable]="true" (nzOnSearchNode)="mouseAction('search',$event)"
-    (nzCheckBoxChange)="mouseAction('check',$event)" (nzClick)="mouseAction('click', $event)" (nzExpandChange)="mouseAction('expand',$event)"
-    (nzDblClick)="mouseAction('dblclick',$event)">
-  </nz-tree>
-</nz-modal> -->
 
   <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isRoleVisible" [nzTitle]="nzTitle"
     (nzOnOk)="handleOk()" [nzOkLoading]="nzBtnLoding" (nzOnCancel)="handleRoleCancel()" [nzOkLoading]="isOkLoading"

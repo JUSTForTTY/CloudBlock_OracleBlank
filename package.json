@@ -63,7 +63,7 @@
     "jszip": "^3.2.2",
     "moment": "^2.19.3",
     "ng-zorro-antd": "^9.1.0",
-    "ngx-block": "^9.1.5",
+    "ngx-block": "^9.1.7",
     "ngx-block-core": "^9.1.4",
     "ngx-countdown": "^3.1.0",
     "ngx-tinymce": "^7.0.0",

@@ -3819,13 +3819,11 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     console.log("当前节点类型："+sourcePot.data.csysPotStyleId);
     console.log("目标节点类型"+targetPot.data.csysPotStyleId);
-    if (targetPot.data.csysPotStyleId != 'LHCsysPotStyle20191111014750540000023' &&(sourcePot.data.csysPotStyleId != "LHCsysPotStyle20190723111446098000016" || sourcePot.data.csysPotStyleId != "LHCsysPotStyle20190803014643552000017")) {
+    if (targetPot.data.csysPotStyleId != 'LHCsysPotStyle20191111014750540000023') {
 
-      console.log("自动规则-需要进行规则生成");
-      console.log("自动规则-需要进行规则生成",targetPot.data.csysPotStyleId);
-      console.log("自动规则-需要进行规则生成",sourcePot.data.csysPotStyleId);
-      
-      //1、查询是否存在规则设定
+      if(sourcePot.data.csysPotStyleId != "LHCsysPotStyle20190723111446098000016"&&sourcePot.data.csysPotStyleId != "LHCsysPotStyle20190803014643552000017"){
+
+         //1、查询是否存在规则设定
 
       if (null != sourcePot.data.csysTrsRuleId && sourcePot.data.csysTrsRuleId != "") {
 
@@ -3884,11 +3882,21 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         });
       }
 
+      }else{
+
+      }
+
+      console.log("自动规则-需要进行规则生成");
+      console.log("自动规则-需要进行规则生成",targetPot.data.csysPotStyleId);
+      console.log("自动规则-需要进行规则生成",sourcePot.data.csysPotStyleId);
+      
+      
+
     } else {
 
       console.log("不需要进行规则生成");
       //删除迁移条件
-
+  
       let deletebean = {
         "csysWorkflowId": this.workflowId,
         "csysPotTrsId": transferId
@@ -3916,8 +3924,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           });
 
       });
-
-
+  
 
 
 

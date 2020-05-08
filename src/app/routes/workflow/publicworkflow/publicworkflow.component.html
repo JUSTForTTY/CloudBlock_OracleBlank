@@ -55,8 +55,8 @@
                       <div class="gutter-box">
                         防呆组
                         <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                          [nzTitle]="item.group.csysPotGroupName">
-                          {{item.group.csysPotGroupName}}
+                          [nzTitle]="item.group?.csysPotGroupName">
+                          {{item.group?.csysPotGroupName}}
                         </p>
                       </div>
                     </div>
@@ -68,11 +68,11 @@
                             <ng-template #titleTemplate>
                               <span>颜色:</span>
                               <nz-avatar [nzShape]="'square'" [nzSize]="'small'"
-                                [ngStyle]="{'background-color':item.style.csysPotStyleColor}"></nz-avatar>
+                                [ngStyle]="{'background-color':item.style?.csysPotStyleColor}"></nz-avatar>
                               <span style="margin-left:9px"> 形状:</span>
-                              {{item.style.csysPotStyleDesc}}
+                              {{item.style?.csysPotStyleDesc}}
                             </ng-template>
-                            {{item.style.csysPotStyleName}}
+                            {{item.style?.csysPotStyleName}}
                           </p>
                         </div>
                       </div>

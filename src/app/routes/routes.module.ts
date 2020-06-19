@@ -15,11 +15,12 @@ import { Exception404Component } from './exception/404.component';
 import { Exception500Component } from './exception/500.component';
 import { IndexComponent } from './index/index.component';
 import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
+import { PrintLabelModule } from "print-label-design";
 
 
 
 @NgModule({
-    imports: [ SharedModule, RouteRoutingModule ],
+    imports: [ SharedModule, RouteRoutingModule,PrintLabelModule ],
     declarations: [
         DashboardWorkplaceComponent,
         // passport pages

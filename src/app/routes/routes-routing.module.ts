@@ -18,7 +18,7 @@ import { CallbackComponent } from './callback/callback.component';
 import { Exception403Component } from './exception/403.component';
 import { Exception404Component } from './exception/404.component';
 import { Exception500Component } from './exception/500.component';
-
+import { PrintLabelComponent } from "print-label-design";
 import { IndexComponent } from './index/index.component';
 
 const routes: Routes = [
@@ -76,7 +76,11 @@ const routes: Routes = [
             { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },
-
+    {
+        path: 'print-label',
+        component: PrintLabelComponent,
+        // loadChildren: () => import('./print-label-design/print-label.module').then(m => m.PrintLabelModule)
+    },
     // passport
     {
         path: '',

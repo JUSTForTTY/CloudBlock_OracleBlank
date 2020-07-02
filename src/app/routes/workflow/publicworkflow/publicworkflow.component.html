@@ -121,9 +121,9 @@
         </nz-list-item>
       </ng-template>
       <ng-template #pagination>
-        <nz-pagination *ngIf="!searchShow" [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage"
+        <nz-pagination *ngIf="!searchShow" [nzTotal]="totalRecords" [nzPageSize]="10" [nzPageIndex]="currentPage"
           (nzPageIndexChange)="_getWorkFlowListData($event)"></nz-pagination>
-        <nz-pagination *ngIf="searchShow" [nzTotal]="totalRecords" [nzPageSize]="5" [nzPageIndex]="currentPage"
+        <nz-pagination *ngIf="searchShow" [nzTotal]="totalRecords" [nzPageSize]="10" [nzPageIndex]="currentPage"
           (nzPageIndexChange)="serchWorkFlow($event)"></nz-pagination>
       </ng-template>
 

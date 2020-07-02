@@ -150,15 +150,17 @@ export class YieldProductlineComponent implements OnInit {
       formatter: '.1%',
     }];
   }
+  yieldAlarm = {};
   initData() {
     this.dataSub = this.data$.subscribe(leftData => {
 
       console.log('yield-workshopYeildData', leftData)
       console.log('yield-alarmSettingData', leftData.alarmSettingData)
       const alarmSettingData = leftData.alarmSettingData.data;
-      let yieldAlarm = {};
       const data = leftData.yeildData
       this.yieldData = [];
+      this.goodBadDataPercent = [];
+      this.yieldAlarm = {};
       this.goodBadData = [{ name: '不良品' }, { name: '良品' }];
       this.goodBadDataFields = [];
       data.data.forEach(lineData => {
@@ -172,10 +174,10 @@ export class YieldProductlineComponent implements OnInit {
       });
 
       alarmSettingData.forEach(element => {
-        yieldAlarm[element.proLineCode] = element.wshopAlarmsettingAyeild === '' ? 0 : element.wshopAlarmsettingAyeild;
+        this.yieldAlarm[element.proLineCode] = element.wshopAlarmsettingAyeild === '' ? 0 : element.wshopAlarmsettingAyeild;
       });
-      this.setChartOpt(yieldAlarm);
-      console.log('yield-yieldAlarm', yieldAlarm)
+      this.setChartOpt(this.yieldAlarm);
+      console.log('yield-yieldAlarm', this.yieldAlarm)
       for (const key in this.goodBadData[0]) {
         if (this.goodBadData[0].hasOwnProperty(key) && key !== 'name') {
           this.goodBadDataPercent.push({

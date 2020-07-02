@@ -122,12 +122,12 @@ export class YieldDailyComponent implements OnInit {
       style: {
         fontSize: 14,
         fill: '#fff',
-        fontWeight: '400'
+        fontWeight: '1'
 
       }
     }).shape('smooth');
     // this.chart.point().position('date*value').shape('circle');
-    console.log('this.data',this.height,this.data)
+
     this.chart.render();
   }
   ngOnDestroy() {

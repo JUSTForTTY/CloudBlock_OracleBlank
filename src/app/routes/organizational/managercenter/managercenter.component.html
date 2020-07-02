@@ -8,13 +8,32 @@
     </ng-template>
   </page-header>
  
-
+<!-- 快速导航 -->
+<!-- <quick-menu>
+  <nz-list [nzBordered]="false" [nzSplit]="false">
+    <nz-list-item>
+      <a routerLink="/">Home</a>
+    </nz-list-item>
+    <nz-list-item>
+      <a routerLink="/widgets">Widgets</a>
+    </nz-list-item>
+    <nz-list-item>
+      <a routerLink="/style/typography">typography</a>
+    </nz-list-item>
+    <nz-list-item>
+      <a routerLink="/style/gridmasonry">gridmasonry</a>
+    </nz-list-item>
+    <nz-list-item>
+      <a routerLink="/pro/result/success">success result</a>
+    </nz-list-item>
+  </nz-list>
+</quick-menu> -->
 <div nz-row nzGutter="16">
     <a routerLink="/authority/organizationalmanager">
   <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md">
     <div nz-row nzType="flex" nzAlign="middle" class="bg-primary rounded-md">
       <div nz-col nzSpan="12" class="p-md text-white">
-        <div class="h2 mt0"><i nz-icon nzType="usergroup-add" nzTheme="outline" ></i></div>
+        <div class="h2 mt0"><i class="anticon anticon-usergroup-add"></i></div>
         <p class="text-nowrap mb0">组织架构</p>
       </div>
       <div nz-col nzSpan="12">
@@ -28,7 +47,7 @@
   <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md">
     <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
       <div nz-col nzSpan="12" class="p-md text-white">
-        <div class="h2 mt0"><i nz-icon nzType="key" nzTheme="outline" ></i></div>
+        <div class="h2 mt0"><i class="anticon anticon-key"></i></div>
         <p class="text-nowrap mb0">权限管理</p>
       </div>
       <div nz-col nzSpan="12">
@@ -37,11 +56,23 @@
     </div>
   </div>
 </a>
-
+<!-- <a routerLink="">
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-orange rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0"><i class="anticon anticon-tool"></i></div>
+        <p class="text-nowrap mb0">数据库权限设置</p>
+      </div>
+      <div nz-col nzSpan="12">
+        <g2-mini-bar height="35" color="#fff" borderWidth="3" [padding]="[36, 30, 30, 30]" [data]="webSite"></g2-mini-bar>
+      </div>
+    </div>
+  </div>
+  </a> -->
   <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md">
     <div nz-row nzType="flex" nzAlign="middle" class="bg-magenta rounded-md">
       <div nz-col nzSpan="12" class="p-md text-white">
-        <div class="h2 mt0"><i nz-icon nzType="appstore" nzTheme="outline"></i></div>
+        <div class="h2 mt0"><i class="anticon anticon-appstore-o"></i></div>
         <p class="text-nowrap mb0">其他</p>
       </div>
       <div nz-col nzSpan="12">

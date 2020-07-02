@@ -137,7 +137,7 @@ export class DepartmentmanagerComponent implements OnInit {
       ]
     })
   ];
-  constructor(private fb: FormBuilder, public msg: NzMessageService,) {
+  constructor(private fb: FormBuilder, private msg: NzMessageService,) {
  
   }
 

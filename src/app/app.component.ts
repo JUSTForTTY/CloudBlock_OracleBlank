@@ -8,7 +8,7 @@ import { UserService } from '@core';
 import { environment } from '@env/environment';
 
 
-const home_url=environment.HOME_URL;
+// const home_url=environment.HOME_URL;
 
 @Component({
   selector: 'app-root',

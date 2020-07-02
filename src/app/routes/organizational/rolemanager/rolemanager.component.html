@@ -27,7 +27,7 @@
       </div>
     </div>
     <button nz-button (click)="showUsergroupModal()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-      <i nz-icon nzType="plus" nzTheme="outline"></i>
+      <i class="anticon anticon-plus"></i>
       <span>添加</span>
     </button>
     <nz-spin [nzSpinning]="isSpinning">
@@ -41,7 +41,7 @@
             <ng-template #menuedit>
               <a (click)="showModal(item.csysRoleId,item.csysRoleName)">用户组菜单</a>
             </ng-template>
-             <!-- <ng-template #pageedit>
+            <!-- <ng-template #pageedit>
           <a (click)= "navigatedetail1(item)">用户组权限</a>
         </ng-template> -->
             <ng-template #op>
@@ -52,7 +52,7 @@
               <!-- <nz-dropdown>
                 <a class="ant-dropdown-link" nz-dropdown>
                   更多
-                  <i nz-icon nzType="down" nzTheme="outline"></i>
+                  <i class="anticon anticon-down"></i>
                 </a>
                 <ul nz-menu>
                   <li nz-menu-item (click)="editRole(item.csysRoleId,item.csysRoleName,item.csysRoleDesc)">编辑</li>
@@ -76,7 +76,7 @@
                   <div class="flex-1">
                     创建人
                     <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                      [nzTooltipTitle]="item.csysRoleCreateUser">
+                      [nzTitle]="item.csysRoleCreateUser">
                       {{item.csysRoleCreateUser}}
                     </p>
                   </div>
@@ -105,7 +105,7 @@
       <input type="text" nz-input placeholder="搜索菜单" [(ngModel)]="searchValue">
     </nz-input-group>
     <ng-template #suffixIcon>
-      <i nz-icon nzType="search"></i>
+      <i class="anticon anticon-search"></i>
     </ng-template>
     <nz-tree [nzData]="nodes" [nzCheckedKeys]="defaultCheckedKeys" [nzSearchValue]="searchValue" [nzCheckable]="true"
       [nzShowLine]="true" (nzCheckBoxChange)="mouseAction('check',$event)">
@@ -118,8 +118,9 @@
     <form nz-form [formGroup]="form">
       <nz-form-item>
         <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">用户组名称</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入密码">
+        <nz-form-control [nzSm]="14" [nzXs]="24">
           <input nz-input formControlName="name" id="name" placeholder="给用户组起个名称">
+          <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">请输入用户组名称</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

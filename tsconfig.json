@@ -1,27 +1,25 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src/",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
+    "module": "es2015",
     "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "lib": [
       "es2018",
       "dom"
     ],
+    "baseUrl": "./src/",
     "paths": {
-      "mjszip": [
-        "../node_modules/jszip/dist/jszip.min.js"
-      ],
-      "@reuse-tab":[
-        "app/shared/delon/abc/reuse-tab/index"
-      ],
+      "mjszip":["../node_modules/jszip/dist/jszip.min.js"],
       "@shared": [
         "app/shared/index"
       ],
@@ -37,10 +35,24 @@
       "@env/*": [
         "environments/*"
       ],
+      // "ngx-block": [
+      //   "dist/ngx-block"
+      // ],
+      // "ngx-block/*": [
+      //   "dist/ngx-block/*"
+      // ],
+      // "ngx-block-core": [
+      //   "dist/ngx-block-core"
+      // ],
+      // "ngx-block-core/*": [
+      //   "dist/ngx-block-core/*"
+      // ],
+      "ngx-block": [
+        "app/shared/block/block.module"
+      ],
+      "ngx-block/*": [
+        "app/shared/*"
+      ],
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
   }
 }

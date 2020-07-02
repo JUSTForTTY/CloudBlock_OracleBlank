@@ -7,12 +7,15 @@
           </div>
 
     </ng-template>
-    <!-- <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale" [animate]="true" [theme]="theme">
+    <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale" [animate]="true" [theme]="theme">
       <v-coord type="polar" [startAngle]="-202.5" [endAngle]="22.5" [radius]="0.75"></v-coord>
       <v-axis dataKey="value" [zIndex]="2" [line]="null" [subTickCount]="4" [grid]="null" [label]="axisLabel"
         [subTickLine]="axisSubTickLine" [tickLine]="axisTickLine"></v-axis>
       <v-axis dataKey="1" [show]="false"></v-axis>
       <v-series gemo="point" position="value*1" shape="pointer" color="#8C8C8C" [active]="false"></v-series>
+      
+      <!-- <v-guide type="arc" [zIndex]="1" [start]="arcGuideMidStart" [end]="arcGuideMidEnd" [style]="arcGuideMidStyle"></v-guide>
+      <v-guide type="arc" [zIndex]="1" [start]="arcGuideHighStart" [end]="arcGuideHighEnd" [style]="arcGuideHighStyle"></v-guide> -->
       <v-guide type="html" [position]="htmlGuidePosition" [html]="htmlGuideHtml"></v-guide>
-    </v-chart> -->
+    </v-chart>
   </nz-card>

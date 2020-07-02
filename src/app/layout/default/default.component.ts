@@ -38,9 +38,9 @@ import { environment } from '@env/environment';
 export class LayoutDefaultComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   @ViewChild('settingHost', { read: ViewContainerRef })
-  private settingHost: ViewContainerRef;
   @ViewChild('template')
   tplRef: TemplateRef<any>;
+  private settingHost: ViewContainerRef;
   isFetching = false;
   releaseData;
   placement = 'topRight';

@@ -1,1118 +1,913 @@
 <div *ngIf="show">
-  <page-header [home]="''"></page-header>
-  <div nz-row [nzGutter]="24" class="pt-lg">
+    <page-header [home]="''"></page-header>
+    <div nz-row [nzGutter]="24" class="pt-lg">
 
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
-      <!-- <nz-affix [nzTarget]="target"> -->
-      <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
-
-        <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
-          <ngx-graph class="chart-container" [layout]="layout" [view]="view" [center$]="center$" minZoomLevel=0.3
-            maxZoomLevel=2 panningEnabled=false [layoutSettings]="layoutSettings" [legend]="showLegend"
-            [links]="hierarchialGraphSimple.links" [clusters]=hierarchialGraphSimple.clusters
-            (legendLabelClick)="onLegendLabelClick($event)" [nodes]="hierarchialGraphSimple.nodes" [curve]="curve"
-            (select)="clickNode($event)">
-
-            <ng-template #defsTemplate>
-              <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
-                orient="auto">
-                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-              </svg:marker>
-            </ng-template>
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
 
 
-            <ng-template #nodeTemplate let-node>
-              <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
-                [tooltipTitle]="node.label">
-                <!-- 矩形构造  *ngIf="node.style.csysPotStyleDesc == '矩形'" -->
-                <ng-container *ngIf="node.shape == 'rect'||node.shape == '矩形'">
+            <!--工作流图形构建-->
+            <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
 
-                  <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
-                    [attr.fill]="node.color" style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
-                    [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
-                </ng-container>
-                <!-- 多边形构造 -->
-                <ng-container *ngIf="node.shape == 'diamond'||node.shape == '菱形'">
-                  <svg:polygon
-                    [attr.points]="0+','+node.dimension.height/2+' '+node.dimension.width/2+','+0+' '+ node.dimension.width+','+node.dimension.height/2+' '+ node.dimension.width/2+','+node.dimension.height"
-                    [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.color"
-                    style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
-                    [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
-                </ng-container>
-                <ng-container *ngIf="node.shape == 'circle'||node.shape == '圆形'">
-                  <!-- 圆形椭圆 -->
-                  <svg:ellipse [attr.cx]="node.dimension.width/2" [attr.cy]="node.dimension.height/2"
-                    [attr.rx]="node.dimension.height*0.618" [attr.ry]="node.dimension.height*0.618"
-                    [attr.fill]="node.color" style="animation: rot 3s linear infinite;" [attr.stroke]="node.stroke"
-                    [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" />
+                <nz-spin [nzSpinning]="isGraphSpinning" [nzTip]="spinningText">
+                    <ngx-graph class="chart-container" [layout]="layout" [view]="view" [center$]="center$"
+                        minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false [layoutSettings]="layoutSettings"
+                        [legend]="showLegend" [links]="hierarchialGraphSimple.links"
+                        [clusters]=hierarchialGraphSimple.clusters 
+                        [nodes]="hierarchialGraphSimple.nodes" [curve]="curve" (select)="clickNode($event)">
 
-                </ng-container>
-                <!-- <svg:polygon [attr.width]="node.width" [attr.height]="node.height" [attr.fill]="node.options.color" style="animation: rot 3s linear infinite;"
-              [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth" [attr.stroke-dasharray]="node.strokeDash" points="100,100 175,50 250,100 175,150"
-              style="fill:#cccccc;
-              stroke:#000000;stroke-width:1"></svg:polygon> -->
-                <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}
-                </svg:text>
-              </svg:g>
-            </ng-template>
-
-            <ng-template #linkTemplate let-link>
-              <svg:g class="edge">
-                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"
-                  style="animation: dash 15s linear infinite;" [attr.stroke]="link.stroke"
-                  [attr.stroke-width]="link.strokeWidth" [attr.stroke-dasharray]="link.strokeDash">
-                </svg:path>
-                <svg:text class="edge-label" text-anchor="middle">
-                  <textPath style="fill: #666;" [attr.href]="'#' + link.id" startOffset="60%">
-                    <!-- {{link.stroke}},{{link.strokeDash}},{{link.stroke}} -->
-                  </textPath>
-                </svg:text>
-              </svg:g>
-            </ng-template>
-
-          </ngx-graph>
-        </nz-spin>
-      </nz-card>
-      <ng-template #extraTemplate>
-
-        <div *ngIf="workflowType == 'operation'">
-          <a>途程状态：</a>
-          <nz-badge [nzStatus]="workflowStatus"></nz-badge>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="styleSetting()">风格设置</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="timeManger()">时间管控</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="madeSetting()">首件设置</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="opList()">新增制程段</a>
-        </div>
-      </ng-template>
-    </div>
-    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
-      <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate1">
-        <div class="active-chart">
-          <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
-            <!-- <nz-form-item>
-            <nz-form-control nzXs="24" nzSm="24" nzMd="24"> -->
-            <!-- 非必须的属性 折叠-->
-            <!-- <nz-collapse [nzBordered]="false">
-                <nz-collapse-panel nzHeader="多功能选择"> -->
-            <!-- 工序资源暂且隐藏不需要 -->
-            <!-- <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzFor="resource">资源选择</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select style="width: 100%" formControlName="resource" [nzSize]="size" nzMode="tags"
-                        nzPlaceHolder="请选择资源">
-                        <nz-option *ngFor="let option of resourceData" [nzLabel]="option.resourceCode"
-                          [nzValue]="option.tResourceId"></nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item> -->
-            <!-- <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzFor="resource">技能选择</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select style="width: 100%" formControlName="potSkill" [nzSize]="size" nzMode="tags"
-                        nzPlaceHolder="请选择技能">
-                        <nz-option *ngFor="let option of skillData" [nzLabel]="option.skillCode"
-                          [nzValue]="option.skillId"></nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-                </nz-collapse-panel>
-              </nz-collapse>
-            </nz-form-control>
-          </nz-form-item> -->
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName">工序选择</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
-                <nz-select nzPlaceHolder="请选择公共工序" formControlName="addNodeName" nzShowSearch nzAllowClear
-                  (ngModelChange)="chartChange($event)">
-                  <nz-option *ngFor="let option of nodes" [nzLabel]="option.csysPotPublicName"
-                    [nzValue]="option.csysPotPublicId"></nz-option>
-
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序属性</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
-                  <nz-option nzLabel="产出点" nzValue="8">
-                  </nz-option>
-                  <nz-option nzLabel="投入点" nzValue="9">
-                  </nz-option>
-                  <nz-option nzLabel="投入&产出" nzValue="7">
-                  </nz-option>
-                </nz-select>
-                <!-- <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
-                  <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
-                  <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
-                  <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>
-                </nz-select> -->
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">制程段</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select nzPlaceHolder="请选择制程段" formControlName="opPot" nzShowSearch nzAllowClear
-                  (ngModelChange)="opChange($event)">
-                  <nz-option *ngFor="let option of opData" [nzLabel]="option.opCode" [nzValue]="option.opId">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <!-- <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName">工序选择</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-select nzPlaceHolder="请选择用户组" formControlName="addNodeName" nzShowSearch nzAllowClear nzPlaceHolder="请选择工序"
-                >
-                <nz-option nzValue="0" nzLabel="头工序"></nz-option>
-                <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
-                <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
-              </nz-select>
-              <nz-form-explain *ngIf="insertForm.get('addNodeName').dirty && insertForm.get('addNodeName').errors">请选择工序</nz-form-explain>
-            </nz-form-control>
-          </nz-form-item> -->
-            <!-- <nz-form-item>
-            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
-            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-              <nz-select formControlName="addNodeName2" nzAllowClear>
-                <nz-option nzValue="0" nzLabel="头工序"></nz-option>
-                <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
-                <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
-              </nz-select>
-              <nz-form-explain *ngIf="insertForm.get('addNodeName2').dirty && insertForm.get('addNodeName2').errors">
-                请选择工序</nz-form-explain>
-            </nz-form-control>
-          </nz-form-item> -->
-            <nz-form-control>
-              <input nz-input type="hidden" formControlName="addNodeName2">
-            </nz-form-control>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName1">工序名称</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请输入工序名称">
-                <input nz-input formControlName="addNodeName1" id="addNodeName1" placeholder="请输入工序名称">
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzRequired>是否拆件</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-switch formControlName="excrete" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item  *ngIf="isNeedOnRepairVisible">
-              <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
-                <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair"  nzShowSearch nzAllowClear>
-                  <nz-option nzLabel="支持" nzValue="1">
-                  </nz-option>
-                  <nz-option nzLabel="不支持" nzValue="0">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item *ngIf="isNeedOnRepairVisible">
-              <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
-                <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair"  nzShowSearch nzAllowClear>
-                  <nz-option nzLabel="支持" nzValue="1">
-                  </nz-option>
-                  <nz-option nzLabel="不支持" nzValue="0">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item *ngIf="isNeedRcVisible">
-              <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
-                <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc"  nzShowSearch nzAllowClear>
-                  <nz-option nzLabel="支持" nzValue="1">
-                  </nz-option>
-                  <nz-option nzLabel="不支持" nzValue="0">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item *ngFor="let control of controlArray;let i = index">
-              {{control.potType}}
-              <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标工序</nz-form-label>
-              <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
-                <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
-                  (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
-                  [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标工序'" [nzShowSearch]="true">
-                  <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.csysPotName"
-                    [nzValue]="option.csysPotId">
-                  </nz-option>
-                </nz-select>
-                <div nz-row>
-                  <div nz-col nzSpan="9">工序描述:</div>
-                  <div nz-col nzSpan="15">
-                    <nz-select style=" margin-right:8px;" [formControlName]="control.desc" [nzPlaceHolder]="'请选择工序描述'"
-                      [nzShowSearch]="true">
-                      <nz-option *ngFor="let option of pointDescList" [nzLabel]="option.csysCodemasterDesc"
-                        [nzValue]="option.csysCodemasterId">
-                      </nz-option>
-                    </nz-select>
-                  </div>
-                </div>
-                <!-- <div nz-row>
-                  <div nz-col nzSpan="5">页面:</div>
-                <div nz-col nzSpan="19">
-                  <nz-select [formControlName]="control.pageIds" id="pageId" [nzMaxTagPlaceholder]="tagPlaceHolder"
-                      style="width: 100%" nzMode="multiple" nzTitle="迁移页面" nzPlacement="top" nz-tooltip nzPlaceHolder="请选择">
-                      <nz-option *ngFor="let option of pageList" [nzLabel]="option.csysPageName" [nzValue]="option.csysPageId">
-                      </nz-option>
-                    </nz-select>
-                </div>
-              </div> -->
-                <div nz-row>
-                  <div nz-col nzSpan="10">自动执行：</div>
-                  <div nz-col nzSpan="8">
-                    <!-- <nz-select nzAllowClear [formControlName]="control.autoExcuteControl" (ngModelChange)="updateAutotPoint(control,$event)">
-                    <nz-option nzValue="0" nzLabel="否"></nz-option>
-                    <nz-option nzValue="1" nzLabel="是"></nz-option>
-                  </nz-select> -->
-                    <nz-switch [formControlName]="control.autoExcuteControl" nzCheckedChildren="开"
-                      nzUnCheckedChildren="关"></nz-switch>
-                  </div>
-                </div>
-                <div nz-row>
-                  <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle"
-                    (click)="removeField(control,$event)">
-                    <i nz-icon nzType="delete" nzTheme="outline" ></i>
-                  </button>
-                  <!-- <button nz-button nzTitle="设置权限" (click)="setAuthority(control,$event)" type="button"
-                  nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                  <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
-                </button> -->
-                  <!-- <button nz-button nzTitle="迁移条件" (click)="addCondition(control,$event)" type="button"
-                  nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                  <i nz-icon nzType="filter" theme="outline"></i>
-                </button> -->
-                  <!-- <button nz-button nzTitle="迁移页面" (click)="setTransferPage(control,$event)" type="button"
-                  nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                </button> -->
-                </div>
-
-                <!-- <nz-form-explain *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                Please input passenger's name or delete this field.
-              </nz-form-explain> -->
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
-                <button nz-button nzType="dashed" type="button" style="width:80%" (click)="addField($event)">
-                  <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标工序</button>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item>
-              <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
-                <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
-                  [disabled]="insertForm.invalid">保存</button>
-              </nz-form-control>
-            </nz-form-item>
-          </form>
-        </div>
-
-      </nz-card>
-      <!-- 编辑 -->
-      <div class="inner" *ngIf="formEditStatus">
-        <div class="innerbox">
-          <div class="formDiv">
-            <nz-card nzTitle="修改工序" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
-              <ng-template #extraTemplate>
-                <a (click)="addPoint()">新建工序</a>
-              </ng-template>
-              <!-- <nz-spin [nzSpinning]="isSpinning"> -->
-              <div class="active-chart">
-                <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
-                  <nz-form-item hidden="true">
-                    <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">工序编号</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <input nz-input disabled="disabled" formControlName="id">
-                    </nz-form-control>
-                  </nz-form-item>
-                  <!-- <nz-form-item>
-                <nz-form-control nzXs="24" nzSm="24" nzMd="24"> -->
-                  <!-- 非必须的属性 折叠-->
-                  <!-- <nz-collapse [nzBordered]="false">
-                    <nz-collapse-panel nzHeader="多功能选择"> -->
-
-                  <!-- 工序资源暂且隐藏不需要 -->
-                  <!-- <nz-form-item>
-                      <nz-form-label nzXs="24" nzSm="7" nzFor="resource">资源选择</nz-form-label>
-                      <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                        <nz-select style="width: 100%" formControlName="resource" [nzSize]="size" nzMode="tags"
-                          nzPlaceHolder="请选择资源">
-                          <nz-option *ngFor="let option of resourceData" [nzLabel]="option.resourceCode"
-                            [nzValue]="option.tResourceId"></nz-option>
-                        </nz-select>
-                      </nz-form-control>
-                    </nz-form-item> -->
-                  <!-- <nz-form-item>
-                        <nz-form-label nzXs="24" nzSm="7" nzFor="resource">技能选择</nz-form-label>
-                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                          <nz-select style="width: 100%" formControlName="potSkill" [nzSize]="size" nzMode="tags"
-                            nzPlaceHolder="请选择技能">
-                            <nz-option *ngFor="let option of skillData" [nzLabel]="option.skillCode"
-                              [nzValue]="option.skillId"></nz-option>
-                          </nz-select>
-                        </nz-form-control>
-                      </nz-form-item>
-                    </nz-collapse-panel>
-                  </nz-collapse>
-                </nz-form-control>
-              </nz-form-item> -->
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">工序属性</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute" nzShowSearch nzAllowClear>
-                        <nz-option nzLabel="产出点" nzValue="8"></nz-option>
-                        <nz-option nzLabel="投入点" nzValue="9"></nz-option>
-                        <nz-option nzLabel="投入&产出" nzValue="7"></nz-option>
-                   
-
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">制程段</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select nzPlaceHolder="请选择制程段" formControlName="opPot" nzShowSearch nzAllowClear
-                        (ngModelChange)="opChange($event)">
-                        <nz-option *ngFor="let option of opData" [nzLabel]="option.opCode" [nzValue]="option.opId">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="nodeEditName">工序名称</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17"  nzErrorTip="请输入工序名称">
-                      <input nz-input formControlName="nodeEditName" id="nodeEditName" placeholder="输入工序名称">
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7" nzFor="rule">规则设定</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select formControlName="rule" nzShowSearch nzAllowClear nzPlaceHolder="请选择规则">
-                        <nz-option *ngFor="let ruleOption of ruleData" [nzValue]="ruleOption.csysTrsRuleId"
-                          [nzLabel]="ruleOption.csysTrsRuleName"></nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7">公共工序</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-tag *ngIf='publickPotName'>{{publickPotName}}</nz-tag>
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7">工序资源</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-collapse>
-                        <nz-collapse-panel
-                        [nzHeader]="'资源列表'"
-                        >
-                        <nz-tag *ngFor="let index of resourceData">{{index.resourceCode}}</nz-tag>
-                        </nz-collapse-panel>
-                      </nz-collapse>
-                      
-                    </nz-form-control>
-                  </nz-form-item>
-                  <nz-form-item>
-                    <nz-form-label nzXs="24" nzSm="7">是否拆件</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-switch formControlName="excrete" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
-                    </nz-form-control>
-                  </nz-form-item>
+                        <ng-template #defsTemplate>
+                            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4"
+                                markerHeight="4" orient="auto">
+                                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                            </svg:marker>
+                        </ng-template>
 
 
-                  <nz-form-item *ngIf="isNeedOnRepairVisible" >
-                    <nz-form-label nzXs="24" nzSm="7" >debug在线维修</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
-                      <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair"  nzShowSearch nzAllowClear>
-                        <nz-option nzLabel="支持" nzValue="1">
-                        </nz-option>
-                        <nz-option nzLabel="不支持" nzValue="0">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
-      
-                  <nz-form-item *ngIf="isNeedOnRepairVisible">
-                    <nz-form-label nzXs="24" nzSm="7" >rework在线维修</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
-                      <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair"  nzShowSearch nzAllowClear>
-                        <nz-option nzLabel="支持" nzValue="1">
-                        </nz-option>
-                        <nz-option nzLabel="不支持" nzValue="0">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                  </nz-form-item>
+                        <ng-template #nodeTemplate let-node>
+                            <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'"
+                                [tooltipType]="'tooltip'" [tooltipTitle]="node.label">
 
-                  <nz-form-item *ngIf="isNeedRcVisible">
-                    <nz-form-label nzXs="24" nzSm="7" >不良送检</nz-form-label>
-                    <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                      <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc" nzShowSearch nzAllowClear>
-                        <nz-option nzLabel="支持" nzValue="1">
-                        </nz-option>
-                        <nz-option nzLabel="不支持" nzValue="0">
-                        </nz-option>
-                      </nz-select>
-                    </nz-form-control>
-                    
-                  </nz-form-item>
+                                <ng-container *ngIf="node.shape == 'rect'||node.shape == '矩形'">
 
-                  <ng-container *ngIf="formEditEnabled">
-                    <nz-form-item>
-                      <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="addNodeName2">工序类型</nz-form-label>
-                      <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
-                        <nz-select formControlName="addNodeName2" nzAllowClear nzDisabled>
-                          <nz-option nzValue="0" nzLabel="头工序"></nz-option>
-                          <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
-                          <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
-                          <nz-option nzValue="3" nzLabel="初始化"></nz-option>
-                        </nz-select>
-                      </nz-form-control>
-                    </nz-form-item>
+                                    <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                                        [attr.fill]="node.color" style="animation: rot 3s linear infinite;"
+                                        [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth"
+                                        [attr.stroke-dasharray]="node.strokeDash" />
+                                </ng-container>
+                                <!-- 多边形构造 -->
+                                <ng-container *ngIf="node.shape == 'diamond'||node.shape == '菱形'">
+                                    <svg:polygon
+                                        [attr.points]="0+','+node.dimension.height/2+' '+node.dimension.width/2+','+0+' '+ node.dimension.width+','+node.dimension.height/2+' '+ node.dimension.width/2+','+node.dimension.height"
+                                        [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                                        [attr.fill]="node.color" style="animation: rot 3s linear infinite;"
+                                        [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth"
+                                        [attr.stroke-dasharray]="node.strokeDash" />
+                                </ng-container>
+                                <ng-container *ngIf="node.shape == 'circle'||node.shape == '圆形'">
+                                    <!-- 圆形椭圆 -->
+                                    <svg:ellipse [attr.cx]="node.dimension.width/2" [attr.cy]="node.dimension.height/2"
+                                        [attr.rx]="node.dimension.height*0.618" [attr.ry]="node.dimension.height*0.618"
+                                        [attr.fill]="node.color" style="animation: rot 3s linear infinite;"
+                                        [attr.stroke]="node.stroke" [attr.stroke-width]="node.strokeWidth"
+                                        [attr.stroke-dasharray]="node.strokeDash" />
 
-                    <input nz-input type="hidden" formControlName="addNodeName2">
+                                </ng-container>
 
-                  </ng-container>
+                                <svg:text alignment-baseline="central" [attr.x]="10"
+                                    [attr.y]="node.dimension.height / 2">{{node.label}}
+                                </svg:text>
+                            </svg:g>
+                        </ng-template>
 
+                        <ng-template #linkTemplate let-link>
+                            <svg:g class="edge">
+                                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"
+                                    style="animation: dash 15s linear infinite;" [attr.stroke]="link.stroke"
+                                    [attr.stroke-width]="link.strokeWidth" [attr.stroke-dasharray]="link.strokeDash">
+                                </svg:path>
+                                <svg:text class="edge-label" text-anchor="middle">
+                                    <textPath style="fill: #666;" [attr.href]="'#' + link.id" startOffset="60%">
 
-                  <nz-form-item *ngFor="let control of controlArray;let i = index">
+                                    </textPath>
+                                </svg:text>
+                            </svg:g>
+                        </ng-template>
 
-                    <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标工序
-                    </nz-form-label>
-                    <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
-                      <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
-                        (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
-                        [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标工序'" [nzShowSearch]="true">
-                        <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.csysPotName"
-                          [nzValue]="option.csysPotId">
-                        </nz-option>
-                      </nz-select>
-                      <div nz-row>
-                        <div nz-col nzSpan="9">工序描述:</div>
-                        <div nz-col nzSpan="15">
-                          <nz-select style=" margin-right:8px;" [formControlName]="control.desc"
-                            [nzPlaceHolder]="'请选择工序描述'" [nzShowSearch]="true">
-                            <nz-option *ngFor="let option of pointDescList" [nzLabel]="option.csysCodemasterDesc"
-                              [nzValue]="option.csysCodemasterId">
-                            </nz-option>
-                          </nz-select>
-
-                        </div>
-                      </div>
-                      <!-- <div nz-row>
-                    <div nz-col nzSpan="5">页面:</div>
-                  <div nz-col nzSpan="19">
-                    <nz-select [formControlName]="control.pageIds" id="pageId" [nzMaxTagPlaceholder]="tagPlaceHolder"
-                      style="width: 100%" nzMode="multiple" nzTitle="迁移页面" nzPlacement="top" nz-tooltip nzPlaceHolder="请选择">
-                      <nz-option *ngFor="let option of pageList" [nzLabel]="option.csysPageName" [nzValue]="option.csysPageId">
-                      </nz-option>
-                    </nz-select>
-                  </div>
-                </div> -->
-                      <div nz-row>
-                        <div nz-col nzSpan="10">自动执行：</div>
-                        <div nz-col nzSpan="8">
-                          <!-- <nz-select nzAllowClear [formControlName]="control.autoExcuteControl" (ngModelChange)="updateAutotPoint(control,$event)">
-                    <nz-option nzValue="0" nzLabel="否"></nz-option>
-                    <nz-option nzValue="1" nzLabel="是"></nz-option>
-                  </nz-select> -->
-                          <nz-switch [formControlName]="control.autoExcuteControl" nzCheckedChildren="开"
-                            nzUnCheckedChildren="关"></nz-switch>
-                        </div>
-
-                      </div>
-                      <div nz-row>
-                        <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default"
-                          nzShape="circle" (click)="removeField(control,$event)">
-                          <i nz-icon nzType="delete" nzTheme="outline" ></i>
-                        </button>
-                        <!-- <button nz-button nzTitle="增加权限" (click)="setAuthority(control,$event)" type="button"
-                    nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                    <i nz-icon nzType="usergroup-add" nzTheme="outline" ></i>
-                  </button> -->
-                        <button nz-button nzTitle="迁移条件" (click)="addCondition(control,$event)" type="button"
-                          nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                          <i nz-icon nzType="filter" nzTheme="outline"></i>
-                        </button>
-                        <ng-container *ngIf="control.potType=='tty'">
-                          <button nz-button nzTitle="回流设置" (click)="addCondition(control,$event)" type="button"
-                            nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                            <i nz-icon nzType="undo" nzTheme="outline"></i>
-                          </button>
-                        </ng-container>
-                        <!-- <button nz-button nzTitle="增加迁移页面" (click)="setTransferPage(control,$event)" type="button"
-                  nzPlacement="topLeft" nz-tooltip nzType="default" nzShape="circle">
-                </button> -->
-                      </div>
-
-
-                      <!-- <span style="color:rgb(159, 159, 159);margin: 0px 2px"> | </span> -->
-
-                      <!-- <nz-form-explain *ngIf="getFormControl(control.controlInstance)?.dirty&&getFormControl(control.controlInstance)?.hasError('required')">
-                Please input passenger's name or delete this field.
-              </nz-form-explain> -->
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item>
-                    <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
-                      <button nz-button nzType="dashed" type="button" style="width:80%" (click)="addField($event)">
-                        <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标工序</button>
-                    </nz-form-control>
-                  </nz-form-item>
-
-
-                  <nz-form-item>
-                    <!-- [nzSm]="{ span: 5, offset: 7 }" -->
-                    <nz-form-control [nzXs]="{ span: 18, offset: 6 }">
-                      <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
-                        [disabled]="editForm.invalid">保存</button>
-                      <button nz-button nzType="primary" (click)="deleteCurrentNode()" type="button"
-                        [nzLoading]="deleting">删除</button>
-                    </nz-form-control>
-                    <!-- <nz-form-control [nzXs]="{ span: 12, offset: 0 }">
-              
-            </nz-form-control> -->
-                  </nz-form-item>
-
-                </form>
-              </div>
-              <!-- </nz-spin> -->
+                    </ngx-graph>
+                </nz-spin>
             </nz-card>
-          </div>
+            <!--工作流图形构建-->
+            <ng-template #extraTemplate>
+
+                <div *ngIf="workflowType == 'operation'">
+                    <a>途程状态：</a>
+                    <nz-badge [nzStatus]="workflowStatus"></nz-badge>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="styleSetting()">风格设置</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="timeManger()">时间管控</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="madeSetting()">首件设置</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="opList()">新增制程段</a>
+                </div>
+            </ng-template>
         </div>
-      </div>
+        <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" *ngIf="operationShow">
+            <nz-card *ngIf="!formEditStatus" nzTitle="新建工序" [nzBordered]="false" class="mb-lg"
+                [nzExtra]="extraTemplate1">
+                <div class="active-chart">
+                    <form nz-form [formGroup]="insertForm" (ngSubmit)="_submitForm()">
 
-      <nz-modal [(nzVisible)]="styleVisible" nzTitle="风格设置" (nzOnCancel)="styleCancel()" (nzOnOk)="styleOk()">
-        <div class="active-chart">
-          <form nz-form [formGroup]="form" (ngSubmit)="_saveConfigure()">
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="flowPot">工序选择</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
+                                <nz-select nzPlaceHolder="请选择公共工序" formControlName="flowPot" nzShowSearch nzAllowClear
+                                    (ngModelChange)="chartChange($event)">
+                                    <nz-option *ngFor="let option of nodes" [nzLabel]="option.csysPotPublicName"
+                                        [nzValue]="option.csysPotPublicId"></nz-option>
 
-            <!-- 途程自定义工序颜色，取消主题设置 -->
-            <!-- <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="colorTheme">主题</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select [ngModel]="colorTheme" (ngModelChange)="setColorScheme($event)" formControlName="colorTheme"
-                  id="colorTheme">
-                  <nz-option *ngFor="let scheme of colorSchemes" [nzValue]="scheme.name" [nzLabel]="scheme.name">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item> -->
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="7">工序属性</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute" nzShowSearch
+                                    nzAllowClear>
+                                    <nz-option nzLabel="产出点" nzValue="8">
+                                    </nz-option>
+                                    <nz-option nzLabel="投入点" nzValue="9">
+                                    </nz-option>
+                                    <nz-option nzLabel="投入&产出" nzValue="7">
+                                    </nz-option>
+                                </nz-select>
 
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="lineStyle">线风格</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select [ngModel]="lineStyle" (ngModelChange)="setLineStyle($event)" formControlName="lineStyle"
-                  id="lineStyle">
-                  <nz-option *ngFor="let lineStyleOption of lineStyleOptions" [nzValue]="lineStyleOption"
-                    [nzLabel]="lineStyleOption"></nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="layoutStyle">风格</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select [(ngModel)]="layout" formControlName="layoutStyle" id="layoutStyle">
-                  <nz-option *ngFor="let orient of workflowlayout" [nzValue]="orient.value" [nzLabel]="orient.label">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="orientation">流向</nz-form-label>
-              <nz-form-control nzXs="24" nzSm="17" nzMd="17">
-                <nz-select [(ngModel)]="layoutSettings.orientation" (ngModelChange)="setOrientation($event)"
-                  formControlName="orientation" id="orientation">
-                  <nz-option *ngFor="let orient of orientations" [nzValue]="orient.value" [nzLabel]="orient.label">
-                  </nz-option>
-                </nz-select>
-              </nz-form-control>
-            </nz-form-item>
-            <!-- <nz-form-item>
-              <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
-                <button nz-button nzType="primary" type="submit" [nzLoading]="saveStyling">保存</button>
-              </nz-form-control>
-            </nz-form-item> -->
-          </form>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">制程段</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-select nzPlaceHolder="请选择制程段" formControlName="opPot" nzShowSearch nzAllowClear
+                                    (ngModelChange)="opChange($event)">
+                                    <nz-option *ngFor="let option of opData" [nzLabel]="option.opCode"
+                                        [nzValue]="option.opId">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-control>
+                            <input nz-input type="hidden" formControlName="flowPotType">
+                        </nz-form-control>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="flowPotName">工序名称</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请输入工序名称">
+                                <input nz-input formControlName="flowPotName" id="flowPotName" placeholder="请输入工序名称">
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="7" nzRequired>是否拆件</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-switch formControlName="excrete" nzCheckedChildren="开" nzUnCheckedChildren="关">
+                                </nz-switch>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item *ngIf="isNeedOnRepairVisible">
+                            <nz-form-label nzXs="24" nzSm="7">debug在线维修</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                                <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair" nzShowSearch
+                                    nzAllowClear>
+                                    <nz-option nzLabel="支持" nzValue="1">
+                                    </nz-option>
+                                    <nz-option nzLabel="不支持" nzValue="0">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item *ngIf="isNeedOnRepairVisible">
+                            <nz-form-label nzXs="24" nzSm="7">rework在线维修</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                                <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair" nzShowSearch
+                                    nzAllowClear>
+                                    <nz-option nzLabel="支持" nzValue="1">
+                                    </nz-option>
+                                    <nz-option nzLabel="不支持" nzValue="0">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item *ngIf="isNeedRcVisible">
+                            <nz-form-label nzXs="24" nzSm="7">不良送检</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                                <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc" nzShowSearch nzAllowClear>
+                                    <nz-option nzLabel="支持" nzValue="1">
+                                    </nz-option>
+                                    <nz-option nzLabel="不支持" nzValue="0">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item *ngFor="let control of controlArray;let i = index">
+                            {{control.potType}}
+                            <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0" [nzFor]="control.controlInstance">目标工序
+                            </nz-form-label>
+                            <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+                                <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
+                                    (ngModelChange)="updateTagetPoint(control,$event)" [attr.id]="control.id"
+                                    [formControlName]="control.controlInstance" [nzPlaceHolder]="'请选择目标工序'"
+                                    [nzShowSearch]="true">
+                                    <nz-option *ngFor="let option of targetNodeList1" [nzLabel]="option.csysPotName"
+                                        [nzValue]="option.csysPotId">
+                                    </nz-option>
+                                </nz-select>
+                       
+
+                                <div nz-row>
+                                    <div nz-col nzSpan="10">自动执行：</div>
+                                    <div nz-col nzSpan="8">
+
+                                        <nz-switch [formControlName]="control.autoExcuteControl" nzCheckedChildren="开"
+                                            nzUnCheckedChildren="关"></nz-switch>
+                                    </div>
+                                </div>
+                                <div nz-row>
+                                    <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip nzType="default"
+                                        nzShape="circle" (click)="removeField(control,$event)">
+                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                    </button>
+
+                                </div>
+
+
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
+                                <button nz-button nzType="dashed" type="button" style="width:80%"
+                                    (click)="addField($event)">
+                                    <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标工序</button>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 10, offset: 7 }">
+                                <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
+                                    [disabled]="insertForm.invalid">保存</button>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+                </div>
+
+            </nz-card>
+            <!-- 编辑 -->
+            <div class="inner" *ngIf="formEditStatus">
+                <div class="innerbox">
+                    <div class="formDiv">
+                        <nz-card nzTitle="修改工序" [nzBordered]="false" [nzExtra]="extraTemplate" class="mb-lg">
+                            <ng-template #extraTemplate>
+                                <a (click)="addPoint()">新建工序</a>
+                            </ng-template>
+                            <!-- <nz-spin [nzSpinning]="isSpinning"> -->
+                            <div class="active-chart">
+                                <form nz-form [formGroup]="editForm" (ngSubmit)="_submitForm()">
+                                    <nz-form-item hidden="true">
+                                        <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="id">工序编号</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <input nz-input disabled="disabled" formControlName="id">
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7">工序属性</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-select nzPlaceHolder="请选择工序属性" formControlName="potAttribute"
+                                                nzShowSearch nzAllowClear>
+                                                <nz-option nzLabel="产出点" nzValue="8"></nz-option>
+                                                <nz-option nzLabel="投入点" nzValue="9"></nz-option>
+                                                <nz-option nzLabel="投入&产出" nzValue="7"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7" nzFor="opPot">制程段</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-select nzPlaceHolder="请选择制程段" formControlName="opPot" nzShowSearch
+                                                nzAllowClear (ngModelChange)="opChange($event)">
+                                                <nz-option *ngFor="let option of opData" [nzLabel]="option.opCode"
+                                                    [nzValue]="option.opId">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="nodeEditName">工序名称
+                                        </nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请输入工序名称">
+                                            <input nz-input formControlName="nodeEditName" id="nodeEditName"
+                                                placeholder="输入工序名称" disabled="true">
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7" nzFor="rule">规则设定</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-select formControlName="rule" nzShowSearch nzAllowClear
+                                                nzPlaceHolder="请选择规则">
+                                                <nz-option *ngFor="let ruleOption of ruleData"
+                                                    [nzValue]="ruleOption.csysTrsRuleId"
+                                                    [nzLabel]="ruleOption.csysTrsRuleName"></nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7">公共工序</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-tag *ngIf='publickPotName'>{{publickPotName}}</nz-tag>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7">工序资源</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-collapse>
+                                                <nz-collapse-panel [nzHeader]="'资源列表'">
+                                                    <nz-tag *ngFor="let index of resourceData">{{index.resourceCode}}
+                                                    </nz-tag>
+                                                </nz-collapse-panel>
+                                            </nz-collapse>
+                                            
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzXs="24" nzSm="7">是否拆件</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-switch formControlName="excrete" nzCheckedChildren="是"
+                                                nzUnCheckedChildren="否"></nz-switch>
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+
+                                    <nz-form-item *ngIf="isNeedOnRepairVisible">
+                                        <nz-form-label nzXs="24" nzSm="7">debug在线维修</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                                            <nz-select nzPlaceHolder="debug在线维修" formControlName="debugIsOnrepair"
+                                                nzShowSearch nzAllowClear>
+                                                <nz-option nzLabel="支持" nzValue="1">
+                                                </nz-option>
+                                                <nz-option nzLabel="不支持" nzValue="0">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                    <nz-form-item *ngIf="isNeedOnRepairVisible">
+                                        <nz-form-label nzXs="24" nzSm="7">rework在线维修</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <!-- <nz-switch formControlName="isNeedRc" [(ngModel)]="isNeedRcValue" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch> -->
+                                            <nz-select nzPlaceHolder="rework在线维修" formControlName="reworkIsOnrepair"
+                                                nzShowSearch nzAllowClear>
+                                                <nz-option nzLabel="支持" nzValue="1">
+                                                </nz-option>
+                                                <nz-option nzLabel="不支持" nzValue="0">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                    <nz-form-item *ngIf="isNeedRcVisible">
+                                        <nz-form-label nzXs="24" nzSm="7">不良送检</nz-form-label>
+                                        <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                            <nz-select nzPlaceHolder="不良送检" formControlName="isNeedRc" nzShowSearch
+                                                nzAllowClear>
+                                                <nz-option nzLabel="支持" nzValue="1">
+                                                </nz-option>
+                                                <nz-option nzLabel="不支持" nzValue="0">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+
+                                    <ng-container *ngIf="formEditEnabled">
+                                        <nz-form-item>
+                                            <nz-form-label nzXs="24" nzSm="7" nzRequired nzFor="flowPotType">工序类型
+                                            </nz-form-label>
+                                            <nz-form-control nzXs="24" nzSm="17" nzMd="17" nzErrorTip="请选择工序">
+                                                <nz-select formControlName="flowPotType" nzAllowClear nzDisabled>
+                                                    <nz-option nzValue="0" nzLabel="头工序"></nz-option>
+                                                    <nz-option nzValue="1" nzLabel="普通工序"></nz-option>
+                                                    <nz-option nzValue="2" nzLabel="尾工序"></nz-option>
+                                                    <nz-option nzValue="3" nzLabel="初始化"></nz-option>
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <input nz-input type="hidden" formControlName="flowPotType">
+
+                                    </ng-container>
+
+
+                                    <nz-form-item *ngFor="let control of controlArray;let i = index">
+
+                                        <nz-form-label [nzXs]="24" [nzSm]="7" *ngIf="i==0"
+                                            [nzFor]="control.controlInstance">目标工序
+                                        </nz-form-label>
+                                        <nz-form-control [nzXs]="24" [nzSm]="17" nzMd="17" [nzOffset]="i==0?0:7">
+                                            <nz-select style=" margin-right:8px;" [(ngModel)]="control.value"
+                                                (ngModelChange)="updateTagetPoint(control,$event)"
+                                                [attr.id]="control.id" [formControlName]="control.controlInstance"
+                                                [nzPlaceHolder]="'请选择目标工序'" [nzShowSearch]="true">
+                                                <nz-option *ngFor="let option of targetNodeList1"
+                                                    [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
+                                                </nz-option>
+                                            </nz-select>
+                                     
+                                            <div nz-row>
+                                                <div nz-col nzSpan="10">自动执行：</div>
+                                                <div nz-col nzSpan="8">
+
+                                                    <nz-switch [formControlName]="control.autoExcuteControl"
+                                                        nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
+                                                </div>
+
+                                            </div>
+                                            <div nz-row>
+                                                <button nz-button nzTitle="删除" nzPlacement="topLeft" nz-tooltip
+                                                    nzType="default" nzShape="circle"
+                                                    (click)="removeField(control,$event)">
+                                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                                </button>
+
+                                                <button nz-button nzTitle="迁移条件" (click)="addCondition(control,$event)"
+                                                    type="button" nzPlacement="topLeft" nz-tooltip nzType="default"
+                                                    nzShape="circle">
+                                                    <i nz-icon nzType="filter" nzTheme="outline"></i>
+                                                </button>
+                                                <ng-container *ngIf="control.potType=='tty'">
+                                                    <button nz-button nzTitle="回流设置"
+                                                        (click)="addCondition(control,$event)" type="button"
+                                                        nzPlacement="topLeft" nz-tooltip nzType="default"
+                                                        nzShape="circle">
+                                                        <i nz-icon nzType="undo" nzTheme="outline"></i>
+                                                    </button>
+                                                </ng-container>
+
+                                            </div>
+
+
+
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                    <nz-form-item>
+                                        <nz-form-control [nzXs]="{span:24,offset:0}" [nzSm]="{span:20,offset:7}">
+                                            <button nz-button nzType="dashed" type="button" style="width:80%"
+                                                (click)="addField($event)">
+                                                <i nz-icon nzType="plus" nzTheme="outline"></i> 增加目标工序</button>
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+
+                                    <nz-form-item>
+
+                                        <nz-form-control [nzXs]="{ span: 18, offset: 6 }">
+                                            <button nz-button nzType="primary" type="submit" [nzLoading]="submitting"
+                                                [disabled]="editForm.invalid">保存</button>
+                                            <button nz-button nzType="primary" (click)="deleteCurrentNode()"
+                                                type="button" [nzLoading]="deleting">删除</button>
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+
+                                </form>
+                            </div>
+                            <!-- </nz-spin> -->
+                        </nz-card>
+                    </div>
+                </div>
+            </div>
+
+            <nz-modal [(nzVisible)]="styleVisible" nzTitle="风格设置" (nzOnCancel)="styleCancel()" (nzOnOk)="styleOk()">
+                <div class="active-chart">
+                    <form nz-form [formGroup]="form" (ngSubmit)="_saveConfigure()">
+
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="lineStyle">线风格</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-select [ngModel]="lineStyle" (ngModelChange)="setLineStyle($event)"
+                                    formControlName="lineStyle" id="lineStyle">
+                                    <nz-option *ngFor="let lineStyleOption of lineStyleOptions"
+                                        [nzValue]="lineStyleOption" [nzLabel]="lineStyleOption"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="layoutStyle">风格</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-select [(ngModel)]="layout" formControlName="layoutStyle" id="layoutStyle">
+                                    <nz-option *ngFor="let orient of workflowlayout" [nzValue]="orient.value"
+                                        [nzLabel]="orient.label">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label nzXs="24" nzSm="4" nzRequired nzFor="orientation">流向</nz-form-label>
+                            <nz-form-control nzXs="24" nzSm="17" nzMd="17">
+                                <nz-select [(ngModel)]="layoutSettings.orientation"
+                                    (ngModelChange)="setOrientation($event)" formControlName="orientation"
+                                    id="orientation">
+                                    <nz-option *ngFor="let orient of orientations" [nzValue]="orient.value"
+                                        [nzLabel]="orient.label">
+                                    </nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                    </form>
+                </div>
+            </nz-modal>
+            <ng-template #extraTemplate1>
+            </ng-template>
         </div>
-      </nz-modal>
-      <ng-template #extraTemplate1>
-      </ng-template>
+
     </div>
 
-  </div>
 
 
-  <!-- 权限分配 -->
-  <nz-modal [(nzVisible)]="isVisible" nzTitle="权限分配" (nzOnCancel)="handleCancel()" (nzOnOk)="authorityConfirm($event)"
-    [nzOkLoading]="isOkLoading">
-    <nz-transfer [nzDataSource]="roleList" nzShowSearch [nzOperations]="['to right', 'to left']"
-      [nzListStyle]="{ 'height.px': 300}" [nzRender]="render" [nzFooter]="footer"
-      (nzSelectChange)="transferselect($event)" (nzChange)="transferchange($event)" [nzTitles]="['Source', 'Target']">
-      <ng-template #render let-item>
-        {{ item.title }}
-        <!-- --{{ item.description }} -->
-      </ng-template>
-      <ng-template #footer let-direction>
-        <button nz-button [nzSize]="'small'"
-          style="float: right; margin: 5px;">reload</button>
-      </ng-template>
-    </nz-transfer>
-  </nz-modal>
+    <!--节点迁移条件-->
+    <nz-modal [(nzVisible)]="conditionisVisible" [nzTitle]="nzTitle" nzWidth="50%" [nzFooter]="modalFooter"
+        (nzOnCancel)="conditionCancel()">
 
-  <!-- 增加迁移页面 -->
-  <!-- <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isTransferVisible" nzTitle="迁移页面"
-  (nzOnCancel)="handleCancel()" (nzOnOk)="pageConfirm()" [nzOkLoading]="isOkLoading">
-  <form nz-form [formGroup]="pageForm">
-    <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="pageId">迁移页面</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24">
-        <nz-select formControlName="pageId" id="pageId" [nzMaxTagPlaceholder]="tagPlaceHolder" style="width: 100%"
-          nzMode="multiple" nzPlaceHolder="请选择">
-          <nz-option *ngFor="let option of pageList" [nzLabel]="option.label" [nzValue]="option.value"> </nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
-</nz-modal> -->
+        <ng-container *ngIf="tableShow == 'table'">
+            <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                <span>自定义添加</span>
+            </button>
+            <button nz-button (click)="repairTrsCon()" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                <i nz-icon nzType="tool" nzTheme="twotone"></i>
+                <span>迁移条件修复</span>
+            </button>
+            <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190723111446098000016'">
+                <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                    <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+                    <span>PPA抽检批退回</span>
+                </button>
+                <button nz-button (click)="quickAddPPACondition('0')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                    <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+                    <span>PPA抽检批通过</span>
+                </button>
+                <button nz-button (click)="quickAddPPACondition('1')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                    <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+                    <span>PPA抽检批维修</span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190803014643552000017'">
 
-  <nz-modal [(nzVisible)]="conditionisVisible" [nzTitle]="nzTitle" nzWidth="50%" [nzFooter]="modalFooter"
-    (nzOnCancel)="conditionCancel()">
+                <button nz-button (click)="quickAddPPACondition('3')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                    <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+                    <span>PPA批等待不良回流</span>
+                </button>
+                <button nz-button (click)="quickAddPPACondition('4')" [nzType]="'primary'" class="ant-btn__block mb-sm">
+                    <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
+                    <span>PPA批退回不良回流</span>
+                </button>
+            </ng-container>
+            <nz-table #basicTable [nzData]="pottrsconData" [nzLoading]="tableLodding">
+                <thead>
+                    <tr>
+                        <th>数据源</th>
+                        <th>条件对比</th>
+                        <th>对比数据</th>
+                        <th>提示信息</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of basicTable.data">
+                        <td>
+                            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                                [nzTitle]="data.csysPotTrsConRawData">
+                                {{data.csysPotTrsConRawData}}
+                            </p>
+                        </td>
+                        <td>
+                            <P style="width: 100px;">{{data.csysPotTrsConMethod}}</P>
+                        </td>
+                        <td>
+                            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                                [nzTitle]="data.csysPotTrsConDate">
+                                {{data.csysPotTrsConContrastData}}
+                            </p>
+                        </td>
+                        <td>
+                            <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
+                                [nzTitle]="data.csysPotTrsConInfo">
+                                {{data.csysPotTrsConInfo}}
+                            </p>
+                        </td>
+                        <td>
 
-    <ng-container *ngIf="tableShow == 'table'">
-      <button nz-button (click)="insertWorkFlowInit()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-        <i nz-icon nzType="plus" nzTheme="outline"></i>
-        <span>自定义添加</span>
-      </button>
-      <button nz-button (click)="repairTrsCon()" [nzType]="'primary'" class="ant-btn__block mb-sm">
-        <i nz-icon nzType="tool" nzTheme="twotone"></i>
-        <span>迁移条件修复</span>
-      </button>
-      <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190723111446098000016'">
-        <button nz-button (click)="quickAddPPACondition('2')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-          <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-          <span>PPA抽检批退回</span>
-        </button>
-        <button nz-button (click)="quickAddPPACondition('0')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-          <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-          <span>PPA抽检批通过</span>
-        </button>
-        <button nz-button (click)="quickAddPPACondition('1')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-          <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-          <span>PPA抽检批维修</span>
-        </button>
-      </ng-container>
-      <ng-container *ngIf="clickNodeData!=null&&clickNodeData.styleId=='LHCsysPotStyle20190803014643552000017'">
-
-        <button nz-button (click)="quickAddPPACondition('3')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-          <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-          <span>PPA批等待不良回流</span>
-        </button>
-        <button nz-button (click)="quickAddPPACondition('4')" [nzType]="'primary'" class="ant-btn__block mb-sm">
-          <i nz-icon nzType="thunderbolt" nzTheme="twotone"></i>
-          <span>PPA批退回不良回流</span>
-        </button>
-      </ng-container>
-      <nz-table #basicTable [nzData]="pottrsconData" [nzLoading]="tableLodding">
-        <thead>
-          <tr>
-            <th>数据源</th>
-            <th>条件对比</th>
-            <th>对比数据</th>
-            <th>提示信息</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td>
-              <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConRawData">
-                {{data.csysPotTrsConRawData}}
-              </p>
-            </td>
-            <td>
-              <P style="width: 100px;">{{data.csysPotTrsConMethod}}</P>
-            </td>
-            <td>
-              <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConDate">
-                {{data.csysPotTrsConContrastData}}
-              </p>
-            </td>
-            <td>
-              <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip [nzTitle]="data.csysPotTrsConInfo">
-                {{data.csysPotTrsConInfo}}
-              </p>
-            </td>
-            <td>
-              <!-- <a
-                (click)="editCondition(data.csysPotTrsConId,data.csysPotTrsConRawData,data.csysPotTrsConMethod,data.csysPotTrsConContrastData,data.csysPotTrsConInfo)">编辑</a>
-              <nz-divider nzType="vertical"></nz-divider>
-              <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a> -->
-              <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </ng-container>
-    <!-- 新增 -->
-    <ng-container *ngIf="tableShow == 'addTable'">
-      <form nz-form [formGroup]="conditionForm">
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="dataSource">源数据</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input placeholder="请输入源数据（动态sql）" formControlName="dataSource">
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="contrast">条件对比</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select formControlName="contrast" nzShowSearch nzAllowClear>
-              <nz-option *ngFor="let scheme of symbol" [nzValue]="scheme" [nzLabel]="scheme">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="contrastData">对比数据</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('contrastData')">
-            <input nz-input placeholder="请输入对比数据（动态sql）" formControlName="contrastData">
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="tips">提示信息</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" form="">
-            <textarea rows="4" nz-input placeholder="请输入提示信息" formControlName="tips"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-      </form>
-    </ng-container>
-    <ng-template #modalFooter>
-      <button *ngIf="tableShow == 'addTable'" nz-button nzType="default" (click)="back()">返回</button>
-      <button *ngIf="tableShow == 'setting'" nz-button nzType="default" (click)="conditionCancel()">取消</button>
-      <button nz-button nzType="primary" (click)="conditionOk()" [nzLoading]="isConfirmLoading">确定</button>
-    </ng-template>
-  </nz-modal>
-  <!-- 新增制程段 -->
-  <nz-modal [(nzVisible)]="opVisible" nzWidth="40%" [nzTitle]="opListTitle" [nzFooter]="modalFooter1"
-    (nzOnCancel)="opCancel()">
-    <ng-container *ngIf="opDiv == 'list'">
-      <button nz-button (click)="insertOp()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-        <i nz-icon nzType="plus" nzTheme="outline"></i>
-        <span>添加</span>
-      </button>
-      <nz-table #basicTable [nzData]="opData" [nzLoading]="tableLodding" nzPageSize=5>
-        <thead>
-          <tr>
-            <th>制程段代码</th>
-            <th>制程段描述</th>
-            <!-- <th>途程编号</th> -->
-            <!-- <th>途程名称</th> -->
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td>
-              <P style="width: 100px;">{{data.opCode}}</P>
-            </td>
-            <td>
-              <P style="width: 100px;"> {{data.opDesc}}</P>
-            </td>
-            <!-- <td>
-            <P style="width: 100px;">{{data.csysWorkflowId}}</P>         
-        </td> -->
-            <!-- <td>
-            <P style="width: 100px;">{{data.csysWorkflowName}}</P>
-          </td> -->
-            <td>
-              <a (click)="editOp(data)">编辑</a>
-              <nz-divider nzType="vertical"></nz-divider>
-              <a (click)="opDelete(data.opId)">删除</a>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </ng-container>
-    <ng-container *ngIf="opDiv == 'insertOpData'">
-      <div nz-row>
-        <div nz-col nzSpan="5"></div>
-        <div nz-col nzSpan="14">
-          <form nz-form [formGroup]="opForm" (ngSubmit)="_saveConfigure()">
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">制程段代码</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-               
-                <ng-container *ngIf="opListTitle == '编辑制成段'">
-                  <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
-                    <nz-option *ngFor="let opgroupdata of opGroup" nzDisabled [nzValue]="opgroupdata.csysCodemasterCode"
-                      [nzLabel]="opgroupdata.csysCodemasterCode">
-                    </nz-option>
-                  </nz-select>
-                </ng-container>
-                <ng-container *ngIf="opListTitle == '新增制成段'">
-                  <nz-select formControlName="opcode" nzShowSearch nzAllowClear nzPlaceHolder="请输入制程段代码">
-                    <nz-option *ngFor="let opgroupdata of opGroup" [nzValue]="opgroupdata.csysCodemasterCode"
-                      [nzLabel]="opgroupdata.csysCodemasterCode">
-                    </nz-option>
-                  </nz-select>
-                </ng-container>
+                            <a (click)="deleteCondition(data.csysPotTrsConId)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </ng-container>
+       
+        <ng-template #modalFooter>
+            <button *ngIf="tableShow == 'addTable'" nz-button nzType="default" (click)="back()">返回</button>
+            <button *ngIf="tableShow == 'setting'" nz-button nzType="default" (click)="conditionCancel()">取消</button>
+            <button nz-button nzType="primary" (click)="conditionOk()" [nzLoading]="isConfirmLoading">确定</button>
+        </ng-template>
+    </nz-modal>
+    <!--节点迁移条件-->
 
 
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">制程段描述</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input placeholder="请输入制程段描述" formControlName="opdesc">
-              </nz-form-control>
-            </nz-form-item>
-            <!-- <nz-form-item>
-                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcontrol">制程段控制编码</nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24"  [nzValidateStatus]="opForm.get('opcontrol')">
-                    <input nz-input placeholder="请输入制程段控制编码" formControlName="opcontrol">
-                    <nz-form-explain *ngIf="opForm.get('opcontrol')?.dirty && opForm.get('opcontrol')?.errors"
-                    >请输入制程段控制编码</nz-form-explain>
-                  </nz-form-control>
-                </nz-form-item> -->
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowid">途程编号</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input disabled="true" placeholder="途程编号" formControlName="workflowid">
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">途程名称</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input disabled="true" placeholder="途程名称" formControlName="workflowname">
-              </nz-form-control>
-            </nz-form-item>
-          </form>
+    <!-- 新增制程段 -->
+    <nz-modal [(nzVisible)]="opVisible" nzWidth="40%" [nzTitle]="opListTitle" [nzFooter]="modalFooter1"
+        (nzOnCancel)="opCancel()">
+        <ng-container *ngIf="opDiv == 'list'">
+            <button nz-button (click)="insertOp()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                <span>添加</span>
+            </button>
+            <nz-table #basicTable [nzData]="opData" [nzLoading]="tableLodding" nzPageSize=5>
+                <thead>
+                    <tr>
+                        <th>制程段代码</th>
+                        <th>制程段描述</th>
+                        <!-- <th>途程编号</th> -->
+                        <!-- <th>途程名称</th> -->
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of basicTable.data">
+                        <td>
+                            <P style="width: 100px;">{{data.opCode}}</P>
+                        </td>
+                        <td>
+                            <P style="width: 100px;"> {{data.opDesc}}</P>
+                        </td>
 
-        </div>
-        <div nz-col nzSpan="5"></div>
-      </div>
+                        <td>
+                            <a (click)="editOp(data)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a (click)="opDelete(data.opId)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </ng-container>
+        <ng-container *ngIf="opDiv == 'insertOpData'">
+            <div nz-row>
+                <div nz-col nzSpan="5"></div>
+                <div nz-col nzSpan="14">
+                    <form nz-form [formGroup]="opForm" (ngSubmit)="_saveConfigure()">
+                        <nz-form-item>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">制程段代码</nz-form-label>
+                            <nz-form-control [nzSm]="14" [nzXs]="24">
 
-    </ng-container>
-    <ng-template #modalFooter1>
-      <button *ngIf="opDiv == 'list'" nz-button nzType="default" (click)="opCancel()">取消</button>
-      <button *ngIf="opDiv == 'insertOpData'" nz-button nzType="default" (click)="opBack()">返回</button>
-      <button nz-button nzType="primary" (click)="opOk()" [nzLoading]="isOpLoding">确认</button>
-    </ng-template>
-  </nz-modal>
+                                <ng-container *ngIf="opListTitle == '编辑制成段'">
+                                    <nz-select formControlName="opcode" nzShowSearch nzAllowClear
+                                        nzPlaceHolder="请输入制程段代码">
+                                        <nz-option *ngFor="let opgroupdata of opGroup" nzDisabled
+                                            [nzValue]="opgroupdata.csysCodemasterCode"
+                                            [nzLabel]="opgroupdata.csysCodemasterCode">
+                                        </nz-option>
+                                    </nz-select>
+                                </ng-container>
+                                <ng-container *ngIf="opListTitle == '新增制成段'">
+                                    <nz-select formControlName="opcode" nzShowSearch nzAllowClear
+                                        nzPlaceHolder="请输入制程段代码">
+                                        <nz-option *ngFor="let opgroupdata of opGroup"
+                                            [nzValue]="opgroupdata.csysCodemasterCode"
+                                            [nzLabel]="opgroupdata.csysCodemasterCode">
+                                        </nz-option>
+                                    </nz-select>
+                                </ng-container>
 
-  <!-- 设置回流工序 -->
-  <!-- <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isBackflowVisible" nzTitle="回流设置"
-  (nzOnCancel)="handleCancel()" (nzOnOk)="pageConfirm()" [nzOkLoading]="isOkLoading">
-  <form nz-form [formGroup]="pageForm">
-    <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="pageId">回流设置</nz-form-label>
-      <nz-form-control [nzSm]="14" [nzXs]="24">
-        <nz-select formControlName="pageId" id="pageId" nzShowSearch nzAllowClear nzPlaceHolder="请选择">
-          <nz-option *ngFor="let option of pageList" [nzLabel]="option.label" [nzValue]="option.value"> </nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
-</nz-modal> -->
-  <nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible"
-    nzTitle="时间管控" (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()" [nzOkLoading]="timeLoading">
-    <nz-spin [nzSpinning]="timeSpin">
-      <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-        <i nz-icon nzType="plus" nzTheme="outline"></i>
-        <span>添加</span>
-      </button>
-      <ng-container *ngIf="!shiftTime">
-        <nz-table #basicTable nzPageSize=5 [nzData]="timeData">
-          <thead>
-            <tr>
-              <th>起始工序</th>
-              <th>目标工序</th>
-              <th>停留时间/分</th>
-              <th>超时时间/分</th>
-              <th>描述</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of basicTable.data">
-              <td>{{ data.csysPotCurrentName }}</td>
-              <td>{{ data.csysPotPointName }}</td>
-              <td>{{ data.csysPotLeastTime }}</td>
-              <td>{{ data.csysPotLongestTime }}</td>
-              <td>{{ data.csysPotConTimeDesc }}</td>
-              <td>
-                <a (click)="editInit(data)">编辑</a>
-                <nz-divider nzType="vertical"></nz-divider>
-                <a nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="deleteTime(data)">删除</a>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </ng-container>
-      <ng-container *ngIf="shiftTime">
-        <div nz-row>
-          <div nz-col nzSpan="4"></div>
-          <div nz-col nzSpan="16">
-            <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序">
-                    <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
-                      [nzLabel]="timedata.label">
-                    </nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="16">
-                  <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序">
-                    <nz-option *ngFor="let timedata of hierarchialGraph.nodes" [nzValue]="timedata.id"
-                      [nzLabel]="timedata.label">
-                    </nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">停留时间</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="16">
-                  <nz-input-group nzCompact>
-                    <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
-                    </nz-input-number>
-                    <nz-select formControlName="potTimeType" style="width: 50px">
-                      <nz-option nzLabel="分" nzValue="min"></nz-option>
-                      <nz-option nzLabel="时" nzValue="h"></nz-option>
-                    </nz-select>
-                  </nz-input-group>
-                  <span style="color: red">设置起始工序到目标工序停留时间</span>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potLongestTime">超时时间</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <nz-input-group nzCompact>
-                    <nz-input-number formControlName="potLongestTime" [nzMin]="0.00" nzPrecision=2 [nzStep]="1">
-                    </nz-input-number>
-                    <nz-select formControlName="potTimeType1" style="width: 50px">
-                      <nz-option nzLabel="分" nzValue="min"></nz-option>
-                      <nz-option nzLabel="时" nzValue="h"></nz-option>
-                    </nz-select>
-                  </nz-input-group>
-                  <span style="color: red">设置起始工序到目标工序不能超过时间</span>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potConTimeDesc">描述</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="16">
-                  <input nz-input placeholder="描述" formControlName="potConTimeDesc">
-                </nz-form-control>
-              </nz-form-item>
+
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">制程段描述</nz-form-label>
+                            <nz-form-control [nzSm]="14" [nzXs]="24">
+                                <input nz-input placeholder="请输入制程段描述" formControlName="opdesc">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowid">途程编号</nz-form-label>
+                            <nz-form-control [nzSm]="14" [nzXs]="24">
+                                <input nz-input disabled="true" placeholder="途程编号" formControlName="workflowid">
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">途程名称</nz-form-label>
+                            <nz-form-control [nzSm]="14" [nzXs]="24">
+                                <input nz-input disabled="true" placeholder="途程名称" formControlName="workflowname">
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+
+                </div>
+                <div nz-col nzSpan="5"></div>
+            </div>
+
+        </ng-container>
+        <ng-template #modalFooter1>
+            <button *ngIf="opDiv == 'list'" nz-button nzType="default" (click)="opCancel()">取消</button>
+            <button *ngIf="opDiv == 'insertOpData'" nz-button nzType="default" (click)="opBack()">返回</button>
+            <button nz-button nzType="primary" (click)="opOk()" [nzLoading]="isOpLoding">确认</button>
+        </ng-template>
+    </nz-modal>
+
+    <!--节点时间管控-->
+    <nz-modal *ngIf="operationShow" nzWrapClassName="vertical-center-modal" nzWidth="50%" [(nzVisible)]="timeVisible"
+        nzTitle="时间管控" (nzOnCancel)="timeCancel()" (nzOnOk)="timeOk()" [nzOkLoading]="timeLoading">
+        <nz-spin [nzSpinning]="timeSpin">
+            <button *ngIf="!shiftTime" nz-button (click)="insertTime()" [nzType]="'dashed'"
+                class="ant-btn__block mb-sm">
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                <span>添加</span>
+            </button>
+            <ng-container *ngIf="!shiftTime">
+                <nz-table #basicTable nzPageSize=5 [nzData]="timeData">
+                    <thead>
+                        <tr>
+                            <th>起始工序</th>
+                            <th>目标工序</th>
+                            <th>停留时间/分</th>
+                            <th>超时时间/分</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of basicTable.data">
+                            <td>{{ data.csysPotCurrentName }}</td>
+                            <td>{{ data.csysPotPointName }}</td>
+                            <td>{{ data.csysPotLeastTime }}</td>
+                            <td>{{ data.csysPotLongestTime }}</td>
+                            <td>{{ data.csysPotConTimeDesc }}</td>
+                            <td>
+                                <a (click)="editInit(data)">编辑</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="deleteTime(data)">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </ng-container>
+            <ng-container *ngIf="shiftTime">
+                <div nz-row>
+                    <div nz-col nzSpan="4"></div>
+                    <div nz-col nzSpan="16">
+                        <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
+                            <nz-form-item>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >起始工序</nz-form-label>
+                                <nz-form-control [nzSm]="14" [nzXs]="24">
+                                    <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear
+                                        nzPlaceHolder="请选择起始工序">
+                                        <nz-option *ngFor="let timedata of hierarchialGraph.nodes"
+                                            [nzValue]="timedata.id" [nzLabel]="timedata.label">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
+                                <nz-form-control [nzSm]="14" [nzXs]="16">
+                                    <nz-select formControlName="potPointName" nzShowSearch nzAllowClear
+                                        nzPlaceHolder="请选择目标工序">
+                                        <nz-option *ngFor="let timedata of hierarchialGraph.nodes"
+                                            [nzValue]="timedata.id" [nzLabel]="timedata.label">
+                                        </nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workflowname">停留时间</nz-form-label>
+                                <nz-form-control [nzSm]="14" [nzXs]="16">
+                                    <nz-input-group nzCompact>
+                                        <nz-input-number formControlName="potLeastTime" [nzMin]="0.00" nzPrecision=2
+                                            [nzStep]="1">
+                                        </nz-input-number>
+                                        <nz-select formControlName="potTimeType" style="width: 50px">
+                                            <nz-option nzLabel="分" nzValue="min"></nz-option>
+                                            <nz-option nzLabel="时" nzValue="h"></nz-option>
+                                        </nz-select>
+                                    </nz-input-group>
+                                    <span style="color: red">设置起始工序到目标工序停留时间</span>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potLongestTime">超时时间</nz-form-label>
+                                <nz-form-control [nzSm]="14" [nzXs]="24">
+                                    <nz-input-group nzCompact>
+                                        <nz-input-number formControlName="potLongestTime" [nzMin]="0.00" nzPrecision=2
+                                            [nzStep]="1">
+                                        </nz-input-number>
+                                        <nz-select formControlName="potTimeType1" style="width: 50px">
+                                            <nz-option nzLabel="分" nzValue="min"></nz-option>
+                                            <nz-option nzLabel="时" nzValue="h"></nz-option>
+                                        </nz-select>
+                                    </nz-input-group>
+                                    <span style="color: red">设置起始工序到目标工序不能超过时间</span>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potConTimeDesc">描述</nz-form-label>
+                                <nz-form-control [nzSm]="14" [nzXs]="16">
+                                    <input nz-input placeholder="描述" formControlName="potConTimeDesc">
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+                    </div>
+                    <div nz-col nzSpan="4"></div>
+                </div>
+            </ng-container>
+        </nz-spin>
+    </nz-modal>
+    <!--节点时间管控-->
+
+
+    <!-- 首件信息 -->
+    <nz-modal [(nzVisible)]="madeVisible" nzTitle="首件设置" nzWidth="50%" (nzOnCancel)="madeCancel()" (nzOnOk)="madeOk()"
+        [nzOkLoading]="madeOkLoading">
+        <ng-container *ngIf="!shiftMade">
+            <button nz-button (click)="insertMade()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                <span>添加</span>
+            </button>
+            <nz-table #basicTable nzPageSize=5 [nzData]="confisrtData">
+                <thead>
+                    <tr>
+                        <th>起始工序</th>
+                        <th>目标工序</th>
+                        <th>开启班次</th>
+                        <th>描述</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of basicTable.data">
+                        <td>{{ data.csysPotCurrentName }}</td>
+                        <td>{{ data.csysPotPointName }}</td>
+                        <td>{{ data.csysPotConFirstName }}</td>
+                        <td>{{ data.csysPotConFirstDesc }}</td>
+                        <td>
+                            <a (click)="editMadeInit(data)">编辑</a>
+                            <nz-divider nzType="vertical"></nz-divider>
+                            <a nz-popconfirm nzTitle="确认删除?"
+                                (nzOnConfirm)="deleteMadeData(data.csysPotConFirstId)">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </ng-container>
+       <!-- 首件信息 -->
+
+
+        <!--新增首件-->
+        <ng-container *ngIf="shiftMade">
+            <form nz-form [formGroup]="madeForm" (ngSubmit)="_saveConfigure()">
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >起始工序</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24">
+                        <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear
+                            nzPlaceHolder="请选择起始工序(只允许设置测试站)" (ngModelChange)="checkModeChange()">
+                            <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
+                                [nzLabel]="madedata.csysPotName">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >目标工序</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="16">
+                        <nz-select formControlName="potPointName" nzShowSearch nzAllowClear
+                            nzPlaceHolder="请选择目标工序(只允许设置测试站)" (ngModelChange)="checkModeChange()">
+                            <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
+                                [nzLabel]="madedata.csysPotName">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">开启班次</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="16">
+                        <nz-switch formControlName="potConFirstIsShift" nzCheckedChildren="开" nzUnCheckedChildren="关">
+                        </nz-switch>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">首件选择</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="16">
+                        <nz-select [nzMaxTagCount]="3" style="width: 100%" nzMode="multiple" nzPlaceHolder="请选择首件"
+                            nzShowSearch nzAllowClear formControlName="firstSetting">
+                            <nz-option *ngFor="let option of firstData" [nzLabel]="option.csysPotName"
+                                [nzValue]="option.csysPotId">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potConTimeDesc">描述</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="16">
+                        <input nz-input placeholder="描述" formControlName="potConTimeDesc">
+                    </nz-form-control>
+                </nz-form-item>
             </form>
-          </div>
-          <div nz-col nzSpan="4"></div>
-        </div>
-      </ng-container>
-    </nz-spin>
-  </nz-modal>
-  <!-- 制程段 -->
-  <nz-modal [(nzVisible)]="madeVisible" nzTitle="首件设置" nzWidth="50%" (nzOnCancel)="madeCancel()" (nzOnOk)="madeOk()"
-    [nzOkLoading]="madeOkLoading">
-    <ng-container *ngIf="!shiftMade">
-      <button nz-button (click)="insertMade()" [nzType]="'dashed'" class="ant-btn__block mb-sm">
-        <i nz-icon nzType="plus" nzTheme="outline"></i>
-        <span>添加</span>
-      </button>
-      <nz-table #basicTable nzPageSize=5 [nzData]="confisrtData">
-        <thead>
-          <tr>
-            <th>起始工序</th>
-            <th>目标工序</th>
-            <th>开启班次</th>
-            <th>描述</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of basicTable.data">
-            <td>{{ data.csysPotCurrentName }}</td>
-            <td>{{ data.csysPotPointName }}</td>
-            <td>{{ data.csysPotConFirstName }}</td>
-            <td>{{ data.csysPotConFirstDesc }}</td>
-            <td>
-              <a (click)="editMadeInit(data)">编辑</a>
-              <nz-divider nzType="vertical"></nz-divider>
-              <a nz-popconfirm nzTitle="确认删除?" (nzOnConfirm)="deleteMadeData(data.csysPotConFirstId)">删除</a>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </ng-container>
-    <ng-container *ngIf="shiftMade">
-      <form nz-form [formGroup]="madeForm" (ngSubmit)="_saveConfigure()">
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opcode">起始工序</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear nzPlaceHolder="请选择起始工序(只允许设置测试站)"
-              (ngModelChange)="checkModeChange()">
-              <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
-                [nzLabel]="madedata.csysPotName">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">目标工序</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-select formControlName="potPointName" nzShowSearch nzAllowClear nzPlaceHolder="请选择目标工序(只允许设置测试站)"
-              (ngModelChange)="checkModeChange()">
-              <nz-option *ngFor="let madedata of nodeData" [nzValue]="madedata.csysPotId"
-                [nzLabel]="madedata.csysPotName">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="opdesc">开启班次</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-switch formControlName="potConFirstIsShift" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="opdesc">首件选择</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="16">
-            <nz-select [nzMaxTagCount]="3" style="width: 100%" nzMode="multiple"
-              nzPlaceHolder="请选择首件" nzShowSearch nzAllowClear formControlName="firstSetting">
-              <nz-option *ngFor="let option of firstData" [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
-              </nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="potConTimeDesc">描述</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="16">
-            <input nz-input placeholder="描述" formControlName="potConTimeDesc">
-          </nz-form-control>
-        </nz-form-item>
-      </form>
-    </ng-container>
-  </nz-modal>
+        </ng-container>
+        <!--新增首件-->
+    </nz-modal>
 </div>

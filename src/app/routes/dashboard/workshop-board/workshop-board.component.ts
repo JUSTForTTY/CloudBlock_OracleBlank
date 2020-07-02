@@ -22,7 +22,6 @@ export class WorkshopBoardComponent implements OnInit {
 
 
   yieldDivHeight = 400;
-  yieldDivHeight$ = new ReplaySubject<number>();
   roundDivHeight$ = new ReplaySubject<number>();
   yieldDailydivHeight$ = new ReplaySubject<number>();
   tableDivHeight$ = new ReplaySubject<number>();
@@ -85,7 +84,6 @@ export class WorkshopBoardComponent implements OnInit {
       console.log('roundDivHeight1', this.roundDiv.nativeElement.offsetHeight)
       console.log('yieldDailydivHeight1', this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10)
       console.log('tableDivHeight1', this.tableDiv.nativeElement.offsetHeight)
-      this.yieldDivHeight$.next(this.yieldDivHeight);
       this.roundDivHeight$.next(this.roundDiv.nativeElement.offsetHeight);
       this.yieldDailydivHeight$.next(this.yieldDailydiv.nativeElement.offsetHeight * 0.872 - 10);
       this.tableDivHeight$.next(this.tableDiv.nativeElement.offsetHeight);
@@ -101,7 +99,7 @@ export class WorkshopBoardComponent implements OnInit {
           this.fontSizeTitle2 = 18;//二级标题
         }
         this.yieldDivHeight = this.yieldDiv.nativeElement.offsetHeight - 10 - this.yieldDiv2.nativeElement.offsetHeight;
-        this.yieldDivHeight$.next(this.yieldDivHeight);
+
         console.log('window.innerHeight', window.innerHeight)
         console.log('yieldDivHeight2', this.yieldDivHeight)
         console.log('roundDivHeight2', this.roundDiv.nativeElement.offsetHeight)

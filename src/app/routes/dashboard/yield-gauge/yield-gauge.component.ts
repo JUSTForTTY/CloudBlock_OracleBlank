@@ -51,7 +51,7 @@ const color = ['#0086FA', '#FFBF00', '#F5222D'];
 export class YieldGaugeComponent implements OnInit {
   forceFit: boolean = true;
   height = 300;
-  @Input() data:any[] = [
+  @Input() data = [
     {value:9}
   ];
   scale = scale;

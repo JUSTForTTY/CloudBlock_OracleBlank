@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 // delon
 import { AlainThemeModule } from '@delon/theme';
+import { DelonABCModule } from '@delon/abc';
 import { DelonChartModule } from '@delon/chart';
 import { DelonACLModule } from '@delon/acl';
 import { DelonFormModule } from '@delon/form';
@@ -11,27 +12,24 @@ import { DelonFormModule } from '@delon/form';
 import { TranslateModule } from '@ngx-translate/core';
 
 // #region third libs
-// import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
 import { UEditorModule } from 'ngx-ueditor';
 import { NgxTinymceModule } from 'ngx-tinymce';
-// import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { DndModule } from 'ngx-drag-drop';
-import { ImageCropperModule } from 'ngx-img-cropper';
-import { SHARED_DELON_MODULES } from './shared-delon.module';
-import { SHARED_ZORRO_MODULES } from './shared-zorro.module';
+
 //
  
-// import { ViserModule } from 'viser-ng';
+import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
-  // NgZorroAntdModule,
+  NgZorroAntdModule,
+  CountdownModule,
   UEditorModule,
   NgxTinymceModule,
-  // InfiniteScrollModule,
+  InfiniteScrollModule,
   DndModule,
-  ImageCropperModule,
-  // ViserModule
 ];
 // #endregion
 
@@ -47,13 +45,13 @@ const DIRECTIVES = [];
     RouterModule,
     ReactiveFormsModule,
     AlainThemeModule.forChild(),
+    DelonABCModule,
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
+    ViserModule,
     // third libs
     ...THIRDMODULES,
-    ...SHARED_DELON_MODULES,
-    ...SHARED_ZORRO_MODULES
   ],
   declarations: [
     // your components
@@ -66,9 +64,11 @@ const DIRECTIVES = [];
     ReactiveFormsModule,
     RouterModule,
     AlainThemeModule,
+    DelonABCModule,
     DelonChartModule,
     DelonACLModule,
     DelonFormModule,
+    ViserModule,
     // i18n
     TranslateModule,
     // third libs
@@ -76,8 +76,6 @@ const DIRECTIVES = [];
     // your components
     ...COMPONENTS,
     ...DIRECTIVES,
-    ...SHARED_DELON_MODULES,
-    ...SHARED_ZORRO_MODULES
   ],
 })
 export class SharedModule {}

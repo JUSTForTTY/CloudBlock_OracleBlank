@@ -4,7 +4,7 @@ import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { UserService } from '@core';
-import { ReuseTabService } from '@reuse-tab';
+import { ReuseTabService } from '@delon/abc/reuse-tab';
 import { HttpService } from 'ngx-block-core';
 import { Md5 } from "ts-md5/dist/md5";
 import { Observable, Observer } from 'rxjs';
@@ -12,31 +12,25 @@ import { environment } from '@env/environment.prod';
 @Component({
   selector: 'header-user',
   template: `
-  <div
-      class="alain-default__nav-item d-flex align-items-center px-sm"
-      nz-dropdown
-      nzPlacement="bottomRight"
-      [nzDropdownMenu]="userMenu"
-    >
+  <nz-dropdown nzPlacement="bottomRight">
+    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
     <nz-avatar *ngIf="userService.getCurrentUser()['csysUserHeadimage'] == ''" nzSize="default" [nzText]="userService.getCurrentUser()['csysUserRealname']" style="background-color:#87d068;" class="mr-sm"></nz-avatar>
     <nz-avatar *ngIf="userService.getCurrentUser()['csysUserHeadimage'] != ''" nzIcon="user" [nzSrc]="userService.resourceHttp + userService.getCurrentUser()['csysUserHeadimage']"></nz-avatar>
       {{userService.getCurrentUser()['csysUserUsername']}}
     </div>
-    <nz-dropdown-menu #userMenu="nzDropdownMenu">
     <div nz-menu class="width-sm">
-      <div nz-menu-item (click)="resetting()"><i nz-icon nzType="user" class="mr-sm"></i>
+      <div nz-menu-item (click)="resetting()"><i nz-icon type="user" class="mr-sm"></i>
         {{ 'menu.account.center' | translate }}
       </div>
-      <div nz-menu-item (click)="tabOption()"><i nz-icon nzType="setting" class="mr-sm"></i>
+      <div nz-menu-item (click)="tabOption()"><i nz-icon type="setting" class="mr-sm"></i>
         {{ 'menu.account.settings' | translate }}
       </div>
       <li nz-menu-divider></li>
-      <div nz-menu-item (click)="logout()"><i nz-icon nzType="logout" class="mr-sm"></i>
+      <div nz-menu-item (click)="logout()"><i nz-icon type="logout" class="mr-sm"></i>
         {{ 'menu.account.logout' | translate }}
       </div>
     </div>
-    </nz-dropdown-menu>
-    
+  </nz-dropdown>
   <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <div *ngIf="!tabView" nz-row>
     <div nz-col nzSpan="8"></div>
@@ -199,7 +193,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
       let pData = {
         "csysUserId": this.userid,
         "csysUserPassword": this.password1,
-        "csysUserMeno": "1"
+        "csysUserMeno":"1"
       }
       this.httpService.putHttp("/csysuser", pData).subscribe((data: any) => {
         this.msg.success("修改成功");
@@ -345,12 +339,12 @@ export class HeaderUserComponent implements OnInit, DoCheck {
 
   getUserStatus() {
 
-    if (null != this.userService.getCurrentUser()) {
+    if(null!=this.userService.getCurrentUser()){
       if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
         this.resetPassword();
       }
     }
-
+    
 
   }
 }

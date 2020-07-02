@@ -51,10 +51,8 @@
               今日线体良率情况
             </span>
           </div>
-          <div style="height: 92.32%;text-align: center;background:#101638;">
-            <app-yield-productline [data$]="leftData$" [height$]="yieldDivHeight$"></app-yield-productline>
-          </div>
 
+          <app-yield-productline [data$]="leftData$" [height]='yieldDivHeight'></app-yield-productline>
         </div>
       </div>
 
@@ -95,7 +93,7 @@
             每日良率趋势情况对比
           </span>
         </div>
-        <div style="background:#101638;width: 100%;height:87.2%">
+        <div style="background:#101638;">
           <app-yield-daily [height$]="yieldDailydivHeight$" [workshopCode]="workshopCode"></app-yield-daily>
         </div>
 

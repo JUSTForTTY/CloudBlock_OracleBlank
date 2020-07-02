@@ -1,25 +1,30 @@
 @import '~@delon/theme/styles/default';
+
 :host {
   display: block;
   width: 368px;
   margin: 0 auto;
+  color:#f0f2f5;
   ::ng-deep {
     .ant-tabs .ant-tabs-bar {
+      border-bottom: 0;
       margin-bottom: 24px;
       text-align: center;
-      border-bottom: 0;
+      color:#f0f2f5;
     }
     .ant-tabs-tab {
       font-size: 16px;
       line-height: 24px;
+      color:#f0f2f5;
     }
     .ant-input-affix-wrapper .ant-input:not(:first-child) {
-      padding-left: 4px;
+      padding-left: 34px;
     }
     .icon {
-      margin-left: 16px;
-      color: rgba(0, 0, 0, 0.2);
       font-size: 24px;
+      //color: rgba(0, 0, 0, 0.2);
+      color:#f0f2f5;
+      margin-left: 16px;
       vertical-align: middle;
       cursor: pointer;
       transition: color 0.3s;
@@ -27,15 +32,25 @@
         color: @primary-color;
       }
     }
+    .auto-login{
+      color:#f0f2f5;
+
+    }
+    .forgot{
+      color:#f0f2f5;
+
+    }
     .other {
+      text-align: left;
       margin-top: 24px;
       line-height: 22px;
-      text-align: left;
+      color:#f0f2f5;
       nz-tooltip {
         vertical-align: middle;
       }
       .register {
         float: right;
+        color:#f0f2f5;
       }
     }
   }

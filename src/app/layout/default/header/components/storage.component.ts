@@ -4,7 +4,7 @@ import { NzModalService, NzMessageService } from 'ng-zorro-antd';
 @Component({
   selector: 'header-storage',
   template: `
-  <i nz-icon nzType="tool"></i>
+  <i nz-icon type="tool"></i>
   {{ 'menu.clear.local.storage' | translate}}
   `,
   host: {

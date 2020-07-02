@@ -71,7 +71,7 @@ export class ErrorTableComponent implements OnInit {
     this.newData = true;
     //自适应高度
     this.heightSub = this.height$.subscribe(height => {
-      console.log(height, 'error-tableDivHeight3', height, this.basicTable['elementRef'].nativeElement.offsetHeight)
+      console.log(height, 'error-tableDivHeight3', height, this.basicTable['tableMainElement'].nativeElement.offsetHeight)
       this.height = height;
       this.changeHeight(height);
     });
@@ -105,7 +105,9 @@ export class ErrorTableComponent implements OnInit {
         this.listOfData.push(item);
       });
       if (this.listOfData.length == 0) {
-        this.listOfData.push({停线原因:'暂无数据'})
+        for (let index = 0; index < this.nzPageSize; index++) {
+          this.listOfData.push({})
+        }
       }
       setTimeout(() => {
         if (this.height) {
@@ -116,7 +118,7 @@ export class ErrorTableComponent implements OnInit {
     });
   }
   changeHeight(height) {
-    const tableHeight = this.basicTable['elementRef'].nativeElement.offsetHeight;
+    const tableHeight = this.basicTable['tableMainElement'].nativeElement.offsetHeight;
     console.log(height, 'error-tableDivHeight3', tableHeight)
     const lineHeight = (tableHeight - 5) / ((this.basicTable['data'] as Array<any>).length + 1);
 

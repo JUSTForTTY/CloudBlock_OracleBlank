@@ -97,8 +97,10 @@ export class UserService {
 
   setAuthByServer(user,serverData) {
     // Save JWT sent from server in localstorage
+    console.log("bug登录检测",server_name);
+    console.log("bug登录检测-token",user);
     this.jwtService.saveToken(server_name, user.csysUserAccessToken, user.csysUserRefreshToken);
-
+    
     this.jwtService.saveUserServerData(server_name, serverData.serverUrl, serverData.resourceUrl, data_url);
 
     this.cacheService.set('userdata' + server_name, user, { type: 's', expire: 24 * 60 * 60 });

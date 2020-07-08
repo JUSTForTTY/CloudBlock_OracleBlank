@@ -202,7 +202,7 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
             params = {
                 "csysUserUsername": this.userName.value.toLowerCase(),
                 "csysUserPassword": this.password.value,
-                "csysUserAddress":serverData.homeUrl
+                 
             }
         } else {
             this.mobile.markAsDirty();
@@ -220,11 +220,12 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
         this.loading = true;
 
         this.userService.attemptAuth(params,serverData).subscribe(
-            (data: any) => {
+            (userData: any) => {
 
-                this.userService.loadMenuByServer(data,serverData).subscribe(
+                this.userService.loadMenuByServer(userData,serverData).subscribe(
                     (data: any) => {
-                        this.router.navigate(['/default/workplace']);
+                        window.location.href=serverData.homeUrl+"/default/workplace?refreshtoken="+userData.csysUserRefreshToken;
+                        //this.router.navigate(['/default/workplace']);
                     });
  
 

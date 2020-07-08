@@ -1,5 +1,5 @@
 import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
@@ -9,6 +9,7 @@ import { HttpService } from 'ngx-block-core';
 import { Md5 } from "ts-md5/dist/md5";
 import { Observable, Observer } from 'rxjs';
 import { environment } from '@env/environment.prod';
+const server_name = environment.SERVER_NAME
 @Component({
   selector: 'header-user',
   template: `
@@ -82,13 +83,14 @@ export class HeaderUserComponent implements OnInit, DoCheck {
   constructor(
     public settings: SettingsService,
     private router: Router,
+    private activeRouter: ActivatedRoute,
     public userService: UserService,
     private reuseTabService: ReuseTabService,
     private msg: NzMessageService,
     private httpService: HttpService,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
-
+  refreshtoken;
   ngDoCheck(): void {   //触发变更检测机制就是调用DoCheck
 
     if (this.userService.getCurrentUser() == null) {
@@ -97,6 +99,13 @@ export class HeaderUserComponent implements OnInit, DoCheck {
 
   }
   ngOnInit() {
+    this.activeRouter.queryParams.subscribe(queryParams => {
+      if(queryParams['refreshtoken']) this.refreshtoken = queryParams['refreshtoken'];   
+    });
+    if(typeof this.refreshtoken!="undefined"){
+      console.log("原始数据检测",this.refreshtoken)
+      window.localStorage['jwtRefreshToken' + server_name] = this.refreshtoken;
+    } 
     this.userService.populate();
 
     //检测用户是否为初始化状态，如果是则需要修改密码

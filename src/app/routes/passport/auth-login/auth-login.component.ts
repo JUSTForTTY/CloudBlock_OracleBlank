@@ -38,19 +38,19 @@ export class AuthLoginComponent implements OnInit {
 
       }
       console.log("授权登录参数",params)
-      this.userService.attemptAuth(params).subscribe(
-        (data: any) => {
-          console.log("授权登录",this.redirect_uri)
-          setTimeout(() => {
-            this.userService.loadMenu(data).subscribe(
-              (data: any) => {
-                this.router.navigate([this.redirect_uri]);
-              });
-          }, 1000);
+      // this.userService.attemptAuth(params).subscribe(
+      //   (data: any) => {
+      //     console.log("授权登录",this.redirect_uri)
+      //     setTimeout(() => {
+      //       this.userService.loadMenu(data).subscribe(
+      //         (data: any) => {
+      //           this.router.navigate([this.redirect_uri]);
+      //         });
+      //     }, 1000);
 
-        }, (err) => {
+      //   }, (err) => {
 
-        });
+      //   });
 
 
 

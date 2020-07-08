@@ -2219,7 +2219,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
   }
 
- //删除工序迁移（参数：工序迁移编号），删除方法为逻辑删除
+  //删除工序迁移（参数：工序迁移编号），删除方法为逻辑删除
   deleteFlowpointTransfer(nodeId,transferId, i, length) {
     //console.log("开始工序删除");
     
@@ -2293,9 +2293,6 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       });
 
  
-
-
-
 
   }
 

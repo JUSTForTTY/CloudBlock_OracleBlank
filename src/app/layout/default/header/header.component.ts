@@ -60,6 +60,7 @@ export class HeaderComponent implements OnInit {
         if (parseInt(data.data.csysReleaseVersion) > parseInt(this.version)) {
           console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
           if (!this.versionShow) {
+            console.log("版本升级弹窗");
             this.versionShow = true;
             this.modalService.create({
               nzTitle: '系统升级',

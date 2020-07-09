@@ -126,7 +126,7 @@ export class UserService {
     return this.httpService.postHttpAllUrl(serverData.serverUrl + '/v1/authlogin', credentials)
       .pipe(map(
         data => {
-          this.setAuthByServer(data.data,serverData);
+          //this.setAuthByServer(data.data,serverData);
 
           return data.data;
         }

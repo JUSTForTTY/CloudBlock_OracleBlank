@@ -79,7 +79,7 @@ const server_name = environment.SERVER_NAME
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderUserComponent implements OnInit, DoCheck {
+export class HeaderUserComponent implements OnInit {
   constructor(
     public settings: SettingsService,
     private router: Router,
@@ -91,13 +91,13 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
   refreshtoken;
-  ngDoCheck(): void {   //触发变更检测机制就是调用DoCheck
+  // ngDoCheck(): void {   //触发变更检测机制就是调用DoCheck
 
-    if (this.userService.getCurrentUser() == null) {
-      this.router.navigateByUrl("/login");
-    }
+  //   if (this.userService.getCurrentUser() == null) {
+  //     this.router.navigateByUrl("/login");
+  //   }
 
-  }
+  // }
   ngOnInit() {
     this.activeRouter.queryParams.subscribe(queryParams => {
       if(queryParams['refreshtoken']) this.refreshtoken = queryParams['refreshtoken'];   
@@ -108,6 +108,7 @@ export class HeaderUserComponent implements OnInit, DoCheck {
     } 
     this.userService.populate();
 
+    
     //检测用户是否为初始化状态，如果是则需要修改密码
     this.getUserStatus();
 

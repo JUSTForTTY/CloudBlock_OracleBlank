@@ -2237,11 +2237,11 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
           console.log("当前节点tty", currentPot)
           console.log("当前节点tty", currentPot.data.csysPotType)
-          if (currentPot.data.csysPotType == '0') {
+          if (currentPot.data.csysPotType == '0'||currentPot.data.csysPotType == '3') {
             if (i == length) {
               this.saveWorkFlow();
             }
-            //当前节点为头结点，不做变更
+            //当前节点为头结点或者初始化节点，不做变更
           } else {
 
             /*-------start------  若当前节点有后续节点，设置为普通节点。---------start---------*/
@@ -3136,8 +3136,10 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
   /*节点自动判断类型 */
   potAutoChangeType(sourcePot, targetPot) {
-
+    console.log("bug检测当前节点", sourcePot.data.csysPotType);
+    console.log("bug检测当前节点", targetPot.data.csysPotType);
     if (sourcePot.data.csysPotType == "3") {
+      console.log("bug检测当前节点", sourcePot.data.csysPotType);
       /*-------start------  若当前节点为初始化节点，设置目标为头节点,并且删除其他头结点。---------start---------*/
 
       //查询是否存在头结点，存在的话更新为普通节点。
@@ -3197,7 +3199,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
       /*-------end------  若当前节点有后续节点，设置为普通节点。---------end---------*/
 
 
-      /*-------start------  判断目标节点是否有后续节点，若没有，自动设置为尾节点---------start---------*/
+      /*-------start------  判断目标节点是否有后续节点，若没有，自动设置为尾节点（初始化节点除外）---------start---------*/
+     
       let checkNextPot = {
         "csysWorkflowId": this.workflowId,
         "csysPotCurrentId": targetPot.data.csysPotId

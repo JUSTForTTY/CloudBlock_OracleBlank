@@ -3993,7 +3993,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let conditionsuccessData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='3'",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS=3",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA抽检批通过",
@@ -4018,7 +4018,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let conditionfailData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS='4' or LOT_NO_STATUS='5') ",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS=4 or LOT_NO_STATUS=5)",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "1",
           "csysPotTrsConInfo": "PPA抽检批维护",
@@ -4042,7 +4042,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let conditionbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4' ",
+          "csysPotTrsConRawData": "select BARCODE_RESULTS as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  (LOT_NO_STATUS=4 or LOT_NO_STATUS=6) ",
           "csysPotTrsConMethod": "=",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA抽检批退回",
@@ -4066,7 +4066,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let conditionPPAbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='5'",
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS t inner join LOT_NO f on t.LOT_NO_SN=f.LOT_NO_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS=5",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA批等待不良回退",
@@ -4090,7 +4090,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let conditionPPAfailbackData = {
           "csysWorkflowId": this.workflowId,
           "csysPotTrsId": this.csysPointTrsId,
-          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS_H t inner join LOT_NO_H f on t.LOT_NO_H_SN=f.LOT_NO_H_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS='4'",
+          "csysPotTrsConRawData": "select count(*) as RAWDATA  from LOT_NO_LISTS_H t inner join LOT_NO_H f on t.LOT_NO_H_SN=f.LOT_NO_H_SN   where  PRO_BAR_CODE  in(select PRO_BAR_CODE from PRO_WO_BARCODE where PRO_WO_BARCODE_ID ='@id')  and  LOT_NO_STATUS=4",
           "csysPotTrsConMethod": ">",
           "csysPotTrsConContrastData": "0",
           "csysPotTrsConInfo": "PPA批退回不良回流",

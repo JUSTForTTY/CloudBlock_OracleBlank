@@ -172,24 +172,6 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
     };
 
     submit() {
-        let checkparams = {
-            "csysUserUsername": this.userName.value.toLowerCase(),
-            "csysUserPassword": this.password.value
-        }
-        //自动识别空闲服务器
-        this.httpService.postHttp("/v1/checkServer", checkparams).subscribe((serverData: any) => {
-
-            console.log("识别空闲服务器",serverData);
-            this.autoLogin(serverData.data);
-      
-          }, (err) => {
-            console.log("识别空闲服务器-接口异常");
-      
-          });
- 
-    }
-
-    autoLogin(serverData){
         this.error = '';
         let params = {};
         if (this.type === 0) {
@@ -201,8 +183,7 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
             //账户不需要大小写区分（特殊处理）
             params = {
                 "csysUserUsername": this.userName.value.toLowerCase(),
-                "csysUserPassword": this.password.value,
-                "csysUserAddress":  serverData.homeUrl
+                "csysUserPassword": this.password.value
             }
         } else {
             this.mobile.markAsDirty();
@@ -219,10 +200,13 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
 
         this.loading = true;
 
-        this.userService.attemptAuth(params,serverData).subscribe(
-            (userData: any) => {
+        this.userService.attemptAuth(params).subscribe(
+            (data: any) => {
 
-                window.location.href=serverData.homeUrl+"/default/workplace?refreshtoken="+userData.csysUserRefreshToken;
+                this.userService.loadMenu(data).subscribe(
+                    (data: any) => {
+                        this.router.navigate(['/default/workplace']);
+                    });
  
 
             }, (err) => {
@@ -238,7 +222,115 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
                 }
 
             });
+        // this.httpService.postHttpAllUrl(loginhttpurl, params).subscribe(
+        //     (data: any) => {
+        //         this.loading = false;
+        //         console.log(data.data)
+
+
+        //         // 清空路由复用信息
+        //         this.reuseTabService.clear();
+
+        //         this.jwtService.saveToken(data.data.cySysBaseUserAccessToken, data.data.cySysBaseUserRefreshToken)
+
+        //         let userdata = {
+        //             "userid": data.data.cySysBaseUserId,
+        //             "username": data.data.cySysBaseUserUsername,
+        //             "realname": data.data.cySysBaseUserRealname,
+        //             "meno": data.data.cySysBaseUserMeno
+
+        //         }
+        //         //设置缓存
+        //         this.cacheService.set('userdata', userdata, { type: 's', expire: 24 * 60 * 60 });
+        //         this.router.navigate(['/default/workplace']);
+
+        //     }, (err) => {
+        //         this.loading = false;
+        //         let errstr = err + "";
+        //         if (errstr.indexOf("400") >= 0) {
+        //             this.error = `账户或密码错误`;
+        //             return;
+
+        //         } else {
+        //             this.error = '接口异常';
+        //             return;
+
+        //         }
+        //     });
+
+
+
+
+
     }
+    // submit() {
+    //     let checkparams = {
+    //         "csysUserUsername": this.userName.value.toLowerCase(),
+    //         "csysUserPassword": this.password.value
+    //     }
+    //     //自动识别空闲服务器
+    //     this.httpService.postHttp("/v1/checkServer", checkparams).subscribe((serverData: any) => {
+
+    //         console.log("识别空闲服务器",serverData);
+    //         this.autoLogin(serverData.data);
+      
+    //       }, (err) => {
+    //         console.log("识别空闲服务器-接口异常");
+      
+    //       });
+ 
+    // }
+
+    // autoLogin(serverData){
+    //     this.error = '';
+    //     let params = {};
+    //     if (this.type === 0) {
+    //         this.userName.markAsDirty();
+    //         this.userName.updateValueAndValidity();
+    //         this.password.markAsDirty();
+    //         this.password.updateValueAndValidity();
+    //         if (this.userName.invalid || this.password.invalid) return;
+    //         //账户不需要大小写区分（特殊处理）
+    //         params = {
+    //             "csysUserUsername": this.userName.value.toLowerCase(),
+    //             "csysUserPassword": this.password.value,
+    //             "csysUserAddress":  serverData.homeUrl
+    //         }
+    //     } else {
+    //         this.mobile.markAsDirty();
+    //         this.mobile.updateValueAndValidity();
+    //         this.captcha.markAsDirty();
+    //         this.captcha.updateValueAndValidity();
+    //         if (this.mobile.invalid || this.captcha.invalid) return;
+    //         if (this.captcha.invalid || this.captcha.value != this.realcaptcha) return;
+
+    //         params = {
+    //             "csysUserMobile": this.mobile.value
+    //         }
+    //     }
+
+    //     this.loading = true;
+
+    //     this.userService.attemptAuth(params,serverData).subscribe(
+    //         (userData: any) => {
+
+    //             window.location.href=serverData.homeUrl+"/default/workplace?refreshtoken="+userData.csysUserRefreshToken;
+ 
+
+    //         }, (err) => {
+    //             this.loading = false;
+    //             let errstr = err + "";
+    //             if (errstr.indexOf("400") >= 0) {
+    //                 this.error = `账户或密码错误`;
+    //                 return;
+
+    //             } else {
+    //                 this.error = '接口异常';
+    //                 return;
+    //             }
+
+    //         });
+    // }
 
     
     // endregion

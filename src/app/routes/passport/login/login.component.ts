@@ -213,10 +213,14 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
                 this.loading = false;
                 let errstr = err + "";
                 if (errstr.indexOf("400") >= 0) {
-                    this.error = `账户或密码错误`;
+                    this.error = errstr;
                     return;
 
-                } else {
+                 }else if (errstr.indexOf("403") >= 0) {
+                    this.error = `账户无密码登录权限，请使用指纹登录！`;
+                    return;
+
+                }  else {
                     this.error = '接口异常';
                     return;
                 }

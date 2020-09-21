@@ -213,7 +213,7 @@ export class UserLoginComponent implements OnDestroy, OnInit, AfterContentInit {
                 this.loading = false;
                 let errstr = err + "";
                 if (errstr.indexOf("400") >= 0) {
-                    this.error = errstr;
+                    this.error = `账户或密码错误`;
                     return;
 
                  }else if (errstr.indexOf("403") >= 0) {

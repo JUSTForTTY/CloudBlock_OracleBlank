@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
     this.pathName = this.location.pathname + this.location.search;
     console.log("当前路由", this.pathName)
     this.versionUpdate();
-    this.nzTimer = setInterval(() => this.versionUpdate(), 60 * 1000)
+    this.nzTimer = setInterval(() => this.versionUpdate(), 30 * 60 * 1000)
   }
   versionUpdate() {
 
@@ -73,8 +73,8 @@ export class HeaderComponent implements OnInit {
 
         }
       } catch (error) {
-        console.error('升级检测error',error);
-        
+        console.error('升级检测error', error);
+
       }
 
 
@@ -90,7 +90,7 @@ export class HeaderComponent implements OnInit {
       clearTimeout(this.versiontimer);
     }
     this.checkVersion();
-    this.versiontimer = setTimeout(this.getClock, 300000);
+    this.versiontimer = setTimeout(this.getClock, 30 * 60 * 1000);
   }
   getCountdown = () => {
     if (this.countdowntimer) {

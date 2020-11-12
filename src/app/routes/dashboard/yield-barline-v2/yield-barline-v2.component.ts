@@ -168,7 +168,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
     }
 
     this.getProlineData();
-    this.timer = setTimeout(this.setData, 60*1000);
+    this.timer = setTimeout(this.setData, 2 * 60 * 1000);
   }
 
   ngOnInit() {

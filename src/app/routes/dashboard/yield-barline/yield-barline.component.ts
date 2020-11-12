@@ -36,7 +36,7 @@ const standardOutputSourceData = [
   { year: '19:30-20:30.', value: 8 },
 ];
 
- 
+
 
 
 
@@ -121,7 +121,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
 
   forceFit: boolean = true;
   height: number = 490;
-  color ;
+  color;
   potcolor;
   stackLabel = stackLabel;
   pointLabel = pointLabel;
@@ -140,7 +140,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
     }
 
     this.getProlineData();
-    this.timer = setTimeout(this.setData, 60*1000);
+    this.timer = setTimeout(this.setData, 2 * 60 * 1000);
   }
 
   ngOnInit() {
@@ -205,7 +205,7 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
         }
       };
     }]
- 
+
     this.color = ['name', function (val) {
       if (val === '不良品') {
         return '#ff4d4f';
@@ -241,9 +241,9 @@ export class YieldBarlineComponent implements OnInit, OnDestroy {
           shadowColor: 'rgba(0, 0, 0, .45)'
         },
         formatter: function formatter(text) {
-    
+
           text = text + "%"
-    
+
           return text;
         }
       };

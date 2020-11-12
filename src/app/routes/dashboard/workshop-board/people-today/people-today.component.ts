@@ -31,12 +31,12 @@ export class PeopleTodayComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.getData();
-    }, 60 * 1000)
+    }, 2 * 60 * 1000)
   }
-  total=0;
+  total = 0;
   getData() {
     this.http.getHttp("/yieldDashboard/workshopShiftData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {
-      this.data=[];
+      this.data = [];
       console.log('右上上-people-data', data)
       this.total = 0;
       data.data.forEach(element => {
@@ -119,7 +119,7 @@ export class PeopleTodayComponent implements OnInit {
       })
       .text({
         position: ['50%', '50%'],
-        content: this.total+' 人',
+        content: this.total + ' 人',
         style: {
           fontSize: 12,
           fill: '#eee',

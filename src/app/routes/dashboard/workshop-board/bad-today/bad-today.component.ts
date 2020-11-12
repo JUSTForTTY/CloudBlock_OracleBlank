@@ -36,7 +36,7 @@ export class BadTodayComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.getData();
-    }, 60 * 1000)
+    }, 2 * 60 * 1000)
 
   }
   getData() {
@@ -79,7 +79,7 @@ export class BadTodayComponent implements OnInit {
           element.percent = Math.round(element.count / total * 100) / 100;
         }
       }
-      console.log('右上上-bad-data2',total, this.data)
+      console.log('右上上-bad-data2', total, this.data)
 
       this.render(this.height);
     });

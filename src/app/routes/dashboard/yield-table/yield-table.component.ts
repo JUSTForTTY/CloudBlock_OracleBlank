@@ -37,7 +37,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     }
     console.log("分页信息", this.nzPageIndex)
 
-    this.timer = setTimeout(this.setData, 8000);
+    this.timer = setTimeout(this.setData, 2 * 60 * 1000);
   }
 
   getWipData = () => {
@@ -47,7 +47,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
     this.getWoWipData();
 
-    this.wotimer = setTimeout(this.getWipData, 120000);
+    this.wotimer = setTimeout(this.getWipData, 2 * 60 * 1000);
   }
 
   ngOnInit() {
@@ -93,16 +93,16 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     });
     for (let index = 0; index < this.waitTableData.length; index++) {
       const element = this.waitTableData[index];
-      if (woCodes.indexOf(element['woCode'])>=0) {
+      if (woCodes.indexOf(element['woCode']) >= 0) {
         this.waitTableData.splice(index, 1);
         index--;
       } else {
         element['opCode'] = element['sectionCode']
         element['produceNumber'] = element['outputNumber']
         element['smtWoState'] = "待排产"
-        element['smtRealWorkDate'] =element['wiStartTime']==''?"———— ————":element['wiStartTime']
-        element['smtCompleteWorkDate'] = element['wiOverTime']==''?"———— ————":element['wiStartTime']
-        
+        element['smtRealWorkDate'] = element['wiStartTime'] == '' ? "———— ————" : element['wiStartTime']
+        element['smtCompleteWorkDate'] = element['wiOverTime'] == '' ? "———— ————" : element['wiStartTime']
+
       }
     }
     this.woWipTableData = [...this.waitTableData, ...this.woWipData]

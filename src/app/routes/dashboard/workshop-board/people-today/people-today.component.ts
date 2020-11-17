@@ -31,7 +31,7 @@ export class PeopleTodayComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.getData();
-    }, 2 * 60 * 1000)
+    }, 10 * 60 * 1000)
   }
   total = 0;
   getData() {

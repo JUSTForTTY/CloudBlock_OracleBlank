@@ -36,7 +36,7 @@ export class BadTodayComponent implements OnInit {
 
     this.nzTimer = setInterval(() => {
       this.getData();
-    }, 2 * 60 * 1000)
+    }, 10 * 60 * 1000)
 
   }
   getData() {

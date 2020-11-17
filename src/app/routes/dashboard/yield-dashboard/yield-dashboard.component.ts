@@ -71,7 +71,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldAllData();
     this.getShiftData();
     this.getWoWipData();
-    this.timer = setTimeout(this.setData, 2*60*1000);
+    this.timer = setTimeout(this.setData, 10 * 60 * 1000);
   }
   getClock = () => {
     if (this.clocktimer) {
@@ -80,7 +80,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldData();
     // this.getYieldAllData();
     this.nowTime = Date.now();
-    this.clocktimer = setTimeout(this.getClock, 2*60*1000);
+    this.clocktimer = setTimeout(this.getClock, 2 * 60 * 1000);
   }
 
   getCurrentUserGroup = () => {
@@ -99,7 +99,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
     }
 
-    this.usertimer = setTimeout(this.getCurrentUserGroup, 2*60*1000);
+    this.usertimer = setTimeout(this.getCurrentUserGroup, 2 * 60 * 1000);
   }
 
   ngOnInit() {
@@ -212,7 +212,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   getWoWipData() {
     this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
 
-      console.log("在制工单检测",woWipData.data);
+      console.log("在制工单检测", woWipData.data);
       if (woWipData.data.length > 0) {
 
         this.prolineColor = "#52c41a";

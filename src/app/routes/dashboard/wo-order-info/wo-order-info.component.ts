@@ -68,7 +68,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
 
     this.getWoWipData();
 
-    this.wiptimer = setTimeout(this.getWipData, 60000);
+    this.wiptimer = setTimeout(this.getWipData, 10 * 60 * 1000);
   }
 
 
@@ -80,7 +80,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   }
 
   getWoWipData() {
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode+"?prolineType="+this.prolineType).subscribe((woWipData: any) => {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
 
       this.woWipTableData = woWipData.data;
       console.log("产线报表-在制工单数据", this.woWipTableData)

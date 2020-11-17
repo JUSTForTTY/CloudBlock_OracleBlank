@@ -87,7 +87,7 @@ export class ErrorTableComponent implements OnInit {
 
     this.nzDataTimer = setInterval(() => {
       this.getData();
-    }, 2 * 60 * 1000)
+    }, 10 * 60 * 1000)
   }
   getData() {
     this.http.getHttp("/yieldDashboard/workshopHoldData/" + this.workshopCode + "/" + this.shiftTypeCode).subscribe((data: any) => {

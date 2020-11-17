@@ -52,7 +52,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
 
     this.getErrorData();
 
-    this.timer = setTimeout(this.setData, 60000);
+    this.timer = setTimeout(this.setData, 10 * 60 * 1000);
   }
   setPageData = () => {
     if (this.ertimer) {

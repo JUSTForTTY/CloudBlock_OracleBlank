@@ -50,7 +50,7 @@ export class WorkshopBoardComponent implements OnInit {
     this.getLeftData();
     this.nzLeftTimer = setInterval(() => {
       this.getLeftData();
-    }, 2 * 60 * 1000)
+    }, 10 * 60 * 1000)
 
   }
   /**

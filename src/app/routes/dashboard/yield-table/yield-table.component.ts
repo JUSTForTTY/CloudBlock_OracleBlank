@@ -37,7 +37,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
     }
     console.log("分页信息", this.nzPageIndex)
 
-    this.timer = setTimeout(this.setData, 2 * 60 * 1000);
+    this.timer = setTimeout(this.setData, 10 * 60 * 1000);
   }
 
   getWipData = () => {
@@ -47,7 +47,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
     this.getWoWipData();
 
-    this.wotimer = setTimeout(this.getWipData, 2 * 60 * 1000);
+    this.wotimer = setTimeout(this.getWipData, 10 * 60 * 1000);
   }
 
   ngOnInit() {

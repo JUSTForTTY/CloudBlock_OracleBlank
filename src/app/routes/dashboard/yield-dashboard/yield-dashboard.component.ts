@@ -80,7 +80,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     // this.getYieldData();
     // this.getYieldAllData();
     this.nowTime = Date.now();
-    this.clocktimer = setTimeout(this.getClock, 2 * 60 * 1000);
+    this.clocktimer = setTimeout(this.getClock, 1000);
   }
 
   getCurrentUserGroup = () => {

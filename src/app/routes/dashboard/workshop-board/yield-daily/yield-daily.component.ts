@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Chart } from '@antv/g2/dist/g2.min.js';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { HttpService } from 'ngx-block-core';
+import { getHours } from 'date-fns';
 
 @Component({
   selector: 'app-yield-daily',
@@ -28,22 +29,32 @@ export class YieldDailyComponent implements OnInit {
       this.render(height);
     });
     setTimeout(() => {
-      this.getData();
+      this.getData(true);
     }, 100);
 
 
     this.nzTimer = setInterval(() => {
       this.getData();
-    }, 1 * 60 * 60 * 1000)
+    }, 1 * 55 * 60 * 1000)
   }
-  getData() {
+  lastHour = 0;
+  getData(first = false) {
+    if (!first) {
+      const nowTime = new Date();
+      const hour = getHours(nowTime);
+      if (hour !== 9 || this.lastHour === 9) {
+        this.lastHour = hour;
+        return;
+      }
+      this.lastHour = hour;
+    }
     console.log('日良率1', this.data)
     this.http.getHttp("/yieldDashboard/workshopYeildDataByDay/" + this.workshopCode + "/" + this.shiftTypeCode + "/15").subscribe((data: any) => {
       console.log('日良率', data)
-      this.data=[];
+      this.data = [];
       data.data.forEach(element => {
-        let date=element.timeslotDate+'';
-        if(date.startsWith('0')) date=date.substring(1,6);
+        let date = element.timeslotDate + '';
+        if (date.startsWith('0')) date = date.substring(1, 6);
         this.data.splice(0, 0, { date: date, value: element.timeslotYeild })
       });
 

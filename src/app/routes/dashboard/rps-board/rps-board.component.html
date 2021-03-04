@@ -38,7 +38,9 @@
               72%
             </span>
           </h2> -->
-
+          <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
+          </nz-statistic>
+          <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
         </div>
 
       </div>

@@ -23,6 +23,8 @@ export class RpsBoardComponent implements OnInit {
   fontSizeTitle1 = 42;//一级标题
   fontSizeTitle2 = 24;//二级标题
   tableSize: 'middle' | 'small' = 'middle';
+  private nowTimeTimer;
+  nowTime = Date.now();
   constructor() {
     this.topData.push({
       title: 'SMT达成率',
@@ -43,7 +45,7 @@ export class RpsBoardComponent implements OnInit {
     })
     this.allData.push(this.topData);
     this.allData.push(this.bottomData)
-
+    
   }
 
   ngOnInit() {
@@ -53,6 +55,7 @@ export class RpsBoardComponent implements OnInit {
       this.tableSize="small";
     }
     this.autoSize();
+    this.nowTimeTimer = setInterval(() => this.nowTime = Date.now(), 1000)
 
   }
   autoSize() {
@@ -72,5 +75,9 @@ export class RpsBoardComponent implements OnInit {
       });
   }
 
-
+  ngOnDestroy() {
+    if (this.nowTimeTimer) {
+      clearInterval(this.nowTimeTimer);
+    }
+  }
 }

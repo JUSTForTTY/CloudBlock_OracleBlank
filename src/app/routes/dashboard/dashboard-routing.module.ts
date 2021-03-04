@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { YieldDashboardComponent } from './yield-dashboard/yield-dashboard.component';
 import { PerformanceTestComponent } from './performance-test/performance-test.component';
+import { RpsBoardComponent } from './rps-board/rps-board.component';
+
 
 const routes: Routes = [
   { path: 'yieldDashboard', component: YieldDashboardComponent, data: { title: '良率报表' } },
@@ -9,6 +11,10 @@ const routes: Routes = [
   {
     path: 'workshopboard',
     loadChildren: './workshop-board/workshop-board.module#WorkshopBoardModule'
+  },
+  {
+    path: 'rpsboard',
+    loadChildren: './rps-board/rps-board.module#RpsBoardModule'
   },
 ];
 

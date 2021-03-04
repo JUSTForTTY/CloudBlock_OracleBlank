@@ -1,0 +1,73 @@
+<div class="chartContainer" style="padding-left: 10px; padding-right: 10px;">
+
+  <div nz-row style="height: 10%;">
+    <!-- 头部 -->
+    <div nz-col nzXs="24" nzLg="6">
+      <span style="color: #ffffff;">达成率：</span>
+      <nz-tag nzColor="#f5222d">75%↓</nz-tag>
+      <nz-tag nzColor="#c2af04">75%~95%</nz-tag>
+      <nz-tag nzColor="#52c41a">95%↑</nz-tag>
+      <br>
+      <span style="color: #ffffff;">良&nbsp;&nbsp;&nbsp;率：</span>
+      <nz-tag nzColor="#f5222d">85%↓</nz-tag>
+      <nz-tag nzColor="#c2af04">85%~90%</nz-tag>
+      <nz-tag nzColor="#52c41a">90%↑</nz-tag>
+    </div>
+    <div nz-col nzXs="24" nzLg="12">
+
+      <h1 style="color:#1e91de;text-align: center" [style.font-size]="fontSizeTitle1+'px'">
+        <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
+          style="height: 55px;">
+        <ng-template #elseBlock>
+          <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;">
+        </ng-template>
+        RPS看板
+      </h1>
+    </div>
+    <div nz-col nzXs="24" nzLg="6">
+      <div nz-row>
+        <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
+
+          <h2 style="color:#ffffff;text-align: center;">
+            <img class="logo" src="./assets/img/温度.svg" style="height: 36px;margin: 0 auto;">温度:
+            <span style="color:#ea9518;">
+              28℃
+            </span>
+            <img class="logo" src="./assets/img/湿度.svg" style="height: 36px;margin: 0 auto;">湿度:
+            <span style="color:#2aa515;">
+              72%
+            </span>
+          </h2>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <ng-container *ngFor="let data of allData">
+    <div nz-row [nzGutter]="8" style="color: aliceblue;height: 44%; border:0px solid #c1eb06;margin-top: 5px;">
+      <!-- 上层  -->
+      <ng-container *ngFor="let oneData of data">
+        <div nz-col nzXs="24" nzLg="12" style="height: 100%;border:0px solid #c1eb06; padding-right: 10px;">
+          <!-- 上层 左  -->
+          <div nz-row style="height: 100%;">
+            <div nz-col nzXs="24" nzLg="24" style="height: 100%; background:#192B53;">
+              <div style="height: 10%;text-align: center;">
+                <span style="color:#1e91de;text-align: center;" [style.font-size]="fontSizeTitle2+'px'">
+                  {{oneData.title}}
+                </span>
+              </div>
+              <div>
+                <app-rps-table [data]="oneData.data" [tableSize]="tableSize"></app-rps-table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+    </div>
+  </ng-container>
+
+
+</div>

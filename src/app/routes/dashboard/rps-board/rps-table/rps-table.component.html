@@ -1,0 +1,29 @@
+<nz-table #smallTable [nzSize]="tableSize" [nzData]="data" style="background:#192B53;" [nzPageSize]="nzPageSize"
+[nzPageIndex]="nzPageIndex"
+  [nzShowPagination]="false">
+  <thead>
+    <tr>
+      <th >线体:{{nzTotal}}</th>
+      <th colspan ="1">达成率 达标:{{headData.completeOk}} 未达标:{{headData.completeBad}}</th>
+      <th></th>
+      <!-- <th >线体:{{nzTotal}}</th> -->
+      <th >良率 达标:{{headData.yieldOk}} 未达标:{{headData.yieldBad}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of smallTable.data">
+      <td>{{ data.line }}</td>
+      <td>
+        <nz-progress [nzPercent]="data.complete" [nzStatus]="data.completeStatus" [nzShowInfo]="false"></nz-progress>
+      </td>
+      <td>{{ data.complete }}%</td>
+      <!-- <td>{{ data.line }}</td> -->
+      <td>
+        <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
+
+      </td>
+      <td>{{ data.yield }}%</td>
+    </tr>
+  </tbody>
+</nz-table>

@@ -26,6 +26,12 @@ export class RpsBoardComponent implements OnInit {
   private nowTimeTimer;
   nowTime = Date.now();
   constructor() {
+    
+    
+  }
+
+  ngOnInit() {
+    // 模拟数据
     this.topData.push({
       title: 'SMT达成率',
       data: getTestData()
@@ -45,10 +51,6 @@ export class RpsBoardComponent implements OnInit {
     })
     this.allData.push(this.topData);
     this.allData.push(this.bottomData)
-    
-  }
-
-  ngOnInit() {
     if (window.screen.height <= 900) {
       this.fontSizeTitle1 = 32;//一级标题
       this.fontSizeTitle2 = 18;//二级标题

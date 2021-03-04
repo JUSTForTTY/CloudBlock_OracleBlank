@@ -28,12 +28,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     for (const iterator of this.data) {
-      
+      // 模拟数据
       const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
       iterator.complete = iterator.complete + randomNum;
       if (iterator.complete > 100) iterator.complete = 99;
       iterator.yield = iterator.yield + randomNum;
       if (iterator.yield > 100) iterator.yield = 99;
+      // 获取状态
       iterator.completeStatus = this.getStatus('达成率', iterator.complete);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
     }
@@ -46,6 +47,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       this.changePage();
     }, 5000)
   }
+  /** 获取表头数据 */
   getHeadData() {
     this.headData = {
       completeOk: 0,
@@ -53,6 +55,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       yieldOk: 0,
       yieldBad: 0
     }
+    this.nzTotal=this.data.length;
     for (const iterator of this.data) {
       if (iterator.completeStatus === 'exception') {
         this.headData.completeBad++;
@@ -68,6 +71,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
     }
   }
+  /** 轮播 */
   changePage() {
 
     if (this.newData) {
@@ -82,7 +86,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
     }
   }
-
+  /** 获取状态 */
   getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
     if (type === '达成率'){
       if (value < 75) {

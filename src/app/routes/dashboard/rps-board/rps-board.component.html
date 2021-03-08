@@ -27,17 +27,6 @@
     <div nz-col nzXs="24" nzLg="6">
       <div nz-row>
         <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
-
-          <!-- <h2 style="color:#ffffff;text-align: center;">
-            <img class="logo" src="./assets/img/温度.svg" style="height: 36px;margin: 0 auto;">温度:
-            <span style="color:#ea9518;">
-              28℃
-            </span>
-            <img class="logo" src="./assets/img/湿度.svg" style="height: 36px;margin: 0 auto;">湿度:
-            <span style="color:#2aa515;">
-              72%
-            </span>
-          </h2> -->
           <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
           </nz-statistic>
           <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>

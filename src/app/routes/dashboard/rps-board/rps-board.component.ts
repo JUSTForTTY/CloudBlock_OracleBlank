@@ -8,6 +8,18 @@ import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
   styleUrls: ['./rps-board.component.less']
 })
 export class RpsBoardComponent implements OnInit {
+  /** 标准 */
+  standard={
+    complete: {
+      good: 95,
+      bad: 75
+    },
+    yield: {
+      good: 90,
+      bad: 85
+    }
+  }
+
   allData: {
     title: string;
     data: Data[];
@@ -26,8 +38,7 @@ export class RpsBoardComponent implements OnInit {
   private nowTimeTimer;
   nowTime = Date.now();
   constructor() {
-    
-    
+
   }
 
   ngOnInit() {
@@ -54,7 +65,7 @@ export class RpsBoardComponent implements OnInit {
     if (window.screen.height <= 900) {
       this.fontSizeTitle1 = 32;//一级标题
       this.fontSizeTitle2 = 18;//二级标题
-      this.tableSize="small";
+      this.tableSize = "small";
     }
     this.autoSize();
     this.nowTimeTimer = setInterval(() => this.nowTime = Date.now(), 1000)
@@ -67,11 +78,11 @@ export class RpsBoardComponent implements OnInit {
         if (window.innerHeight <= 900) {
           this.fontSizeTitle1 = 32;//一级标题
           this.fontSizeTitle2 = 18;//二级标题
-          this.tableSize="small";
+          this.tableSize = "small";
         } else {
           this.fontSizeTitle1 = 42;//一级标题
           this.fontSizeTitle2 = 24;//二级标题
-          this.tableSize='middle';
+          this.tableSize = 'middle';
         }
 
       });

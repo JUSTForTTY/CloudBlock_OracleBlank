@@ -3,15 +3,15 @@
   <div nz-row style="height: 10%;">
     <!-- 头部 -->
     <div nz-col nzXs="24" nzLg="6">
-      <span style="color: #ffffff;">达成率：</span>
-      <nz-tag nzColor="#f5222d">75%↓</nz-tag>
-      <nz-tag nzColor="#c2af04">75%~95%</nz-tag>
-      <nz-tag nzColor="#52c41a">95%↑</nz-tag>
+      <span style="color: #ffffff;font-size: 16px;">达成率：</span>
+      <nz-tag nzColor="#f5222d">{{standard.complete.bad}}%↓</nz-tag>
+      <nz-tag nzColor="#c2af04">{{standard.complete.bad}}%~{{standard.complete.good}}%</nz-tag>
+      <nz-tag nzColor="#52c41a">{{standard.complete.good}}%↑</nz-tag>
       <br>
-      <span style="color: #ffffff;">良品率：</span>
-      <nz-tag nzColor="#f5222d">85%↓</nz-tag>
-      <nz-tag nzColor="#c2af04">85%~90%</nz-tag>
-      <nz-tag nzColor="#52c41a">90%↑</nz-tag>
+      <span style="color: #ffffff;font-size: 16px;">良品率：</span>
+      <nz-tag nzColor="#f5222d">{{standard.yield.bad}}%↓</nz-tag>
+      <nz-tag nzColor="#c2af04">{{standard.yield.bad}}%~{{standard.yield.good}}%</nz-tag>
+      <nz-tag nzColor="#52c41a">{{standard.yield.good}}%↑</nz-tag>
     </div>
     <div nz-col nzXs="24" nzLg="12">
 
@@ -60,7 +60,7 @@
                 </span>
               </div>
               <div>
-                <app-rps-table [data]="oneData.data" [tableSize]="tableSize"></app-rps-table>
+                <app-rps-table [data]="oneData.data" [tableSize]="tableSize" [standard]="standard"></app-rps-table>
               </div>
             </div>
           </div>

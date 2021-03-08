@@ -10,6 +10,17 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   data: Data[] = getTestData() || [];
   @Input()
   tableSize='middle';
+  @Input()
+  standard={
+    complete: {
+      good: 95,
+      bad: 75
+    },
+    yield: {
+      good: 90,
+      bad: 85
+    }
+  }
 
   headData = {
     completeOk: 0,
@@ -89,11 +100,11 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   /** 获取状态 */
   getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
     if (type === '达成率'){
-      if (value < 75) {
+      if (value < this.standard.complete.bad) {
         console.log('exception',value);
         return 'exception';
       }
-      else if (value > 95) {
+      else if (value > this.standard.complete.good) {
         console.log('success',value);
 
         return 'success'
@@ -104,10 +115,10 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
     }
     else if (type === '良率') {
-      if (value < 85) {
+      if (value < this.standard.yield.bad) {
         return 'exception'
       }
-      else if (value > 90) {
+      else if (value > this.standard.yield.good) {
         return 'success'
       }
       else return 'active'

@@ -35,10 +35,12 @@
       </div>
     </div>
   </div>
+
   <ng-container *ngFor="let data of allData">
     <div nz-row [nzGutter]="8" style="color: aliceblue;height: 44%; border:0px solid #c1eb06;margin-top: 5px;">
       <!-- 上层  -->
       <ng-container *ngFor="let oneData of data">
+
         <div nz-col nzXs="24" nzLg="12" style="height: 100%;border:0px solid #c1eb06; padding-right: 10px;">
           <!-- 上层 左  -->
           <div nz-row style="height: 100%;">
@@ -48,13 +50,19 @@
                   {{oneData.title}}
                 </span>
               </div>
-              <div>
-                <app-rps-table [data]="oneData.data" [tableSize]="tableSize" [standard]="standard"></app-rps-table>
+
+              <div style="height: 89%;">
+
+                <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize"
+                  [standard]="standard"></app-rps-table>
+
               </div>
+
             </div>
           </div>
 
         </div>
+
       </ng-container>
 
     </div>

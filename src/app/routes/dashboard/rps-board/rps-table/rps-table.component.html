@@ -13,12 +13,11 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of smallTable.data">
-      <td>{{ data.line }}</td>
+      <td>{{ data.prolineCode }}</td>
       <td>
-        <nz-progress [nzPercent]="data.complete" [nzStatus]="data.completeStatus" [nzShowInfo]="false"></nz-progress>
+        <nz-progress [nzPercent]="data.planAchievementRate" [nzStatus]="data.completeStatus" [nzShowInfo]="false"></nz-progress>
       </td>
-      <td>{{ data.complete }}%</td>
-      <!-- <td>{{ data.line }}</td> -->
+      <td>{{ data.planAchievementRate | number:'1.0-1'}}%</td>
       <td>
         <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
 

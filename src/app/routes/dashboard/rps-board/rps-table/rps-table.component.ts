@@ -40,13 +40,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
 
     for (const iterator of this.data) {
       // 模拟数据
-      const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
-      iterator.complete = iterator.complete + randomNum;
-      if (iterator.complete > 100) iterator.complete = 99;
-      iterator.yield = iterator.yield + randomNum;
-      if (iterator.yield > 100) iterator.yield = 99;
+      // const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
+      // iterator.planAchievementRate = iterator.planAchievementRate + randomNum;
+      // if (iterator.planAchievementRate > 100) iterator.planAchievementRate = 99;
+      // iterator.yield = iterator.yield + randomNum;
+      // if (iterator.yield > 100) iterator.yield = 99;
       // 获取状态
-      iterator.completeStatus = this.getStatus('达成率', iterator.complete);
+      iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
     }
     this.getHeadData();

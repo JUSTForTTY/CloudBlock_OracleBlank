@@ -1,6 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { Data, getTestData } from "./datas";
+import { Data, getTestData, UrlData } from "./datas";
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
+import { HttpService, PageService } from 'ngx-block-core';
+
+const options: {
+  key: string,
+  title: string,
+  index: number[]
+}[] = [
+    {
+      key: 'SMT',
+      title: 'SMT达成率',
+      index: [0, 0]
+    },
+    {
+      key: 'WAVE',
+      title: 'WAVE达成率',
+      index: [0, 1]
+    },
+    {
+      key: 'ATP',
+      title: '选焊达成率',
+      index: [1, 0]
+    },
+    {
+      key: 'COATING',
+      title: 'COATING达成率',
+      index: [1, 1]
+    },
+  ]
 
 @Component({
   selector: 'app-rps-board',
@@ -42,7 +70,7 @@ export class RpsBoardComponent implements OnInit {
   nowTime = Date.now();
 
   private dataTimer;
-  constructor() {
+  constructor(private http: HttpService) {
 
   }
 
@@ -59,13 +87,14 @@ export class RpsBoardComponent implements OnInit {
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
     }
+    this.initData();
     this.getAllData();
     this.dataTimer = setInterval(() => {
       this.getAllData();
-    }, 10 * 60 * 1000)
+    }, 5 * 60 * 1000)
 
   }
-  getAllData() {
+  initData() {
     console.log('getAllData')
     this.topData = [];
     this.bottomData = [];
@@ -73,35 +102,56 @@ export class RpsBoardComponent implements OnInit {
     this.topData.push({
       title: 'SMT达成率',
       data: getTestData(),
-      isLoading:true
+      isLoading: true
     })
     this.topData.push({
       title: 'WAVE达成率',
       data: getTestData(),
-      isLoading:true
+      isLoading: true
     })
     this.bottomData.push({
       title: '选焊达成率',
       data: getTestData(),
-      isLoading:true
+      isLoading: true
 
     })
     this.bottomData.push({
       title: 'COATING达成率',
       data: getTestData(),
-      isLoading:true
+      isLoading: true
       // data:[]
     })
     this.allData.push(this.topData);
     this.allData.push(this.bottomData);
-    setTimeout(() => {
-      // 模拟数据
-      for (const iterator of this.allData) {
-        for (const data of iterator) {
-          data.isLoading=false;
-        }
-      }
-    }, 1);
+    // setTimeout(() => {
+    //   // 模拟数据
+    //   for (const iterator of this.allData) {
+    //     for (const data of iterator) {
+    //       data.isLoading = false;
+    //     }
+    //   }
+    // }, 1);
+  }
+  getAllData() {
+
+    // SMT
+    for (const option of options) {
+      this.http.getHttp("/yieldDashboard/worksectionData/" + option.key).subscribe((data: UrlData) => {
+      // this.http.getHttpAllUrl("http://172.18.3.201:8080/yieldDashboard/worksectionData/" + option.key).subscribe((data: UrlData) => {
+        // console.log('data', option.key, data);
+        this.allData[option.index[0]][option.index[1]].data = data.data
+        this.allData[option.index[0]][option.index[1]].isLoading = true;
+        this.allData[option.index[0]][option.index[1]].title=option.title;
+        setTimeout(() => {
+          // 模拟数据
+          if (data.data.length > 0)
+            this.allData[option.index[0]][option.index[1]].isLoading = false;
+        }, 1);
+      })
+    }
+
+
+
 
   }
   autoSize() {

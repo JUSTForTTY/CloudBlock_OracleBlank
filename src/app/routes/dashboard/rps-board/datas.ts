@@ -1,65 +1,77 @@
 export interface Data {
-    line: String;
-    complete: number;
+    prolineCode: String;// line
+    planAchievementRate: number;//complete
     yield: number;
+    goodNums?: number;
+    badNums?: number;
+    planError?: string;
+
     completeStatus?: 'success' | 'exception' | 'active';
     yieldStatus?: 'success' | 'exception' | 'active';
+}
+export interface UrlData {
+    [key: string]: any;
+    data: Data[]
+
+}
+export function getDataByUrlData(data: Data): Data {
+    return null;
 }
 export function getTestData(): Data[] {
     return [
         {
-            line: 'SUZ15SMT-A',
-            complete: 75,
+            prolineCode: 'SUZ15SMT-A',
+            planAchievementRate: 75,
             yield: 99,
         },
         {
-            line: 'SUZ15SMT-B',
-            complete: 75,
+            prolineCode: 'SUZ15SMT-B',
+            planAchievementRate: 75,
             yield: 99
         },
         {
-            line: 'SUZ15SMT-C',
-            complete: 96,
+            prolineCode: 'SUZ15SMT-C',
+            planAchievementRate: 96,
             yield: 80
         },
         {
-            line: 'SUZ15SMT-D',
-            complete: 95,
+            prolineCode: 'SUZ15SMT-D',
+            planAchievementRate: 95,
             yield: 77
         },
         {
-            line: 'SUZ15SMT-E',
-            complete: 75,
+            prolineCode: 'SUZ15SMT-E',
+            planAchievementRate: 75,
             yield: 43
         },
         {
-            line: 'SUZ15SMT-F',
-            complete: 89,
+            prolineCode: 'SUZ15SMT-F',
+            planAchievementRate: 89,
             yield: 86
         },
         {
-            line: 'SUZ15SMT-G',
-            complete: 99,
+            prolineCode: 'SUZ15SMT-G',
+            planAchievementRate: 99,
             yield: 78
         },
         {
-            line: 'SUZ15SMT-H',
-            complete: 96,
+            prolineCode: 'SUZ15SMT-H',
+            planAchievementRate: 96,
             yield: 97
         },
         {
-            line: 'SUZ15SMT-I',
-            complete: 86,
+            prolineCode: 'SUZ15SMT-I',
+            planAchievementRate: 86,
             yield: 95
         },
         {
-            line: 'SUZ15SMT-J',
-            complete: 93,
+            prolineCode: 'SUZ15SMT-J',
+            planAchievementRate: 93,
             yield: 85
         },
         {
-            line: 'SUZ15SMT-K',
-            complete: 87,
+            prolineCode: 'SUZ15SMT-K',
+            planAchievementRate: 87,
             yield: 77
         },
     ];

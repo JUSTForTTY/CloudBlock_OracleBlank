@@ -20,7 +20,7 @@ const options: {
     },
     {
       key: 'ATP',
-      title: '选焊达成率',
+      title: 'ATP达成率',
       index: [1, 0]
     },
     {
@@ -110,7 +110,7 @@ export class RpsBoardComponent implements OnInit {
       isLoading: true
     })
     this.bottomData.push({
-      title: '选焊达成率',
+      title: 'ATP达成率',
       data: getTestData(),
       isLoading: true
 

@@ -139,8 +139,8 @@ export class RpsBoardComponent implements OnInit {
       this.http.getHttp("/yieldDashboard/worksectionData/" + option.key).subscribe((data: UrlData) => {
       // this.http.getHttpAllUrl("http://172.18.3.201:8080/yieldDashboard/worksectionData/" + option.key).subscribe((data: UrlData) => {
         // console.log('data', option.key, data);
-        this.allData[option.index[0]][option.index[1]].data = data.data
         this.allData[option.index[0]][option.index[1]].isLoading = true;
+        this.allData[option.index[0]][option.index[1]].data = data.data
         this.allData[option.index[0]][option.index[1]].title=option.title;
         setTimeout(() => {
           // 模拟数据

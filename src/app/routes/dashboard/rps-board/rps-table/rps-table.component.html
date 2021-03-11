@@ -17,12 +17,12 @@
         <nz-progress [nzPercent]="data.planAchievementRate" [nzStatus]="data.completeStatus" [nzShowInfo]="false">
         </nz-progress>
       </td>
-      <td>{{ data.planAchievementRate*100 | number:'1.0-1'}}%</td>
+      <td>{{ data.planAchievementRate }}%</td>
       <td>
         <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
 
       </td>
-      <td>{{ data.yield*100 | number:'1.0-1' }}%</td>
+      <td>{{ data.yield }}%</td>
     </tr>
   </tbody>
 </nz-table>

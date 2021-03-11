@@ -9,9 +9,9 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @Input()
   data: Data[] = getTestData() || [];
   @Input()
-  tableSize='middle';
+  tableSize = 'middle';
   @Input()
-  standard={
+  standard = {
     complete: {
       good: 95,
       bad: 75
@@ -46,6 +46,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // iterator.yield = iterator.yield + randomNum;
       // if (iterator.yield > 100) iterator.yield = 99;
       // 获取状态
+      iterator.planAchievementRate = iterator.planAchievementRate * 100;
+      iterator.yield = iterator.yield * 100;
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
     }
@@ -66,7 +68,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       yieldOk: 0,
       yieldBad: 0
     }
-    this.nzTotal=this.data.length;
+    this.nzTotal = this.data.length;
     for (const iterator of this.data) {
       if (iterator.completeStatus === 'exception') {
         this.headData.completeBad++;
@@ -99,18 +101,18 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
   /** 获取状态 */
   getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
-    if (type === '达成率'){
+    if (type === '达成率') {
       if (value < this.standard.complete.bad) {
-        console.log('exception',value);
+        console.log('exception', value);
         return 'exception';
       }
       else if (value > this.standard.complete.good) {
-        console.log('success',value);
+        console.log('success', value);
 
         return 'success'
       }
-      else{
-        console.log('active',value);
+      else {
+        console.log('active', value);
         return 'active'
       }
     }
@@ -123,7 +125,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
       else return 'active'
     }
-    
+
   }
   ngOnDestroy() {
     if (this.nzTimer) {

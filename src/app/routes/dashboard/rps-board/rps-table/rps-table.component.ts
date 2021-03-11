@@ -46,8 +46,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // iterator.yield = iterator.yield + randomNum;
       // if (iterator.yield > 100) iterator.yield = 99;
       // 获取状态
-      iterator.planAchievementRate = iterator.planAchievementRate * 100;
-      iterator.yield = iterator.yield * 100;
+      iterator.planAchievementRate = iterator.planAchievementRate;
+      iterator.yield = iterator.yield;
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
     }

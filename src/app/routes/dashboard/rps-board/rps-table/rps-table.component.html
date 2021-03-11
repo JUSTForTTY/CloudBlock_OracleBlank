@@ -1,13 +1,12 @@
 <nz-table #smallTable [nzSize]="tableSize" [nzData]="data" style="background:#192B53;" [nzPageSize]="nzPageSize"
-[nzPageIndex]="nzPageIndex"
-  [nzShowPagination]="false">
+  [nzPageIndex]="nzPageIndex" [nzShowPagination]="false">
   <thead>
     <tr>
-      <th >线体：{{nzTotal}}</th>
-      <th colspan ="1">达成率 达标：{{headData.completeOk}} 未达标：{{headData.completeBad}}</th>
+      <th>线体：{{nzTotal}}</th>
+      <th colspan="1">达成率 达标：{{headData.completeOk}} 未达标：{{headData.completeBad}}</th>
       <th></th>
       <!-- <th >线体:{{nzTotal}}</th> -->
-      <th >良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
+      <th>良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
       <th></th>
     </tr>
   </thead>
@@ -15,14 +14,15 @@
     <tr *ngFor="let data of smallTable.data">
       <td>{{ data.prolineCode }}</td>
       <td>
-        <nz-progress [nzPercent]="data.planAchievementRate" [nzStatus]="data.completeStatus" [nzShowInfo]="false"></nz-progress>
+        <nz-progress [nzPercent]="data.planAchievementRate" [nzStatus]="data.completeStatus" [nzShowInfo]="false">
+        </nz-progress>
       </td>
-      <td>{{ data.planAchievementRate | number:'1.0-1'}}%</td>
+      <td>{{ data.planAchievementRate*100 | number:'1.0-1'}}%</td>
       <td>
         <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
 
       </td>
-      <td>{{ data.yield }}%</td>
+      <td>{{ data.yield*100 | number:'1.0-1' }}%</td>
     </tr>
   </tbody>
 </nz-table>

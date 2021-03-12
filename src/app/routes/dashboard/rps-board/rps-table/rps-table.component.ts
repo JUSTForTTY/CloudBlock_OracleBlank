@@ -32,7 +32,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   private nzTimer;
   newData = false;
   nzPageIndex = 1;
-  nzPageSize = 7;
+  nzPageSize = 5;
   nzTotal: Number;
   constructor() { }
 
@@ -42,7 +42,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // 模拟数据
       // const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
       // iterator.planAchievementRate = iterator.planAchievementRate + randomNum;
-      // if (iterator.planAchievementRate > 100) iterator.planAchievementRate = 99;
+      // if (iterator.planAchievementRate > 100) iterator.planAchievementRate = 100;
       // iterator.yield = iterator.yield + randomNum;
       // if (iterator.yield > 100) iterator.yield = 99;
       // 获取状态

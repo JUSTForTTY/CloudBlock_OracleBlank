@@ -11,7 +11,14 @@ export interface Data {
 }
 export interface UrlData {
     [key: string]: any;
-    data: Data[]
+    data: {
+        WAVE: Data[],
+        COATING:Data[],
+        SMT:Data[],
+        ATP:Data[],
+        planAchievementRate:{ bad: number; good: number },
+        yield: { bad: number; good: number }
+    }
 
 }
 export function getDataByUrlData(data: Data): Data {

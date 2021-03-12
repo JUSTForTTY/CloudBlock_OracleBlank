@@ -14,11 +14,15 @@
     <tr *ngFor="let data of smallTable.data">
       <td>{{ data.prolineCode }}</td>
       <td>
-        <nz-progress [nzPercent]="data.planAchievementRate" [nzStatus]="data.completeStatus" [nzShowInfo]="false">
+        <span  style="margin-left: 20%; font-size: 16px;">产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums}}</span>
+        <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate"
+          [nzStatus]="data.completeStatus" [nzShowInfo]="false">
         </nz-progress>
       </td>
       <td>{{ data.planAchievementRate }}%</td>
       <td>
+        <span  style="margin-left: 20%; font-size: 16px;">
+          良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}</span>
         <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
 
       </td>

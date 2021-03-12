@@ -135,8 +135,8 @@ export class RpsBoardComponent implements OnInit {
     // }, 1);
   }
   getAllData() {
-    this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
-      // this.http.getHttp("/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
+    // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
+      this.http.getHttp("/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
       for (const option of options) {
         // console.log('data', option.key, data);
         const dataList = data.data[option.key];

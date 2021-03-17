@@ -5,18 +5,19 @@ export interface Data {
     goodNums?: number;
     badNums?: number;
     planError?: string;
-
     completeStatus?: 'success' | 'exception' | 'active';
     yieldStatus?: 'success' | 'exception' | 'active';
+    planNums?:number;
+    isNull?: boolean;
 }
 export interface UrlData {
     [key: string]: any;
     data: {
         WAVE: Data[],
-        COATING:Data[],
-        SMT:Data[],
-        ATP:Data[],
-        planAchievementRate:{ bad: number; good: number },
+        COATING: Data[],
+        SMT: Data[],
+        ATP: Data[],
+        planAchievementRate: { bad: number; good: number },
         yield: { bad: number; good: number }
     }
 

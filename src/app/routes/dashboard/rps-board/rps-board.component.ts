@@ -19,14 +19,15 @@ const options: {
       title: 'WAVE达成率',
       index: [0, 1]
     },
-    {
-      key: 'ATP',
-      title: 'ATP达成率',
-      index: [1, 0]
-    },
+
     {
       key: 'COATING',
       title: 'COATING达成率',
+      index: [1, 0]
+    },
+    {
+      key: 'ATP',
+      title: 'ATP达成率',
       index: [1, 1]
     },
   ]
@@ -111,17 +112,18 @@ export class RpsBoardComponent implements OnInit {
       data: getTestData(),
       isLoading: true
     })
-    this.bottomData.push({
-      title: 'ATP达成率',
-      data: getTestData(),
-      isLoading: true
-
-    })
+   
     this.bottomData.push({
       title: 'COATING达成率',
       data: getTestData(),
       isLoading: true
       // data:[]
+    })
+    this.bottomData.push({
+      title: 'ATP达成率',
+      data: getTestData(),
+      isLoading: true
+
     })
     this.allData.push(this.topData);
     this.allData.push(this.bottomData);
@@ -136,7 +138,7 @@ export class RpsBoardComponent implements OnInit {
   }
   getAllData() {
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
-      this.http.getHttp("/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
+    this.http.getHttp("/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
       for (const option of options) {
         // console.log('data', option.key, data);
         const dataList = data.data[option.key];
@@ -155,11 +157,11 @@ export class RpsBoardComponent implements OnInit {
           this.allData[option.index[0]][option.index[1]].isLoading = false;
         }
       }
-      if(data.data.planAchievementRate){
-        this.standard.complete=data.data.planAchievementRate
+      if (data.data.planAchievementRate) {
+        this.standard.complete = data.data.planAchievementRate
       }
-      if(data.data.yield){
-        this.standard.yield=data.data.yield
+      if (data.data.yield) {
+        this.standard.yield = data.data.yield
       }
 
     })

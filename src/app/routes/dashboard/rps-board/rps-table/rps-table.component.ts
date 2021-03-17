@@ -50,7 +50,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // iterator.yield = iterator.yield * 100;
       if (iterator.planNums === 0) {
         if (iterator.badNums + iterator.goodNums < 5) {
-          iterator.isNull=true;
+          iterator.isNull = true;
         } else {
 
         }
@@ -77,6 +77,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
     this.nzTotal = this.data.length;
     for (const iterator of this.data) {
+      if (iterator.isNull) continue;
       if (iterator.completeStatus === 'exception') {
         this.headData.completeBad++;
       }

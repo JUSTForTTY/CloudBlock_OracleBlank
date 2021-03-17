@@ -1,3 +1,8 @@
+/**
+ * 1.无排产从未达标剔除
+ * 2.无排产时良率显示
+ * 3.无排产时颜色
+ */
 export interface Data {
     prolineCode: String;// line
     planAchievementRate: number;//complete

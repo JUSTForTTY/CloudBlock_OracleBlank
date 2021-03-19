@@ -14,7 +14,7 @@
     <tr *ngFor="let data of smallTable.data">
       <td>{{ data.prolineCode }}</td>
       <td>
-        <span style="margin-left: 20%; font-size: 16px;position: relative;"
+        <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;"
           [ngStyle]="{color:data.planNums===0&&!data.isNull?'#f50':'#ffffff'}">
           <ng-container *ngIf="data.isNull;">
             无排产
@@ -22,16 +22,16 @@
           <ng-container *ngIf="!data.isNull;">
             产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums}}
           </ng-container>
-        </span>
-        <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;">
-          <ng-container *ngIf="data.isNull;">
+        </span> -->
+        <span style="margin-left: 15%; font-size: 16px;position: relative;">
+          <ng-container *ngIf="data.isNull==='0';">
             无排产
           </ng-container>
-          <ng-container *ngIf="!data.isNull;">
-            产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums===0?'':data.planNums}}
-            <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">未排产</nz-tag>
+          <ng-container *ngIf="data.isNull==='1';">
+            产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;{{data.planNums===0?'':'计划：'+data.planNums}}
+            <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
           </ng-container>
-        </span> -->
+        </span>
 
         <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate"
           [nzStatus]="data.completeStatus" [nzShowInfo]="false">
@@ -39,11 +39,11 @@
       </td>
       <td>{{ data.planAchievementRate }}%</td>
       <td>
-        <span style="margin-left: 20%; font-size: 16px;">
-          <ng-container *ngIf="data.isNull">
+        <span style="margin-left: 15%; font-size: 16px;">
+          <ng-container *ngIf="data.isNull==='0'">
             无排产
           </ng-container>
-          <ng-container *ngIf="!data.isNull">
+          <ng-container *ngIf="data.isNull==='1'">
             良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
           </ng-container>
         </span>

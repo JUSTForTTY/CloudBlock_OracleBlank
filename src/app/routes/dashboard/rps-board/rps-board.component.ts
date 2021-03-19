@@ -212,7 +212,7 @@ export class RpsBoardComponent implements OnInit {
     //  path 可不传
     //  this.activatedRoute 需保证准确
     this.workshopCode = this.pageService.getRouteParams(this.route, 'workshopCode', path);
-    if (!this.workshopCode) this.workshopCode = 'abc';
+    if (!this.workshopCode) this.workshopCode = '-1';
     console.log('workshopCode,shiftTypeCode', this.workshopCode);
 
   }

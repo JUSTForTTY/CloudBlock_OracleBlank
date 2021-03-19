@@ -28,7 +28,7 @@
       <div nz-row>
         <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
           <span style="color:#1e91de;line-height: 1;"  [style.font-size]="fontSizeTitle1+'px'">
-            {{this.workshopCode}}
+            {{this.workshopCode==='-1'?'全厂':this.workshopCode}}
           </span>
           <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
           </nz-statistic>

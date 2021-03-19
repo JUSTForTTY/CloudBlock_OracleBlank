@@ -13,7 +13,8 @@ export interface Data {
     completeStatus?: 'success' | 'exception' | 'active';
     yieldStatus?: 'success' | 'exception' | 'active';
     planNums?:number;
-    isNull?: boolean;
+    /** 0-无排产 1-未排产 */
+    isNull?: '0'|'1';
 }
 export interface UrlData {
     [key: string]: any;

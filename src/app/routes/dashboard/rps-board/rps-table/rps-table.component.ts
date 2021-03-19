@@ -48,13 +48,12 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // 获取状态
       // iterator.planAchievementRate = iterator.planAchievementRate * 100;
       // iterator.yield = iterator.yield * 100;
-      if (iterator.planNums === 0) {
-        if (iterator.badNums + iterator.goodNums < 5) {
-          iterator.isNull = true;
-        } else {
-
-        }
-      }
+      if(!iterator.isNull) iterator.isNull='1';
+      // if (iterator.planNums === 0) {
+      //   if (iterator.badNums + iterator.goodNums < 5) {
+      //     iterator.isNull = '0';
+      //   }
+      // }
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
     }

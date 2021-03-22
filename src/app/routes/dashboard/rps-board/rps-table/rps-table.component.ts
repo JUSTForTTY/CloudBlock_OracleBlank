@@ -48,7 +48,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // 获取状态
       // iterator.planAchievementRate = iterator.planAchievementRate * 100;
       // iterator.yield = iterator.yield * 100;
-      if(!iterator.isNull) iterator.isNull='1';
+      if (!iterator.isNull) iterator.isNull = '1';
       // if (iterator.planNums === 0) {
       //   if (iterator.badNums + iterator.goodNums < 5) {
       //     iterator.isNull = '0';
@@ -76,18 +76,17 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
     this.nzTotal = this.data.length;
     for (const iterator of this.data) {
-      if (iterator.isNull) continue;
-      if (iterator.completeStatus === 'exception') {
-        this.headData.completeBad++;
-      }
-      else if (iterator.completeStatus === 'success') {
+      if (iterator.isNull === '0') continue;
+      if (iterator.completeStatus === 'success') {
         this.headData.completeOk++;
+      } else {
+        this.headData.completeBad++;
+
       }
-      if (iterator.yieldStatus === 'exception') {
-        this.headData.yieldBad++;
-      }
-      else if (iterator.yieldStatus === 'success') {
+      if (iterator.yieldStatus === 'success') {
         this.headData.yieldOk++;
+      } else {
+        this.headData.yieldBad++;
       }
     }
   }

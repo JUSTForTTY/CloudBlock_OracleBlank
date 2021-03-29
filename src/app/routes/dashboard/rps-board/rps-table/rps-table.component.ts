@@ -109,16 +109,16 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
     if (type === '达成率') {
       if (value < this.standard.complete.bad) {
-        console.log('exception', value);
+        // console.log('exception', value);
         return 'exception';
       }
       else if (value > this.standard.complete.good) {
-        console.log('success', value);
+        // console.log('success', value);
 
         return 'success'
       }
       else {
-        console.log('active', value);
+        // console.log('active', value);
         return 'active'
       }
     }

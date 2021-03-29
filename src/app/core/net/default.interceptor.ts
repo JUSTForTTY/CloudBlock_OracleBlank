@@ -84,8 +84,11 @@ export class DefaultInterceptor implements HttpInterceptor {
             case 200:
                 const body: any = ev instanceof HttpResponse && ev.body;
 
-                console.log("回调处理body", body.code)
-                if (body.code == 401) {
+                console.log("回调处理body", body, body.code)
+                if (!body.code && body.data) {
+                    body.code = 200;
+                }
+                else if (body.code == 401) {
                     this.notification.remove();
                     this.notification.create('warning', '系统提示',
                         '对不起，该账户已过期或者已在其他设备登录！');

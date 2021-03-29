@@ -163,7 +163,7 @@ export class RpsBoardComponent implements OnInit {
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: any[], ErrorCode: number, Msg?: string }
       }) => {
-        console.log('getErrorData', data)
+        // console.log('getErrorData', data)
         if (data.data.ErrorCode === 0) {
           this.rightData = data.data.CallInfo;
           for (const iterator of this.rightData) {

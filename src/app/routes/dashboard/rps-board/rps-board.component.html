@@ -108,16 +108,28 @@
           <div nz-col nzSpan="5">
             处理人/响应
           </div>
-          <div nz-col nzSpan="19">
-            {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate/60|number:'1.0-0'}}分钟
+          <div nz-col nzSpan="19" *ngIf="item.FRespDate">
+              <ng-container *ngIf="item.FRespDate<180">
+                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
+              </ng-container>
+              <ng-container *ngIf="item.FRespDate>=180">
+                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate/60 |number:'1.0-1'}}小时
+
+              </ng-container>
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="5">
             停线累计时间
           </div>
-          <div nz-col nzSpan="19">
-            {{item.FStopLineDate/60 |number:'1.0-0'}}分钟
+          <div nz-col nzSpan="19" >
+            <ng-container *ngIf="item.FStopLineDate<180">
+              {{item.FStopLineDate}}分钟
+            </ng-container>
+            <ng-container *ngIf="item.FStopLineDate>=180">
+              {{item.FStopLineDate/60 |number:'1.0-1'}}小时
+            </ng-container>
+            
           </div>
         </div>
       </div>

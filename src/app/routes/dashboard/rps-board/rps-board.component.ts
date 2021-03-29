@@ -124,6 +124,8 @@ export class RpsBoardComponent implements OnInit {
     }, 6 * 1000)
   }
   pageChangeInit() {
+    this.rightShow = [];
+    this.rightOther = [];
     for (let index = 0; index < this.rightData.length; index++) {
       this.rightData[index].index = index + 1;
       if (index < 6) {

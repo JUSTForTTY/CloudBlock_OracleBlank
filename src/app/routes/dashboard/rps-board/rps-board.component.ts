@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Data, getTestData, UrlData } from "./datas";
-import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
+import { fromEvent as observableFromEvent, of as observableOf ,Subscriber} from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
+import { RpsBoardService} from './rps-board.service';
 
 const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
@@ -49,6 +50,10 @@ const options: {
   styleUrls: ['./rps-board.component.less']
 })
 export class RpsBoardComponent implements OnInit {
+  changePageTime=15;
+  ngModelChange(event){
+    this.rpsBoardService.pageChangeTime$.next(event);
+  }
   leftSpan=20
   workshopCode = '';
   /** 标准 */
@@ -90,7 +95,7 @@ export class RpsBoardComponent implements OnInit {
   private dataTimer;
   private rightTimer;
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService,) {
+  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService,private rpsBoardService:RpsBoardService) {
 
   }
 

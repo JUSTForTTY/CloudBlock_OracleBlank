@@ -3,21 +3,36 @@
   <div nz-row style="height: 9%;">
     <!-- 头部 -->
     <div nz-col nzXs="24" nzLg="6">
-      <span style="color: #ffffff;font-size: 16px;">达成率：</span>
-      <nz-tag nzColor="#f5222d">{{standard.complete.bad}}%↓</nz-tag>
-      <nz-tag nzColor="#c2af04">{{standard.complete.bad}}%~{{standard.complete.good}}%</nz-tag>
-      <nz-tag nzColor="#52c41a">{{standard.complete.good}}%↑</nz-tag>
-      <br>
-      <span style="color: #ffffff;font-size: 16px;">良品率：</span>
-      <nz-tag nzColor="#f5222d">{{standard.yield.bad}}%↓</nz-tag>
-      <nz-tag nzColor="#c2af04">{{standard.yield.bad}}%~{{standard.yield.good}}%</nz-tag>
-      <nz-tag nzColor="#52c41a">{{standard.yield.good}}%↑</nz-tag>
+      <div style="margin-top: 3px; display: flex;flex-wrap: nowrap; align-items:center;">
+        <div>
+          <span style="color: #ffffff;font-size: 16px;">达成率：</span>
+          <nz-tag nzColor="#f5222d">{{standard.complete.bad}}%↓</nz-tag>
+          <nz-tag nzColor="#c2af04">{{standard.complete.bad}}%~{{standard.complete.good}}%</nz-tag>
+          <nz-tag nzColor="#52c41a">{{standard.complete.good}}%↑</nz-tag>
+        </div>
+        <div style="margin-left: 10px;">
+          <nz-select   nzSize="small" [(ngModel)]="changePageTime" (ngModelChange)="ngModelChange($event)">
+            <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
+            <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
+            <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
+          </nz-select>
+        </div>
+       
+      </div>
+     
+      <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
+        <nz-tag nzColor="#f5222d">{{standard.yield.bad}}%↓</nz-tag>
+        <nz-tag nzColor="#c2af04">{{standard.yield.bad}}%~{{standard.yield.good}}%</nz-tag>
+        <nz-tag nzColor="#52c41a">{{standard.yield.good}}%↑</nz-tag>
+      </div>
+      
+      
     </div>
     <div nz-col nzXs="24" nzLg="12">
 
       <h1 style="color:#1e91de;text-align: center" [style.font-size]="fontSizeTitle1+'px'">
         <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
-          style="height: 55px;">
+          style="height: 55px;margin-top: 3px;">
         <ng-template #elseBlock>
           <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;">
         </ng-template>
@@ -57,7 +72,7 @@
 
                   <div style="height: 89%;">
 
-                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize"
+                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize" [changePageTime]="changePageTime"
                       [standard]="standard"></app-rps-table>
 
                   </div>

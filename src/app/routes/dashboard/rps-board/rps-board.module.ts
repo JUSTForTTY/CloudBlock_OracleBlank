@@ -6,12 +6,14 @@ import { SharedModule } from '@shared/shared.module';
 import { RpsTableComponent } from './rps-table/rps-table.component';
 import { DomVisibleDirective } from "./dom-visible.directive";
 import { HighlightDirective } from "./highlight.directive";
+import { RpsBoardService } from "./rps-board.service";
 @NgModule({
   declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective,HighlightDirective],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,
     SharedModule
-  ]
+  ],
+  providers:[RpsBoardService]
 })
 export class RpsBoardModule { }

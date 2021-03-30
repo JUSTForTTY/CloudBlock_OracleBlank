@@ -1,5 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Data, getTestData } from "../datas";
+import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
+import { RpsBoardService } from '../rps-board.service';
+import { Subscription } from 'rxjs/Subscription';
+
 @Component({
   selector: 'app-rps-table',
   templateUrl: './rps-table.component.html',
@@ -9,7 +13,9 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @Input()
   data: Data[] = getTestData() || [];
   @Input()
-  tableSize = 'small';
+  tableSize = 'small';//middle small
+  @Input() changePageTime = 15;
+  subscription: Subscription;
   @Input()
   standard = {
     complete: {
@@ -34,8 +40,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   nzPageIndex = 1;
   nzPageSize = 5;
   nzTotal: Number;
-  stopPage=false;
-  constructor() { }
+  stopPage = false;
+  constructor(private rpsBoardService: RpsBoardService) { }
 
   ngOnInit() {
 
@@ -65,7 +71,40 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     this.newData = true;
     this.nzTimer = setInterval(() => {
       this.changePage();
-    }, 8000)
+    }, this.changePageTime * 1000)
+
+    observableFromEvent(window, 'resize')
+      .subscribe((event) => {
+        // 操作
+        if (window.innerHeight <= 800) {
+          if (this.nzPageSize === 5) {
+            this.nzPageSize = 4;
+            this.newData = true;
+            this.changePage();
+          }
+        } else {
+          if (this.nzPageSize === 4) {
+            this.nzPageSize = 5;
+            this.newData = true;
+            this.changePage();
+          }
+        }
+      });
+      this.changPageTime();
+  }
+  changPageTime() {
+    this.subscription = this.rpsBoardService.pageChangeTime$.subscribe(
+      time => {
+        if (this.nzTimer) {
+          clearInterval(this.nzTimer);
+        }
+        this.newData = true;
+        this.changePage();
+        this.nzTimer = setInterval(() => {
+          this.changePage();
+        }, time * 1000)
+      }
+    )
   }
   /** 获取表头数据 */
   getHeadData() {
@@ -93,11 +132,19 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
   /** 轮播 */
   changePage() {
-    if(this.stopPage) return;
+    if (this.stopPage) return;
     if (this.newData) {
       this.newData = false;
-      this.nzPageIndex = 1;
       this.nzTotal = this.data.length;
+      if (this.nzPageIndex !== 1) {
+        this.nzPageIndex = 1;
+      } else {
+        if (this.nzPageIndex * this.nzPageSize < this.nzTotal) {
+          this.nzPageIndex++;
+        } else {
+          this.nzPageIndex = 1;
+        }
+      }
     } else {
       if (this.nzPageIndex * this.nzPageSize < this.nzTotal) {
         this.nzPageIndex++;
@@ -138,6 +185,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     if (this.nzTimer) {
       clearInterval(this.nzTimer);
     }
+    this.subscription.unsubscribe();
   }
 
 }

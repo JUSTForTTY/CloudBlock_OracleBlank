@@ -3,11 +3,10 @@
   <thead>
     <tr>
       <th>线体：{{nzTotal}}</th>
-      <th colspan="1">达成率 达标：{{headData.completeOk}} 未达标：{{headData.completeBad}}</th>
-      <th></th>
+      <th colspan="1">达成率 达标:&nbsp;{{headData.completeOk}} 未达标:&nbsp;{{headData.completeBad}}</th>
       <!-- <th >线体:{{nzTotal}}</th> -->
       <th>良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
-      <th></th>
+      <!-- <th></th> -->
     </tr>
   </thead>
   <tbody>
@@ -23,7 +22,7 @@
             产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums}}
           </ng-container>
         </span> -->
-        <span style="margin-left: 15%; font-size: 16px;position: relative;">
+        <span style="margin-left: 8%; font-size: 16px;position: relative;">
           <ng-container *ngIf="data.isNull==='0';">
             无排产
           </ng-container>
@@ -32,14 +31,17 @@
             <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
           </ng-container>
         </span>
-
-        <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate"
-          [nzStatus]="data.completeStatus" [nzShowInfo]="false">
-        </nz-progress>
+       
+        <span style="display: flex;flex-wrap: nowrap; align-items:center;">
+            <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate" style="width: 75%;margin-right: 8px;"
+              [nzStatus]="data.completeStatus" [nzShowInfo]="false">
+            </nz-progress>
+          {{ data.planAchievementRate }}%
+        </span>
+        
       </td>
-      <td>{{ data.planAchievementRate }}%</td>
       <td>
-        <span style="margin-left: 15%; font-size: 16px;">
+        <span style="margin-left: 8%; font-size: 16px;">
           <ng-container *ngIf="data.isNull==='0'">
             无排产
           </ng-container>
@@ -47,10 +49,11 @@
             良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
           </ng-container>
         </span>
-        <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"></nz-progress>
-
+        <span style="display: flex;flex-wrap: nowrap; align-items:center;">
+          <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false" style="width: 75%;margin-right: 8px;"></nz-progress>
+          {{ data.yield }}%
+      </span>
       </td>
-      <td>{{ data.yield }}%</td>
     </tr>
   </tbody>
 </nz-table>

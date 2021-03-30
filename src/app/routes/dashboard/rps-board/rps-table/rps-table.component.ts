@@ -34,6 +34,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   nzPageIndex = 1;
   nzPageSize = 5;
   nzTotal: Number;
+  stopPage=false;
   constructor() { }
 
   ngOnInit() {
@@ -92,7 +93,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
   /** 轮播 */
   changePage() {
-
+    if(this.stopPage) return;
     if (this.newData) {
       this.newData = false;
       this.nzPageIndex = 1;

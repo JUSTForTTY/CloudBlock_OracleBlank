@@ -1,5 +1,5 @@
 <nz-table #smallTable [nzSize]="tableSize" [nzData]="data" style="background:#192B53;" [nzPageSize]="nzPageSize"
-  [nzPageIndex]="nzPageIndex" [nzShowPagination]="false">
+  [nzPageIndex]="nzPageIndex" [nzShowPagination]="false" (mouseenter)="stopPage=true;" (mouseleave)="stopPage=false">
   <thead>
     <tr>
       <th>线体：{{nzTotal}}</th>

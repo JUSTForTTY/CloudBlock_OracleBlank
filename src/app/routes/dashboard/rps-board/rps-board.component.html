@@ -11,22 +11,22 @@
           <nz-tag nzColor="#52c41a">{{standard.complete.good}}%↑</nz-tag>
         </div>
         <div style="margin-left: 10px;">
-          <nz-select   nzSize="small" [(ngModel)]="changePageTime" (ngModelChange)="ngModelChange($event)">
+          <nz-select nzSize="small" [(ngModel)]="changePageTime" (ngModelChange)="ngModelChange($event)">
             <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
             <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
             <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
           </nz-select>
         </div>
-       
+
       </div>
-     
+
       <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
         <nz-tag nzColor="#f5222d">{{standard.yield.bad}}%↓</nz-tag>
         <nz-tag nzColor="#c2af04">{{standard.yield.bad}}%~{{standard.yield.good}}%</nz-tag>
         <nz-tag nzColor="#52c41a">{{standard.yield.good}}%↑</nz-tag>
       </div>
-      
-      
+
+
     </div>
     <div nz-col nzXs="24" nzLg="12">
 
@@ -72,8 +72,8 @@
 
                   <div style="height: 89%;">
 
-                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize" [changePageTime]="changePageTime"
-                      [standard]="standard"></app-rps-table>
+                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize"
+                      [changePageTime]="changePageTime" [standard]="standard"></app-rps-table>
 
                   </div>
 
@@ -87,22 +87,41 @@
         </div>
       </ng-container>
     </div>
-    <div nz-col [nzSpan]="rightData.length>0?5:1" style="height: 100%;" id="rightBox" >
+    <div nz-col [nzSpan]="rightData.length>0?5:1" style="height: 100%;" id="rightBox">
       <div nz-row class="shiftInfo-title" style="margin-top: 5px;">
         <div nz-col nzSpan="12" nzOffset="6">
           异常信息({{rightData.length}})
         </div>
       </div>
-      <div style="margin-top: 5px;" *ngFor="let item of rightShow;index as i" ryDomVisible (visible)="visible($event,item,i)">
-
+      <div style="margin-top: 5px;" *ngFor="let item of rightShow;index as i" ryDomVisible
+        (visible)="visible($event,item,i)">
+        
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="7">
-            # {{item.index}}&nbsp;状态
+            编号(#{{item.index}})
+          </div>
+          <div nz-col nzSpan="17">
+            {{item.FBillNo}}
+          </div>
+        </div>
+        <div nz-row class="shiftInfo-content">
+          <div nz-col nzSpan="7">
+            状态
           </div>
           <div nz-col nzSpan="17">
             <nz-alert [nzType]="item.status" [nzMessage]="item.FState" nzShowIcon></nz-alert>
           </div>
         </div>
+        <div nz-row class="shiftInfo-content" *ngIf="item.FLocation">
+          <div nz-col nzSpan="7">
+            位置
+          </div>
+          <div nz-col nzSpan="17">
+            {{item.FLocation}}
+          </div>
+        </div>
+        
+        
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="7">
             原因
@@ -124,27 +143,27 @@
             处理人/响应
           </div>
           <div nz-col nzSpan="17" *ngIf="item.FRespDate">
-              <ng-container *ngIf="item.FRespDate<180">
-                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
-              </ng-container>
-              <ng-container *ngIf="item.FRespDate>=180">
-                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate/60 |number:'1.0-1'}}小时
+            <ng-container *ngIf="item.FRespDate<180">
+              {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
+            </ng-container>
+            <ng-container *ngIf="item.FRespDate>=180">
+              {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate/60 |number:'1.0-1'}}小时
 
-              </ng-container>
+            </ng-container>
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="7">
             停线累计
           </div>
-          <div nz-col nzSpan="17" >
+          <div nz-col nzSpan="17">
             <ng-container *ngIf="item.FStopLineDate<180">
               {{item.FStopLineDate}}分钟
             </ng-container>
             <ng-container *ngIf="item.FStopLineDate>=180">
               {{item.FStopLineDate/60 |number:'1.0-1'}}小时
             </ng-container>
-            
+
           </div>
         </div>
       </div>

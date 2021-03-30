@@ -72,7 +72,7 @@
 
                   <div style="height: 89%;">
 
-                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize"
+                    <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize" [key]="oneData.title"
                       [changePageTime]="changePageTime" [standard]="standard"></app-rps-table>
 
                   </div>

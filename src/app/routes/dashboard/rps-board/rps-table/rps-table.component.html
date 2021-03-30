@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of smallTable.data" ryHighlight>
+    <tr *ngFor="let data of smallTable.data" ryHighlight (click)="jump(data)">
       <td>{{ data.prolineCode }}</td>
       <td>
         <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;"

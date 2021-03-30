@@ -27,6 +27,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       bad: 85
     }
   }
+  @Input() key = 'SMT';
 
   headData = {
     completeOk: 0,
@@ -90,7 +91,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
           }
         }
       });
-      this.changPageTime();
+    this.changPageTime();
   }
   changPageTime() {
     this.subscription = this.rpsBoardService.pageChangeTime$.subscribe(
@@ -187,5 +188,14 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
     this.subscription.unsubscribe();
   }
+  jump(data) {
+    // f
+    const { prolineCode } = data;
+    const prolineType = this.key.includes('SMT') ? 'smt' : 'be'
+    const url = location.origin + `/fullscreen/dashboard/yieldDashboard?prolineCode=${prolineCode}&prolineType=${prolineType}`;
+    console.log('url',this.key, url, data)
 
+    window.open(url);
+
+  }
 }

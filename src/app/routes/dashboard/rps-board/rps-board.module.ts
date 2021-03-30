@@ -5,8 +5,9 @@ import { RpsBoardRoutingModule } from "./rps-board-routing.module";
 import { SharedModule } from '@shared/shared.module';
 import { RpsTableComponent } from './rps-table/rps-table.component';
 import { DomVisibleDirective } from "./dom-visible.directive";
+import { HighlightDirective } from "./highlight.directive";
 @NgModule({
-  declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective],
+  declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective,HighlightDirective],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,

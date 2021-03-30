@@ -49,6 +49,7 @@ const options: {
   styleUrls: ['./rps-board.component.less']
 })
 export class RpsBoardComponent implements OnInit {
+  leftSpan=20
   workshopCode = '';
   /** 标准 */
   standard = {

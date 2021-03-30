@@ -9,7 +9,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @Input()
   data: Data[] = getTestData() || [];
   @Input()
-  tableSize = 'middle';
+  tableSize = 'small';
   @Input()
   standard = {
     complete: {
@@ -64,7 +64,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     this.newData = true;
     this.nzTimer = setInterval(() => {
       this.changePage();
-    }, 5000)
+    }, 8000)
   }
   /** 获取表头数据 */
   getHeadData() {

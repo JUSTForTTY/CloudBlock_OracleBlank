@@ -39,7 +39,7 @@
     </div>
   </div>
   <div nz-row style="height: 90%;" [nzGutter]="4">
-    <div nz-col nzSpan="18" style="height: 100%;">
+    <div nz-col [nzSpan]="rightData.length>0?20:23" style="height: 100%;">
       <ng-container *ngFor="let data of allData">
         <div nz-row [nzGutter]="8" style="color: aliceblue;height:49%; border:0px solid #c1eb06;margin-top: 5px;">
           <!-- 上层  -->
@@ -72,7 +72,7 @@
         </div>
       </ng-container>
     </div>
-    <div nz-col nzSpan="6" style="height: 100%;" id="rightBox">
+    <div nz-col [nzSpan]="rightData.length>0?4:1" style="height: 100%;" id="rightBox">
       <div nz-row class="shiftInfo-title" style="margin-top: 5px;">
         <div nz-col nzSpan="12" nzOffset="6">
           异常信息({{rightData.length}})
@@ -81,34 +81,34 @@
       <div style="margin-top: 5px;" *ngFor="let item of rightShow;index as i" ryDomVisible (visible)="visible($event,item,i)">
 
         <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="5">
+          <div nz-col nzSpan="7">
             # {{item.index}}&nbsp;状态
           </div>
-          <div nz-col nzSpan="19">
+          <div nz-col nzSpan="17">
             <nz-alert [nzType]="item.status" [nzMessage]="item.FState" nzShowIcon></nz-alert>
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="5">
+          <div nz-col nzSpan="7">
             原因
           </div>
-          <div nz-col nzSpan="19">
+          <div nz-col nzSpan="17">
             {{item.FReason}}
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="5">
+          <div nz-col nzSpan="7">
             发起人/时间
           </div>
-          <div nz-col nzSpan="19">
+          <div nz-col nzSpan="17">
             {{item.FCallUserName}} &nbsp;&nbsp;{{item.FCallDate}}
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="5">
+          <div nz-col nzSpan="7">
             处理人/响应
           </div>
-          <div nz-col nzSpan="19" *ngIf="item.FRespDate">
+          <div nz-col nzSpan="17" *ngIf="item.FRespDate">
               <ng-container *ngIf="item.FRespDate<180">
                 {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
               </ng-container>
@@ -119,10 +119,10 @@
           </div>
         </div>
         <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="5">
-            停线累计时间
+          <div nz-col nzSpan="7">
+            停线累计
           </div>
-          <div nz-col nzSpan="19" >
+          <div nz-col nzSpan="17" >
             <ng-container *ngIf="item.FStopLineDate<180">
               {{item.FStopLineDate}}分钟
             </ng-container>

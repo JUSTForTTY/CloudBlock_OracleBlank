@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Data, getTestData, UrlData } from "./datas";
-import { fromEvent as observableFromEvent, of as observableOf ,Subscriber} from 'rxjs';
+import { fromEvent as observableFromEvent, of as observableOf, Subscriber } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
-import { RpsBoardService} from './rps-board.service';
+import { RpsBoardService } from './rps-board.service';
 
 const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
@@ -50,11 +50,14 @@ const options: {
   styleUrls: ['./rps-board.component.less']
 })
 export class RpsBoardComponent implements OnInit {
-  changePageTime=15;
-  ngModelChange(event){
+  changePageTime = 15;
+  ngModelChange(event) {
     this.rpsBoardService.pageChangeTime$.next(event);
   }
-  leftSpan=20
+  isError=false;
+  errorIconSize=60;
+  isVisibleErrorDetail=false;
+  leftSpan = 20
   workshopCode = '';
   /** 标准 */
   standard = {
@@ -95,7 +98,12 @@ export class RpsBoardComponent implements OnInit {
   private dataTimer;
   private rightTimer;
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService,private rpsBoardService:RpsBoardService) {
+  @ViewChild('errorBox') errorBox: ElementRef;
+
+
+  @ViewChild('errodHead') errodHead: ElementRef;
+
+  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, private rpsBoardService: RpsBoardService) {
 
   }
 
@@ -126,42 +134,13 @@ export class RpsBoardComponent implements OnInit {
 
     this.getErrorData()
     this.rightTimer = setInterval(() => {
-      this.pageChange()
-    }, 6 * 1000)
+      this.changePage(this.rightData, this.nzPageSize);
+    }, 15 * 1000)
   }
-  pageChangeInit() {
-    this.rightShow = [];
-    this.rightOther = [];
-    for (let index = 0; index < this.rightData.length; index++) {
-      this.rightData[index].index = index + 1;
-      if (index < 6) {
-        this.rightShow.push(this.rightData[index])
-      } else {
-        this.rightOther.push(this.rightData[index])
-      }
-    }
 
-  }
+
   pageChange() {
-    if (this.rightOther.length === 0 || this.rightData.length === 0) return;
-    const ToRight = []
-    for (const iterator of this.rightShow) {
-      ToRight.push(iterator)
-    }
-    this.rightShow = []
-    let addNumber = 0;
-    for (let index = 0; index < this.rightOther.length; index++) {
-      if (index < 6) {
-        this.rightShow.push(this.rightOther[index])
-        addNumber++;
-      } else {
-        break;
-      }
-    }
-    this.rightOther.splice(0, addNumber);
-    for (const iterator of ToRight) {
-      this.rightOther.push(iterator);
-    }
+    // this.rpsBoardService.changePage(this.rightData, this.rightShow, this.rightOther);
   }
   getErrorData() {
     console.log('getErrorData do')
@@ -171,10 +150,13 @@ export class RpsBoardComponent implements OnInit {
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: any[], ErrorCode: number, Msg?: string }
       }) => {
-        // console.log('getErrorData', data)
+        // console.log('getErrorData', data)  ||
         if (data.data.ErrorCode === 0) {
-          this.rightData = data.data.CallInfo;
+          this.rightData =data.data.CallInfo;
+          let index = 0;
+          this.isError=false;
           for (const iterator of this.rightData) {
+            iterator.index = ++index;
             switch (iterator.FState) {
               case '已维修':
                 iterator.status = 'success';
@@ -183,9 +165,11 @@ export class RpsBoardComponent implements OnInit {
                 iterator.status = 'success';
                 break;
               case '待响应':
+                this.isError=true;
                 iterator.status = 'error';
                 break;
               case '已响应':
+                this.isError=true;
                 iterator.status = 'warning';
                 break;
 
@@ -193,11 +177,32 @@ export class RpsBoardComponent implements OnInit {
                 break;
             }
           }
-          this.pageChangeInit();
+          this.changeSize()
         } else {
-          this.rightData = [];
-          this.rightShow = [];
-          this.rightOther = [];
+          this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
+          // this.rightData = [];
+          // for (let index = 0; index < 20; index++) {
+          //   this.rightData.push({
+          //     index: (index + 1),
+          //     "FBillNo": (index + 1) + '',
+          //     "FLocation": "SUZ21SMT-A",
+          //     "FReason": "XP异常中",
+          //     "FCallDate": "2021-03-23 22:27:03",
+          //     "FCallUser": "2011024",
+          //     "FCallUserName": "绪立成",
+          //     "FRespUser": "",
+          //     "FRespUserName": "",
+          //     "FMaintUserCode": "2011024",
+          //     "FMaintUserName": "绪立成",
+          //     "FRespDate": 3936,
+          //     "FMaintDate": 5754,
+          //     "FStopLineDate": 8002,
+          //     "FactoryCode": "SUZ01",
+          //     "FState": "已维修"
+          //   })
+          // }
+          // this.changeSize()
+
         }
 
 
@@ -206,11 +211,60 @@ export class RpsBoardComponent implements OnInit {
 
   }
   visible(event, item, index) {
-    console.log(index, event, item)
-    if (!event.visible) {
-      this.rightOther.splice(0, 0, item)
-      this.rightShow.splice(this.rightShow.length - 1, 1)
+    this.rpsBoardService.visible(event, item, index, this.rightShow, this.rightOther)
+
+  }
+  changeSize() {
+    const errorListHeight = this.errorBox.nativeElement.clientHeight - this.errodHead.nativeElement.clientHeight
+    console.log('errorBox', this.errorBox.nativeElement.clientHeight, this.errodHead.nativeElement.clientHeight, errorListHeight)
+
+    const pagesize = Math.floor(errorListHeight / (163 + 5) + 0.05)
+    this.nzPageSize = pagesize;
+    this.changePage(this.rightData, this.nzPageSize, true);
+  }
+  initDatas() {
+    this.rightOther = [...this.rightData];
+    this.rightShow = [];
+
+  }
+  async changePage(allData: any[], size: number, init: boolean = false) {
+
+    if (init) {
+      this.initDatas()
     }
+
+    let rightShow = []
+    if (allData.length === 0) {
+      return;
+    }
+
+    if (size >= allData.length) {
+      rightShow = [...allData];
+      this.rightShow = rightShow;
+      return;
+    }
+
+    const ToRight = []
+    for (const iterator of this.rightShow) {
+      ToRight.push(iterator)
+    }
+    let addNumber = 0;
+    for (const iterator of this.rightOther) {
+      rightShow.push(iterator);
+      addNumber++;
+      if (addNumber === size) {
+        break;
+      }
+    }
+    this.rightOther.splice(0, size);
+    for (const iterator of ToRight) {
+      this.rightOther.push(iterator);
+    }
+    // for (let index = 0; index < array.length; index++) {
+    //   const element = array[index];
+      //  TODO 残缺补全
+    // }
+    this.rightShow = rightShow;
   }
   initData() {
     console.log('getAllData')
@@ -287,10 +341,17 @@ export class RpsBoardComponent implements OnInit {
 
 
   }
+  lastHeight = window.innerHeight;
+  nzPageSize = 1;
+
   autoSize() {
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
+
+        // 163;
         // 操作
+        // if (window.innerHeight >= 900)
+        // 
         if (window.innerHeight <= 900) {
           this.fontSizeTitle1 = 32;//一级标题
           this.fontSizeTitle2 = 18;//二级标题
@@ -300,6 +361,19 @@ export class RpsBoardComponent implements OnInit {
           this.fontSizeTitle2 = 24;//二级标题
           this.tableSize = 'middle';
         }
+        if (this.lastHeight < window.innerHeight) {
+          console.log('this.lastHeight', this.lastHeight, window.innerHeight)
+          // this.pageChangeInit()
+        }
+        if(window.innerHeight>2000){
+          this.errorIconSize=120;
+        }else{
+          this.errorIconSize=60;
+        }
+        setTimeout(() => {
+          this.changeSize()
+        }, 10);
+        if (this.lastHeight) this.lastHeight = window.innerHeight;
 
       });
   }

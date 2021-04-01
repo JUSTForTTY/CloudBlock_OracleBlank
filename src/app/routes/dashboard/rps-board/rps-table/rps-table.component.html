@@ -1,59 +1,62 @@
-<nz-table #smallTable [nzSize]="tableSize" [nzData]="data" style="background:#192B53;" [nzPageSize]="nzPageSize"
-  [nzPageIndex]="nzPageIndex" [nzShowPagination]="false" (mouseenter)="stopPage=true;" (mouseleave)="stopPage=false">
-  <thead>
-    <tr>
-      <th>线体：{{nzTotal}}</th>
-      <th colspan="1">达成率 达标:&nbsp;{{headData.completeOk}} 未达标:&nbsp;{{headData.completeBad}}</th>
-      <!-- <th >线体:{{nzTotal}}</th> -->
-      <th>良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
-      <!-- <th></th> -->
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of smallTable.data" ryHighlight (click)="jump(data)">
-      <td>{{ data.prolineCode }}</td>
-      <td>
-        <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;"
-          [ngStyle]="{color:data.planNums===0&&!data.isNull?'#f50':'#ffffff'}">
-          <ng-container *ngIf="data.isNull;">
-            无排产
-          </ng-container>
-          <ng-container *ngIf="!data.isNull;">
-            产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums}}
-          </ng-container>
-        </span> -->
-        <span style="margin-left: 8%; font-size: 16px;position: relative;">
-          <ng-container *ngIf="data.isNull==='0';">
-            无排产
-          </ng-container>
-          <ng-container *ngIf="data.isNull==='1';">
-            产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;{{data.planNums===0?'':'计划：'+data.planNums}}
-            <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
-          </ng-container>
+<div style="height: 100%;" #divBox>
+  <nz-table #smallTable nzSize="middle" [nzData]="showData" style="background:#192B53;" [nzPageSize]="nzPageSize"
+  nzBordered="false"
+    [nzPageIndex]="nzPageIndex" [nzShowPagination]="false" (mouseenter)="stopPage=true;" (mouseleave)="stopPage=false">
+    <thead>
+      <tr>
+        <th>线体：{{nzTotal}}</th>
+        <th colspan="1">达成率 达标:&nbsp;{{headData.completeOk}} 未达标:&nbsp;{{headData.completeBad}}</th>
+        <!-- <th >线体:{{nzTotal}}</th> -->
+        <th>良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
+        <!-- <th></th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of smallTable.data;index as i" ryHighlight (click)="jump(data)">
+        <td>{{ data.prolineCode }}</td>
+        <td>
+          <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;"
+            [ngStyle]="{color:data.planNums===0&&!data.isNull?'#f50':'#ffffff'}">
+            <ng-container *ngIf="data.isNull;">
+              无排产
+            </ng-container>
+            <ng-container *ngIf="!data.isNull;">
+              产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;计划：{{data.planNums}}
+            </ng-container>
+          </span> -->
+          <span style="margin-left: 8%; font-size: 16px;position: relative;">
+            <ng-container *ngIf="data.isNull==='0';">
+              无排产
+            </ng-container>
+            <ng-container *ngIf="data.isNull==='1';">
+              产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;{{data.planNums===0?'':'计划：'+data.planNums}}
+              <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
+            </ng-container>
+          </span>
+         
+          <span style="display: flex;flex-wrap: nowrap; align-items:center;">
+              <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate" style="width: 75%;margin-right: 8px;"
+                [nzStatus]="data.completeStatus" [nzShowInfo]="false">
+              </nz-progress>
+            {{ data.planAchievementRate }}%
+          </span>
+          
+        </td>
+        <td>
+          <span style="margin-left: 8%; font-size: 16px;">
+            <ng-container *ngIf="data.isNull==='0'">
+              无排产
+            </ng-container>
+            <ng-container *ngIf="data.isNull==='1'">
+              良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
+            </ng-container>
+          </span>
+          <span style="display: flex;flex-wrap: nowrap; align-items:center;">
+            <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false" style="width: 75%;margin-right: 8px;"></nz-progress>
+            {{ data.yield }}%
         </span>
-       
-        <span style="display: flex;flex-wrap: nowrap; align-items:center;">
-            <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate" style="width: 75%;margin-right: 8px;"
-              [nzStatus]="data.completeStatus" [nzShowInfo]="false">
-            </nz-progress>
-          {{ data.planAchievementRate }}%
-        </span>
-        
-      </td>
-      <td>
-        <span style="margin-left: 8%; font-size: 16px;">
-          <ng-container *ngIf="data.isNull==='0'">
-            无排产
-          </ng-container>
-          <ng-container *ngIf="data.isNull==='1'">
-            良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
-          </ng-container>
-        </span>
-        <span style="display: flex;flex-wrap: nowrap; align-items:center;">
-          <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false" style="width: 75%;margin-right: 8px;"></nz-progress>
-          {{ data.yield }}%
-      </span>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

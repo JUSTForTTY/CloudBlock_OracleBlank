@@ -15,6 +15,7 @@ export interface Data {
     planNums?:number;
     /** 0-无排产 1-未排产 */
     isNull?: '0'|'1';
+    index?:number;
 }
 export interface UrlData {
     [key: string]: any;

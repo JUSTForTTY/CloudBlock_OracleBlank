@@ -1,10 +1,12 @@
 import { Directive, Output, EventEmitter, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { root } from 'rxjs/internal-compatibility';
 
 @Directive({
   selector: '[ryDomVisible]'
 })
 export class DomVisibleDirective implements AfterViewInit {
   @Input() visibleUsed = true;
+  @Input() root: any;
   @Output() visible: EventEmitter<{ visible: boolean, time: number }> = new EventEmitter();
 
   private _intersectionObserver: IntersectionObserver;
@@ -16,10 +18,14 @@ export class DomVisibleDirective implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
+    let opt:any= {
+      threshold: 0.95,
+    }
+    // if(root) opt.root=document.getElementById('tableSMT');
     if (this.visibleUsed) {
       this._intersectionObserver = new IntersectionObserver(entries => {
         this._checkForIntersection(entries);
-      }, { threshold: 1 });
+      },opt);
       this._intersectionObserver.observe(<Element>this._elemRef.nativeElement);
     }
 

@@ -7,8 +7,9 @@ import { RpsTableComponent } from './rps-table/rps-table.component';
 import { DomVisibleDirective } from "./dom-visible.directive";
 import { HighlightDirective } from "./highlight.directive";
 import { RpsBoardService } from "./rps-board.service";
+import { ErrorDetailComponent } from './error-detail/error-detail.component';
 @NgModule({
-  declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective,HighlightDirective],
+  declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,

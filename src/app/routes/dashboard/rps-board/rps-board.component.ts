@@ -4,6 +4,8 @@ import { fromEvent as observableFromEvent, of as observableOf, Subscriber } from
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService } from './rps-board.service';
+import { orderBy, slice, map, groupBy } from 'lodash';
+
 
 const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
@@ -54,9 +56,10 @@ export class RpsBoardComponent implements OnInit {
   ngModelChange(event) {
     this.rpsBoardService.pageChangeTime$.next(event);
   }
-  isError=false;
-  errorIconSize=60;
-  isVisibleErrorDetail=false;
+  isError = false;
+  errorIconSize = 100;
+  isVisibleErrorDetail = false;
+  currentErrorInfo:ErrorInfo
   leftSpan = 20
   workshopCode = '';
   /** 标准 */
@@ -148,14 +151,16 @@ export class RpsBoardComponent implements OnInit {
     if (!factoryCode) factoryCode = this.workshopCode;
     this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {
-        data: { CallInfo: ErrorInfo[], CallUserInfo: any[], ErrorCode: number, Msg?: string }
+        data: { CallInfo: ErrorInfo[], CallUserInfo: CallUserInfo[], ErrorCode: number, Msg?: string }
       }) => {
         // console.log('getErrorData', data)  ||
         if (data.data.ErrorCode === 0) {
-          this.rightData =data.data.CallInfo;
+          this.rightData = data.data.CallInfo;
           let index = 0;
-          this.isError=false;
+          this.isError = false;
+          const errorData = groupByToJson(data.data.CallUserInfo, 'FBillNo')
           for (const iterator of this.rightData) {
+            iterator.callUserInfo=errorData[iterator.FBillNo]||[];
             iterator.index = ++index;
             switch (iterator.FState) {
               case '已维修':
@@ -165,11 +170,11 @@ export class RpsBoardComponent implements OnInit {
                 iterator.status = 'success';
                 break;
               case '待响应':
-                this.isError=true;
+                this.isError = true;
                 iterator.status = 'error';
                 break;
               case '已响应':
-                this.isError=true;
+                this.isError = true;
                 iterator.status = 'warning';
                 break;
 
@@ -177,9 +182,10 @@ export class RpsBoardComponent implements OnInit {
                 break;
             }
           }
+          console.log('errorData',errorData,this.rightData)
           this.changeSize()
         } else {
-          this.isError=false
+          this.isError = false
           this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
           // this.rightData = [];
           // for (let index = 0; index < 20; index++) {
@@ -263,7 +269,7 @@ export class RpsBoardComponent implements OnInit {
     }
     // for (let index = 0; index < array.length; index++) {
     //   const element = array[index];
-      //  TODO 残缺补全
+    //  TODO 残缺补全
     // }
     this.rightShow = rightShow;
   }
@@ -325,6 +331,7 @@ export class RpsBoardComponent implements OnInit {
           this.allData[option.index[0]][option.index[1]].data = [];
           this.allData[option.index[0]][option.index[1]].title = option.title;
           this.allData[option.index[0]][option.index[1]].isLoading = false;
+
         }
       }
       if (data.data.planAchievementRate) {
@@ -366,10 +373,10 @@ export class RpsBoardComponent implements OnInit {
           console.log('this.lastHeight', this.lastHeight, window.innerHeight)
           // this.pageChangeInit()
         }
-        if(window.innerHeight>2000){
-          this.errorIconSize=120;
-        }else{
-          this.errorIconSize=60;
+        if (window.innerHeight > 2000) {
+          this.errorIconSize = 160;
+        } else {
+          this.errorIconSize = 100;
         }
         setTimeout(() => {
           this.changeSize()
@@ -406,6 +413,20 @@ export class RpsBoardComponent implements OnInit {
     console.log('workshopCode,shiftTypeCode', this.workshopCode);
 
   }
+  showErrorDetail(errorInfo:ErrorInfo){
+    this.currentErrorInfo=errorInfo;
+    this.isVisibleErrorDetail=true;
+  }
+}
+
+function groupByToJson<E extends { [key: string]: any }>(list: E[], key: (keyof E)): { [key: string]: E[] } {
+  let res: { [key: string]: E[] } = {};
+  for (const item of list) {
+    const id = item[key]
+    if (!res[id]) res[id] = [];
+    res[id].push(item);
+  }
+  return res;
 }
 
 interface ErrorInfo {
@@ -426,7 +447,21 @@ interface ErrorInfo {
   "FState": '已维修' | '已关闭' | '待响应' | '已响应';
   index?: number;
   status?: string;
+  callUserInfo?: CallUserInfo[]
+
 }
+interface CallUserInfo {
+  /** 姓名 */
+  A0101: string;
+  FBillNo: string;
+  FDate: string;
+  FUserCode: string;
+}
+// A0101: "牛连胜"
+// FBillNo: "C2104011254550007"
+// FDate: "2021-04-01 12:54:55"
+// FUserCode: "2009005   "
+
 // FBillNo": 呼叫编号
 // FLocation": 呼叫位置
 // FReason": 呼叫原因

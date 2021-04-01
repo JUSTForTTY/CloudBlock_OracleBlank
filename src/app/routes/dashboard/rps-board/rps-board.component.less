@@ -23,10 +23,14 @@
     text-align: left;
     margin-left: 2px;
   }
+
   .ant-row {
     line-height: 1.4;
   }
-  
+
+  .ant-modal {
+    background-color: #203668;
+  }
 
   .ant-descriptions-item .ant-descriptions-item-content {
     color: #ffffff;
@@ -48,6 +52,9 @@
   .logo {
     margin-top: -15px;
   }
+  nz-modal .ant-modal {
+    top: 300px;
+  }
 
   nz-table .ant-table-thead tr th {
     background: #101638;
@@ -65,7 +72,7 @@
     background: #192b53;
   }
 
-  nz-table .ant-empty-description {
+  nz-table .ant-empty-description .ant-descriptions-item-content {
     color: #ffffff;
   }
 
@@ -76,6 +83,26 @@
   // nz-tag .ant-tag {
 
   // }
+
+  nz-descriptions-item {
+    background: #c2af04;
+    background-color: #c2af04;
+    color: #c2af04;
+    font-size: 16px;
+  }
+  nz-descriptions-item .ant-descriptions .ant-descriptions-item-label,
+  .ant-descriptions .ant-descriptions-item-content {
+    color: #c2af04;
+  }
+  nz-descriptions .ant-descriptions .ant-descriptions-item-label,
+  .ant-descriptions .ant-descriptions-item-content {
+    color: #c2af04;
+  }
+
+  .ant-descriptions.bordered .ant-descriptions-item-label,
+  .ant-descriptions.bordered .ant-descriptions-item-content {
+    border-right: 1px solid #c2af04;
+  }
 }
 nz-tag {
   font-size: 16px;
@@ -90,30 +117,32 @@ nz-tag {
 
 @keyframes fade {
   from {
-      opacity: 1.0;
+    opacity: 1;
   }
   50% {
-      opacity: 0.4;
+    opacity: 0.4;
   }
   to {
-      opacity: 1.0;
+    opacity: 1;
   }
 }
 
 @-webkit-keyframes fade {
   from {
-      opacity: 1.0;
+    opacity: 1;
   }
   50% {
-      opacity: 0.4;
+    opacity: 0.4;
   }
   to {
-      opacity: 1.0;
+    opacity: 1;
   }
 }
 .error {
-  color: #d81e06;
+  color: rgb(245, 34, 45);
   animation: fade 200ms infinite;
   -webkit-animation: fade 200ms infinite;
 }
-
+.success {
+  color: #52c41a;
+}

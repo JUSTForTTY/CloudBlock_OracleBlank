@@ -1,0 +1,115 @@
+<div style="margin-top: 5px;" *ngIf="currentErrorInfo">
+
+  
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      状态
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-alert [nzType]="currentErrorInfo.status" [nzMessage]="currentErrorInfo.FState" nzShowIcon></nz-alert>
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      编号
+    </div>
+    <div nz-col nzSpan="18">
+      {{currentErrorInfo.FBillNo}}
+    </div>
+  </div>
+
+  
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      发起人/发起时间
+    </div>
+    <div nz-col nzSpan="12">
+      {{currentErrorInfo.FCallUserName}} &nbsp;&nbsp;{{currentErrorInfo.FCallDate}}
+    </div>
+    <div nz-col nzSpan="6">
+      工号:&nbsp;{{currentErrorInfo.FCallUser}}
+    </div>
+
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      响应人/响应时间
+    </div>
+    <div nz-col nzSpan="12" *ngIf="currentErrorInfo.FRespDate">
+      <ng-container *ngIf="currentErrorInfo.FRespDate">
+        <ng-container *ngIf="currentErrorInfo.FRespDate<180">
+          {{currentErrorInfo.FRespUserName}} &nbsp;&nbsp;{{currentErrorInfo.FRespDate}}分钟
+        </ng-container>
+        <ng-container *ngIf="currentErrorInfo.FRespDate>=180">
+          {{currentErrorInfo.FRespUserName}} &nbsp;&nbsp;{{currentErrorInfo.FRespDate/60 |number:'1.0-1'}}小时
+        </ng-container>
+      </ng-container>
+    </div>
+    <div nz-col nzSpan="6">
+      工号:&nbsp;{{currentErrorInfo.FRespUser}}
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      维修人/维修时间
+    </div>
+    <div nz-col nzSpan="12" >
+      <ng-container *ngIf="currentErrorInfo.FMaintDate">
+        <ng-container *ngIf="currentErrorInfo.FMaintDate<180">
+          {{currentErrorInfo.FMaintUserName}} &nbsp;&nbsp;{{currentErrorInfo.FMaintDate}}分钟
+        </ng-container>
+        <ng-container *ngIf="currentErrorInfo.FMaintDate>=180">
+          {{currentErrorInfo.FMaintUserName}} &nbsp;&nbsp;{{currentErrorInfo.FMaintDate/60 |number:'1.0-1'}}小时
+        </ng-container>
+      </ng-container>
+    </div>
+    <div nz-col nzSpan="6">
+      工号:&nbsp;{{currentErrorInfo.FMaintUserCode}}
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      停线累计
+    </div>
+    <div nz-col nzSpan="18">
+      <ng-container *ngIf="currentErrorInfo.FStopLineDate<180">
+        {{currentErrorInfo.FStopLineDate}}分钟
+      </ng-container>
+      <ng-container *ngIf="currentErrorInfo.FStopLineDate>=180">
+        {{currentErrorInfo.FStopLineDate/60 |number:'1.0-1'}}小时
+      </ng-container>
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content" *ngIf="currentErrorInfo.FLocation">
+    <div nz-col nzSpan="6">
+      位置
+    </div>
+    <div nz-col nzSpan="18">
+      {{currentErrorInfo.FLocation}}
+    </div>
+  </div>
+
+
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      原因
+    </div>
+    <div nz-col nzSpan="18">
+      {{currentErrorInfo.FReason}}
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="6">
+      已呼叫人员
+    </div>
+    <div nz-col nzSpan="18">
+      <div *ngIf="currentErrorInfo.callUserInfo" nz-row>
+
+        <span *ngFor="let user of currentErrorInfo.callUserInfo" style="display: inline-block;margin-right: 10px;">
+          {{user['A0101']}}
+        </span>
+  
+      </div>
+    </div>
+  </div>
+</div>

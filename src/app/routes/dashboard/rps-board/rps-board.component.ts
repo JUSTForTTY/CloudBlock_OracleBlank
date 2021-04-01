@@ -179,6 +179,7 @@ export class RpsBoardComponent implements OnInit {
           }
           this.changeSize()
         } else {
+          this.isError=false
           this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
           // this.rightData = [];
           // for (let index = 0; index < 20; index++) {

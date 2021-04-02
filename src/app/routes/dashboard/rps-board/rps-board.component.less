@@ -11,13 +11,12 @@
   }
 
   .shiftInfo-title {
-    background: #192b53;
     color: #ffffff;
+    background: #192b53;
     font-size: 20px;
     text-align: center;
   }
   .shiftInfo-content {
-    background: #192b53;
     color: #ffffff;
     font-size: 15px;
     text-align: left;
@@ -79,7 +78,13 @@
   nz-progress .ant-progress-status-active .ant-progress-bg {
     background-color: #c2af04;
   }
+  .ant-empty-description {
+    color: #ffffff;
+  }
 
+  .ant-table-placeholder {
+    border-bottom: unset;
+  }
   // nz-tag .ant-tag {
 
   // }
@@ -120,7 +125,7 @@ nz-tag {
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.5;
   }
   to {
     opacity: 1;
@@ -132,17 +137,31 @@ nz-tag {
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.5;
   }
   to {
     opacity: 1;
   }
 }
-.error {
+.errorIcon{
   color: rgb(245, 34, 45);
   animation: fade 200ms infinite;
-  -webkit-animation: fade 200ms infinite;
+  -webkit-animation: fade 300ms infinite;
+}
+.successIcon {
+  color: #52c41a;
+
+}
+.error {
+  background: rgb(245, 34, 45);
+  animation: fade 600ms infinite;
+  -webkit-animation: fade 600ms infinite;
+}
+.warning {
+  background: #c2af04;
+  animation: fade 600ms infinite;
+  -webkit-animation: fade 600ms infinite;
 }
 .success {
-  color: #52c41a;
+  background: #192b53;
 }

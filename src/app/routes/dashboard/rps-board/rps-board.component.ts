@@ -57,9 +57,9 @@ export class RpsBoardComponent implements OnInit {
     this.rpsBoardService.pageChangeTime$.next(event);
   }
   isError = false;
-  errorIconSize = 100;
+  errorIconSize = 60;
   isVisibleErrorDetail = false;
-  currentErrorInfo:ErrorInfo
+  currentErrorInfo: ErrorInfo
   leftSpan = 20
   workshopCode = '';
   /** 标准 */
@@ -146,9 +146,11 @@ export class RpsBoardComponent implements OnInit {
     // this.rpsBoardService.changePage(this.rightData, this.rightShow, this.rightOther);
   }
   getErrorData() {
-    console.log('getErrorData do')
     let factoryCode = FactoryCode[this.workshopCode];
     if (!factoryCode) factoryCode = this.workshopCode;
+    if(factoryCode==='-1') factoryCode='';
+    console.log('getAbnormalInfo do',factoryCode)
+
     this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: CallUserInfo[], ErrorCode: number, Msg?: string }
@@ -156,33 +158,44 @@ export class RpsBoardComponent implements OnInit {
         // console.log('getErrorData', data)  ||
         if (data.data.ErrorCode === 0) {
           this.rightData = data.data.CallInfo;
-          let index = 0;
           this.isError = false;
           const errorData = groupByToJson(data.data.CallUserInfo, 'FBillNo')
           for (const iterator of this.rightData) {
-            iterator.callUserInfo=errorData[iterator.FBillNo]||[];
-            iterator.index = ++index;
+            iterator.callUserInfo = errorData[iterator.FBillNo] || [];
             switch (iterator.FState) {
               case '已维修':
                 iterator.status = 'success';
+                iterator.sort = 3;
                 break;
               case '已关闭':
                 iterator.status = 'success';
+                iterator.sort = 4;
                 break;
               case '待响应':
                 this.isError = true;
                 iterator.status = 'error';
+                iterator.sort = 1;
+
                 break;
               case '已响应':
                 this.isError = true;
                 iterator.status = 'warning';
+                iterator.sort = 2;
+
                 break;
 
               default:
                 break;
             }
           }
-          console.log('errorData',errorData,this.rightData)
+          this.rightData.sort((a, b) => {
+            return a.sort - b.sort;
+          })
+          let index = 0;
+          for (const iterator of this.rightData) {
+            iterator.index = ++index;
+          }
+          console.log('errorData', errorData, this.rightData)
           this.changeSize()
         } else {
           this.isError = false
@@ -316,7 +329,7 @@ export class RpsBoardComponent implements OnInit {
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
     this.http.getHttp("/yieldDashboard/worksectionData/" + this.workshopCode).subscribe((data: UrlData) => {
       for (const option of options) {
-        // console.log('data', option.key, data);
+        console.log('data', option.key, data);
         const dataList = data.data[option.key];
         if (dataList) {
           this.allData[option.index[0]][option.index[1]].isLoading = true;
@@ -326,6 +339,10 @@ export class RpsBoardComponent implements OnInit {
             // 模拟数据
             if (dataList.length > 0)
               this.allData[option.index[0]][option.index[1]].isLoading = false;
+            else {
+              // TODO 无数据
+              this.allData[option.index[0]][option.index[1]].isLoading = false;
+            }
           }, 1);
         } else {
           this.allData[option.index[0]][option.index[1]].data = [];
@@ -374,9 +391,9 @@ export class RpsBoardComponent implements OnInit {
           // this.pageChangeInit()
         }
         if (window.innerHeight > 2000) {
-          this.errorIconSize = 160;
-        } else {
           this.errorIconSize = 100;
+        } else {
+          this.errorIconSize = 60;
         }
         setTimeout(() => {
           this.changeSize()
@@ -413,9 +430,9 @@ export class RpsBoardComponent implements OnInit {
     console.log('workshopCode,shiftTypeCode', this.workshopCode);
 
   }
-  showErrorDetail(errorInfo:ErrorInfo){
-    this.currentErrorInfo=errorInfo;
-    this.isVisibleErrorDetail=true;
+  showErrorDetail(errorInfo: ErrorInfo) {
+    this.currentErrorInfo = errorInfo;
+    this.isVisibleErrorDetail = true;
   }
 }
 
@@ -447,6 +464,7 @@ interface ErrorInfo {
   "FState": '已维修' | '已关闭' | '待响应' | '已响应';
   index?: number;
   status?: string;
+  sort?: number;
   callUserInfo?: CallUserInfo[]
 
 }

@@ -148,8 +148,8 @@ export class RpsBoardComponent implements OnInit {
   getErrorData() {
     let factoryCode = FactoryCode[this.workshopCode];
     if (!factoryCode) factoryCode = this.workshopCode;
-    if(factoryCode==='-1') factoryCode='';
-    console.log('getAbnormalInfo do',factoryCode)
+    if (factoryCode === '-1') factoryCode = '';
+    console.log('getAbnormalInfo do', factoryCode)
 
     this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {
@@ -247,13 +247,13 @@ export class RpsBoardComponent implements OnInit {
     this.rightShow = [];
 
   }
-  async changePage(allData: any[], size: number, init: boolean = false) {
+  async changePage(allData: ErrorInfo[], size: number, init: boolean = false) {
 
     if (init) {
       this.initDatas()
     }
 
-    let rightShow = []
+    let rightShow: ErrorInfo[] = []
     if (allData.length === 0) {
       return;
     }
@@ -264,7 +264,7 @@ export class RpsBoardComponent implements OnInit {
       return;
     }
 
-    const ToRight = []
+    const ToRight: ErrorInfo[] = []
     for (const iterator of this.rightShow) {
       ToRight.push(iterator)
     }
@@ -277,6 +277,8 @@ export class RpsBoardComponent implements OnInit {
       }
     }
     this.rightOther.splice(0, size);
+    // ToRight.sort((a, b) => a.index - b.index);
+
     for (const iterator of ToRight) {
       this.rightOther.push(iterator);
     }
@@ -285,6 +287,7 @@ export class RpsBoardComponent implements OnInit {
     //  TODO 残缺补全
     // }
     this.rightShow = rightShow;
+    // this.rightShow.sort((a, b) => a.sort - b.sort);
   }
   initData() {
     console.log('getAllData')

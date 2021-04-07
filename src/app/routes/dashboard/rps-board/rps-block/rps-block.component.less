@@ -1,0 +1,167 @@
+@import '~@delon/theme/styles/default';
+:host ::ng-deep {
+  .chartContainer {
+    background-color: #203668;
+    height: 100%;
+  }
+  .shiftInfo {
+    background: #192b53;
+    color: #ffffff;
+    height: auto;
+  }
+
+  .shiftInfo-title {
+    color: #ffffff;
+    background: #192b53;
+    font-size: 20px;
+    text-align: center;
+  }
+  .shiftInfo-content {
+    color: #ffffff;
+    font-size: 15px;
+    text-align: left;
+    margin-left: 2px;
+  }
+
+  .ant-row {
+    line-height: 1.4;
+  }
+
+  .ant-modal {
+    background-color: #203668;
+  }
+
+  .ant-descriptions-item .ant-descriptions-item-content {
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
+  }
+  .proline-title {
+    color: #ffffff;
+    text-align: center;
+  }
+  .proline-status {
+    color: #ffffff;
+    font-size: 36px;
+  }
+  .ant-badge-status-dot {
+    width: 64px;
+    height: 64px;
+  }
+  .logo {
+    margin-top: -15px;
+  }
+  nz-modal .ant-modal {
+    top: 300px;
+  }
+
+  nz-table .ant-table-thead tr th {
+    background: #101638;
+    font-size: 17px;
+    color: #ffffff;
+  }
+  nz-table .ant-table-tbody tr td {
+    line-height: 1;
+    background: #101638;
+    font-size: 16px;
+    padding: 0 0;
+    color: #ffffff;
+  }
+  nz-table .ant-table-placeholder {
+    background: #192b53;
+  }
+
+  nz-table .ant-empty-description .ant-descriptions-item-content {
+    color: #ffffff;
+  }
+
+  nz-progress .ant-progress-status-active .ant-progress-bg {
+    background-color: #c2af04;
+  }
+  .ant-empty-description {
+    color: #ffffff;
+  }
+
+  .ant-table-placeholder {
+    border-bottom: unset;
+  }
+  // nz-tag .ant-tag {
+
+  // }
+
+  nz-descriptions-item {
+    background: #c2af04;
+    background-color: #c2af04;
+    color: #c2af04;
+    font-size: 16px;
+  }
+  nz-descriptions-item .ant-descriptions .ant-descriptions-item-label,
+  .ant-descriptions .ant-descriptions-item-content {
+    color: #c2af04;
+  }
+  nz-descriptions .ant-descriptions .ant-descriptions-item-label,
+  .ant-descriptions .ant-descriptions-item-content {
+    color: #c2af04;
+  }
+
+  .ant-descriptions.bordered .ant-descriptions-item-label,
+  .ant-descriptions.bordered .ant-descriptions-item-content {
+    border-right: 1px solid #c2af04;
+  }
+}
+nz-tag {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@media screen and (max-height: 1000px) {
+  // .list {
+  //   height: 45rem;
+  // }
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade {
+  from {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.errorIcon{
+  color: rgb(245, 34, 45);
+  animation: fade 200ms infinite;
+  -webkit-animation: fade 300ms infinite;
+}
+.successIcon {
+  color: #52c41a;
+
+}
+.error {
+  background: rgb(245, 34, 45);
+  animation: fade 600ms infinite;
+  -webkit-animation: fade 600ms infinite;
+}
+.warning {
+  background: #c2af04;
+  animation: fade 600ms infinite;
+  -webkit-animation: fade 600ms infinite;
+}
+.success {
+  background: #192b53;
+}

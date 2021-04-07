@@ -97,22 +97,27 @@ export class DefaultInterceptor implements HttpInterceptor {
 
                 }
                 else if (body.code == 200) {
+                    if (body.param) {
+                        //更新token信息
+                        if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
 
-                    //更新token信息
-                    if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
-
-                        this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
+                            this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
+                        }
                     }
-                } else if (body.code == 500) {
 
+                } else if (body.code == 500) {
+                    if (body.param) {
+                        if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
+
+                            this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
+                        }
+                        this.notification.remove();
+
+                    }
                     // this.notification.create('error', '系统提示',
                     //     '系统维护中，请稍后进行操作"。');
                     //更新token信息
-                    if (body.param.access_token != undefined && body.param.refresh_token != undefined) {
-
-                        this.jwtService.saveToken(server_name, body.param.access_token, body.param.refresh_token);
-                    }
-                    this.notification.remove();
+                    
 
                     NOTFILTER.forEach(element => {
                         if (ev.url.indexOf(element) != -1) {

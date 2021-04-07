@@ -1,15 +1,89 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { PageService } from 'ngx-block-core';
+import { HttpService, PageService } from 'ngx-block-core';
 
+export const FactoryCode = {
+  'SUZ15-1F': 'SUZ01',
+  'SX-P1': 'SUZ01',
+  'SUZ21-2F': 'SUZ02',
+  'SX-P2': 'SUZ02',
+  'SUZ15-2F': 'SUZ03',
+  'SX-P3': 'SUZ03',
+  'SUZ21-1F': 'SUZ04',
+  'SX-P6': 'SUZ04',
+}
+export interface WorkShop {
+  createTime?: string
+  createUser?: string
+  factoryCode?: string
+  factorySn?: string
+  flag?: string
+  markDate?: string
+  markTime?: string
+  modifyTime?: string
+  modifyUser?: string
+  remark?: string
+  workShopCode?: string
+  workShopCodeDes?: string
+  workShopSn?: string;
+  isAdding: boolean;
+  sort: number;
+  oldSort?: number;
 
+}
+export interface BlockData {
+  [key: string]: WorkShop
+}
 interface Data { index?: number, [key: string]: any }
 @Injectable()
 export class RpsBoardService {
+  isFour=false;
+  isFullscreen = false;
+  changePageTime = 15;
   pageChangeTime$: Subject<number> = new Subject();
-  private isAdding = false;
+  changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop }> = new Subject();
 
-  constructor(private pageService: PageService) { }
+  standard = {
+    complete: {
+      good: 95,
+      bad: 75
+    },
+    yield: {
+      good: 90,
+      bad: 85
+    }
+  }
+  fourBlock: BlockData = {
+    'SUZ01': {
+      workShopCode: 'SUZ15-1F',
+      isAdding: false,
+      sort: 2
+    },
+    'SUZ02': {
+      workShopCode: 'SUZ21-2F',
+      isAdding: false,
+      sort: 3
+    },
+    'SUZ03': {
+      workShopCode: 'SUZ15-2F',
+      isAdding: false,
+      sort: 4
+    },
+    'SUZ04': {
+      workShopCode: 'SUZ21-1F',
+      isAdding: false,
+      sort: 5
+    }
+  }
+  workshops: WorkShop[] = []
+
+  constructor(private pageService: PageService, private http: HttpService) {
+    // 获取工厂列表
+    http.postHttp('/workshop/condition').subscribe(data => {
+      console.log('workshop,', data);
+      this.workshops = data.data
+    })
+  }
   clearAll(allData: Data[], showData: Data[], otherData: Data[]) {
     showData.splice(0, showData.length)
     otherData.splice(0, otherData.length)
@@ -30,80 +104,7 @@ export class RpsBoardService {
       showData.splice(index, 1);
     }
   }
-  async pageChangeInit(allData: Data[], showData: Data[], otherData: Data[], reset = true) {
-    if (reset) {
-      showData.splice(0, showData.length)
-      otherData.splice(0, otherData.length)
 
-      for (let index = 0; index < allData.length; index++) {
-        allData[index].index = index + 1;
-        if (otherData.length > 0) {
-          otherData.push(allData[index])
-        } else {
-          showData.push(allData[index])
-          await this.pageService.sleep(10);
-        }
 
-      }
-    } else {
-      if (this.isAdding) return;
-      this.addShowData(showData, otherData);
-    }
 
-  }
-  private async addShowData(showData: Data[], otherData: Data[]) {
-    this.isAdding = true;
-    let oldnumber = showData.length;
-    let addNumber = 0;
-    for (const iterator of otherData) {
-      showData.push(iterator);
-      // console.log('visible',iterator.index,'push')
-      addNumber++;
-      oldnumber++;
-      await this.pageService.sleep(10);
-      if (oldnumber !== showData.length) {
-        break;
-      }
-    }
-
-    otherData.splice(0, oldnumber - showData.length);
-    const showIds = [];
-    for (const iterator of showData) {
-      showIds.push(iterator.index)
-    }
-    // for (const iterator of otherData) {
-    //   ids.push(iterator.index)
-    // }
-
-    for (let index = 1; index < otherData.length; index++) {
-      const element = otherData[index];
-      if (showIds.includes(element.index) || element.index === otherData[index - 1].index) {
-        otherData.splice(index, 1);
-        index--;
-      }
-    }
-    if (otherData.length && showIds.includes(otherData[0].index)) {
-      otherData.splice(0, 1);
-    }
-    this.isAdding = false;
-
-  }
-  async changePage(allData: Data[], showData: Data[], otherData: Data[]) {
-    if (this.isAdding) return;
-    this.isAdding = true;
-    if (otherData.length === 0 || allData.length === 0) {
-      this.isAdding = false;
-      return;
-    }
-    const ToRight = []
-    for (const iterator of showData) {
-      ToRight.push(iterator)
-    }
-    showData.splice(0, showData.length)
-    this.addShowData(showData, otherData)
-    for (const iterator of ToRight) {
-      otherData.push(iterator);
-    }
-    this.isAdding = false;
-  }
 }

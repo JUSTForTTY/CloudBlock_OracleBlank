@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Data, getTestData } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
-import { RpsBoardService } from '../rps-board.service';
+import { RpsBoardService, WorkShop } from '../rps-board.service';
 import { Subscription } from 'rxjs/Subscription';
 import { NzTableComponent } from 'ng-zorro-antd';
 
@@ -15,21 +15,14 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   data: Data[] = getTestData() || [];
   showData: Data[] = []
   otherData: Data[] = []
+  @Input() workShop: WorkShop;
+
   @Input()
   tableSize = 'small';//middle small
   @Input() changePageTime = 15;
   subscription: Subscription;
-  @Input()
-  standard = {
-    complete: {
-      good: 95,
-      bad: 75
-    },
-    yield: {
-      good: 90,
-      bad: 85
-    }
-  }
+  subscription2: Subscription;
+
   @Input() key = 'SMT';
   testVis
   headData = {
@@ -53,7 +46,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   constructor(private rpsBoardService: RpsBoardService) { }
 
   ngOnInit() {
-    let i=0;
+    let i = 0;
     for (const iterator of this.data) {
       // 模拟数据
       // const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
@@ -72,7 +65,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // }
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
-      iterator.index=++i;
+      iterator.index = ++i;
     }
     this.testVis = (this.key.includes('SMT'));
 
@@ -85,26 +78,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     this.changeSize()
     this.nzTimer = setInterval(() => {
       this.changePage(this.data, this.otherData, this.nzPageSize);
-    }, this.changePageTime * 1000)
+    }, this.rpsBoardService.changePageTime * 1000)
 
     observableFromEvent(window, 'resize')
       .subscribe((event) => {
         // 操作
         this.changeSize();
-        // if (window.innerHeight <= 800) {
-        //   if (this.nzPageSize === 5) {
-        //     this.nzPageSize = 4;
-        //     this.newData = true;
-        //     this.changePage();
-        //   }
-        // } else {
-        //   if (this.nzPageSize === 4) {
-        //     this.nzPageSize = 5;
-        //     this.newData = true;
-        //     this.changePage();
-        //   }
-        // }
-        // this.pageChange()
+
       });
     this.changPageTime();
   }
@@ -113,13 +93,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     const pagesize = Math.floor((divHeight - 50) / 64 + 0.2)
     this.nzPageSize = pagesize;
     this.newData = true;
-    console.log('smallTable', this.key,pagesize,  this.divBox.nativeElement.clientHeight)
+    console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)
     this.initDatas();
-    this.changePage(this.data, this.otherData, this.nzPageSize,true);
+    this.changePage(this.data, this.otherData, this.nzPageSize, true);
   }
-  initDatas(){
+  initDatas() {
     this.otherData = [...this.data];
-    this.showData=[];
+    this.showData = [];
 
   }
 
@@ -133,9 +113,12 @@ export class RpsTableComponent implements OnInit, OnDestroy {
         this.changePage(this.data, this.otherData, this.nzPageSize);
         this.nzTimer = setInterval(() => {
           this.changePage(this.data, this.otherData, this.nzPageSize);
+          console.log('time', time)
         }, time * 1000)
       }
     )
+
+    
   }
   /** 获取表头数据 */
   getHeadData() {
@@ -162,19 +145,19 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
   }
   /** 轮播 */
-  async changePage(allData: Data[], otherData: Data[], size: number,force:boolean=false) {
-    if(!force){
-      if (this.stopPage && this.showData.length>0) return;
+  async changePage(allData: Data[], otherData: Data[], size: number, force: boolean = false) {
+    if (!force) {
+      if (this.stopPage && this.showData.length > 0) return;
     }
 
     if (allData.length === 0) {
       return;
     }
-    if(size>=allData.length){
-      this.showData=[...allData];
+    if (size >= allData.length) {
+      this.showData = [...allData];
       return;
     }
-    console.log('do',this.key)
+    console.log('do', this.key)
     const ToRight = []
     for (const iterator of this.showData) {
       ToRight.push(iterator)
@@ -192,38 +175,17 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     for (const iterator of ToRight) {
       otherData.push(iterator);
     }
-    this.showData=[...this.showData]
+    this.showData = [...this.showData]
   }
-  // changePage() {
-  //   if (this.stopPage) return;
-  //   if (this.newData) {
-  //     this.newData = false;
-  //     this.nzTotal = this.data.length;
-  //     if (this.nzPageIndex !== 1) {
-  //       this.nzPageIndex = 1;
-  //     } else {
-  //       if (this.nzPageIndex * this.nzPageSize < this.nzTotal) {
-  //         this.nzPageIndex++;
-  //       } else {
-  //         this.nzPageIndex = 1;
-  //       }
-  //     }
-  //   } else {
-  //     if (this.nzPageIndex * this.nzPageSize < this.nzTotal) {
-  //       this.nzPageIndex++;
-  //     } else {
-  //       this.nzPageIndex = 1;
-  //     }
-  //   }
-  // }
+
   /** 获取状态 */
   getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
     if (type === '达成率') {
-      if (value < this.standard.complete.bad) {
+      if (value < this.rpsBoardService.standard.complete.bad) {
         // console.log('exception', value);
         return 'exception';
       }
-      else if (value > this.standard.complete.good) {
+      else if (value > this.rpsBoardService.standard.complete.good) {
         // console.log('success', value);
 
         return 'success'
@@ -234,10 +196,10 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
     }
     else if (type === '良率') {
-      if (value < this.standard.yield.bad) {
+      if (value < this.rpsBoardService.standard.yield.bad) {
         return 'exception'
       }
-      else if (value > this.standard.yield.good) {
+      else if (value > this.rpsBoardService.standard.yield.good) {
         return 'success'
       }
       else return 'active'
@@ -261,16 +223,5 @@ export class RpsTableComponent implements OnInit, OnDestroy {
 
   }
 
-  // visible(event, item, index) {
-  //   console.log('visible', index+1, event.visible,item)
 
-  //   this.rpsBoardService.visible(event, item, index, this.showData, this.otherData)
-  // }
-  // pageChangeInit(reset = true) {
-  //   console.log('pageChangeInit')
-  //   this.rpsBoardService.pageChangeInit(this.data, this.otherData, reset)
-  // }
-  // pageChange() {
-  //   this.rpsBoardService.changePage(this.data, this.otherData);
-  // }
 }

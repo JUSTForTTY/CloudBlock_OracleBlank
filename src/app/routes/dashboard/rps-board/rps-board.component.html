@@ -9,16 +9,18 @@
       <app-head [workShop]="workShop"></app-head>
 
     </div>
-    <div nz-row style="height: 95%;" [nzGutter]="4" [nzType]="null">
-      <div nz-col *ngFor="let item of rpsBoardService.fourBlock |keyvalue" [nzSpan]="rpsBoardService.isFullscreen?24:12"
-      [nzOrder]="item.value.sort"
-      [ngStyle]="{'height':(rpsBoardService.isFullscreen?100:50)+'%'}"
-        style="border:0px solid #c1eb06; padding-right: 10px;" >
-        <!-- 1  -->
-        <div style="height: 100%;" id="{{item.key}}" ryDomVisible (visible)="visible($event)" >
-          <app-rps-block [workShop]="item.value" [isFourBlock]="true"></app-rps-block>
+    <div nz-row style="height: 95%;" [nzGutter]="4">
+      <ng-container *ngFor="let item of rpsBoardService.fourBlock |keyvalue">
+        <div nz-col id="{{item.key}}" 
+          [nzSpan]="rpsBoardService.isFullscreen?24:12" [ngStyle]="{'height':(rpsBoardService.isFullscreen?100:50)+'%','display':!rpsBoardService.isFullscreen||item.value.sort===1?'block':'none'}"
+          style="border:0px solid #c1eb06; padding-right: 10px;">
+          <!-- 1  -->
+          <div style="height: 100%;"  ryDomVisible (visible)="visible($event)">
+            <app-rps-block [workShop]="item.value" [isFourBlock]="true"></app-rps-block>
+          </div>
         </div>
-      </div>
+      </ng-container>
+
 
 
     </div>

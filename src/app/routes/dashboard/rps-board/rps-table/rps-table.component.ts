@@ -91,7 +91,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     this.subscriptionF=this.rpsBoardService.fullscreen$.subscribe(
       data=>{
         setTimeout(() => {
-          this.changeSize()
+          if(this.rpsBoardService.isFullscreen){
+            if(this.workShop.sort===1){
+              this.changeSize()
+            }
+          }else{
+            this.changeSize()
+          }
         }, 10);
       }
     )
@@ -184,6 +190,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       otherData.push(iterator);
     }
     this.showData = [...this.showData]
+    console.log('showData',this.showData)
   }
 
   /** 获取状态 */

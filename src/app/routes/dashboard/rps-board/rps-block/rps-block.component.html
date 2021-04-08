@@ -64,8 +64,8 @@
         </div>
 
       </div>
-      <div style="margin-top: 5px;" class="success" [highlightType]="item.status"  ryChangBg   defaultColor="#192b53" *ngFor="let item of rightShow;index as i" ryDomVisible
-        (visible)="visible($event,item,i)" (click)="showErrorDetail(item);">
+      <div style="margin-top: 5px;" class="success" [highlightType]="item.status"  ryChangBg   defaultColor="#192b53" *ngFor="let item of rightShow;index as i" 
+      ryDomVisible (visible)="visible($event,item,i)" (click)="showErrorDetail(item);">
 
         <div nz-row class="shiftInfo-content">
           <div nz-col nzSpan="7">

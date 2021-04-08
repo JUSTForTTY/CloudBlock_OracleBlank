@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Data, getTestData, UrlData } from "./datas";
-import { fromEvent as observableFromEvent, of as observableOf, Subscriber } from 'rxjs';
+import { fromEvent as observableFromEvent, of as observableOf, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService, WorkShop, FactoryCode } from './rps-board.service';
@@ -19,9 +19,28 @@ export class RpsBoardComponent implements OnInit {
   constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
+  subscription: Subscription;
 
   ngOnInit() {
     this.getRouteParam();
+
+    this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
+      console.log('changeWorkShop',data)
+      if (data.obj.workShopCode==='-1' && data.newObj.workShopCode!=='-1') {
+        this.workShop=null;
+        setTimeout(() => {
+          this.workShop = {
+            workShopCode: data.newObj.workShopCode,
+            isAdding: false,
+            sort:1
+          }
+        }, 10);
+      }
+    })
+
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
 
   }
   queryParamStr = ""
@@ -50,6 +69,12 @@ export class RpsBoardComponent implements OnInit {
       workShopCode: this.workshopCode,
       isAdding: false,
       sort:1
+    }
+  }
+
+  visible(event){
+    if(event.visible){
+      this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
     }
   }
 

@@ -86,6 +86,7 @@ export class RpsBlockComponent implements OnInit {
 
   }
   subscription: Subscription;
+  subscriptionF: Subscription;
 
   ngOnInit() {
     console.log('window.screen.height', window.screen.width, window.screen.height)
@@ -128,6 +129,14 @@ export class RpsBlockComponent implements OnInit {
         this.getAllData();
       }
     })
+
+    this.subscriptionF=this.rpsBoardService.fullscreen$.subscribe(
+      data=>{
+        setTimeout(() => {
+          this.changeSize()
+        }, 10);
+      }
+    )
   }
 
 
@@ -331,6 +340,7 @@ export class RpsBlockComponent implements OnInit {
         }
       }
     }
+    this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
   }
   getAllData(errorCount = 0) {
     if(errorCount>=3) return;
@@ -415,7 +425,7 @@ export class RpsBlockComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-
+    this.subscriptionF.unsubscribe();
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
     }

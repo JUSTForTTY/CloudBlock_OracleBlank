@@ -41,6 +41,7 @@ export class RpsBoardService {
   isFullscreen = false;
   changePageTime = 15;
   pageChangeTime$: Subject<number> = new Subject();
+  fullscreen$: Subject<boolean> = new Subject();
   changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop }> = new Subject();
 
   standard = {

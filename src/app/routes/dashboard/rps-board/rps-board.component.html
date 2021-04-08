@@ -15,7 +15,7 @@
       [ngStyle]="{'height':(rpsBoardService.isFullscreen?100:50)+'%'}"
         style="border:0px solid #c1eb06; padding-right: 10px;" >
         <!-- 1  -->
-        <div style="height: 100%;" id="{{item.key}}">
+        <div style="height: 100%;" id="{{item.key}}" ryDomVisible (visible)="visible($event)" >
           <app-rps-block [workShop]="item.value" [isFourBlock]="true"></app-rps-block>
         </div>
       </div>

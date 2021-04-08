@@ -22,7 +22,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @Input() changePageTime = 15;
   subscription: Subscription;
   subscription2: Subscription;
-
+  subscriptionF: Subscription;
   @Input() key = 'SMT';
   testVis
   headData = {
@@ -87,6 +87,14 @@ export class RpsTableComponent implements OnInit, OnDestroy {
 
       });
     this.changPageTime();
+
+    this.subscriptionF=this.rpsBoardService.fullscreen$.subscribe(
+      data=>{
+        setTimeout(() => {
+          this.changeSize()
+        }, 10);
+      }
+    )
   }
   changeSize() {
     const divHeight = this.divBox.nativeElement.clientHeight;
@@ -211,6 +219,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       clearInterval(this.nzTimer);
     }
     this.subscription.unsubscribe();
+    this.subscriptionF.unsubscribe();
   }
   jump(data) {
     // f

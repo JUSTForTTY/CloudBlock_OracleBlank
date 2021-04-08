@@ -8,10 +8,11 @@
           <span style="color:#1e91de;line-height: 1;text-align: center;cursor: pointer;" [style.font-size]="fontSizeTitle1+'px'" (click)="isVisible=true;" >
             {{workShop.workShopCode}}
           </span>
+          <i nz-icon [nzType]="rpsBoardService.isFullscreen?'fullscreen-exit':'fullscreen'" style="cursor: pointer;color: #fff;" (click)="fullscreen()" nzTheme="outline"   [style.font-size]="fontSizeTitle1+'px'"></i>
         </div>
-        <div nz-col nzSpan="6" style="text-align: right;">
-          <i nz-icon [nzType]="rpsBoardService.isFullscreen?'fullscreen-exit':'fullscreen'" style="cursor: pointer;" (click)="fullscreen()" nzTheme="outline"  [style.font-size]="fontSizeTitle1+'px'"></i>
-        </div>
+        <!-- <div nz-col nzSpan="6" style="text-align: right;">
+          <i nz-icon [nzType]="rpsBoardService.isFullscreen?'fullscreen-exit':'fullscreen'" style="cursor: pointer;color: #fff;" (click)="fullscreen()" nzTheme="outline"   [style.font-size]="fontSizeTitle1+'px'"></i>
+        </div> -->
 
       </div>
      
@@ -166,7 +167,7 @@
     <div nz-row nzGutter="16">
       <div nz-col  nzSpan="6" *ngFor="let item of rpsBoardService.workshops" style="border:1px solid #000;color: #fff;cursor: pointer;" (click)="change(item)">
         <div style="font-size:xx-large;">{{item.workShopCode}}</div>
-        <div style="font-size:xx-large;">{{item.workShopCodeDes}}</div>
+        <!-- <div style="font-size:xx-large;">{{item.workShopCodeDes}}</div> -->
       </div>
 
     </div>

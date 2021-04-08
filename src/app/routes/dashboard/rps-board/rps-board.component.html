@@ -9,7 +9,7 @@
       <app-head [workShop]="workShop"></app-head>
 
     </div>
-    <div nz-row style="height: 95%;" [nzGutter]="4" [nzType]="rpsBoardService.isFullscreen?'flex':null">
+    <div nz-row style="height: 95%;" [nzGutter]="4" [nzType]="null">
       <div nz-col *ngFor="let item of rpsBoardService.fourBlock |keyvalue" [nzSpan]="rpsBoardService.isFullscreen?24:12"
       [nzOrder]="item.value.sort"
       [ngStyle]="{'height':(rpsBoardService.isFullscreen?100:50)+'%'}"

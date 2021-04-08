@@ -88,7 +88,7 @@ export class RpsBoardService {
   clearAll(allData: Data[], showData: Data[], otherData: Data[]) {
     showData.splice(0, showData.length)
     otherData.splice(0, otherData.length)
-    allData.splice(0, showData.length)
+    allData.splice(0, allData.length)
   }
 
   visible(event, item: Data, index, showData: Data[], otherData: Data[]) {

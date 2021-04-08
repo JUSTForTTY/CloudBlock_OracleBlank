@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Data, getTestData, UrlData } from "../datas";
-import { fromEvent as observableFromEvent, of as observableOf, Subscriber ,Subscription} from 'rxjs';
+import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
@@ -117,21 +117,14 @@ export class RpsBlockComponent implements OnInit {
     }, 15 * 1000)
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      console.log('changeWorkShop',data)
+      console.log('changeWorkShop', data)
       if (data.obj.sort === this.workShop.sort) {
-        this.workShop.workShopCode = data.newObj.workShopCode;
-        for (const lineData of this.allData) {
-    
-          for (const onedata of lineData) {
-            onedata.isLoading=true;
-          }
-        }
-        this.getAllData();
+        this.changeData(data.newObj)
       }
     })
 
-    this.subscriptionF=this.rpsBoardService.fullscreen$.subscribe(
-      data=>{
+    this.subscriptionF = this.rpsBoardService.fullscreen$.subscribe(
+      data => {
         setTimeout(() => {
           this.changeSize()
         }, 10);
@@ -139,7 +132,17 @@ export class RpsBlockComponent implements OnInit {
     )
   }
 
+  changeData(newWorkShop: WorkShop) {
+    this.workShop.workShopCode = newWorkShop.workShopCode;
+    for (const lineData of this.allData) {
 
+      for (const onedata of lineData) {
+        onedata.isLoading = true;
+      }
+    }
+    this.getAllData();
+    this.getErrorData();
+  }
 
   getErrorData() {
     let factoryCode = FactoryCode[this.workShop.workShopCode];
@@ -151,7 +154,7 @@ export class RpsBlockComponent implements OnInit {
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: CallUserInfo[], ErrorCode: number, Msg?: string }
       }) => {
-        // console.log('getErrorData', data)  ||
+        console.log('getErrorData', data)  
         if (data.data.ErrorCode === 0) {
           this.rightData = data.data.CallInfo;
           this.isError = false;
@@ -196,28 +199,7 @@ export class RpsBlockComponent implements OnInit {
         } else {
           this.isError = false
           this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
-          // this.rightData = [];
-          // for (let index = 0; index < 20; index++) {
-          //   this.rightData.push({
-          //     index: (index + 1),
-          //     "FBillNo": (index + 1) + '',
-          //     "FLocation": "SUZ21SMT-A",
-          //     "FReason": "XP异常中",
-          //     "FCallDate": "2021-03-23 22:27:03",
-          //     "FCallUser": "2011024",
-          //     "FCallUserName": "绪立成",
-          //     "FRespUser": "",
-          //     "FRespUserName": "",
-          //     "FMaintUserCode": "2011024",
-          //     "FMaintUserName": "绪立成",
-          //     "FRespDate": 3936,
-          //     "FMaintDate": 5754,
-          //     "FStopLineDate": 8002,
-          //     "FactoryCode": "SUZ01",
-          //     "FState": "已维修"
-          //   })
-          // }
-          // this.changeSize()
+          console.log('getErrorData', data.data.Msg,this.rightData, this.rightShow, this.rightOther)
 
         }
 
@@ -243,7 +225,7 @@ export class RpsBlockComponent implements OnInit {
     this.rightShow = [];
 
   }
- 
+
   async changePage(allData: ErrorInfo[], size: number, init: boolean = false) {
 
     if (init) {
@@ -325,26 +307,26 @@ export class RpsBlockComponent implements OnInit {
     //   }
     // }, 1);
   }
-  fullscreen(){
-    this.rpsBoardService.isFullscreen=!this.rpsBoardService.isFullscreen
-    if(this.rpsBoardService.isFullscreen){
-      this.workShop.oldSort=this.workShop.sort;
-      this.workShop.sort=1
-    }else{
+  fullscreen() {
+    this.rpsBoardService.isFullscreen = !this.rpsBoardService.isFullscreen
+    if (this.rpsBoardService.isFullscreen) {
+      this.workShop.oldSort = this.workShop.sort;
+      this.workShop.sort = 1
+    } else {
 
       for (const key in this.rpsBoardService.fourBlock) {
         if (Object.prototype.hasOwnProperty.call(this.rpsBoardService.fourBlock, key)) {
           const element = this.rpsBoardService.fourBlock[key];
-          if(element.oldSort) this.workShop.sort=element.oldSort;
-         delete element.oldSort;
+          if (element.oldSort) this.workShop.sort = element.oldSort;
+          delete element.oldSort;
         }
       }
     }
     this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
   }
   getAllData(errorCount = 0) {
-    if(errorCount>=3) return;
-    
+    if (errorCount >= 3) return;
+
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
     this.http.getHttp("/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
       for (const option of options) {
@@ -379,8 +361,8 @@ export class RpsBlockComponent implements OnInit {
 
     },
       error => {
-        console.error('getAllData',this.workShop.workShopCode)
-        this.getAllData(errorCount+1);
+        console.error('getAllData', this.workShop.workShopCode)
+        this.getAllData(errorCount + 1);
       })
     // SMT
 
@@ -421,6 +403,14 @@ export class RpsBlockComponent implements OnInit {
         if (this.lastHeight) this.lastHeight = window.innerHeight;
 
       });
+  }
+  isVisible = false;
+  change(workShop: WorkShop) {
+    if (this.workShop.workShopCode === workShop.workShopCode) return;
+
+    this.changeData(workShop)
+    this.isVisible = false;
+    // TODO
   }
 
   ngOnDestroy() {

@@ -8,7 +8,7 @@ import { orderBy, slice, map, groupBy } from 'lodash';
 import { TitleService } from '@delon/theme';
 
 
-const DefaultTitle='RPS看板-'
+const DefaultTitle = ' RPS看板'
 
 
 @Component({
@@ -28,24 +28,24 @@ export class RpsBoardComponent implements OnInit {
     this.getRouteParam();
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      console.log('changeWorkShop',data)
-      if (data.obj.workShopCode==='-1' && data.newObj.workShopCode!=='-1') {
-        this.workShop=null;
+      console.log('changeWorkShop', data)
+      if (data.obj.workShopCode === '-1' && data.newObj.workShopCode !== '-1') {
+        this.workShop = null;
         setTimeout(() => {
           this.workShop = {
             workShopCode: data.newObj.workShopCode,
             isAdding: false,
-            sort:1
+            sort: 1
           }
         }, 10);
-        this.titleSrv.setTitle(DefaultTitle+data.newObj.workShopCode)
+        this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
 
-      }else{
-        if(data.newObj.workShopCode==='-1'){
-          this.titleSrv.setTitle(DefaultTitle+'全厂')
-        }else{
-          if(!this.rpsBoardService.isFour)
-          this.titleSrv.setTitle(DefaultTitle+data.newObj.workShopCode)
+      } else {
+        if (data.newObj.workShopCode === '-1') {
+          this.titleSrv.setTitle('全厂' + DefaultTitle)
+        } else {
+          if (!this.rpsBoardService.isFour)
+            this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
         }
 
       }
@@ -75,22 +75,22 @@ export class RpsBoardComponent implements OnInit {
     this.workshopCode = this.pageService.getRouteParams(this.route, 'workshopCode', path);
     if (!this.workshopCode) this.workshopCode = '-1';
     console.log('workshopCode,shiftTypeCode', this.workshopCode);
-    if(this.workshopCode==='-1'){
-      this.rpsBoardService.isFour=true;
-      this.titleSrv.setTitle(DefaultTitle+'全厂')
-    }else{
-      this.titleSrv.setTitle(DefaultTitle+this.workshopCode)
+    if (this.workshopCode === '-1') {
+      this.rpsBoardService.isFour = true;
+      this.titleSrv.setTitle('全厂' + DefaultTitle)
+    } else {
+      this.titleSrv.setTitle(this.workshopCode + DefaultTitle)
 
     }
     this.workShop = {
       workShopCode: this.workshopCode,
       isAdding: false,
-      sort:1
+      sort: 1
     }
   }
 
-  visible(event){
-    if(event.visible){
+  visible(event) {
+    if (event.visible) {
       this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
     }
   }

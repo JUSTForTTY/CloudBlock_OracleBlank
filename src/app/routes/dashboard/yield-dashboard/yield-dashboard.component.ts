@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@env/environment';
+import { TitleService } from '@delon/theme';
 
 const resource_url = environment.RESOURCE_SERVER_URL;
 @Component({
@@ -57,7 +58,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   nowTime = Date.now();
 
-  constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute) {
+  constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute, private titleSrv: TitleService,) {
     this.timer = setTimeout(this.setData, 0);
     this.clocktimer = setTimeout(this.getClock, 0);
     //this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
@@ -129,6 +130,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.prolineName = this.prolineCode
     }
+    this.titleSrv.setTitle(this.prolineCode + '看板(' + this.prolineType+')')
 
   }
 

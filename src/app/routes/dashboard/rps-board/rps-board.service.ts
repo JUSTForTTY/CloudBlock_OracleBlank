@@ -26,8 +26,8 @@ export interface WorkShop {
   workShopCode?: string
   workShopCodeDes?: string
   workShopSn?: string;
-  isAdding: boolean;
-  sort: number;
+  isAdding?: boolean;
+  sort?: number;
   oldSort?: number;
 
 }
@@ -37,7 +37,7 @@ export interface BlockData {
 interface Data { index?: number, [key: string]: any }
 @Injectable()
 export class RpsBoardService {
-  isFour=false;
+  isFour = false;
   isFullscreen = false;
   changePageTime = 15;
   pageChangeTime$: Subject<number> = new Subject();

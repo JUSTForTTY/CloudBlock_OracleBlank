@@ -33,6 +33,9 @@ export class HeadComponent implements OnInit, OnDestroy {
 
   }
   showChange() {
+    if(this.rpsBoardService.isFour){
+      return;
+    }
     this.isVisible = true;
   }
   change(workShop: WorkShop) {

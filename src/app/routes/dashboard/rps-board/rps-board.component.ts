@@ -60,6 +60,7 @@ export class RpsBoardComponent implements OnInit {
   workshopCode = '';
   workShop: WorkShop
   getRouteParam() {
+    console.log('getRouteParam')
     let path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, path);

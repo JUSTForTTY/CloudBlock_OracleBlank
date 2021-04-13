@@ -25,6 +25,8 @@ export class RpsBoardComponent implements OnInit {
   }
   subscription: Subscription;
   ngOnInit() {
+    this.rpsBoardService.isFour = false;
+    this.rpsBoardService.isFullscreen=false;
     this.getRouteParam();
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
@@ -60,7 +62,7 @@ export class RpsBoardComponent implements OnInit {
   workshopCode = '';
   workShop: WorkShop
   getRouteParam() {
-    console.log('getRouteParam')
+    console.log('getRouteParam workshopCode')
     let path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, path);
@@ -75,14 +77,16 @@ export class RpsBoardComponent implements OnInit {
     //  this.activatedRoute 需保证准确
     this.workshopCode = this.pageService.getRouteParams(this.route, 'workshopCode', path);
     if (!this.workshopCode) this.workshopCode = '-1';
-    console.log('workshopCode,shiftTypeCode', this.workshopCode);
     if (this.workshopCode === '-1') {
       this.rpsBoardService.isFour = true;
       this.titleSrv.setTitle('全厂' + DefaultTitle)
     } else {
+      this.rpsBoardService.isFour = false;
       this.titleSrv.setTitle(this.workshopCode + DefaultTitle)
 
     }
+    console.log('workshopCode,shiftTypeCode', this.workshopCode, this.rpsBoardService.isFour);
+
     this.workShop = {
       workShopCode: this.workshopCode,
       isAdding: false,

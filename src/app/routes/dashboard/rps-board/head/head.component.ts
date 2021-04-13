@@ -39,7 +39,7 @@ export class HeadComponent implements OnInit, OnDestroy {
     this.isVisible = true;
   }
   change(workShop: WorkShop) {
-    console.log('change',this.workShop,workShop)
+    console.log('change changeWorkShop',this.workShop,workShop)
     if(this.workShop.workShopCode===workShop.workShopCode) return;
     if(workShop.workShopCode==='-1'){
       this.rpsBoardService.isFour=true;

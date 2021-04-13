@@ -15,7 +15,7 @@ const resource_url = environment.RESOURCE_SERVER_URL;
  * 查询产线良率看板，支持传入产线代码进行查询，可以拓展将所有产线进行分批显示
  */
 export class YieldDashboardComponent implements OnInit, OnDestroy {
-
+  document = document;
   timer: any;
   usertimer: any;
   clocktimer: any;
@@ -102,8 +102,14 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
     this.usertimer = setTimeout(this.getCurrentUserGroup, 2 * 60 * 1000);
   }
-
+  isBack=false
   ngOnInit() {
+    console.log('document.referrer',document.referrer)
+    if(document.referrer){
+    // if(!document.referrer || (document.referrer  && (!document.referrer.includes('workshopCode=-1') && document.referrer.includes('v1?workshopCode'))) ){
+      //
+      this.isBack=true;
+    }
     this.path = this.pageService.getPathByRoute(this.route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(this.route, this.path);
@@ -130,7 +136,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.prolineName = this.prolineCode
     }
-    this.titleSrv.setTitle(this.prolineCode + '看板(' + this.prolineType+')')
+    this.titleSrv.setTitle(this.prolineCode + '看板(' + this.prolineType + ')')
 
   }
 
@@ -298,7 +304,10 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     console.log("用户组数据", this.userGroupData);
 
   }
+  goBack(){
+          window.history.back();
 
+  }
 
   ngOnDestroy(): void {
     clearInterval(this.timer);

@@ -4,6 +4,7 @@ import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
 import { RpsBoardService, WorkShop } from '../rps-board.service';
 import { Subscription } from 'rxjs/Subscription';
 import { NzTableComponent } from 'ng-zorro-antd';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rps-table',
@@ -43,7 +44,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @ViewChild('divBox') divBox: ElementRef;
 
 
-  constructor(private rpsBoardService: RpsBoardService) { }
+  constructor(private rpsBoardService: RpsBoardService,private router: Router, ) { }
 
   ngOnInit() {
     let i = 0;
@@ -232,10 +233,18 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     // f
     const { prolineCode } = data;
     const prolineType = this.key.includes('SMT') ? 'smt' : 'be'
-    const url = location.origin + `/fullscreen/dashboard/yieldDashboard?prolineCode=${prolineCode}&prolineType=${prolineType}`;
+    const urlend=`/fullscreen/dashboard/yieldDashboard?prolineCode=${prolineCode}&prolineType=${prolineType}`;
+    const url = location.origin + urlend
     console.log('url', this.key, url, data)
+    if(this.rpsBoardService.isFour){
+      window.open(url);
 
-    window.open(url);
+    }else{
+      this.router.navigateByUrl(urlend)
+
+      // window.history.back();
+    }
+
 
   }
 

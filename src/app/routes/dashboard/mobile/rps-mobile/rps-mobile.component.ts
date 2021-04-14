@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Data, getTestData, UrlData } from "../../rps-board/datas";
-import { fromEvent as observableFromEvent, of as observableOf, Subscriber } from 'rxjs';
+import { fromEvent as observableFromEvent, of as observableOf, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService } from '../../rps-board/rps-board.service';
@@ -51,7 +51,7 @@ const options: {
   styleUrls: ['./rps-mobile.component.less']
 })
 export class RpsMobileComponent implements OnInit {
-
+  subscription: Subscription;
   hidden: boolean = false;
   fullScreen: boolean = true;
   topFlag: boolean = false;
@@ -86,11 +86,11 @@ export class RpsMobileComponent implements OnInit {
     this.fullScreen = !this.fullScreen;
     this.tabbarStyle = this.fullScreen
       ? {
-          position: 'fixed',
-          height: '100%',
-          width: '100%',
-          top: 0
-        }
+        position: 'fixed',
+        height: '100%',
+        width: '100%',
+        top: 0
+      }
       : { height: '400px' };
   }
 
@@ -176,7 +176,7 @@ export class RpsMobileComponent implements OnInit {
 
   @ViewChild('errodHead') errodHead: ElementRef;
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService,private rpsMobileService:RpsMobileService,private rpsBoardService: RpsBoardService) {
+  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, private rpsMobileService: RpsMobileService, private rpsBoardService: RpsBoardService) {
 
   }
 
@@ -201,13 +201,16 @@ export class RpsMobileComponent implements OnInit {
     this.getAllData();
     this.dataTimer = setInterval(() => {
       this.getAllData();
-      this.getErrorData();
+      // this.getErrorData();
     }, 5 * 60 * 1000)
 
     // this.getErrorData()
     // this.rightTimer = setInterval(() => {
     //   this.changePage(this.rightData, this.nzPageSize);
     // }, 15 * 1000)
+    this.subscription = this.rpsMobileService.changeWorkshop$.subscribe(data => {
+      this.getAllData();
+    })
   }
 
 
@@ -400,8 +403,9 @@ export class RpsMobileComponent implements OnInit {
   getAllData() {
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.rpsMobileService.workshopCode).subscribe((data: UrlData) => {
     this.http.getHttp("/yieldDashboard/worksectionData/" + this.rpsMobileService.workshopCode).subscribe((data: UrlData) => {
+      console.log('mobile data', data,this.rpsMobileService.workshopCode);
+
       for (const option of options) {
-        console.log('mobile data', option.key, data);
         const dataList = data.data[option.key];
         if (dataList) {
           this.allData[option.index[0]][option.index[1]].isLoading = true;
@@ -477,7 +481,10 @@ export class RpsMobileComponent implements OnInit {
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
     }
+    this.subscription.unsubscribe();
+
   }
+
   queryParamStr = ""
   getRouteParam() {
     let path = this.pageService.getPathByRoute(this.route);

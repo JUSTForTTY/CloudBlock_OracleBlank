@@ -282,7 +282,8 @@ export class ListComponent implements OnInit, OnDestroy {
   onChange(value) {
     console.log(value);
     this.show = false;
-    this.rpsMobileService.workshopCode=value[0];
+    this.rpsMobileService.workshopCode = value[0];
+    this.rpsMobileService.changeWorkshop$.next(value[0])
   }
 
   handleClick(e) {
@@ -290,7 +291,20 @@ export class ListComponent implements OnInit, OnDestroy {
     this.show = !this.show;
     if (!this.initData) {
       setTimeout(() => {
+        this.data = [
+          {
+            value: '-1',
+            label: '全场'
+          }
+        ]
+        for (const iterator of this.rpsBoardService.workshops) {
+          this.data.push({
+            value: iterator.workShopCode,
+            label: iterator.workShopCode
+          })
+        }
         this.initData = this.data;
+
       }, 500);
     }
   }

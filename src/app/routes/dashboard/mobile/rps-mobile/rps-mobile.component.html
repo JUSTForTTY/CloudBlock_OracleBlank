@@ -1,0 +1,49 @@
+<ng-template #icon1>
+  <div style="width:22px;height: 22px;background: url('./assets/img/工段2.svg') center center / 21px 21px no-repeat;">
+  </div>
+  <!-- <nz-avatar nzText="SMT"></nz-avatar> -->
+
+</ng-template>
+<ng-template #icon11>
+  <div style="width:22px;height: 22px;background: url('./assets/img/工段.svg') center center / 21px 21px no-repeat;">
+  </div>
+</ng-template>
+<TabBar [barTintColor]="'white'" [tintColor]="tintColor" [unselectedTintColor]="unselectedTintColor"
+  [ngStyle]="tabbarStyle" [activeTab]="selectedIndex" [hidden]="hidden" [tabBarPosition]="topFlag ? 'top' : 'bottom'"
+  (onPress)="tabBarTabOnPress($event)">
+  <TabBarItem [title]="'SMT'" [key]="1" [icon]="icon1" [selectedIcon]="icon11">
+
+    <div class="contentDiv">
+      <!-- SMT -->
+
+      <app-list *ngIf="!allData[0][0].isLoading" [datas]="allData[0][0].data"></app-list>
+
+    </div>
+  </TabBarItem>
+  <TabBarItem [title]="'WAVE'" [key]="2" [icon]="icon1" [selectedIcon]="icon11">
+
+    <div class="contentDiv">
+      <!-- WAVE -->
+ 
+      <app-list *ngIf="!allData[0][1].isLoading" [datas]="allData[0][1].data"></app-list>
+
+    </div>
+  </TabBarItem>
+  <TabBarItem [title]="'COATING'" [key]="3" [icon]="icon1" [selectedIcon]="icon11">
+
+    <div class="contentDiv">
+      <!-- COATING -->
+      <app-list *ngIf="!allData[1][0].isLoading" [datas]="allData[1][0].data"></app-list>
+
+    </div>
+  </TabBarItem>
+  <TabBarItem [title]="'ATP'" [key]="4" [icon]="icon1" [selectedIcon]="icon11">
+
+    <div class="contentDiv">
+      <!-- ATP -->
+      <app-list *ngIf="!allData[1][1].isLoading" [datas]="allData[1][1].data"></app-list>
+
+    </div>
+  </TabBarItem>
+
+</TabBar>

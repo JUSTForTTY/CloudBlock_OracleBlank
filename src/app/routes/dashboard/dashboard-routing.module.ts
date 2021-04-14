@@ -16,6 +16,10 @@ const routes: Routes = [
     path: 'rpsboard',
     loadChildren: './rps-board/rps-board.module#RpsBoardModule'
   },
+  {
+    path: 'rpsboard-mobile',
+    loadChildren: './mobile/rps-mobile/rps-mobile.module#RpsMobileModule'
+  },
 ];
 
 @NgModule({

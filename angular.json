@@ -32,7 +32,8 @@
               }
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less",
+              "node_modules/ng-zorro-antd-mobile/src/ng-zorro-antd-mobile.min.css"
             ],
             "scripts": [
               "node_modules/@antv/data-set/dist/data-set.min.js",

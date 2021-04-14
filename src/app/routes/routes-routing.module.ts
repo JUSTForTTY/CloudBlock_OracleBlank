@@ -6,13 +6,9 @@ import { LayoutDefaultComponent } from '../layout/default/default.component';
 import { LayoutFullScreenComponent } from '../layout/fullscreen/fullscreen.component';
 import { LayoutPassportComponent } from '../layout/passport/passport.component';
 // dashboard pages
-import { DashboardWorkplaceComponent } from './workplace/workplace.component';
 
 // passport pages
-import { UserLoginComponent } from './passport/login/login.component';
-import { UserRegisterComponent } from './passport/register/register.component';
-import { UserRegisterResultComponent } from './passport/register-result/register-result.component';
-import { AuthLoginComponent } from './passport/auth-login/auth-login.component';
+
 // single pages
 import { CallbackComponent } from './callback/callback.component';
 import { Exception403Component } from './exception/403.component';

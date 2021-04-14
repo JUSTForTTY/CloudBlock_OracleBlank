@@ -18,38 +18,44 @@
       
 <ng-container *ngIf="showData">
   <div style="padding-top: 75px;"></div>
-  <List *ngFor="let data of showData" [renderHeader]='data.prolineCode'>
-    <ListItem thumb="./assets/img/计划.svg">
-      <ng-container *ngIf="data.isNull==='0';">
-        无排产
-      </ng-container>
-      <ng-container *ngIf="data.isNull==='1';">
-        产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;{{data.planNums===0?'':'计划：'+data.planNums}}
-        <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
-      </ng-container>
-      <Brief>
-        <span style="display: flex;flex-wrap: nowrap; align-items:center;">
-          <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate"
-            style="width: 75%;margin-right: 8px;" [nzStatus]="data.completeStatus" [nzShowInfo]="false">
-          </nz-progress>
-          {{ data.planAchievementRate }}%
-        </span>
-      </Brief>
-    </ListItem>
-    <ListItem thumb="./assets/img/质量.svg">
-      <ng-container *ngIf="data.isNull==='0'">
-        无排产
-      </ng-container>
-      <ng-container *ngIf="data.isNull==='1'">
-        良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
-      </ng-container>
-      <Brief>
-        <span style="display: flex;flex-wrap: nowrap; align-items:center; ">
-          <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"
-            style="width: 75%;margin-right: 8px;"></nz-progress>
-          {{ data.yield }}%
-        </span>
-      </Brief>
-    </ListItem>
-  </List>
+  <ng-container *ngIf="!showData.length">
+    <div style="padding-top: 150px;">无数据</div>
+  </ng-container>
+  <ng-container *ngIf="showData.length">
+    <List  *ngFor="let data of showData" [renderHeader]='data.prolineCode'>
+      <ListItem thumb="./assets/img/计划.svg">
+        <ng-container *ngIf="data.isNull==='0';">
+          无排产
+        </ng-container>
+        <ng-container *ngIf="data.isNull==='1';">
+          产出：{{data.badNums+data.goodNums}}&nbsp;&nbsp;{{data.planNums===0?'':'计划：'+data.planNums}}
+          <nz-tag *ngIf="!data.planNums" [nzColor]="'#f5222d'">无产出计划</nz-tag>
+        </ng-container>
+        <Brief>
+          <span style="display: flex;flex-wrap: nowrap; align-items:center;">
+            <nz-progress [nzPercent]="data.planAchievementRate>100?100:data.planAchievementRate"
+              style="width: 75%;margin-right: 8px;" [nzStatus]="data.completeStatus" [nzShowInfo]="false">
+            </nz-progress>
+            {{ data.planAchievementRate }}%
+          </span>
+        </Brief>
+      </ListItem>
+      <ListItem thumb="./assets/img/质量.svg">
+        <ng-container *ngIf="data.isNull==='0'">
+          无排产
+        </ng-container>
+        <ng-container *ngIf="data.isNull==='1'">
+          良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
+        </ng-container>
+        <Brief>
+          <span style="display: flex;flex-wrap: nowrap; align-items:center; ">
+            <nz-progress [nzPercent]="data.yield" [nzStatus]="data.yieldStatus" [nzShowInfo]="false"
+              style="width: 75%;margin-right: 8px;"></nz-progress>
+            {{ data.yield }}%
+          </span>
+        </Brief>
+      </ListItem>
+    </List>
+  </ng-container>
+  
 </ng-container>

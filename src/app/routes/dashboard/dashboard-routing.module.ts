@@ -6,6 +6,7 @@ import { RpsBoardComponent } from './rps-board/rps-board.component';
 
 
 const routes: Routes = [
+  { path: '', redirectTo: 'rpsboard-mobile',pathMatch:'full' },
   { path: 'yieldDashboard', component: YieldDashboardComponent, data: { title: '良率报表' } },
   { path: 'performancetest', component: PerformanceTestComponent, data: { title: '性能测试' } },
   {

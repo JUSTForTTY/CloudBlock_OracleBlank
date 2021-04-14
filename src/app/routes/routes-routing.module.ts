@@ -22,67 +22,19 @@ import { Exception500Component } from './exception/500.component';
 import { IndexComponent } from './index/index.component';
 
 const routes: Routes = [
-    {
-        path: 'default',
-        component: LayoutDefaultComponent,
-        children: [
-            { path: 'workplace', component: DashboardWorkplaceComponent, data: { title: '控制台' } },
-            { path: 'pages', loadChildren: './pages/pages.module#PagesModule' }//test测试页面
-            // 业务子模块
-            // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
-        ]
-    },
-    {
-        path: '',
-        component: LayoutDefaultComponent,
-        children: [
-            { path: '', component: DashboardWorkplaceComponent, data: { title: '控制台' } }
+
+    { path: '', redirectTo: 'fullscreen/dashboard',pathMatch:'full' },
 
 
-        ]
-    },
-    //工作流
-    {
-        path: 'workflow', loadChildren: './workflow/workflow.module#WorkflowModule', data: { title: '工作流' },
-        component: LayoutDefaultComponent,
-
-    },
-    //模块管理
-    {
-
-        path: 'block', loadChildren: './myblock/myblock.module#MyblockModule', data: { title: '模块管理' },
-        component: LayoutDefaultComponent,
-
-    },
-    //组织权限
-    {
-
-        path: 'authority', loadChildren: './organizational/organizational.module#OrganizationalModule', data: { title: '组织权限' },
-        component: LayoutDefaultComponent,
-
-    },
     // 全屏布局
     {
         path: 'fullscreen',
         component: LayoutFullScreenComponent,
         children: [
-            { path: 'default/pages', loadChildren: './pages/pages.module#PagesModule' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-            { path: 'auth-login', component: AuthLoginComponent, data: { title: '授权登录' } }
         ]
     },
 
-    // passport
-    {
-        path: '',
-        component: LayoutPassportComponent,
-        children: [
-            { path: '', redirectTo: 'login',pathMatch:'full' },
-            { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
-            { path: 'register', component: UserRegisterComponent },
-            { path: 'register-result', component: UserRegisterResultComponent }
-        ]
-    },
     // 单页不包裹Layout
     { path: 'callback/:type', component: CallbackComponent },
     { path: '403', component: Exception403Component },

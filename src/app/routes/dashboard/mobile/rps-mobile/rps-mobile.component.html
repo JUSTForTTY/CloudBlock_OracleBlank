@@ -11,7 +11,7 @@
 <TabBar [barTintColor]="'white'" [tintColor]="tintColor" [unselectedTintColor]="unselectedTintColor"
   [ngStyle]="tabbarStyle" [activeTab]="selectedIndex" [hidden]="hidden" [tabBarPosition]="topFlag ? 'top' : 'bottom'"
   (onPress)="tabBarTabOnPress($event)">
-  <TabBarItem [title]="'SMT'" [key]="1" [icon]="icon1" [selectedIcon]="icon11">
+  <TabBarItem [title]="'SMT'" [key]="1" [icon]="icon1" [selectedIcon]="icon11" [badge]="allData[0][0].data?.length || 0">
 
     <div class="contentDiv">
       <!-- SMT -->
@@ -20,7 +20,7 @@
 
     </div>
   </TabBarItem>
-  <TabBarItem [title]="'WAVE'" [key]="2" [icon]="icon1" [selectedIcon]="icon11">
+  <TabBarItem [title]="'WAVE'" [key]="2" [icon]="icon1" [selectedIcon]="icon11" [badge]="allData[0][1].data?.length || 0">
 
     <div class="contentDiv">
       <!-- WAVE -->
@@ -29,7 +29,7 @@
 
     </div>
   </TabBarItem>
-  <TabBarItem [title]="'COATING'" [key]="3" [icon]="icon1" [selectedIcon]="icon11">
+  <TabBarItem [title]="'COATING'" [key]="3" [icon]="icon1" [selectedIcon]="icon11" [badge]="allData[1][0].data?.length || 0">
 
     <div class="contentDiv">
       <!-- COATING -->
@@ -37,7 +37,7 @@
 
     </div>
   </TabBarItem>
-  <TabBarItem [title]="'ATP'" [key]="4" [icon]="icon1" [selectedIcon]="icon11">
+  <TabBarItem [title]="'ATP'" [key]="4" [icon]="icon1" [selectedIcon]="icon11" [badge]="allData[1][1].data?.length || 0">
 
     <div class="contentDiv">
       <!-- ATP -->

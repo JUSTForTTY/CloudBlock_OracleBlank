@@ -11,8 +11,9 @@ import { ErrorDetailComponent } from './error-detail/error-detail.component';
 import { ChangeBgDirective } from "./changBg.directive";
 import { RpsBlockComponent } from './rps-block/rps-block.component';
 import { HeadComponent } from './head/head.component';
+import { TimerComponent } from './timer/timer.component';
 @NgModule({
-  declarations: [RpsBoardComponent,ChangeBgDirective, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent],
+  declarations: [RpsBoardComponent,ChangeBgDirective, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent, TimerComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,

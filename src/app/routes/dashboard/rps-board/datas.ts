@@ -12,10 +12,10 @@ export interface Data {
     planError?: string;
     completeStatus?: 'success' | 'exception' | 'active';
     yieldStatus?: 'success' | 'exception' | 'active';
-    planNums?:number;
-    /** 0-无排产 1-未排产 */
-    isNull?: '0'|'1';
-    index?:number;
+    planNums?: number;
+    /** 0-无排产 1-正常 3-试产 2-保养 */
+    isNull?: '0' | '1' | '2' | '3';
+    index?: number;
 }
 export interface UrlData {
     [key: string]: any;

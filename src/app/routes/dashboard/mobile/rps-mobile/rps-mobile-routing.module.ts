@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'select',pathMatch:'full' },
 
   { path: 'v1', component: RpsMobileComponent, data: { title: 'RPS看板' } },
-  { path: 'select', component: SelectComponent, data: { title: '选择车间' } },
+  { path: 'select', component: SelectComponent, data: { title: 'RPS看板' } },
 
 
 ];

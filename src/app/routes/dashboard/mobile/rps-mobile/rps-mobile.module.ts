@@ -7,9 +7,10 @@ import { ListComponent } from './list/list.component';
 import { RpsBoardService } from "../../rps-board/rps-board.service";
 import { RpsMobileService } from "./rps-mobile.service";
 import { SharedModule } from '@shared/shared.module';
+import { SelectComponent } from './select/select.component';
 
 @NgModule({
-  declarations: [RpsMobileComponent, ListComponent],
+  declarations: [RpsMobileComponent, ListComponent, SelectComponent],
   imports: [
     RpsMobileRoutingModule,
     NgZorroAntdMobileModule,

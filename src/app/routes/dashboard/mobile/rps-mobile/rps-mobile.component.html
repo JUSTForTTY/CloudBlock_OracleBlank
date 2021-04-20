@@ -12,10 +12,9 @@
   [ngStyle]="tabbarStyle" [activeTab]="selectedIndex" [hidden]="hidden" [tabBarPosition]="topFlag ? 'top' : 'bottom'"
   (onPress)="tabBarTabOnPress($event)">
   <TabBarItem [title]="'SMT'" [key]="1" [icon]="icon1" [selectedIcon]="icon11" [badge]="allData[0][0].data?.length || 0">
-
     <div class="contentDiv">
       <!-- SMT -->
-
+      <ng-container *ngIf="allData[0][0].isLoading"><div style="padding-top: 20%;">加载中....</div></ng-container>
       <app-list *ngIf="!allData[0][0].isLoading" [datas]="allData[0][0].data"></app-list>
 
     </div>

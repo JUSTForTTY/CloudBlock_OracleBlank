@@ -1,11 +1,11 @@
 <List  renderHeader="选择车间">
-  <ListItem *ngFor="let data of rpsBoardService.workshops">
-    <a [routerLink]="['/fullscreen/dashboard/rpsboard-mobile/v1']"  [queryParams]="{workshopCode:data.workShopCode}"> {{data.workShopCode}}</a>
+  <ListItem *ngFor="let data of rpsBoardService.workshops" (onClick)="onClick(data.workShopCode)">
+    {{data.workShopCode}}
     <!-- <Brief>
       {{data.workShopCode}}
     </Brief> -->
   </ListItem>
-  <ListItem>
-    <a [routerLink]="['/fullscreen/dashboard/rpsboard-mobile/v1']"  [queryParams]="{workshopCode:-1}"> 全厂</a>
+  <ListItem (onClick)="onClick(-1)">
+     全厂
   </ListItem>
 </List>

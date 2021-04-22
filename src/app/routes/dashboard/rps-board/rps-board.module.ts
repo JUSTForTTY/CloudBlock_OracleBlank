@@ -13,12 +13,13 @@ import { RpsBlockComponent } from './rps-block/rps-block.component';
 import { HeadComponent } from './head/head.component';
 import { TimerComponent } from './timer/timer.component';
 @NgModule({
-  declarations: [RpsBoardComponent,ChangeBgDirective, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent, TimerComponent],
+  declarations: [RpsBoardComponent, ChangeBgDirective, RpsTableComponent, DomVisibleDirective, HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent, TimerComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,
     SharedModule
   ],
-  providers:[RpsBoardService]
+  exports: [RpsBoardComponent, ChangeBgDirective, RpsTableComponent, DomVisibleDirective, HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent, TimerComponent],
+  // providers: [RpsBoardService]
 })
 export class RpsBoardModule { }

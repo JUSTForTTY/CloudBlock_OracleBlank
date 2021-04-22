@@ -8,13 +8,14 @@ import { RpsBoardService } from "../../rps-board/rps-board.service";
 import { RpsMobileService } from "./rps-mobile.service";
 import { SharedModule } from '@shared/shared.module';
 import { SelectComponent } from './select/select.component';
-
+import { RpsBoardModule } from "../../rps-board/rps-board.module";
 @NgModule({
   declarations: [RpsMobileComponent, ListComponent, SelectComponent],
   imports: [
     RpsMobileRoutingModule,
     NgZorroAntdMobileModule,
-    CommonModule, SharedModule
+    CommonModule, SharedModule,
+    RpsBoardModule
   ],
   providers: [RpsBoardService, RpsMobileService]
 })

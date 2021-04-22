@@ -45,11 +45,10 @@
     </div>
   </TabBarItem>
 
-  <TabBarItem [title]="'异常'" [key]="4" [icon]="icon1" [selectedIcon]="icon11">
+  <TabBarItem [title]="'异常'" [key]="4" [icon]="icon1" [selectedIcon]="icon11" [badge]="error.rightData.length">
 
     <div class="contentDiv">
-      <app-list *ngIf="!allData[1][1].isLoading" [datas]="allData[1][1].data"></app-list>
-
+      <app-rps-block #error [workShopCode]="rpsMobileService.workshopCode"></app-rps-block>
     </div>
   </TabBarItem>
 

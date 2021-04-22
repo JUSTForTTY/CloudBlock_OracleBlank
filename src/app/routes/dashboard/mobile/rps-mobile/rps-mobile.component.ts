@@ -176,7 +176,7 @@ export class RpsMobileComponent implements OnInit {
 
   @ViewChild('errodHead') errodHead: ElementRef;
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, private rpsMobileService: RpsMobileService, private rpsBoardService: RpsBoardService) {
+  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, public rpsMobileService: RpsMobileService, private rpsBoardService: RpsBoardService) {
 
   }
 

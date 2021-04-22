@@ -282,8 +282,13 @@ export class ListComponent implements OnInit, OnDestroy {
   onChange(value) {
     console.log(value);
     this.show = false;
+
     this.rpsMobileService.workshopCode = value[0];
     this.rpsMobileService.changeWorkshop$.next(value[0])
+    this.rpsBoardService.changeWorkShop$.next({
+      obj: {},
+      newObj: { workShopCode: value[0] }
+    })
   }
 
   handleClick(e) {

@@ -401,9 +401,12 @@ export class RpsMobileComponent implements OnInit {
     // }, 1);
   }
   getAllData() {
+    for (const option of options) {
+      this.allData[option.index[0]][option.index[1]].isLoading = true;
+    }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.rpsMobileService.workshopCode).subscribe((data: UrlData) => {
     this.http.getHttp("/yieldDashboard/worksectionData/" + this.rpsMobileService.workshopCode).subscribe((data: UrlData) => {
-      console.log('mobile data', data,this.rpsMobileService.workshopCode);
+      console.log('mobile data', data, this.rpsMobileService.workshopCode);
 
       for (const option of options) {
         const dataList = data.data[option.key];

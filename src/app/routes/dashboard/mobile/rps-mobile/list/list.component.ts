@@ -294,7 +294,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.data = [
           {
             value: '-1',
-            label: '全场'
+            label: '全厂'
           }
         ]
         for (const iterator of this.rpsBoardService.workshops) {

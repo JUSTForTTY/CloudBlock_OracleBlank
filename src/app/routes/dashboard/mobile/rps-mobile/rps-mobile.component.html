@@ -45,4 +45,12 @@
     </div>
   </TabBarItem>
 
+  <TabBarItem [title]="'异常'" [key]="4" [icon]="icon1" [selectedIcon]="icon11">
+
+    <div class="contentDiv">
+      <app-list *ngIf="!allData[1][1].isLoading" [datas]="allData[1][1].data"></app-list>
+
+    </div>
+  </TabBarItem>
+
 </TabBar>

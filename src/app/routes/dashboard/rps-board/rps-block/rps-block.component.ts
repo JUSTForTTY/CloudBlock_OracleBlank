@@ -102,7 +102,7 @@ export class RpsBlockComponent implements OnInit {
       this.fontSizeTitle2 = 18;//二级标题
       this.tableSize = "small";
     }
-    this.autoSize();
+    // this.autoSize();
 
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
@@ -115,36 +115,36 @@ export class RpsBlockComponent implements OnInit {
     }
 
     this.initData();
-    this.getAllData();
+    // this.getAllData();
     this.getErrorData()
 
-    this.dataTimer = setInterval(() => {
-      this.getErrorData();
-    }, 5 * 60 * 1000)
+    // this.dataTimer = setInterval(() => {
+    //   this.getErrorData();
+    // }, 5 * 60 * 1000)
 
     this.errorTimer = setInterval(() => {
       this.getErrorData();
     }, 60 * 1000)
 
-    this.rightTimer = setInterval(() => {
-      this.changePage(this.rightData, this.nzPageSize);
-    }, 15 * 1000)
+    // this.rightTimer = setInterval(() => {
+    //   this.changePage(this.rightData, this.nzPageSize);
+    // }, 15 * 1000)
 
-    this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      if (data.obj.sort === this.workShop.sort) {
-        this.changeData(data.newObj)
-      }
-    })
+    // this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
+    //   if (data.obj.sort === this.workShop.sort) {
+    //     this.changeData(data.newObj)
+    //   }
+    // })
 
-    this.subscriptionF = this.rpsBoardService.fullscreen$.subscribe(
-      data => {
-        console.log('subscriptionF', data, this.workShop.workShopCode, this.workShop)
+    // this.subscriptionF = this.rpsBoardService.fullscreen$.subscribe(
+    //   data => {
+    //     console.log('subscriptionF', data, this.workShop.workShopCode, this.workShop)
 
-        setTimeout(() => {
-          this.changeSize()
-        }, 100);
-      }
-    )
+    //     setTimeout(() => {
+    //       this.changeSize()
+    //     }, 100);
+    //   }
+    // )
 
 
 
@@ -356,6 +356,7 @@ export class RpsBlockComponent implements OnInit {
     // this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
   }
   getAllData(errorCount = 0) {
+    return;
     if (errorCount >= 3) return;
 
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {

@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { RpsBoardService, WorkShop } from "../rps-board.service";
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-head',
   templateUrl: './head.component.html',
@@ -16,7 +18,7 @@ export class HeadComponent implements OnInit, OnDestroy {
   ngModelChange(event) {
     this.rpsBoardService.pageChangeTime$.next(event);
   }
-  constructor(public rpsBoardService: RpsBoardService) { }
+  constructor(public rpsBoardService: RpsBoardService,private router:Router) { }
 
   ngOnInit() {
     if (window.screen.height <= 900) {
@@ -41,6 +43,8 @@ export class HeadComponent implements OnInit, OnDestroy {
   change(workShop: WorkShop) {
     console.log('change changeWorkShop',this.workShop,workShop)
     if(this.workShop.workShopCode===workShop.workShopCode) return;
+    this.router.navigate(['/fullscreen/dashboard/rpsboard/v1'],{ queryParams: { workshopCode:workShop.workShopCode } })
+    // return;
     if(workShop.workShopCode==='-1'){
       this.rpsBoardService.isFour=true;
     }else{

@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService, WorkShop, FactoryCode } from './rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
 import { TitleService } from '@delon/theme';
+import { environment } from '@env/environment';
 
 
 const DefaultTitle = ' RPS看板'
@@ -23,10 +24,11 @@ export class RpsBoardComponent implements OnInit {
     private route: ActivatedRoute, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
+  nzTimer
   subscription: Subscription;
   ngOnInit() {
     this.rpsBoardService.isFour = false;
-    this.rpsBoardService.isFullscreen=false;
+    this.rpsBoardService.isFullscreen = false;
     this.getRouteParam();
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
@@ -52,11 +54,14 @@ export class RpsBoardComponent implements OnInit {
 
       }
     })
-
+    this.versionUpdate()
+    this.nzTimer = setInterval(() => this.versionUpdate(), 30 * 60 * 1000)
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
-
+    if (this.nzTimer) {
+      clearInterval(this.nzTimer);
+    }
   }
   queryParamStr = ""
   workshopCode = '';
@@ -98,6 +103,39 @@ export class RpsBoardComponent implements OnInit {
     if (event.visible) {
       this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
     }
+  }
+  version = environment.version;
+  versionShow = false;
+  versionUpdate() {
+
+    let version = {
+    };
+    console.log("版本发布-本地", this.version);
+    this.http.postHttpAllUrl("http://172.16.8.107/cloudblock_oracle/release/info", version).subscribe((data: any) => {
+      console.log("版本发布", data)
+      //线上版本大于本地，则提醒升级
+      try {
+        if (parseInt(data.data.csysReleaseVersion) > parseInt(this.version)) {
+          console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
+          // if (!this.versionShow) {
+          //   console.log("版本升级弹窗");
+          //   this.versionShow = true;
+          //   location.reload();
+          // }
+          location.reload();
+
+        }
+      } catch (error) {
+        console.error('升级检测error', error);
+
+      }
+
+
+    }, (err) => {
+      console.log("版本发布检测-接口异常");
+
+    });
+
   }
 
 

@@ -161,7 +161,7 @@ export class RpsBlockComponent implements OnInit {
     if (factoryCode === '-1') factoryCode = '';
     console.log('getAbnormalInfo do', factoryCode)
 
-    this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
+    this.http.postHttpAllUrl('http://58.240.175.123:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: CallUserInfo[], ErrorCode: number, Msg?: string }
       }) => {

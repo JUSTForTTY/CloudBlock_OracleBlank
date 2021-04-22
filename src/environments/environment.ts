@@ -8,6 +8,7 @@ export const environment = {
     SERVER_NAME:`lh_mes`,
     chore: false,
     SERVER_URL: `http://localhost:8080/`,
+    // SERVER_URL: `http://172.16.8.112:81/cloudblock_lhoracle/`,
     RESOURCE_SERVER_URL: `http://172.16.8.112:81/`,
     DATA_SERVER_URL:`http://172.16.8.107:8082/cloudblock_datapull/`,
     //SERVER_URL: `http://192.168.200.149:8080/cloudblock_spring_boot_oracle_war_exploded/`,

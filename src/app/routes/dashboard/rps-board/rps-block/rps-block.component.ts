@@ -119,7 +119,7 @@ export class RpsBlockComponent implements OnInit {
     this.getErrorData()
 
     this.dataTimer = setInterval(() => {
-      this.getErrorData();
+      this.getAllData();
     }, 5 * 60 * 1000)
 
     this.errorTimer = setInterval(() => {

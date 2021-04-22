@@ -44,7 +44,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   @ViewChild('divBox') divBox: ElementRef;
 
 
-  constructor(private rpsBoardService: RpsBoardService,private router: Router, ) { }
+  constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
 
   ngOnInit() {
     let i = 0;
@@ -59,6 +59,24 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // iterator.planAchievementRate = iterator.planAchievementRate * 100;
       // iterator.yield = iterator.yield * 100;
       if (!iterator.isNull) iterator.isNull = '1';
+      // if (iterator.isNull === '1') {
+      //   const random = Math.floor(Math.random() * 2.2 );
+      //   console.log('random', random)
+      //   if (random === 1) {
+      //     iterator.isNull = '1'
+      //   } else  {
+      //     iterator.isNull = '3'
+      //   }
+      // }
+      // if (iterator.isNull === '0') {
+      //   const random = Math.floor(Math.random() * 2.2 );
+      //   console.log('random', random)
+      //   if (random === 1) {
+      //     iterator.isNull = '0'
+      //   } else {
+      //     iterator.isNull = '2'
+      //   }
+      // }
       // if (iterator.planNums === 0) {
       //   if (iterator.badNums + iterator.goodNums < 5) {
       //     iterator.isNull = '0';
@@ -89,14 +107,14 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       });
     this.changPageTime();
 
-    this.subscriptionF=this.rpsBoardService.fullscreen$.subscribe(
-      data=>{
+    this.subscriptionF = this.rpsBoardService.fullscreen$.subscribe(
+      data => {
         setTimeout(() => {
-          if(this.rpsBoardService.isFullscreen){
-            if(this.workShop.sort===1){
+          if (this.rpsBoardService.isFullscreen) {
+            if (this.workShop.sort === 1) {
               this.changeSize()
             }
-          }else{
+          } else {
             this.changeSize()
           }
         }, 10);
@@ -133,7 +151,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       }
     )
 
-    
+
   }
   /** 获取表头数据 */
   getHeadData() {
@@ -191,7 +209,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       otherData.push(iterator);
     }
     this.showData = [...this.showData]
-    console.log('showData',this.showData)
+    console.log('showData', this.showData)
   }
 
   /** 获取状态 */
@@ -233,13 +251,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     // f
     const { prolineCode } = data;
     const prolineType = this.key.includes('SMT') ? 'smt' : 'be'
-    const urlend=`/fullscreen/dashboard/yieldDashboard?prolineCode=${prolineCode}&prolineType=${prolineType}`;
+    const urlend = `/fullscreen/dashboard/yieldDashboard?prolineCode=${prolineCode}&prolineType=${prolineType}`;
     const url = location.origin + urlend
     console.log('url', this.key, url, data)
-    if(this.rpsBoardService.isFour){
+    if (this.rpsBoardService.isFour) {
       window.open(url);
 
-    }else{
+    } else {
       this.router.navigateByUrl(urlend)
 
       // window.history.back();

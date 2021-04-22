@@ -8,7 +8,6 @@ import { orderBy, slice, map, groupBy } from 'lodash';
 
 
 
-
 const options: {
   key: string,
   title: string,
@@ -75,7 +74,10 @@ export class RpsBlockComponent implements OnInit {
   rightData: ErrorInfo[] = []
 
   private dataTimer;
+  private errorTimer;
   private rightTimer;
+  countTimeTimer;
+
 
   @ViewChild('errorBox') errorBox: ElementRef;
 
@@ -88,7 +90,12 @@ export class RpsBlockComponent implements OnInit {
   subscription: Subscription;
   subscriptionF: Subscription;
 
+  countTime = Date.now() + 1000
+  nowTime = new Date();
+
   ngOnInit() {
+    // const timer=Timer(Date.now,true)
+
     console.log('window.screen.height', window.screen.width, window.screen.height)
     if (window.screen.height <= 900) {
       this.fontSizeTitle1 = 32;//一级标题
@@ -100,18 +107,25 @@ export class RpsBlockComponent implements OnInit {
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
     }
+    if (this.errorTimer) {
+      clearInterval(this.errorTimer);
+    }
     if (this.rightTimer) {
       clearInterval(this.rightTimer);
     }
 
     this.initData();
     this.getAllData();
+    this.getErrorData()
+
     this.dataTimer = setInterval(() => {
-      this.getAllData();
       this.getErrorData();
     }, 5 * 60 * 1000)
 
-    this.getErrorData()
+    this.errorTimer = setInterval(() => {
+      this.getErrorData();
+    }, 60 * 1000)
+
     this.rightTimer = setInterval(() => {
       this.changePage(this.rightData, this.nzPageSize);
     }, 15 * 1000)
@@ -131,7 +145,11 @@ export class RpsBlockComponent implements OnInit {
         }, 100);
       }
     )
+
+
+
   }
+  // 1000 * 60 * 60 * 24 * 2 + 1000 * 30;
 
   changeData(newWorkShop: WorkShop) {
     this.workShop.workShopCode = newWorkShop.workShopCode;
@@ -158,6 +176,8 @@ export class RpsBlockComponent implements OnInit {
         console.log('getErrorData', data)
         if (data.data.ErrorCode === 0) {
           this.rightData = data.data.CallInfo;
+          // console.log('getErrorData', data.data.CallInfo)
+
           this.isError = false;
           const errorData = groupByToJson(data.data.CallUserInfo, 'FBillNo')
           for (const iterator of this.rightData) {
@@ -311,7 +331,7 @@ export class RpsBlockComponent implements OnInit {
   }
   jump() {
     // f
-    const url = location.origin + `/fullscreen/dashboard/rpsboard/v1?workshopCode=`+this.workShop.workShopCode
+    const url = location.origin + `/fullscreen/dashboard/rpsboard/v1?workshopCode=` + this.workShop.workShopCode
     window.open(url);
 
   }
@@ -429,6 +449,12 @@ export class RpsBlockComponent implements OnInit {
     this.subscriptionF.unsubscribe();
     if (this.dataTimer) {
       clearInterval(this.dataTimer);
+    }
+    if (this.errorTimer) {
+      clearInterval(this.errorTimer);
+    }
+    if (this.rightTimer) {
+      clearInterval(this.rightTimer);
     }
   }
 

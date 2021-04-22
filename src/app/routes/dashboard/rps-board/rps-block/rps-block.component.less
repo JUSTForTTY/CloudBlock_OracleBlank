@@ -108,6 +108,41 @@
   .ant-descriptions.bordered .ant-descriptions-item-content {
     border-right: 1px solid #c2af04;
   }
+
+  .ant-timeline-item-head {
+    width: 20px;
+    height: 20px;
+  }
+  
+
+  .red ::ng-deep {
+    .ant-timeline-item-head {
+      background-color: #f5222d;
+    }
+  }
+  .yellow ::ng-deep {
+    .ant-timeline-item-head {
+      background-color: #c2af04;
+    }
+  }
+  .green ::ng-deep {
+    .ant-timeline-item-head {
+      background-color: #52c41a;
+    }
+  }
+  .ant-timeline-item {
+    color: #ffffff;
+    font-size: 15px;
+    padding: 0 0 2px;
+  }
+  .ant-timeline-item-tail {
+    left: 9px;
+  }
+  .ant-timeline-item-content {
+    position: relative;
+    top: -1px;
+    margin: 0 0 0 23px;
+  }
 }
 nz-tag {
   font-size: 16px;
@@ -143,14 +178,13 @@ nz-tag {
     opacity: 1;
   }
 }
-.errorIcon{
+.errorIcon {
   color: rgb(245, 34, 45);
   animation: fade 200ms infinite;
   -webkit-animation: fade 300ms infinite;
 }
 .successIcon {
   color: #52c41a;
-
 }
 .error {
   background: rgb(245, 34, 45);

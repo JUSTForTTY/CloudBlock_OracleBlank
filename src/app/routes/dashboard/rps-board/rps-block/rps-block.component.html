@@ -178,11 +178,11 @@
                   {{item.FReason}}
                 </div>
               </div>
-              <div *ngIf="!item.FRespDate">
+              <div *ngIf="item.status==='error'">
                 <app-timer [date]="item.FCallDate"></app-timer>
               </div>
             </nz-timeline-item>
-            <nz-timeline-item class="yellow" nzColor="#c2af04" *ngIf="item.FRespDate">
+            <nz-timeline-item class="yellow" nzColor="#c2af04" *ngIf="item.FResponseDate">
               <div nz-row>
                 <div nz-col nzSpan="5">
                   响应
@@ -196,11 +196,11 @@
                   </ng-container>
                 </div>
               </div>
-              <div *ngIf="!item.FMaintDate">
-                <app-timer [date]="item.FResponseDate" ></app-timer>
+              <div *ngIf="item.status==='warning'">
+                <app-timer [date]="item.FResponseDate"></app-timer>
               </div>
             </nz-timeline-item>
-            <nz-timeline-item class="green" nzColor="#52c41a" *ngIf="item.FMaintDate">
+            <nz-timeline-item class="green" nzColor="#52c41a" *ngIf="item.status==='success'">
               <div nz-row>
                 <div nz-col nzSpan="5">
                   维修

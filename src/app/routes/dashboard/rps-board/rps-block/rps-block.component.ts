@@ -124,7 +124,7 @@ export class RpsBlockComponent implements OnInit {
 
     this.errorTimer = setInterval(() => {
       this.getErrorData();
-    }, 30 * 1000)
+    }, 60 * 1000)
 
     this.rightTimer = setInterval(() => {
       this.changePage(this.rightData, this.nzPageSize);

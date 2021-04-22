@@ -23,7 +23,7 @@
 
     <div class="contentDiv">
       <!-- WAVE -->
- 
+      <ng-container *ngIf="allData[0][1].isLoading"><div style="padding-top: 20%;">加载中....</div></ng-container>
       <app-list *ngIf="!allData[0][1].isLoading" [datas]="allData[0][1].data"></app-list>
 
     </div>
@@ -32,6 +32,7 @@
 
     <div class="contentDiv">
       <!-- COATING -->
+      <ng-container *ngIf="allData[1][0].isLoading"><div style="padding-top: 20%;">加载中....</div></ng-container>
       <app-list *ngIf="!allData[1][0].isLoading" [datas]="allData[1][0].data"></app-list>
 
     </div>
@@ -40,6 +41,7 @@
 
     <div class="contentDiv">
       <!-- ATP -->
+      <ng-container *ngIf="allData[1][1].isLoading"><div style="padding-top: 20%;">加载中....</div></ng-container>
       <app-list *ngIf="!allData[1][1].isLoading" [datas]="allData[1][1].data"></app-list>
 
     </div>

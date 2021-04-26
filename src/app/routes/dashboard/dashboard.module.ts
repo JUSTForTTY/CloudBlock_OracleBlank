@@ -16,12 +16,12 @@ import { WoOrderInfoComponent } from './wo-order-info/wo-order-info.component';
 import { PerformanceTestComponent } from './performance-test/performance-test.component';
 import { YieldBarlineV2Component } from './yield-barline-v2/yield-barline-v2.component';
 import { PipeModule } from 'ngx-block-core';
-
+import { ErrorItemModule } from "./rps-board/error-item/error-item.module";
 @NgModule({
   declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent, YieldBarlineV2Component],
   imports: [
     DashboardRoutingModule,
-    CommonModule,
+    CommonModule,ErrorItemModule,
     ColorPickerModule,NgxGraphModule, NgxChartsModule,FormsModule,SharedModule,PipeModule
     
   ]

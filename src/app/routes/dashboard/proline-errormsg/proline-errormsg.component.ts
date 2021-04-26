@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
+import {  CallUserInfo, ErrorInfo, InitErrorData } from "../utils";
 
 @Component({
   selector: 'app-proline-errormsg',
@@ -52,7 +53,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
 
     this.getErrorData();
 
-    this.timer = setTimeout(this.setData, 10 * 60 * 1000);
+    this.timer = setTimeout(this.setData, 1 * 60 * 1000);
   }
   setPageData = () => {
     if (this.ertimer) {
@@ -77,6 +78,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
   }
 
   //获取产线异常信息
+  rightData: ErrorInfo[] = []
   getErrorData() {
 
     console.log("产线报表-异常查询")
@@ -95,6 +97,18 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode='+this.prolineCode).subscribe(
       data=>{
         console.log('getErrorData '+this.prolineCode, data)
+        if (data.data.ErrorCode === 0) {
+          this.rightData = data.data.CallInfo;
+          // console.log('getErrorData', data.data.CallInfo)
+
+          InitErrorData(this.rightData, data.data.CallUserInfo)
+          console.log('errorData', this.rightData)
+          this.rightData=this.rightData.filter(data=> data.status!=='success')
+
+        } else {
+          this.rightData=[];
+
+        }
       }
     )
 

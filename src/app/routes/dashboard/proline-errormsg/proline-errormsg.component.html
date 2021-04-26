@@ -7,8 +7,11 @@
     </div>
 
   </ng-template>
+  <div style="width: 100%;" *ngFor="let item of rightData">
+    <app-error-item [item]="item"></app-error-item>
+  </div>
 
-  <nz-list [nzDataSource]="prolineErrorData" [nzRenderItem]="item"  [nzItemLayout]="'horizontal'" [nzLoading]="loading">
+  <nz-list [nzDataSource]="prolineErrorData" [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzLoading]="loading">
     <ng-template #item let-item>
       <nz-list-item>
         <nz-list-item-meta [nzTitle]="nzTitle" [nzDescription]="nzDescription">
@@ -18,25 +21,25 @@
               <div nz-col nzSpan="9">
                 时间段：
               </div>
-              <div nz-col nzSpan="15" >
-                 {{ item.lossLogTimeStart | date:'HH:mm' }} -
-                  {{ item.lossLogTimeStop | date:'HH:mm' }} 
+              <div nz-col nzSpan="15">
+                {{ item.lossLogTimeStart | date:'HH:mm' }} -
+                {{ item.lossLogTimeStop | date:'HH:mm' }}
               </div>
             </div>
-       
+
             <div nz-row>
               <div nz-col nzSpan="9">
                 责任人：
               </div>
               <div nz-col nzSpan="15">
-                {{item.lossDepartment}}-{{item.lossPerson}} 
+                {{item.lossDepartment}}-{{item.lossPerson}}
               </div>
             </div>
             <div nz-row style="height:40px">
               <div nz-col nzSpan="9">
                 异常原因：
               </div>
-              <div nz-col nzSpan="15" >
+              <div nz-col nzSpan="15">
                 <marquee loop="-1" scrollamount="4">
 
                   {{ item.lossReason }}
@@ -54,9 +57,9 @@
               {{mesrange[item.lossLogType]}}</nz-tag>
             <nz-tag *ngIf="item.lossLogType=='2'" style="margin-left:10px" [nzColor]="'#f50'">
               {{mesrange[item.lossLogType]}}</nz-tag>
-              &nbsp;&nbsp;
-               
-           <span style="color:white">损失：{{item.lossTime}}min</span>  
+            &nbsp;&nbsp;
+
+            <span style="color:white">损失：{{item.lossTime}}min</span>
 
           </ng-template>
         </nz-list-item-meta>

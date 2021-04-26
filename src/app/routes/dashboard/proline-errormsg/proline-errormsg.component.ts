@@ -92,6 +92,11 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       console.log("看板数据-接口异常");
 
     });
+      this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode='+this.prolineCode).subscribe(
+      data=>{
+        console.log('getErrorData '+this.prolineCode, data)
+      }
+    )
 
   }
   errorDataTransform() {

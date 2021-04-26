@@ -5,7 +5,7 @@ import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
-
+import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
 
 
 const options: {
@@ -168,6 +168,11 @@ export class RpsBlockComponent implements OnInit {
     if (!factoryCode) factoryCode = this.workShop.workShopCode;
     if (factoryCode === '-1') factoryCode = '';
     console.log('getAbnormalInfo do', factoryCode)
+    // this.http.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode=SUZ15BE-1').subscribe(
+    //   data=>{
+    //     console.log('getErrorData SUZ15BE-1', data)
+    //   }
+    // )
 
     this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {
@@ -178,44 +183,8 @@ export class RpsBlockComponent implements OnInit {
           this.rightData = data.data.CallInfo;
           // console.log('getErrorData', data.data.CallInfo)
 
-          this.isError = false;
-          const errorData = groupByToJson(data.data.CallUserInfo, 'FBillNo')
-          for (const iterator of this.rightData) {
-            iterator.callUserInfo = errorData[iterator.FBillNo] || [];
-            switch (iterator.FState) {
-              case '已维修':
-                iterator.status = 'success';
-                iterator.sort = 3;
-                break;
-              case '已关闭':
-                iterator.status = 'success';
-                iterator.sort = 4;
-                break;
-              case '待响应':
-                this.isError = true;
-                iterator.status = 'error';
-                iterator.sort = 1;
-
-                break;
-              case '已响应':
-                this.isError = true;
-                iterator.status = 'warning';
-                iterator.sort = 2;
-
-                break;
-
-              default:
-                break;
-            }
-          }
-          this.rightData.sort((a, b) => {
-            return a.sort - b.sort;
-          })
-          let index = 0;
-          for (const iterator of this.rightData) {
-            iterator.index = ++index;
-          }
-          console.log('errorData', errorData, this.rightData)
+          this.isError = InitErrorData(this.rightData, data.data.CallUserInfo)
+          console.log('errorData', this.rightData)
           this.changeSize()
         } else {
           this.isError = false
@@ -464,45 +433,7 @@ export class RpsBlockComponent implements OnInit {
   }
 }
 
-function groupByToJson<E extends { [key: string]: any }>(list: E[], key: (keyof E)): { [key: string]: E[] } {
-  let res: { [key: string]: E[] } = {};
-  for (const item of list) {
-    const id = item[key]
-    if (!res[id]) res[id] = [];
-    res[id].push(item);
-  }
-  return res;
-}
 
-interface ErrorInfo {
-  "FBillNo": string;
-  "FLocation": string;
-  "FReason": string;
-  "FCallDate": string;
-  "FCallUser": string;
-  "FCallUserName": string;
-  "FRespUser": string;
-  "FRespUserName": string;
-  "FMaintUserCode": string;
-  "FMaintUserName": string;
-  "FRespDate": number;
-  "FMaintDate": number;
-  "FStopLineDate": number;
-  "FactoryCode": string;
-  "FState": '已维修' | '已关闭' | '待响应' | '已响应';
-  index?: number;
-  status?: string;
-  sort?: number;
-  callUserInfo?: CallUserInfo[]
-
-}
-interface CallUserInfo {
-  /** 姓名 */
-  A0101: string;
-  FBillNo: string;
-  FDate: string;
-  FUserCode: string;
-}
 // A0101: "牛连胜"
 // FBillNo: "C2104011254550007"
 // FDate: "2021-04-01 12:54:55"

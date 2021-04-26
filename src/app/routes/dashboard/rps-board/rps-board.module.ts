@@ -8,16 +8,20 @@ import { DomVisibleDirective } from "./dom-visible.directive";
 import { HighlightDirective } from "./highlight.directive";
 import { RpsBoardService } from "./rps-board.service";
 import { ErrorDetailComponent } from './error-detail/error-detail.component';
-import { ChangeBgDirective } from "./changBg.directive";
+// import { ChangeBgDirective } from "./changBg.directive";
 import { RpsBlockComponent } from './rps-block/rps-block.component';
 import { HeadComponent } from './head/head.component';
 import { TimerComponent } from './timer/timer.component';
+import { ErrorItemModule } from "./error-item/error-item.module";
+import { TimerModule } from "./timer/timer.module";
 @NgModule({
-  declarations: [RpsBoardComponent,ChangeBgDirective, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent, TimerComponent],
+  declarations: [RpsBoardComponent, RpsTableComponent, DomVisibleDirective,HighlightDirective, ErrorDetailComponent, RpsBlockComponent, HeadComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,
-    SharedModule
+    SharedModule,
+    ErrorItemModule,
+    TimerModule
   ],
   providers:[RpsBoardService]
 })

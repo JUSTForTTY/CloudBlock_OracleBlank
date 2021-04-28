@@ -14,6 +14,7 @@
     <v-legend></v-legend>
     <v-bar position="部门*总数" [color]="color" [adjust]="adjust" [label]="label"></v-bar>
     <v-guide
+    *ngIf="lineNum"
     type="line" 
     [start]="start2" 
     [end]="end"

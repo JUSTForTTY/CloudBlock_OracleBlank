@@ -88,15 +88,15 @@ export class DepartAvgComponent implements OnInit {
     const data = dv.rows;
     this.data = data;
     this.text = {
-      position: 'end',
+      position: 'start',
       style: {
         fill: '#fff',
         fontSize: 15,
         fontWeight: 'normal'
       },
       content: '合格线'+this.lineNum,
-      offsetY: -5,
-      offsetX: -15
+      offsetY: -3,
+      offsetX: -20
     };
   }
 
@@ -123,7 +123,7 @@ export class DepartAvgComponent implements OnInit {
     const max = yScale.总数.max;
     if (max > this.lineNum) {
       const start = ((max - this.lineNum) / max) * 100
-      return ['2%', start + '%']
+      return ['0%', start + '%']
     } else
       return []; // 位置信息
   };
@@ -134,7 +134,7 @@ export class DepartAvgComponent implements OnInit {
     const max = yScale.总数.max;
     if (max > this.lineNum) {
       const start = ((max - this.lineNum) / max) * 100
-      return ['98%', start + '%']
+      return ['100%', start + '%']
     } else
       return []; // 位置信息
   };

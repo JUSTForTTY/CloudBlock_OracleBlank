@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
+import { ActivatedRoute } from '@angular/router';
+import { TitleService } from '@delon/theme';
 
 export const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
@@ -78,7 +80,7 @@ export class RpsBoardService {
   }
   workshops: WorkShop[] = []
 
-  constructor(private pageService: PageService, private http: HttpService) {
+  constructor(private pageService: PageService, private http: HttpService,private titleSrv:TitleService) {
     // 获取工厂列表
     http.postHttp('/workshop/condition').subscribe(data => {
       console.log('workshop,', data);
@@ -103,6 +105,39 @@ export class RpsBoardService {
       }
       otherData.splice(addIndx, 0, item);
       showData.splice(index, 1);
+    }
+  }
+
+  getRouteParam(route: ActivatedRoute,DefaultTitle='看板'): WorkShop
+  {
+    console.log('getRouteParam workshopCode')
+    let path = this.pageService.getPathByRoute(route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(route, path);
+    //初始化参数识别字串
+   let queryParamStr = '';
+    for (const key in this.pageService.routeParams[path]) {
+      if (this.pageService.routeParams[path].hasOwnProperty(key)) {
+        queryParamStr = queryParamStr + this.pageService.routeParams[path][key];
+      }
+    }
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    let workshopCode = this.pageService.getRouteParams(route, 'workshopCode', path);
+    if (!workshopCode) workshopCode = '-1';
+    if (workshopCode === '-1') {
+      this.isFour = true;
+      this.titleSrv.setTitle('全厂' + DefaultTitle)
+    } else {
+      this.isFour = false;
+      this.titleSrv.setTitle(workshopCode + DefaultTitle)
+
+    }
+    console.log('workshopCode,shiftTypeCode', workshopCode, this.isFour);
+    return  {
+      workShopCode: workshopCode,
+      isAdding: false,
+      sort: 1
     }
   }
 

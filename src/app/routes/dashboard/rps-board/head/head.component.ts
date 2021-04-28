@@ -11,6 +11,9 @@ export class HeadComponent implements OnInit, OnDestroy {
   fontSizeTitle1 = 42;//一级标题
   fontSizeTitle2 = 24;//二级标题
   @Input() workShop: WorkShop
+  @Input() title='工段看板';
+  @Input() showRight=true;
+  @Input() url="/fullscreen/dashboard/rpsboard/v1";
   nowTime = Date.now();
   isVisible = false;
   private nowTimeTimer;
@@ -43,7 +46,7 @@ export class HeadComponent implements OnInit, OnDestroy {
   change(workShop: WorkShop) {
     console.log('change changeWorkShop',this.workShop,workShop)
     if(this.workShop.workShopCode===workShop.workShopCode) return;
-    this.router.navigate(['/fullscreen/dashboard/rpsboard/v1'],{ queryParams: { workshopCode:workShop.workShopCode } })
+    this.router.navigate([this.url],{ queryParams: { workshopCode:workShop.workShopCode } })
     // return;
     if(workShop.workShopCode==='-1'){
       this.rpsBoardService.isFour=true;

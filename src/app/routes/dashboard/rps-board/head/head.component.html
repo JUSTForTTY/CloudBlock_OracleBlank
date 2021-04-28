@@ -1,30 +1,35 @@
 <div nz-row>
   <!-- 头部 -->
   <div nz-col nzXs="24" nzLg="6">
-    <div style="margin-top: 3px; display: flex;flex-wrap: nowrap; align-items:center;">
-      <div>
-        <span style="color: #ffffff;font-size: 16px;">达成率：</span>
-        <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.complete.bad}}%↓</nz-tag>
-        <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.complete.bad}}%~{{rpsBoardService.standard.complete.good}}%
+    <div *ngIf="showRight">
+      <div style="margin-top: 3px; display: flex;flex-wrap: nowrap; align-items:center;">
+        <div>
+          <span style="color: #ffffff;font-size: 16px;">达成率：</span>
+          <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.complete.bad}}%↓</nz-tag>
+          <nz-tag nzColor="#c2af04">
+            {{rpsBoardService.standard.complete.bad}}%~{{rpsBoardService.standard.complete.good}}%
+          </nz-tag>
+          <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.complete.good}}%↑</nz-tag>
+        </div>
+        <div style="margin-left: 10px;">
+          <nz-select nzSize="small" [(ngModel)]="rpsBoardService.changePageTime"
+            (ngModelChange)="ngModelChange($event)">
+            <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
+            <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
+            <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
+          </nz-select>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
+        <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.yield.bad}}%↓</nz-tag>
+        <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.yield.bad}}%~{{rpsBoardService.standard.yield.good}}%
         </nz-tag>
-        <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.complete.good}}%↑</nz-tag>
+        <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.yield.good}}%↑</nz-tag>
       </div>
-      <div style="margin-left: 10px;">
-        <nz-select nzSize="small" [(ngModel)]="rpsBoardService.changePageTime" (ngModelChange)="ngModelChange($event)">
-          <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
-          <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
-          <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
-        </nz-select>
-      </div>
-
     </div>
 
-    <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
-      <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.yield.bad}}%↓</nz-tag>
-      <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.yield.bad}}%~{{rpsBoardService.standard.yield.good}}%
-      </nz-tag>
-      <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.yield.good}}%↑</nz-tag>
-    </div>
 
 
   </div>
@@ -36,14 +41,14 @@
       <ng-template #elseBlock>
         <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;">
       </ng-template>
-      工段看板
+      {{title}}
     </h1>
   </div>
   <div nz-col nzXs="24" nzLg="6">
     <div nz-row>
       <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
         <span style="color:#1e91de;line-height: 1;cursor: pointer;" [style.font-size]="fontSizeTitle1+'px'"
-        (click)="showChange()">
+          (click)="showChange()">
           {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
         </span>
 
@@ -56,11 +61,12 @@
   </div>
 </div>
 
-<nz-modal [(nzVisible)]="isVisible" [nzWidth]="1200" (nzOnCancel)="isVisible=false;"[nzStyle]="{ top: '200px' }"
-  [nzOkText]="null" [nzCancelText]="null"  [nzBodyStyle]="{'background': '#192b53'}" [nzFooter]="null">
+<nz-modal [(nzVisible)]="isVisible" [nzWidth]="1200" (nzOnCancel)="isVisible=false;" [nzStyle]="{ top: '200px' }"
+  [nzOkText]="null" [nzCancelText]="null" [nzBodyStyle]="{'background': '#192b53'}" [nzFooter]="null">
   <div class="gutter-example">
     <div nz-row nzGutter="16">
-      <div nz-col  nzSpan="6" *ngFor="let item of rpsBoardService.workshops" style="border:1px solid #000;color: #fff;cursor: pointer;" (click)="change(item)">
+      <div nz-col nzSpan="6" *ngFor="let item of rpsBoardService.workshops"
+        style="border:1px solid #000;color: #fff;cursor: pointer;" (click)="change(item)">
         <div style="font-size:xx-large;">{{item.workShopCode}}</div>
         <!-- <div style="font-size:xx-large;">{{item.workShopCodeDes}}</div> -->
       </div>

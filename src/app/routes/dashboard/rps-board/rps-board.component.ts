@@ -63,40 +63,11 @@ export class RpsBoardComponent implements OnInit {
       clearInterval(this.nzTimer);
     }
   }
-  queryParamStr = ""
   workshopCode = '';
   workShop: WorkShop
   getRouteParam() {
-    console.log('getRouteParam workshopCode')
-    let path = this.pageService.getPathByRoute(this.route);
-    //监听路径参数
-    this.pageService.setRouteParamsByRoute(this.route, path);
-    //初始化参数识别字串
-    this.queryParamStr = '';
-    for (const key in this.pageService.routeParams[path]) {
-      if (this.pageService.routeParams[path].hasOwnProperty(key)) {
-        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[path][key];
-      }
-    }
-    //  path 可不传
-    //  this.activatedRoute 需保证准确
-    this.workshopCode = this.pageService.getRouteParams(this.route, 'workshopCode', path);
-    if (!this.workshopCode) this.workshopCode = '-1';
-    if (this.workshopCode === '-1') {
-      this.rpsBoardService.isFour = true;
-      this.titleSrv.setTitle('全厂' + DefaultTitle)
-    } else {
-      this.rpsBoardService.isFour = false;
-      this.titleSrv.setTitle(this.workshopCode + DefaultTitle)
-
-    }
-    console.log('workshopCode,shiftTypeCode', this.workshopCode, this.rpsBoardService.isFour);
-
-    this.workShop = {
-      workShopCode: this.workshopCode,
-      isAdding: false,
-      sort: 1
-    }
+    this.workShop =this.rpsBoardService.getRouteParam(this.route,DefaultTitle);
+    this.workshopCode=this.workShop.workShopCode;
   }
 
   visible(event) {

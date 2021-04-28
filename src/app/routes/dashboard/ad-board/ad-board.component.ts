@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../utils";
 import { HttpService, PageService } from 'ngx-block-core';
+import { RpsBoardService, WorkShop, FactoryCode } from '../rps-board/rps-board.service';
+import { ActivatedRoute } from '@angular/router';
 
+const DefaultTitle="安灯看板"
 @Component({
   selector: 'app-ad-board',
   templateUrl: './ad-board.component.html',
@@ -12,11 +15,24 @@ export class AdBoardComponent implements OnInit {
   rightOther: ErrorInfo[] = [];
   rightData: ErrorInfo[] = []
   isError = false;
-
-  constructor(private http: HttpService) { }
+  workshopCode = '';
+  workShop: WorkShop;
+  constructor(private http: HttpService,public rpsBoardService:RpsBoardService,private route:ActivatedRoute) { }
 
   ngOnInit() {
     this.getErrorData()
+    this.getRouteParam()
+  }
+
+  getRouteParam() {
+    this.workShop =this.rpsBoardService.getRouteParam(this.route,DefaultTitle);
+    this.workshopCode=this.workShop.workShopCode;
+    if(this.workshopCode==='-1'){
+      const url = location.origin + `/fullscreen/dashboard/adboard/v1?workshopCode=SUZ15-1F`;
+      location.replace(url);
+  
+    }
+
   }
 
   getErrorData() {

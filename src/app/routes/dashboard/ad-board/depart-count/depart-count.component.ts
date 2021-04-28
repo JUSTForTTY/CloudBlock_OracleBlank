@@ -39,7 +39,7 @@ const Label = ['总数', function (val) {
 export class DepartCountComponent implements OnInit {
   theme = require('assets/js/chartstheme.js');
   forceFit: boolean = true;
-  height: number = 450;
+  height: number = 400;
   data = data;
   adjust = [{
     type: 'dodge',

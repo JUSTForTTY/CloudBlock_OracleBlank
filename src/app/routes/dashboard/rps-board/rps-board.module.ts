@@ -23,6 +23,5 @@ import { TimerModule } from "./timer/timer.module";
     ErrorItemModule,
     TimerModule
   ],
-  providers:[RpsBoardService]
 })
 export class RpsBoardModule { }

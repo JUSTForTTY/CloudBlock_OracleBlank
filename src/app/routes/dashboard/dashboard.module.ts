@@ -17,6 +17,7 @@ import { PerformanceTestComponent } from './performance-test/performance-test.co
 import { YieldBarlineV2Component } from './yield-barline-v2/yield-barline-v2.component';
 import { PipeModule } from 'ngx-block-core';
 import { ErrorItemModule } from "./rps-board/error-item/error-item.module";
+import { RpsBoardService } from "./rps-board/rps-board.service";
 @NgModule({
   declarations: [YieldDashboardComponent, YieldTableComponent, YieldBarlineComponent, YieldGaugeComponent, ProlineErrormsgComponent, WoOrderInfoComponent, PerformanceTestComponent, YieldBarlineV2Component],
   imports: [
@@ -24,6 +25,8 @@ import { ErrorItemModule } from "./rps-board/error-item/error-item.module";
     CommonModule,ErrorItemModule,
     ColorPickerModule,NgxGraphModule, NgxChartsModule,FormsModule,SharedModule,PipeModule
     
-  ]
+  ],
+  providers:[RpsBoardService]
+
 })
 export class DashboardModule { }

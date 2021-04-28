@@ -16,6 +16,10 @@ const routes: Routes = [
     path: 'rpsboard',
     loadChildren: './rps-board/rps-board.module#RpsBoardModule'
   },
+  {
+    path: 'adboard',
+    loadChildren: './ad-board/ad-board.module#AdBoardModule'
+  },
 ];
 
 @NgModule({

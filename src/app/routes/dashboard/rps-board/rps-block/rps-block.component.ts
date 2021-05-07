@@ -164,6 +164,11 @@ export class RpsBlockComponent implements OnInit {
   }
 
   getErrorData() {
+    if (this.rpsBoardService.date) {
+      this.isError = false
+      this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
+      return;
+    }
     let factoryCode = FactoryCode[this.workShop.workShopCode];
     if (!factoryCode) factoryCode = this.workShop.workShopCode;
     if (factoryCode === '-1') factoryCode = '';
@@ -326,9 +331,9 @@ export class RpsBlockComponent implements OnInit {
   }
   getAllData(errorCount = 0) {
     if (errorCount >= 3) return;
-    let url="/yieldDashboard/worksectionData/" + this.workShop.workShopCode;
-    if(this.rpsBoardService.date&& this.rpsBoardService.dateMode){
-      url +=`/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
+    let url = "/yieldDashboard/worksectionData/" + this.workShop.workShopCode;
+    if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
+      url += `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
     }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
     this.http.getHttp(url).subscribe((data: UrlData) => {

@@ -73,11 +73,18 @@ export class HeadComponent implements OnInit, OnDestroy {
 
   }
   changeMode() {
+    const today=this.datePipe.transform(new Date(), 'yyyy-MM-dd'); 
     const date = this.datePipe.transform(this.date, 'yyyy-MM-dd');
     const mode = this.dateMode;
     console.log('date', date, mode)
-    this.rpsBoardService.date = date;
-    this.rpsBoardService.dateMode = mode;
+    if(today===date){
+      this.rpsBoardService.date = '';
+      this.rpsBoardService.dateMode = '';
+    }else{
+      this.rpsBoardService.date = date;
+      this.rpsBoardService.dateMode = mode;
+    }
+    
     this.dateVisible = false;
     this.change(this.workShop, true)
   }

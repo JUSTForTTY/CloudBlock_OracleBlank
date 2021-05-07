@@ -51,25 +51,36 @@
           (click)="showChange()">
           {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
         </span>
-        <button nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible" nzTrigger="click"><i nz-icon nzType="swap"
-            nzTheme="outline"></i>历史</button>
+        <div style="display:flex;align-items: center;justify-content: flex-end;width: 100%;">
+         
+          <nz-statistic *ngIf="!rpsBoardService.date" style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"
+            [nzPrefix]="prefixTpl">
+          </nz-statistic>
+          <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
 
-        <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
-        </nz-statistic>
-        <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+          <!-- {{rpsBoardService.date}} -->
+          <nz-statistic *ngIf="rpsBoardService.date" style="color:white" [nzValue]="rpsBoardService.date"
+            [nzPrefix]="prefixTpl">
+          </nz-statistic>
+          <button *ngIf="showRight" nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible"
+          style="margin-left: 10px;"
+          nzTrigger="click"><i nz-icon nzType="swap" nzTheme="outline"></i>历史</button>
+          <ng-template #contentTemplate>
+            <div>
+              日期：
+              <nz-date-picker [(ngModel)]="date"></nz-date-picker>
+              <br>
+              <nz-radio-group [(ngModel)]="dateMode">
+                <label nz-radio nzValue="白班">白班</label>
+                <label nz-radio nzValue="夜班">夜班</label>
+              </nz-radio-group>
+              <button nz-button style="margin-left: 8px;" nzType="primary" (click)="changeMode()">确定</button>
+            </div>
+          </ng-template>
 
-        <ng-template #contentTemplate>
-          <div>
-            日期：
-            <nz-date-picker [(ngModel)]="date" ></nz-date-picker>
-            <br>
-            <nz-radio-group [(ngModel)]="dateMode" >
-              <label nz-radio nzValue="白班">白班</label>
-              <label nz-radio nzValue="夜班">夜班</label>
-            </nz-radio-group>
-            <button nz-button style="margin-left: 8px;" nzType="primary" (click)="changeMode()">确定</button>
-          </div>
-        </ng-template>
+        </div>
+
+
 
 
 

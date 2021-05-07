@@ -42,9 +42,11 @@ export class RpsBoardService {
   isFour = false;
   isFullscreen = false;
   changePageTime = 15;
+  date = ''
+  dateMode: '夜班' | '白班' | '' = ''
   pageChangeTime$: Subject<number> = new Subject();
   fullscreen$: Subject<boolean> = new Subject();
-  changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop }> = new Subject();
+  changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop ,force?:boolean}> = new Subject();
 
   standard = {
     complete: {
@@ -80,7 +82,7 @@ export class RpsBoardService {
   }
   workshops: WorkShop[] = []
 
-  constructor(private pageService: PageService, private http: HttpService,private titleSrv:TitleService) {
+  constructor(private pageService: PageService, private http: HttpService, private titleSrv: TitleService) {
     // 获取工厂列表
     http.postHttp('/workshop/condition').subscribe(data => {
       console.log('workshop,', data);
@@ -108,14 +110,13 @@ export class RpsBoardService {
     }
   }
 
-  getRouteParam(route: ActivatedRoute,DefaultTitle='看板'): WorkShop
-  {
+  getRouteParam(route: ActivatedRoute, DefaultTitle = '看板'): WorkShop {
     console.log('getRouteParam workshopCode')
     let path = this.pageService.getPathByRoute(route);
     //监听路径参数
     this.pageService.setRouteParamsByRoute(route, path);
     //初始化参数识别字串
-   let queryParamStr = '';
+    let queryParamStr = '';
     for (const key in this.pageService.routeParams[path]) {
       if (this.pageService.routeParams[path].hasOwnProperty(key)) {
         queryParamStr = queryParamStr + this.pageService.routeParams[path][key];
@@ -134,7 +135,7 @@ export class RpsBoardService {
 
     }
     console.log('workshopCode,shiftTypeCode', workshopCode, this.isFour);
-    return  {
+    return {
       workShopCode: workshopCode,
       isAdding: false,
       sort: 1

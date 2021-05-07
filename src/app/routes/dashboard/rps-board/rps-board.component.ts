@@ -33,7 +33,7 @@ export class RpsBoardComponent implements OnInit {
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
       console.log('changeWorkShop', data)
-      if (data.obj.workShopCode === '-1' && data.newObj.workShopCode !== '-1') {
+      if ((data.obj.workShopCode === '-1' && data.newObj.workShopCode !== '-1') || data.force) {
         this.workShop = null;
         setTimeout(() => {
           this.workShop = {

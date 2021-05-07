@@ -131,7 +131,7 @@ export class RpsBlockComponent implements OnInit {
     }, 15 * 1000)
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      if (data.obj.sort === this.workShop.sort) {
+      if (data.obj.sort === this.workShop.sort || data.force) {
         this.changeData(data.newObj)
       }
     })
@@ -326,9 +326,12 @@ export class RpsBlockComponent implements OnInit {
   }
   getAllData(errorCount = 0) {
     if (errorCount >= 3) return;
-
+    let url="/yieldDashboard/worksectionData/" + this.workShop.workShopCode;
+    if(this.rpsBoardService.date&& this.rpsBoardService.dateMode){
+      url +=`/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
+    }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
-    this.http.getHttp("/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
+    this.http.getHttp(url).subscribe((data: UrlData) => {
       for (const option of options) {
         console.log('data', option.key, data);
         const dataList = data.data[option.key];

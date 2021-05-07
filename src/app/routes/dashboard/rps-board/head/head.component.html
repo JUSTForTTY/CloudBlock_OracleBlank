@@ -51,10 +51,29 @@
           (click)="showChange()">
           {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
         </span>
+        <button nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible" nzTrigger="click"><i nz-icon nzType="swap"
+            nzTheme="outline"></i>历史</button>
 
         <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
         </nz-statistic>
         <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+
+        <ng-template #contentTemplate>
+          <div>
+            日期：
+            <nz-date-picker [(ngModel)]="date" ></nz-date-picker>
+            <br>
+            <nz-radio-group [(ngModel)]="dateMode" >
+              <label nz-radio nzValue="白班">白班</label>
+              <label nz-radio nzValue="夜班">夜班</label>
+            </nz-radio-group>
+            <button nz-button style="margin-left: 8px;" nzType="primary" (click)="changeMode()">确定</button>
+          </div>
+        </ng-template>
+
+
+
+
       </div>
 
     </div>

@@ -33,7 +33,7 @@ export class RpsBoardComponent implements OnInit {
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
       console.log('changeWorkShop', data)
-      if ((data.obj.workShopCode === '-1' && data.newObj.workShopCode !== '-1') || data.force) {
+      if ((data.obj.workShopCode === '-1' && (data.newObj.workShopCode !== '-1' || data.force))) {
         this.workShop = null;
         setTimeout(() => {
           this.workShop = {
@@ -66,8 +66,8 @@ export class RpsBoardComponent implements OnInit {
   workshopCode = '';
   workShop: WorkShop
   getRouteParam() {
-    this.workShop =this.rpsBoardService.getRouteParam(this.route,DefaultTitle);
-    this.workshopCode=this.workShop.workShopCode;
+    this.workShop = this.rpsBoardService.getRouteParam(this.route, DefaultTitle);
+    this.workshopCode = this.workShop.workShopCode;
   }
 
   visible(event) {

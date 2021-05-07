@@ -43,7 +43,7 @@ export class RpsBoardService {
   isFullscreen = false;
   changePageTime = 15;
   date = ''
-  dateMode: '夜班' | '白班' | '' = ''
+  dateMode: 'NightShift' | 'DayShift' | '' = ''
   pageChangeTime$: Subject<number> = new Subject();
   fullscreen$: Subject<boolean> = new Subject();
   changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop ,force?:boolean}> = new Subject();

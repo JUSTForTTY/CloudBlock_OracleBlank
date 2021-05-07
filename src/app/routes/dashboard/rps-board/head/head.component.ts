@@ -21,7 +21,7 @@ export class HeadComponent implements OnInit, OnDestroy {
   nowTime = Date.now();
   isVisible = false;
   date = new Date()
-  dateMode: '夜班' | '白班' = '白班';
+  dateMode: 'NightShift' | 'DayShift' = 'DayShift';
   dateVisible = false;
   private nowTimeTimer;
 
@@ -72,19 +72,19 @@ export class HeadComponent implements OnInit, OnDestroy {
     // TODO
 
   }
-  changeMode() {
-    const today=this.datePipe.transform(new Date(), 'yyyy-MM-dd'); 
-    const date = this.datePipe.transform(this.date, 'yyyy-MM-dd');
-    const mode = this.dateMode;
-    console.log('date', date, mode)
-    if(today===date){
+  changeMode(now = false) {
+
+    if (now) {
       this.rpsBoardService.date = '';
       this.rpsBoardService.dateMode = '';
-    }else{
+    } else {
+      const date = this.datePipe.transform(this.date, 'yyyy-MM-dd');
+      const mode = this.dateMode;
+      console.log('date', date, mode)
       this.rpsBoardService.date = date;
       this.rpsBoardService.dateMode = mode;
     }
-    
+
     this.dateVisible = false;
     this.change(this.workShop, true)
   }

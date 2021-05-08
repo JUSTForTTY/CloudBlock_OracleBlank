@@ -34,6 +34,7 @@ export class AdBoardComponent implements OnInit {
       clearInterval(this.rightTimer);
     }
     this.errorTimer = setInterval(() => {
+      this.versionUpdate();
       this.getErrorData();
     }, 120 * 1000)
     let index = 0
@@ -44,6 +45,8 @@ export class AdBoardComponent implements OnInit {
         this.rpsBoardService.adData.pageAvg = !this.rpsBoardService.adData.pageAvg;
       }
     }, 15 * 1000)
+
+
 
   }
 
@@ -179,5 +182,40 @@ export class AdBoardComponent implements OnInit {
     }
 
   }
+
+  version = environment.version;
+  versionShow = false;
+  versionUpdate() {
+
+    let version = {
+    };
+    console.log("版本发布-本地", this.version);
+    this.http.postHttpAllUrl("http://172.16.8.107/cloudblock_oracle/release/info", version).subscribe((data: any) => {
+      console.log("版本发布", data)
+      //线上版本大于本地，则提醒升级
+      try {
+        if (parseInt(data.data.csysReleaseVersion) > parseInt(this.version)) {
+          console.log("版本发布-升级", data.data.csysReleaseVersion, this.version)
+          // if (!this.versionShow) {
+          //   console.log("版本升级弹窗");
+          //   this.versionShow = true;
+          //   location.reload();
+          // }
+          location.reload();
+
+        }
+      } catch (error) {
+        console.error('升级检测error', error);
+
+      }
+
+
+    }, (err) => {
+      console.log("版本发布检测-接口异常");
+
+    });
+
+  }
 }
 import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';
+import { environment } from '@env/environment';

@@ -27,17 +27,18 @@
       <div nz-row style="height: 100%;" [nzGutter]="4" *ngIf="!rpsBoardService.adData.pageAvg">
         <div nz-col [nzSpan]="12" style="height: 50%;padding-right: 10px;">
           <div style="height: 100%;">
-            <app-depart-avg title="部门-平均响应时间统计" [lineNum]="5"></app-depart-avg>
+            <app-depart-avg title="部门-响应数"  [type]="3" [avg]="false"></app-depart-avg>
           </div>
         </div>
+        
         <div nz-col [nzSpan]="12" style="height: 50%;">
           <div style="height: 100%;">
-            <app-depart-avg title="部门-平均维修时间统计2" [type]="1" ></app-depart-avg>
+            <app-depart-avg title="全厂-响应数" [type]="5" [avg]="false"></app-depart-avg>
           </div>
         </div>
         <div nz-col [nzSpan]="24" style="height: 50%;">
           <div style="height: 100%;">
-            <app-depart-avg title="工段-总时间统计3" [type]="2" ></app-depart-avg>
+            <app-depart-avg title="工段-响应数" [type]="4" [avg]="false"></app-depart-avg>
           </div>
         </div>
       </div>

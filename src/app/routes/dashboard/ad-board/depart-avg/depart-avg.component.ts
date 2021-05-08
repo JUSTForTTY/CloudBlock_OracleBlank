@@ -46,10 +46,11 @@ const Label = ['总数', function (val) {
 }]
 
 enum EpageType {
-  部门响应时间, 部门维修时间, 工段总时间
+  部门响应时间, 部门维修时间, 工段总时间, 部门响应, 工段响应, 工厂响应
 }
 interface AvgItem {
   DEPT_DESC: string,//"EC/OPR_EC_ENG"
+  Dept_Desc: string,
   FMainComDate: number,//"26.4"
   FRespDate: number,//"12.6"
   FStopDate: number,//"495.2"
@@ -65,6 +66,8 @@ export class DepartAvgComponent implements OnInit {
   @Input() title = "部门-平均响应时间统计";
   @Input() type: EpageType = EpageType.部门响应时间;
   @Input() lineNum = 0;
+  @Input() avg = true;
+  @Input() FKind: 'DEPT' | '' | 'Test' = 'DEPT'
   theme = require('assets/js/chartstheme.js');
   forceFit: boolean = true;
   height: number = 400;
@@ -79,11 +82,17 @@ export class DepartAvgComponent implements OnInit {
 
   getSource(): Observable<any> {
     return new Observable<any>(o => {
-      const week = {
+      const weekIndex = {
         '16': '0',
         '17': '1',
         '18': '2',
         '19': '3',
+      }
+      const weekNum = {
+        'WEEK1': '16',
+        'WEEK2': '17',
+        'WEEK3': '18',
+        'WEEK4': '19',
       }
 
       const sourceData = [
@@ -93,21 +102,37 @@ export class DepartAvgComponent implements OnInit {
         { name: 'WEEK4' }
       ]
       const url = 'http://172.16.8.28:8088/api/getAbInfoBySecOrDept';
-      this.http.post(url, { FactoryCode: "SUZ01", FKind: this.type === EpageType.工段总时间?'TEST':'DEPT', FWay: "1" }).subscribe(
-        (data: { AbnormalInfo: AvgItem[], errorcode: number },) => {
+      this.http.post(url, { FactoryCode: "SUZ01", FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
+        (data: { AbnormalInfo: AvgItem[], errorcode: number }) => {
           console.log('data,getSource', data)
           if (data.errorcode + '' !== '0') {
             o.error(data);
             o.complete();
           }
           else {
-            for (const iterator of data.AbnormalInfo) {
-              const index = week[iterator.WeekCount];
-              const desc = getDesc(iterator.DEPT_DESC)
-              const timeAvg = (this.type === EpageType.部门响应时间 ? iterator.FRespDate : (this.type === EpageType.部门维修时间 ? iterator.FMainComDate : iterator.FStopDate))
-              sourceData[index][desc] = parseFloat(timeAvg+'')
-              this.Fields.add(desc);
+            if (this.type >= 3) {
+              // num
+              for (const item of data.AbnormalInfo) {
+                const desc = getDesc(item.Dept_Desc)
+                for (const iterator of sourceData) {
+                  const week = weekNum[iterator.name];
+                  if (item[week]) {
+                    iterator[desc] = parseFloat(item[week] + '')
+                    this.Fields.add(desc);
+                  }
+                }
+              }
+            } else {
+              // avg
+              for (const iterator of data.AbnormalInfo) {
+                const index = weekIndex[iterator.WeekCount];
+                const desc = getDesc(iterator.DEPT_DESC)
+                const timeAvg = (this.type === EpageType.部门响应时间 ? iterator.FRespDate : (this.type === EpageType.部门维修时间 ? iterator.FMainComDate : iterator.FStopDate))
+                sourceData[index][desc] = parseFloat(timeAvg + '')
+                this.Fields.add(desc);
+              }
             }
+
             o.next(sourceData)
             o.complete();
           }
@@ -119,22 +144,13 @@ export class DepartAvgComponent implements OnInit {
   }
   ngOnInit() {
     console.log('init')
+    if (this.type === EpageType.工段总时间 || this.type === EpageType.工段响应) this.FKind = 'Test';
     this.getSource().subscribe(
       sourceData => {
         let source
         let fields
-        // if (this.type < EpageType.工段总时间) {
-        //   // source = sourceData
-        //   // if (this.lineNum === 15) {
-        //   //   source = sourceData2
-        //   // }
-         
-        // } else {
-        //   source = sourceData3
-        //   fields = Fields3;
-        // }
         source = sourceData
-        console.log('set', this.Fields)
+        console.log('set,getSource', this.Fields,source)
         fields = Array.from(this.Fields);
         const dv = new DataSet.View().source(source);
         dv.transform({
@@ -221,5 +237,5 @@ export class DepartAvgComponent implements OnInit {
 function getDesc(name: string) {
   const arr = name.split('/');
   if (!arr.length) return name;
-  return arr[arr.length - 1].replace('OPR_','').replace('_ENG','').replace('_PRD','')
+  return arr[arr.length - 1].replace('OPR_', '').replace('_ENG', '').replace('_PRD', '')
 }

@@ -16,7 +16,7 @@ export class HeadComponent implements OnInit, OnDestroy {
   fontSizeTitle2 = 24;//二级标题
   @Input() workShop: WorkShop
   @Input() title = '工段看板';
-  @Input() showRight = true;
+  @Input() rpsMode = true;
   @Input() url = "/fullscreen/dashboard/rpsboard/v1";
   nowTime = Date.now();
   isVisible = false;
@@ -87,6 +87,11 @@ export class HeadComponent implements OnInit, OnDestroy {
 
     this.dateVisible = false;
     this.change(this.workShop, true)
+  }
+
+  changeAD(){
+    console.log('changeAD')
+    this.rpsBoardService.adData.pageAvg=!this.rpsBoardService.adData.pageAvg
   }
 
 }

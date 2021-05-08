@@ -46,7 +46,7 @@ export class RpsBoardService {
   dateMode: 'NightShift' | 'DayShift' | '' = ''
   pageChangeTime$: Subject<number> = new Subject();
   fullscreen$: Subject<boolean> = new Subject();
-  changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop ,force?:boolean}> = new Subject();
+  changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop, force?: boolean }> = new Subject();
 
   standard = {
     complete: {
@@ -81,6 +81,10 @@ export class RpsBoardService {
     }
   }
   workshops: WorkShop[] = []
+
+  adData = {
+    pageAvg: true
+  }
 
   constructor(private pageService: PageService, private http: HttpService, private titleSrv: TitleService) {
     // 获取工厂列表

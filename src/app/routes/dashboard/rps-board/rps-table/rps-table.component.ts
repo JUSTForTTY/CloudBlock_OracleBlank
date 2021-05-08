@@ -42,6 +42,11 @@ export class RpsTableComponent implements OnInit, OnDestroy {
 
   @ViewChild('smallTable') smallTable: NzTableComponent;
   @ViewChild('divBox') divBox: ElementRef;
+  progressColor = {
+    'success': '#52c41a',
+    'exception': '#f5222d',
+    'active': '#c2af04'
+  }
 
 
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }

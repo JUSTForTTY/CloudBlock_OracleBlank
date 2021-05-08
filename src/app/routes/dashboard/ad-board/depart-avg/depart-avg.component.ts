@@ -64,7 +64,7 @@ interface AvgItem {
 export class DepartAvgComponent implements OnInit {
   @Input() title = "部门-平均响应时间统计";
   @Input() type: EpageType = EpageType.部门响应时间;
-  @Input() lineNum = 5;
+  @Input() lineNum = 0;
   theme = require('assets/js/chartstheme.js');
   forceFit: boolean = true;
   height: number = 400;
@@ -118,6 +118,7 @@ export class DepartAvgComponent implements OnInit {
 
   }
   ngOnInit() {
+    console.log('init')
     this.getSource().subscribe(
       sourceData => {
         let source

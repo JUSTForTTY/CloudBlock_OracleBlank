@@ -1,7 +1,7 @@
 <div nz-row>
   <!-- 头部 -->
   <div nz-col nzXs="24" nzLg="6">
-    <div *ngIf="showRight">
+    <div *ngIf="rpsMode">
       <div style="margin-top: 3px; display: flex;flex-wrap: nowrap; align-items:center;">
         <div>
           <span style="color: #ffffff;font-size: 16px;">达成率：</span>
@@ -29,6 +29,7 @@
         <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.yield.good}}%↑</nz-tag>
       </div>
     </div>
+
 
 
 
@@ -62,9 +63,14 @@
           <nz-statistic *ngIf="rpsBoardService.date" style="color:white" [nzValue]="rpsBoardService.date+(rpsBoardService.dateMode==='DayShift'?' 白班':' 夜班')"
             [nzPrefix]="prefixTpl">
           </nz-statistic>
-          <button *ngIf="showRight" nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible"
+
+          <button *ngIf="rpsMode;else adButton" nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible"
           style="margin-left: 10px;"
           nzTrigger="click"><i nz-icon nzType="swap" nzTheme="outline"></i>历史</button>
+          <ng-template #adButton>
+            <button  nz-button style="margin-left: 10px;"  nzType="primary" (click)="changeAD()"><i nz-icon nzType="swap" nzTheme="outline"></i>切换</button>
+          </ng-template>
+
           <ng-template #contentTemplate>
             <div>
               <!-- 日期：{{date}} -->

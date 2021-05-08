@@ -3,6 +3,8 @@ import { _HttpClient } from '@delon/theme';
 
 import { HttpService, PageService } from 'ngx-block-core';
 import { Observable } from 'rxjs';
+import { RpsBoardService, WorkShop, FactoryCode } from '../../rps-board/rps-board.service';
+import { ActivatedRoute } from '@angular/router';
 
 const sourceData = [
   { name: 'WEEK1', 'PE': 5.5, 'EE': 4.5, 'TE': 3.9, 'AE': 3.1, 'JE': 2.0 },
@@ -77,7 +79,7 @@ export class DepartAvgComponent implements OnInit {
   label = Label
   data;
   Fields: Set<string> = new Set();
-  constructor(private http: _HttpClient) { }
+  constructor(private http: _HttpClient,private rpsBoardService:RpsBoardService,private route: ActivatedRoute) { }
 
   getSource(): Observable<any> {
     return new Observable<any>(o => {
@@ -101,7 +103,9 @@ export class DepartAvgComponent implements OnInit {
         { name: 'WEEK4' }
       ]
       const url = 'http://172.16.8.28:8088/api/getAbInfoBySecOrDept';
-      this.http.post(url, { FactoryCode: "SUZ01", FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
+      let factoryCode = FactoryCode[this.workShopCode];
+
+      this.http.post(url, { FactoryCode: factoryCode, FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
         (data: { AbnormalInfo: AvgItem[], errorcode: number }) => {
           console.log('data,getSource', data)
           if (data.errorcode + '' !== '0') {
@@ -145,7 +149,7 @@ export class DepartAvgComponent implements OnInit {
     console.log('init')
     if (this.type === EpageType.工段总时间 || this.type === EpageType.工段响应) this.FKind = 'Test';
     else if (this.type === EpageType.工厂响应) this.FKind = '';
-
+    this.getRouteParam()
     this.getSource().subscribe(
       sourceData => {
         let source
@@ -232,6 +236,11 @@ export class DepartAvgComponent implements OnInit {
     lineWidth: 2,
     lineDash: [3, 3]
   };
+  workShopCode=''
+  getRouteParam() {
+    const workShop = this.rpsBoardService.getRouteParam(this.route);
+    this.workShopCode = workShop.workShopCode;
+  }
 
 }
 

@@ -55,21 +55,26 @@ export class HeadComponent implements OnInit, OnDestroy {
   }
   change(workShop: WorkShop, force = false) {
     console.log('change changeWorkShop', this.workShop, workShop)
-    if (this.workShop.workShopCode === workShop.workShopCode && !force) return;
-    this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
-    // return;
-    if (workShop.workShopCode === '-1') {
-      this.rpsBoardService.isFour = true;
-    } else {
-      this.rpsBoardService.isFour = false;
+    if(this.rpsMode){
+      if (this.workShop.workShopCode === workShop.workShopCode && !force) return;
+      this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
+      // return;
+      if (workShop.workShopCode === '-1') {
+        this.rpsBoardService.isFour = true;
+      } else {
+        this.rpsBoardService.isFour = false;
+      }
+      this.rpsBoardService.changeWorkShop$.next({
+        obj: this.workShop,
+        newObj: workShop,
+        force: force
+      })
+      this.isVisible = false;
+    }else{
+      this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
+      location.reload();
     }
-    this.rpsBoardService.changeWorkShop$.next({
-      obj: this.workShop,
-      newObj: workShop,
-      force: force
-    })
-    this.isVisible = false;
-    // TODO
+    
 
   }
   changeMode(now = false) {

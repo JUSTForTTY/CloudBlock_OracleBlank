@@ -49,8 +49,7 @@ enum EpageType {
   部门响应时间, 部门维修时间, 工段总时间, 部门响应, 工段响应, 工厂响应
 }
 interface AvgItem {
-  DEPT_DESC: string,//"EC/OPR_EC_ENG"
-  Dept_Desc: string,
+  Dept_Desc: string,//"EC/OPR_EC_ENG"
   FMainComDate: number,//"26.4"
   FRespDate: number,//"12.6"
   FStopDate: number,//"495.2"
@@ -126,7 +125,7 @@ export class DepartAvgComponent implements OnInit {
               // avg
               for (const iterator of data.AbnormalInfo) {
                 const index = weekIndex[iterator.WeekCount];
-                const desc = getDesc(iterator.DEPT_DESC)
+                const desc = getDesc(iterator.Dept_Desc)
                 const timeAvg = (this.type === EpageType.部门响应时间 ? iterator.FRespDate : (this.type === EpageType.部门维修时间 ? iterator.FMainComDate : iterator.FStopDate))
                 sourceData[index][desc] = parseFloat(timeAvg + '')
                 this.Fields.add(desc);
@@ -145,6 +144,8 @@ export class DepartAvgComponent implements OnInit {
   ngOnInit() {
     console.log('init')
     if (this.type === EpageType.工段总时间 || this.type === EpageType.工段响应) this.FKind = 'Test';
+    else if (this.type === EpageType.工厂响应) this.FKind = '';
+
     this.getSource().subscribe(
       sourceData => {
         let source

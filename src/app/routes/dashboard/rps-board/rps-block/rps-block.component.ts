@@ -211,7 +211,7 @@ export class RpsBlockComponent implements OnInit {
     const errorListHeight = this.errorBox.nativeElement.clientHeight - this.errodHead.nativeElement.clientHeight
     console.log('errorBox', this.errorBox.nativeElement.clientHeight, this.errodHead.nativeElement.clientHeight, errorListHeight)
 
-    const pagesize = Math.floor(errorListHeight / (163 + 5) + 0.05)
+    const pagesize = Math.floor(errorListHeight / (210 + 5) + 0.05)
     this.nzPageSize = pagesize;
     console.log('changeSize', this.nzPageSize, this.workShop, this.allData)
     this.changePage(this.rightData, this.nzPageSize, true);

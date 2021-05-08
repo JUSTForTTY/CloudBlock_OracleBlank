@@ -5,7 +5,7 @@
     <app-head [workShop]="workShop" title="安灯看板" [rpsMode]="false" url="/fullscreen/dashboard/adboard/v1"></app-head>
 
   </div>
-  <div nz-row style="height: 90%;">
+  <div nz-row style="height: 90%;" [nzGutter]="4">
     <div nz-col nzSpan="20" style="height: 100%;">
       <div nz-row style="height: 100%;" [nzGutter]="4" *ngIf="rpsBoardService.adData.pageAvg">
         <div nz-col [nzSpan]="12" style="height: 50%;padding-right: 10px;">
@@ -27,10 +27,10 @@
       <div nz-row style="height: 100%;" [nzGutter]="4" *ngIf="!rpsBoardService.adData.pageAvg">
         <div nz-col [nzSpan]="12" style="height: 50%;padding-right: 10px;">
           <div style="height: 100%;">
-            <app-depart-avg title="部门-响应数"  [type]="3" [avg]="false"></app-depart-avg>
+            <app-depart-avg title="部门-响应数" [type]="3" [avg]="false"></app-depart-avg>
           </div>
         </div>
-        
+
         <div nz-col [nzSpan]="12" style="height: 50%;">
           <div style="height: 100%;">
             <app-depart-avg title="全厂-响应数" [type]="5" [avg]="false"></app-depart-avg>
@@ -46,7 +46,7 @@
 
 
 
-    <div nz-col nzSpan="4">
+    <div nz-col nzSpan="4"  #errorBox style="height: 100%;">
       <div nz-row class="shiftInfo-title" style="margin-left: 5px;" #errodHead nzType="flex" nzAlign="middle">
 
         <div nz-col nzSpan="6" *ngIf="rightData.length>0">
@@ -64,10 +64,13 @@
         </div>
 
       </div>
-      <ng-container *ngFor="let item of rightData;index as i">
-        <app-error-item [item]="item" *ngIf="i<3"></app-error-item>
+      <div style="margin-left: 5px;">
+        <ng-container *ngFor="let item of rightShow;index as i">
+          <app-error-item [item]="item"  ryDomVisible (visible)="visible($event,item,i)"></app-error-item>
 
-      </ng-container>
+        </ng-container>
+      </div>
+
     </div>
   </div>
 

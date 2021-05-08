@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../utils";
 import { HttpService, PageService } from 'ngx-block-core';
 import { RpsBoardService, WorkShop, FactoryCode } from '../rps-board/rps-board.service';
 import { ActivatedRoute } from '@angular/router';
 
-const DefaultTitle="安灯看板"
+const DefaultTitle = "安灯看板"
 @Component({
   selector: 'app-ad-board',
   templateUrl: './ad-board.component.html',
@@ -17,20 +17,43 @@ export class AdBoardComponent implements OnInit {
   isError = false;
   workshopCode = '';
   workShop: WorkShop;
-  constructor(private http: HttpService,public rpsBoardService:RpsBoardService,private route:ActivatedRoute) { }
+  private errorTimer;
+  private rightTimer;
+
+
+  constructor(private http: HttpService, public rpsBoardService: RpsBoardService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.getErrorData()
     this.getRouteParam()
+    this.autoSize()
+    if (this.errorTimer) {
+      clearInterval(this.errorTimer);
+    }
+    if (this.rightTimer) {
+      clearInterval(this.rightTimer);
+    }
+    this.errorTimer = setInterval(() => {
+      this.getErrorData();
+    }, 120 * 1000)
+    let index = 0
+    this.rightTimer = setInterval(() => {
+      index++;
+      this.changePage(this.rightData, this.nzPageSize);
+      if (index % 3===0) {
+        this.rpsBoardService.adData.pageAvg = !this.rpsBoardService.adData.pageAvg;
+      }
+    }, 15 * 1000)
+
   }
 
   getRouteParam() {
-    this.workShop =this.rpsBoardService.getRouteParam(this.route,DefaultTitle);
-    this.workshopCode=this.workShop.workShopCode;
-    if(this.workshopCode==='-1'){
+    this.workShop = this.rpsBoardService.getRouteParam(this.route, DefaultTitle);
+    this.workshopCode = this.workShop.workShopCode;
+    if (this.workshopCode === '-1') {
       const url = location.origin + `/fullscreen/dashboard/adboard/v1?workshopCode=SUZ15-1F`;
       location.replace(url);
-  
+
     }
 
   }
@@ -56,6 +79,9 @@ export class AdBoardComponent implements OnInit {
 
           this.isError = InitErrorData(this.rightData, data.data.CallUserInfo)
           console.log('errorData', this.rightData)
+          setTimeout(() => {
+            this.changeSize()
+          }, 10);
         } else {
           this.isError = false
           console.log('getErrorData', data.data.Msg, this.rightData, this.rightShow, this.rightOther)
@@ -67,4 +93,91 @@ export class AdBoardComponent implements OnInit {
     )
 
   }
+
+  visible(event, item, index) {
+    this.rpsBoardService.visible(event, item, index, this.rightShow, this.rightOther)
+
+  }
+  @ViewChild('errorBox') errorBox: ElementRef;
+  errorIconSize = 60;
+  nzPageSize = 1;
+  @ViewChild('errodHead') errodHead: ElementRef;
+  changeSize() {
+    const errorListHeight = this.errorBox.nativeElement.clientHeight - this.errodHead.nativeElement.clientHeight
+
+    const pagesize = Math.floor(errorListHeight / (210 + 5) + 0.05)
+    console.log('errorBox', this.errorBox.nativeElement.clientHeight, this.errodHead.nativeElement.clientHeight, errorListHeight, pagesize)
+
+    this.nzPageSize = pagesize;
+    this.changePage(this.rightData, this.nzPageSize, true);
+  }
+  initDatas() {
+    this.rightOther = [...this.rightData];
+    this.rightShow = [];
+
+  }
+  async changePage(allData: ErrorInfo[], size: number, init: boolean = false) {
+
+    if (init) {
+      this.initDatas()
+    }
+
+    let rightShow: ErrorInfo[] = []
+    if (allData.length === 0) {
+      return;
+    }
+
+    if (size >= allData.length) {
+      rightShow = [...allData];
+      this.rightShow = rightShow;
+      return;
+    }
+
+    const ToRight: ErrorInfo[] = []
+    for (const iterator of this.rightShow) {
+      ToRight.push(iterator)
+    }
+    let addNumber = 0;
+    for (const iterator of this.rightOther) {
+      rightShow.push(iterator);
+      addNumber++;
+      if (addNumber === size) {
+        break;
+      }
+    }
+    this.rightOther.splice(0, size);
+    // ToRight.sort((a, b) => a.index - b.index);
+
+    for (const iterator of ToRight) {
+      this.rightOther.push(iterator);
+    }
+    // for (let index = 0; index < array.length; index++) {
+    //   const element = array[index];
+    //  TODO 残缺补全
+    // }
+    this.rightShow = rightShow;
+    // this.rightShow.sort((a, b) => a.sort - b.sort);
+  }
+
+  autoSize() {
+    observableFromEvent(window, 'resize')
+      .subscribe((event) => {
+
+        setTimeout(() => {
+          this.changeSize()
+        }, 10);
+
+      });
+  }
+  ngOnDestroy() {
+
+    if (this.errorTimer) {
+      clearInterval(this.errorTimer);
+    }
+    if (this.rightTimer) {
+      clearInterval(this.rightTimer);
+    }
+
+  }
 }
+import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';

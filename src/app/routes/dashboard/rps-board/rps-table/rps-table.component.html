@@ -8,7 +8,7 @@
         <th class="thcenter">达成率 达标:&nbsp;{{headData.completeOk}} 未达标:&nbsp;{{headData.completeBad}}</th>
         <!-- <th >线体:{{nzTotal}}</th> -->
         <th class="thcenter">良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th>
-        <th class="thcenter">效率</th>
+        <!-- <th class="thcenter">效率</th> -->
       </tr>
     </thead>
     <tbody>
@@ -72,9 +72,9 @@
             {{ data.yield }}%
           </span>
         </td>
-        <td class="thcenter">
+        <!-- <td class="thcenter">
           <nz-progress [nzPercent]="100" nzType="circle"  [nzWidth]="48" [nzStrokeColor]="progressColor[data.completeStatus]"></nz-progress>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </nz-table>

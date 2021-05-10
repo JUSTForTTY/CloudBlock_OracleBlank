@@ -70,6 +70,8 @@ export interface ErrorInfo {
     status?: string;
     sort?: number;
     callUserInfo?: CallUserInfo[]
+    FResponseDate?:any;
+    [key:string]:any
 }
 export interface CallUserInfo {
     /** 姓名 */

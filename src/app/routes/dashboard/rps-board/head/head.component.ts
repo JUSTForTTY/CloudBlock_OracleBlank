@@ -72,7 +72,9 @@ export class HeadComponent implements OnInit, OnDestroy {
       this.isVisible = false;
     }else{
       this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
-      location.reload();
+      setTimeout(() => {
+        location.reload();
+      }, 50);
     }
     
 

@@ -6,13 +6,13 @@ import { TitleService } from '@delon/theme';
 
 export const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
-  'SX-P1': 'SUZ01',
+  'SX-P1': 'SX-P1',
   'SUZ21-2F': 'SUZ02',
-  'SX-P2': 'SUZ02',
+  'SX-P2': 'SX-P2',
   'SUZ15-2F': 'SUZ03',
-  'SX-P3': 'SUZ03',
+  'SX-P3': 'SX-P3',
   'SUZ21-1F': 'SUZ04',
-  'SX-P6': 'SUZ04',
+  'SX-P6': 'SX-P6',
 }
 export interface WorkShop {
   createTime?: string

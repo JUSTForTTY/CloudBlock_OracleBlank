@@ -79,15 +79,42 @@ export class DepartAvgComponent implements OnInit {
   label = Label
   data;
   Fields: Set<string> = new Set();
-  constructor(private http: _HttpClient,private rpsBoardService:RpsBoardService,private route: ActivatedRoute) { }
+  constructor(private http: HttpService, private rpsBoardService: RpsBoardService, private route: ActivatedRoute) { }
 
+  setWeek(weekIndex, weekNum, AbnormalInfo: AvgItem[],avg=true) {
+    const weeks = new Set<number>();
+    for (const iterator of AbnormalInfo) {
+      if(avg){
+        weeks.add(parseInt(iterator.WeekCount + ''))
+      }else{
+        for (const key in iterator) {
+          if (Object.prototype.hasOwnProperty.call(iterator, key)) {
+            const element = iterator[key];
+            if(key.length<=2&& typeof element==='number'){
+              weeks.add(parseInt(key + ''))
+            }
+          }
+        }
+      }
+      if (weeks.size >= 4) break;
+    }
+    const arr=Array.from(weeks).sort((a,b)=> a-b);
+
+    for (let index = 0; index < arr.length; index++) {
+      weekIndex[arr[index]]=index;
+      weekNum['WEEK'+(index+1)]=arr[index];
+    }
+    console.log('setWeek',arr,weekIndex,weekNum)
+
+
+  }
   getSource(): Observable<any> {
     return new Observable<any>(o => {
       const weekIndex = {
-        '16': '0',
-        '17': '1',
-        '18': '2',
-        '19': '3',
+        // '16': '0',
+        // '17': '1',
+        // '18': '2',
+        // '19': '3',
       }
       const weekNum = {
         'WEEK1': '16',
@@ -105,8 +132,9 @@ export class DepartAvgComponent implements OnInit {
       const url = 'http://172.16.8.28:8088/api/getAbInfoBySecOrDept';
       let factoryCode = FactoryCode[this.workShopCode];
 
-      this.http.post(url, { FactoryCode: factoryCode, FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
-        (data: { AbnormalInfo: AvgItem[], errorcode: number }) => {
+      this.http.postHttpAllUrl(url, { FactoryCode: factoryCode, FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
+        (res: { data: { AbnormalInfo: AvgItem[], errorcode: number } }) => {
+          const data = res.data
           console.log('data,getSource', data)
           if (data.errorcode + '' !== '0') {
             o.error(data);
@@ -114,6 +142,7 @@ export class DepartAvgComponent implements OnInit {
           }
           else {
             if (this.type >= 3) {
+              this.setWeek(weekIndex,weekNum,data.AbnormalInfo,false)
               // num
               for (const item of data.AbnormalInfo) {
                 const desc = getDesc(item.Dept_Desc)
@@ -126,6 +155,8 @@ export class DepartAvgComponent implements OnInit {
                 }
               }
             } else {
+              this.setWeek(weekIndex,weekNum,data.AbnormalInfo,true)
+
               // avg
               for (const iterator of data.AbnormalInfo) {
                 const index = weekIndex[iterator.WeekCount];
@@ -155,7 +186,7 @@ export class DepartAvgComponent implements OnInit {
         let source
         let fields
         source = sourceData
-        console.log('set,getSource', this.Fields,source)
+        console.log('set,getSource', this.Fields, source)
         fields = Array.from(this.Fields);
         const dv = new DataSet.View().source(source);
         dv.transform({
@@ -236,7 +267,7 @@ export class DepartAvgComponent implements OnInit {
     lineWidth: 2,
     lineDash: [3, 3]
   };
-  workShopCode=''
+  workShopCode = ''
   getRouteParam() {
     const workShop = this.rpsBoardService.getRouteParam(this.route);
     this.workShopCode = workShop.workShopCode;

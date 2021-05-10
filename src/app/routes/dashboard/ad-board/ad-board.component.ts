@@ -24,9 +24,10 @@ export class AdBoardComponent implements OnInit {
   constructor(private http: HttpService, public rpsBoardService: RpsBoardService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.getErrorData()
     this.getRouteParam()
     this.autoSize()
+    this.getErrorData()
+
     if (this.errorTimer) {
       clearInterval(this.errorTimer);
     }
@@ -62,14 +63,14 @@ export class AdBoardComponent implements OnInit {
   }
 
   getErrorData() {
-    let factoryCode = '-1';
-    if (factoryCode === '-1') factoryCode = '';
-    console.log('getAbnormalInfo do', factoryCode)
     // this.http.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode=SUZ15BE-1').subscribe(
     //   data=>{
     //     console.log('getErrorData SUZ15BE-1', data)
     //   }
     // )
+    let factoryCode = FactoryCode[this.workshopCode];
+    if (factoryCode === '-1') factoryCode = '';
+    console.log('getAbnormalInfo do', factoryCode)
 
     this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
       (data: {

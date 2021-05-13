@@ -75,13 +75,17 @@
             <div>
               <!-- 日期：{{date}} -->
               <nz-date-picker [(ngModel)]="date"></nz-date-picker>
-              <br>
+
               <nz-radio-group [(ngModel)]="dateMode">
                 <label nz-radio nzValue="DayShift">白班</label>
                 <label nz-radio nzValue="NightShift">夜班</label>
-              </nz-radio-group>
-              <button nz-button style="margin-left: 8px;" nzType="primary" (click)="changeMode()">确定</button>
-            </div><br>
+              </nz-radio-group><br>
+              <button nz-button style="margin-left: 8px;margin-top: 4px;" nzType="primary" (click)="changeMode()">查看历史</button>
+              <button nz-button style="margin-left: 8px;" (click)="changeMode(true)">返回时时</button>
+
+              <br>
+
+            </div>
 
           </ng-template>
 

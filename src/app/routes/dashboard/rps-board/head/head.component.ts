@@ -80,7 +80,7 @@ export class HeadComponent implements OnInit, OnDestroy {
 
   }
   changeMode(now = false) {
-
+    console.log('changeMode')
     if (now) {
       this.rpsBoardService.date = '';
       this.rpsBoardService.dateMode = '';

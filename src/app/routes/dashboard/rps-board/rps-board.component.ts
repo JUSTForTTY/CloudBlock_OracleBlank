@@ -32,27 +32,27 @@ export class RpsBoardComponent implements OnInit {
     this.getRouteParam();
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      console.log('changeWorkShop', data)
-      if ((data.obj.workShopCode === '-1' && (data.newObj.workShopCode !== '-1' || data.force))) {
-        this.workShop = null;
-        setTimeout(() => {
-          this.workShop = {
-            workShopCode: data.newObj.workShopCode,
-            isAdding: false,
-            sort: 1
-          }
-        }, 10);
-        this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
+      return;
+      // if ((data.obj.workShopCode === '-1' && (data.newObj.workShopCode !== '-1' || data.force))) {
+      //   this.workShop = null;
+      //   setTimeout(() => {
+      //     this.workShop = {
+      //       workShopCode: data.newObj.workShopCode,
+      //       isAdding: false,
+      //       sort: 1
+      //     }
+      //   }, 10);
+      //   this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
 
-      } else {
-        if (data.newObj.workShopCode === '-1') {
-          this.titleSrv.setTitle('全厂' + DefaultTitle)
-        } else {
-          if (!this.rpsBoardService.isFour)
-            this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
-        }
+      // } else {
+      //   if (data.newObj.workShopCode === '-1') {
+      //     this.titleSrv.setTitle('全厂' + DefaultTitle)
+      //   } else {
+      //     if (!this.rpsBoardService.isFour)
+      //       this.titleSrv.setTitle(data.newObj.workShopCode + DefaultTitle)
+      //   }
 
-      }
+      // }
     })
     this.versionUpdate()
     this.nzTimer = setInterval(() => this.versionUpdate(), 30 * 60 * 1000)

@@ -16,6 +16,10 @@ export interface Data {
     /** 0-无排产 1-正常 3-试产 2-保养 */
     isNull?: '0' | '1' | '2' | '3';
     index?: number;
+    efficiency?:number;
+    efficiencyStatus?:'success' | 'exception' | 'active';
+    [key:string]:any;
+
 }
 export interface UrlData {
     [key: string]: any;
@@ -25,7 +29,8 @@ export interface UrlData {
         SMT: Data[],
         ATP: Data[],
         planAchievementRate: { bad: number; good: number },
-        yield: { bad: number; good: number }
+        yield: { bad: number; good: number },
+        efficiency:{ bad: number; good: number }
     }
 
 }

@@ -131,7 +131,9 @@ export class RpsBlockComponent implements OnInit {
     }, 15 * 1000)
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      if (data.obj.sort === this.workShop.sort || data.force) {
+      console.log('changeData',data.newObj)
+
+      if (data.obj.sort === this.workShop.sort || data.newObj.workShopCode==='-1') {
         this.changeData(data.newObj)
       }
     })
@@ -152,7 +154,9 @@ export class RpsBlockComponent implements OnInit {
   // 1000 * 60 * 60 * 24 * 2 + 1000 * 30;
 
   changeData(newWorkShop: WorkShop) {
-    this.workShop.workShopCode = newWorkShop.workShopCode;
+    if(newWorkShop.workShopCode!=='-1'){
+      this.workShop.workShopCode = newWorkShop.workShopCode;
+    }
     for (const lineData of this.allData) {
 
       for (const onedata of lineData) {

@@ -56,6 +56,10 @@ export class RpsBoardService {
     yield: {
       good: 90,
       bad: 85
+    },
+    efficiency:{
+      good: 90,
+      bad: 85
     }
   }
   fourBlock: BlockData = {

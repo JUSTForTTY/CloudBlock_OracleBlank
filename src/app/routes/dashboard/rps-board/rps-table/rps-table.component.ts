@@ -89,6 +89,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // }
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
+      iterator.efficiencyStatus= this.getStatus('效率', iterator.efficiency);
       iterator.index = ++i;
     }
     this.testVis = (this.key.includes('SMT'));
@@ -218,7 +219,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
 
   /** 获取状态 */
-  getStatus(type: '良率' | '达成率', value): 'success' | 'exception' | 'active' {
+  getStatus(type: '良率' | '达成率' | '效率', value): 'success' | 'exception' | 'active' {
     if (type === '达成率') {
       if (value < this.rpsBoardService.standard.complete.bad) {
         // console.log('exception', value);
@@ -239,6 +240,14 @@ export class RpsTableComponent implements OnInit, OnDestroy {
         return 'exception'
       }
       else if (value > this.rpsBoardService.standard.yield.good) {
+        return 'success'
+      }
+      else return 'active'
+    }else if(type==='效率'){
+      if (value < this.rpsBoardService.standard.efficiency.bad) {
+        return 'exception'
+      }
+      else if (value > this.rpsBoardService.standard.efficiency.good) {
         return 'success'
       }
       else return 'active'

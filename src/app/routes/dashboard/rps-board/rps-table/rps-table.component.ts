@@ -48,7 +48,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     'active': '#c2af04'
   }
 
-
+  formatOne = (percent: number) => `${percent}%`;
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
 
   ngOnInit() {
@@ -129,7 +129,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
   changeSize() {
     const divHeight = this.divBox.nativeElement.clientHeight;
-    const pagesize = Math.floor((divHeight - 50) / 64 + 0.2)
+    const pagesize = Math.floor((divHeight - 50) / 60 + 0.2)
     this.nzPageSize = pagesize;
     this.newData = true;
     console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)

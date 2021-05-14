@@ -370,6 +370,10 @@ export class RpsBlockComponent implements OnInit {
       if (data.data.yield) {
         this.rpsBoardService.standard.yield = data.data.yield
       }
+      if (data.data.efficiency) {
+        this.rpsBoardService.standard.efficiency = data.data.efficiency
+      }
+
 
     },
       error => {

@@ -19,8 +19,10 @@ import { NgxTinymceModule } from 'ngx-tinymce';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { DndModule } from 'ngx-drag-drop';
 import { DomVisibleDirective } from "./utils/dom-visible.directive";
+import { HighlightDirective } from "./utils/highlight.directive";
+
 //
- 
+
 import { ViserModule } from 'viser-ng';
 
 const THIRDMODULES = [
@@ -35,7 +37,7 @@ const THIRDMODULES = [
 
 // #region your componets & directives
 const COMPONENTS = [];
-const DIRECTIVES = [DomVisibleDirective];
+const DIRECTIVES = [DomVisibleDirective,HighlightDirective];
 // #endregion
 
 @NgModule({

@@ -19,7 +19,7 @@
   </thead>
   <tbody style="background:#192B53;color:#ffffff">
     <ng-container *ngFor="let data of borderedTable.data;let i=index">
-      <tr>
+      <tr ryHighlight>
         <td [style.color]="data.smtWoState=='待排产'?'#FFD700':'#ffffff'">{{i+1+(nzPageIndex-1)*nzPageSize}}</td>
         <td [style.color]="data.smtWoState=='待排产'?'#FFD700':'#ffffff'">{{ data.woCode }}</td>
         <!-- <td>{{ data.productCode }}</td> -->

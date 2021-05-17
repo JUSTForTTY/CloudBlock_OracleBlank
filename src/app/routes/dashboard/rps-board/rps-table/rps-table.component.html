@@ -14,7 +14,8 @@
     <tbody>
       <tr *ngFor="let data of smallTable.data;index as i" ryHighlight (click)="jump(data)">
         <td>{{ data.prolineCode }}<ng-container *ngIf="data.isNull==='3'">
-            <br><nz-tag nzColor='#52c41a' >试产</nz-tag>
+            <br>
+            <nz-tag nzColor='#52c41a'>试产</nz-tag>
           </ng-container>
           <!-- <ng-container *ngIf="data.isNull==='2'">
             <br><nz-tag  [nzColor]="'#52c41a'">保养</nz-tag>
@@ -37,7 +38,7 @@
               无排产
             </ng-container>
             <ng-container *ngIf="data.isNull==='2'">
-              <span style="color:#c2af04;">保养</span> 
+              <span style="color:#c2af04;">保养</span>
             </ng-container>
             <!-- {{data.badNums+data.goodNums}} -->
             <ng-container *ngIf="data.isNull==='1'||data.isNull==='3'">
@@ -60,7 +61,7 @@
               无排产
             </ng-container>
             <ng-container *ngIf="data.isNull==='2'">
-              <span style="color:#c2af04;">保养</span> 
+              <span style="color:#c2af04;">保养</span>
             </ng-container>
             <ng-container *ngIf="data.isNull==='1'||data.isNull==='3'">
               良品：{{data.goodNums}}&nbsp;&nbsp;不良：{{data.badNums}}
@@ -75,7 +76,9 @@
         <td class="thcenter">
           <ng-container *ngIf="data.errorMsg">{{data.errorMsg}}</ng-container>
           <ng-container *ngIf="!data.errorMsg">
-            <nz-progress [nzPercent]="data.efficiency" nzType="circle" [nzFormat]="formatOne" [nzWidth]="52" [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
+            <nz-progress [nzPercent]="data.efficiency" [ngClass]="{'error': data.errorCode==eErrorCode.error}"
+              nzType="circle" [nzFormat]="formatOne" [nzWidth]="52"
+              [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
           </ng-container>
         </td>
       </tr>

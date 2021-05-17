@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Data, getTestData } from "../datas";
+import { Data, getTestData,EErrorCode } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
 import { RpsBoardService, WorkShop } from '../rps-board.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -47,7 +47,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     'exception': '#f5222d',
     'active': '#c2af04'
   }
-
+  eErrorCode=EErrorCode
   formatOne = (percent: number) => `${percent}%`;
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
 

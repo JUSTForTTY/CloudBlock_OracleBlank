@@ -18,6 +18,7 @@ export interface Data {
     index?: number;
     efficiency?:number;
     efficiencyStatus?:'success' | 'exception' | 'active';
+    errorMsg?:string;
     [key:string]:any;
 
 }

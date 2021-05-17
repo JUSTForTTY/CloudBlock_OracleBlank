@@ -73,7 +73,10 @@
           </span>
         </td>
         <td class="thcenter">
-          <nz-progress [nzPercent]="data.efficiency" nzType="circle" [nzFormat]="formatOne" [nzWidth]="52" [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
+          <ng-container *ngIf="data.errorMsg">{{data.errorMsg}}</ng-container>
+          <ng-container *ngIf="!data.errorMsg">
+            <nz-progress [nzPercent]="data.efficiency" nzType="circle" [nzFormat]="formatOne" [nzWidth]="52" [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
+          </ng-container>
         </td>
       </tr>
     </tbody>

@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
+import { DatePipe } from '@angular/common';
 
 interface BigData{
   title: string;
@@ -62,6 +63,20 @@ export class RpsBlockComponent implements OnInit {
     "SMT"?: number,
     "ATP"?: number
   }={};
+  signSection2?: {
+    "WAVE"?: number,
+    "shiftType"?: "白班" | "夜班",
+    "COATING"?: number,
+    "SMT"?: number,
+    "ATP"?: number
+  }={};
+  signSection3?: {
+    "WAVE"?: number,
+    "shiftType"?: "白班" | "夜班",
+    "COATING"?: number,
+    "SMT"?: number,
+    "ATP"?: number
+  }={};
 
   allData: BigData[][] = [];
   topData: BigData[] = [];
@@ -84,7 +99,7 @@ export class RpsBlockComponent implements OnInit {
 
   @ViewChild('errodHead') errodHead: ElementRef;
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private pageService: PageService, public rpsBoardService: RpsBoardService) {
+  constructor(private http: HttpService, private route: ActivatedRoute,private datePipe:DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
   subscription: Subscription;
@@ -344,8 +359,40 @@ export class RpsBlockComponent implements OnInit {
     }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
       this.signSection =  {};
+      this.signSection2 =  {};
+      this.signSection3 =  {};
+
+    
+
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
+
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp',{
+      "FDate":        this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+      "FShift": this.signSection.shiftType==='白班'?"DayShift":'NightShift',
+      "FactoryCode": this.workShop.workShopCode,
+      "Fkind": "0"
+      }).subscribe((data: any) => {
+        console.log('getkp0',data)
+        if(data.data && data.data.length){
+          for (const iterator of data.data) {
+            this.signSection2[iterator['WORK_SHOP_CODE']]=iterator['HeadCount']
+          }
+        }
+      })
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp',{
+      "FDate":        this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+      "FShift": this.signSection.shiftType==='白班'?"DayShift":'NightShift',
+      "FactoryCode": this.workShop.workShopCode,
+      "Fkind": "1"
+      }).subscribe((data: any) => {
+        console.log('getkp1',data)
+        if(data.data && data.data.length){
+          for (const iterator of data.data) {
+            this.signSection3[iterator['WORK_SHOP_CODE']]=iterator['HeadCount']
+          }
+        }
+      })
       
       for (const option of options) {
         console.log('data', option.key, data);

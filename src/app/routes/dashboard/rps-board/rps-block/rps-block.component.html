@@ -34,10 +34,19 @@
               <!-- 上层 左  -->
               <div nz-row style="height: 100%;">
                 <div nz-col nzXs="24" nzLg="24" style="height: 100%; background:#192B53;">
-                  <div style="height: 10%;text-align: center;">
-                    <span style="color:#1e91de;text-align: center;" [style.font-size]="fontSizeTitle2+'px'">
-                      {{oneData.title}}
-                    </span>
+                  <div style="height: 10%;display: flex;align-items: center;justify-content: space-between; padding-left:8px;padding-right:8px;">
+
+                    <div>
+                      <span style="color:#1e91de;text-align: center;" [style.font-size]="fontSizeTitle2+'px'">
+                        <i nz-icon nzType="database" nzTheme="twotone"></i>
+                        {{oneData.title}}
+                      </span>
+                    </div>
+                    <div *ngIf="!isFourBlock">
+                      <span [style.font-size]="(fontSizeTitle2-2)+'px'">
+                        签到：{{signSection[oneData.key]}} 考勤： 排班：
+                      </span>
+                    </div>
                   </div>
 
                   <div style="height: 89%;">
@@ -77,7 +86,8 @@
 
       </div>
       <ng-container *ngFor="let item of rightShow;index as i">
-        <app-error-item [item]="item" ryDomVisible (visible)="visible($event,item,i)" (showErrorDetail)="showErrorDetail($event);"></app-error-item>
+        <app-error-item [item]="item" ryDomVisible (visible)="visible($event,item,i)"
+          (showErrorDetail)="showErrorDetail($event);"></app-error-item>
 
       </ng-container>
       <!-- <div style="margin-top: 5px;" class="success" [highlightType]="item.status" ryChangBg defaultColor="#192b53"

@@ -7,6 +7,12 @@ import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
 
+interface BigData{
+  title: string;
+  data: Data[];
+  key:string;
+  isLoading?: boolean;
+}
 
 const options: {
   key: string,
@@ -49,23 +55,17 @@ export class RpsBlockComponent implements OnInit {
   currentErrorInfo: ErrorInfo
   leftSpan = 20
   @Input() workShop: WorkShop
+  signSection?: {
+    "WAVE"?: number,
+    "shiftType"?: "白班" | "夜班",
+    "COATING"?: number,
+    "SMT"?: number,
+    "ATP"?: number
+  }={};
 
-
-  allData: {
-    title: string;
-    data: Data[];
-    isLoading?: boolean;
-  }[][] = [];
-  topData: {
-    title: string;
-    data: Data[];
-    isLoading?: boolean;
-  }[] = [];
-  bottomData: {
-    title: string;
-    data: Data[];
-    isLoading?: boolean;
-  }[] = [];
+  allData: BigData[][] = [];
+  topData: BigData[] = [];
+  bottomData: BigData[] = [];
   fontSizeTitle1 = 42;//一级标题
   fontSizeTitle2 = 24;//二级标题
   tableSize: 'middle' | 'small' = 'middle';
@@ -131,9 +131,9 @@ export class RpsBlockComponent implements OnInit {
     }, 15 * 1000)
 
     this.subscription = this.rpsBoardService.changeWorkShop$.subscribe(data => {
-      console.log('changeData',data.newObj)
+      console.log('changeData', data.newObj)
 
-      if (data.obj.sort === this.workShop.sort || data.newObj.workShopCode==='-1') {
+      if (data.obj.sort === this.workShop.sort || data.newObj.workShopCode === '-1') {
         this.changeData(data.newObj)
       }
     })
@@ -154,7 +154,7 @@ export class RpsBlockComponent implements OnInit {
   // 1000 * 60 * 60 * 24 * 2 + 1000 * 30;
 
   changeData(newWorkShop: WorkShop) {
-    if(newWorkShop.workShopCode!=='-1'){
+    if (newWorkShop.workShopCode !== '-1') {
       this.workShop.workShopCode = newWorkShop.workShopCode;
     }
     for (const lineData of this.allData) {
@@ -276,25 +276,28 @@ export class RpsBlockComponent implements OnInit {
     this.topData.push({
       title: 'SMT达成率',
       data: getTestData(),
+      key:'SMT',
       isLoading: true
     })
     this.topData.push({
       title: 'WAVE达成率',
       data: getTestData(),
+      key:'WAVE',
       isLoading: true
     })
 
     this.bottomData.push({
       title: 'COATING达成率',
       data: getTestData(),
+      key:'COATING',
       isLoading: true
       // data:[]
     })
     this.bottomData.push({
       title: 'ATP达成率',
       data: getTestData(),
+      key:'ATP',
       isLoading: true
-
     })
     this.allData.push(this.topData);
     this.allData.push(this.bottomData);
@@ -340,7 +343,10 @@ export class RpsBlockComponent implements OnInit {
       url += `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
     }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
+      this.signSection =  {};
     this.http.getHttp(url).subscribe((data: UrlData) => {
+      this.signSection = data.data.signSection || {};
+      
       for (const option of options) {
         console.log('data', option.key, data);
         const dataList = data.data[option.key];

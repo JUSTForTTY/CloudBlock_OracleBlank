@@ -35,7 +35,14 @@ export interface UrlData {
         ATP: Data[],
         planAchievementRate: { bad: number; good: number },
         yield: { bad: number; good: number },
-        efficiency: { bad: number; good: number }
+        efficiency: { bad: number; good: number },
+        signSection?: {
+            "WAVE": number,
+            "shiftType": "白班" | "夜班",
+            "COATING": number,
+            "SMT": number,
+            "ATP": number
+        },
     }
 
 }

@@ -1679,7 +1679,8 @@ export class FlowchartComponent implements OnInit, OnDestroy {
         let updateparam = {
           opPotId: updateBean.opPotId,
           opId: newId,
-          csysPotAtrribute: potAttribute
+          csysPotAtrribute: potAttribute,
+          opCode:this.opName
         }
         this.httpService.putHttp("/oppot", updateparam).subscribe((data: any) => {
 

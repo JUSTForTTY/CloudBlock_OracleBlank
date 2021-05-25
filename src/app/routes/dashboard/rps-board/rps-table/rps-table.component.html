@@ -12,8 +12,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of smallTable.data;index as i" ryHighlight (click)="jump(data)">
-        <td>{{ data.prolineCode }}<ng-container *ngIf="data.isNull==='3'">
+      <tr *ngFor="let data of smallTable.data;index as i" ryHighlight >
+        <td (click)="jump(data)">{{ data.prolineCode }}<ng-container *ngIf="data.isNull==='3'">
             <br>
             <nz-tag nzColor='#52c41a'>试产</nz-tag>
           </ng-container>
@@ -23,7 +23,7 @@
           <!-- <g2-gauge [title]="'核销率'" height="50" [percent]="60" ></g2-gauge> -->
 
         </td>
-        <td>
+        <td (click)="jump(data)">
           <!-- <span style="margin-left: 20%; font-size: 16px;position: relative;"
             [ngStyle]="{color:data.planNums===0&&!data.isNull?'#f50':'#ffffff'}">
             <ng-container *ngIf="data.isNull;">
@@ -55,7 +55,7 @@
           </span>
 
         </td>
-        <td>
+        <td (click)="jump(data)">
           <span style="margin-left: 8%; font-size: 16px;">
             <ng-container *ngIf="data.isNull==='0'">
               无排产
@@ -73,7 +73,8 @@
             {{ data.yield }}%
           </span>
         </td>
-        <td class="thcenter">
+        
+        <td class="thcenter" (click)="showDeatil(data)" style="cursor: pointer;" defaultColor="rgba(0, 0, 255, 0.1)" ryHighlight >
           <ng-container *ngIf="data.errorMsg">{{data.errorMsg}}</ng-container>
           <ng-container *ngIf="!data.errorMsg">
             <nz-progress [nzPercent]="data.efficiency" [ngClass]="{'error': data.errorCode==eErrorCode.error}"
@@ -85,3 +86,11 @@
     </tbody>
   </nz-table>
 </div>
+
+<nz-modal [(nzVisible)]="isVisible" [nzWidth]="1200" (nzOnCancel)="isVisible=false;" [nzStyle]="{ top: '200px' }"
+  [nzOkText]="null" [nzCancelText]="null" [nzBodyStyle]="{'background': '#192b53'}" [nzFooter]="null">
+
+  <app-efficiency-detail *ngIf="isVisible" [data]="effData"></app-efficiency-detail>
+
+
+</nz-modal>

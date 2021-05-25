@@ -22,6 +22,22 @@ export interface Data {
     errorCode?: EErrorCode;
     [key: string]: any;
 
+    efficiencyFormula?: EfficiencyFormula;
+
+}
+export interface EfficiencyFormula {
+    "efficiency": number,
+    "signTime": number,
+    "signWorker": number,
+    "efficiencyFormulaProd": {
+        "effectiveOutput": number,
+        "productCode": string,
+        "stdUph": number,
+        "stdHuman": number,
+        "produce": number,
+        "stdCt": number
+    }[];
+    prolineCode: String;// line
 }
 export enum EErrorCode {
     success, error, null

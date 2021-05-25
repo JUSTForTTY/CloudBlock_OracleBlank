@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Data, getTestData,EErrorCode } from "../datas";
+import { Data, getTestData, EErrorCode } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
 import { RpsBoardService, WorkShop } from '../rps-board.service';
 import { Subscription } from 'rxjs/Subscription';
 import { NzTableComponent } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
+import { EfficiencyFormula } from "../datas";
 
 @Component({
   selector: 'app-rps-table',
@@ -39,6 +40,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   nzPageSize = 5;
   nzTotal: Number;
   stopPage = false;
+  isVisible = false;
+  effData: EfficiencyFormula;
 
   @ViewChild('smallTable') smallTable: NzTableComponent;
   @ViewChild('divBox') divBox: ElementRef;
@@ -47,10 +50,18 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     'exception': '#f5222d',
     'active': '#c2af04'
   }
-  eErrorCode=EErrorCode
+  eErrorCode = EErrorCode
   formatOne = (percent: number) => `${percent}%`;
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
+  showDeatil(data: Data) {
+    console.log('showDeatil', data,)
+    
+    this.effData = data.efficiencyFormula;
+    if(!this.effData) return;
+    this.effData.prolineCode=data.prolineCode;
+    this.isVisible = true;
 
+  }
   ngOnInit() {
     let i = 0;
     for (const iterator of this.data) {
@@ -89,7 +100,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       // }
       iterator.completeStatus = this.getStatus('达成率', iterator.planAchievementRate);
       iterator.yieldStatus = this.getStatus('良率', iterator.yield);
-      iterator.efficiencyStatus= this.getStatus('效率', iterator.efficiency);
+      iterator.efficiencyStatus = this.getStatus('效率', iterator.efficiency);
       iterator.index = ++i;
     }
     this.testVis = (this.key.includes('SMT'));
@@ -243,7 +254,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
         return 'success'
       }
       else return 'active'
-    }else if(type==='效率'){
+    } else if (type === '效率') {
       if (value < this.rpsBoardService.standard.efficiency.bad) {
         return 'exception'
       }

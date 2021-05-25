@@ -1,0 +1,60 @@
+
+<div style="margin-top: 5px;" *ngIf="data">
+
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="12">
+      产线：{{data.prolineCode}}
+    </div>
+    <div nz-col nzSpan="12">
+      效率：{{data.efficiency}}%
+    </div>
+
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="12">
+      签到总时间：{{data.signTime/3600 | number:'.3-4'}}/小时
+    </div>
+    <div nz-col nzSpan="12">
+      签到人数：{{data.signWorker}}
+    </div>
+    
+  </div>
+
+
+  <div nz-row class="shiftInfo-title">
+    <div nz-col nzSpan="6">
+      产品信息
+    </div>
+  </div>
+  <ng-container *ngFor="let pro of data.efficiencyFormulaProd">
+
+    <div style="border: 1px dashed #ccc;">
+      <div nz-row class="shiftInfo-content">
+        <div nz-col nzSpan="12" >
+          产品：{{pro.productCode}}
+        </div>
+        <div nz-col nzSpan="12">
+          产出： {{pro.produce}}
+        </div>
+      </div>
+      <div nz-row class="shiftInfo-content">
+        <div nz-col nzSpan="12">
+          工时：{{pro.effectiveOutput/3600 | number:'.3-4'}}/小时
+        </div>
+        <div nz-col nzSpan="12">
+          标准人力： {{pro.stdHuman}}
+        </div>
+      </div>
+      <div nz-row class="shiftInfo-content">
+        <div nz-col nzSpan="12">
+          UPH：{{pro.stdUph}}（标准小时产出）
+        </div>
+        <div nz-col nzSpan="12">
+          CT： {{pro.stdCt}}
+        </div>
+      </div>
+    </div>
+    
+  </ng-container>
+ 
+</div>

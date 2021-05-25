@@ -13,8 +13,9 @@ import { HeadModule } from './head/head.module';
 import { TimerComponent } from './timer/timer.component';
 import { ErrorItemModule } from "./error-item/error-item.module";
 import { TimerModule } from "./timer/timer.module";
+import { EfficiencyDetailComponent } from './efficiency-detail/efficiency-detail.component';
 @NgModule({
-  declarations: [RpsBoardComponent, RpsTableComponent, ErrorDetailComponent, RpsBlockComponent],
+  declarations: [RpsBoardComponent, RpsTableComponent, ErrorDetailComponent, RpsBlockComponent, EfficiencyDetailComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,

@@ -1,6 +1,12 @@
-
 <div style="margin-top: 5px;" *ngIf="data">
 
+  <span style=" color: #ffffff;
+  font-size: 16px;">
+    1.SMT,Wave，Coating计算方式： 生产效率=Σ（产出产品数量/产品标准UPH）*标准人力/整线体投入的工时*100% <br>
+    2.ATP计算方式： 生产效率=Σ（产出产品数量*大CT/3600）/整线体投入的工时*100%
+  </span>
+  <hr>
+ 
   <div nz-row class="shiftInfo-content">
     <div nz-col nzSpan="12">
       产线：{{data.prolineCode}}
@@ -17,7 +23,7 @@
     <div nz-col nzSpan="12">
       签到人数：{{data.signWorker}}
     </div>
-    
+
   </div>
 
 
@@ -30,7 +36,7 @@
 
     <div style="border: 1px dashed #ccc;">
       <div nz-row class="shiftInfo-content">
-        <div nz-col nzSpan="12" >
+        <div nz-col nzSpan="12">
           产品：{{pro.productCode}}
         </div>
         <div nz-col nzSpan="12">
@@ -38,7 +44,7 @@
         </div>
       </div>
       <div nz-row class="shiftInfo-content">
-        <div nz-col nzSpan="12">
+        <div nz-col nzSpan="12" [ngStyle]="{color: pro.effectiveOutput?'#ffffff':'red'}">
           工时：{{pro.effectiveOutput/3600 | number:'.3-4'}}/小时
         </div>
         <div nz-col nzSpan="12">
@@ -54,7 +60,7 @@
         </div>
       </div>
     </div>
-    
+
   </ng-container>
- 
+
 </div>

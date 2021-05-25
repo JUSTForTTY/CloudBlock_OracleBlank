@@ -223,8 +223,37 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     //初始化代码
     this.baseInit();
-
+    this.getAllnode();
   }
+  in_out_info: { [key: string]: string } = {};
+  getAllnode() {
+    this.httpService.postHttp(this.nodeTargertUrl, { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
+      // this.workType = data.data[0].csysWorkflowType;
+      // for
+      console.log('getAllnode', data);
+      for (const iterator of data.data) {
+        this.in_out_info[iterator.csysPotId]='';
+        if (iterator.csysPotAtrribute) {
+          switch (iterator.csysPotAtrribute) {
+            case '7':
+              this.in_out_info[iterator.csysPotId] = ' 投入/产出'
+              break;
+            case '8':
+              this.in_out_info[iterator.csysPotId] = ' 产出点'
+              break;
+            case '9':
+              this.in_out_info[iterator.csysPotId] = ' 投入点'
+              break;
+
+            default:
+              break;
+          }
+        }
+
+      }
+    });
+  }
+
 
   baseInit() {
     this.workflowId = this.pageService.getRouteParams(this.route, 'workflowId', this.path);
@@ -412,9 +441,9 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     let params = {
       csysPotId: data.id,
     }
-    this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
+    // this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
 
-    })
+    // })
     this.httpService.postHttp(this.nodeTargertUrl, params).subscribe((potdata: any) => {
 
       if (potdata.data[0].csysPotStyleId == 'LHCsysPotStyle20191111014750540000023') {
@@ -1680,7 +1709,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
           opPotId: updateBean.opPotId,
           opId: newId,
           csysPotAtrribute: potAttribute,
-          opCode:this.opName
+          opCode: this.opName
         }
         this.httpService.putHttp("/oppot", updateparam).subscribe((data: any) => {
 
@@ -4721,7 +4750,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
       console.log("工序组数据检测", updateData);
       updateData.data.forEach(element => {
-        console.log("工序组", element.opId+"--"+element.csysPotId);
+        console.log("工序组", element.opId + "--" + element.csysPotId);
         if (element.opId == element.csysPotId) {
 
           this.httpService.deleteHttp("/oppot/" + element.opPotId).subscribe((data: any) => {

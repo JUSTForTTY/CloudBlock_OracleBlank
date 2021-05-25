@@ -3,7 +3,7 @@
     <div nz-row [nzGutter]="24" class="pt-lg">
 
         <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
-
+test
 
             <!--工作流图形构建-->
             <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
@@ -25,7 +25,7 @@
 
                         <ng-template #nodeTemplate let-node>
                             <svg:g class="node" style="width:100px" ngx-tooltip [tooltipPlacement]="'top'"
-                                [tooltipType]="'tooltip'" [tooltipTitle]="node.label">
+                                [tooltipType]="'tooltip'" [tooltipTitle]="node.label+in_out_info[node.id]">
 
                                 <ng-container *ngIf="node.shape == 'rect'||node.shape == '矩形'">
 

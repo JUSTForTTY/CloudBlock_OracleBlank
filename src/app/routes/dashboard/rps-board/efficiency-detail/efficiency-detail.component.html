@@ -2,8 +2,9 @@
 
   <span style=" color: #ffffff;
   font-size: 16px;">
-    1.SMT,Wave，Coating计算方式： 生产效率=Σ（产出产品数量/产品标准UPH）*标准人力/整线体投入的工时*100% <br>
-    2.ATP计算方式： 生产效率=Σ（产出产品数量*大CT/3600）/整线体投入的工时*100%
+    1.效率计算方式：Σ产出工时/整线体投入的工时*100% <br>
+    2.SMT,Wave，Coating产出工时计算方式： 产出工时=产出产品数量/产品标准UPH）*标准人力 <br>
+    3.ATP产出工时计算方式： 产出工时=产出产品数量*大CT/3600
   </span>
   <hr>
  
@@ -18,7 +19,7 @@
   </div>
   <div nz-row class="shiftInfo-content">
     <div nz-col nzSpan="12">
-      签到总时间：{{data.signTime/3600 | number:'.3-4'}}/小时
+      签到总时间：{{data.signTime/3600 | number:'.3-4'}}（小时）
     </div>
     <div nz-col nzSpan="12">
       签到人数：{{data.signWorker}}
@@ -45,7 +46,7 @@
       </div>
       <div nz-row class="shiftInfo-content">
         <div nz-col nzSpan="12" [ngStyle]="{color: pro.effectiveOutput?'#ffffff':'red'}">
-          工时：{{pro.effectiveOutput/3600 | number:'.3-4'}}/小时
+          工时：{{pro.effectiveOutput/3600 | number:'.3-4'}}（小时）
         </div>
         <div nz-col nzSpan="12">
           标准人力： {{pro.stdHuman}}

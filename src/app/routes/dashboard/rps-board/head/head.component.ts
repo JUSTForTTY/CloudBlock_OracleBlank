@@ -91,7 +91,7 @@ export class HeadComponent implements OnInit, OnDestroy {
       this.rpsBoardService.date = date;
       this.rpsBoardService.dateMode = mode;
     }
-
+    this.rpsBoardService.historyUrl=`/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`;
     this.dateVisible = false;
     this.change(this.workShop, true)
   }

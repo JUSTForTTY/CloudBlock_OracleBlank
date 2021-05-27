@@ -45,7 +45,7 @@ export class AdBoardComponent implements OnInit {
       if (index % 4===0) {
         this.rpsBoardService.adData.pageAvg = !this.rpsBoardService.adData.pageAvg;
       }
-    }, 15 * 1000)
+    }, 25 * 1000)
 
 
 

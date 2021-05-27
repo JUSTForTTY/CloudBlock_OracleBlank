@@ -3,11 +3,40 @@
     <div nz-row>
       <div nz-col nzSpan="4">
 
-        <nz-statistic style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'" [nzPrefix]="prefixTpl">
-        </nz-statistic>
-        <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
-        
-        <button *ngIf="isBack" nz-button   nzSize="large" (click)="goBack()"><i nz-icon type="left"></i>返回</button>
+        <div style="display:flex;align-items: center;width: 100%;">
+
+          <nz-statistic *ngIf="!rpsBoardService.date" style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"
+            [nzPrefix]="prefixTpl">
+          </nz-statistic>
+          <!-- {{rpsBoardService.date}} -->
+          <nz-statistic *ngIf="rpsBoardService.date" style="color:white" [nzValue]="rpsBoardService.date+(rpsBoardService.dateMode==='DayShift'?' 白班':' 夜班')"
+            [nzPrefix]="prefixTpl">
+          </nz-statistic>
+          <button nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible"
+          style="margin-left: 5px;"
+          nzTrigger="click"><i nz-icon nzType="swap" nzTheme="outline"></i>历史</button>
+          <ng-template #contentTemplate>
+            <div>
+              <!-- 日期：{{date}} -->
+              <nz-date-picker [(ngModel)]="date"></nz-date-picker>
+
+              <nz-radio-group [(ngModel)]="dateMode">
+                <label nz-radio nzValue="DayShift">白班</label>
+                <label nz-radio nzValue="NightShift">夜班</label>
+              </nz-radio-group><br>
+              <button nz-button style="margin-left: 8px;margin-top: 4px;" nzType="primary" (click)="changeMode()">查看历史</button>
+              <button nz-button style="margin-left: 8px;" (click)="changeMode(true)">返回实时</button>
+
+              <br>
+
+            </div>
+
+          </ng-template>
+          <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
+        </div>
+
+
+        <button *ngIf="isBack" nz-button nzSize="large" (click)="goBack()"><i nz-icon type="left"></i>返回</button>
 
       </div>
       <div nz-col nzSpan="16">
@@ -33,10 +62,10 @@
     <div nz-row [nzGutter]="12" style="margin-bottom:20px">
       <div nz-col nzSpan="24">
         <div nz-col nzSpan="20">
-          <app-yield-table [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-table>
+          <app-yield-table #yieldTable [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-table>
         </div>
         <div nz-col nzSpan="4" style="background:#192B53;">
-          <app-wo-order-info [prolineCode]=prolineCode [prolineType]=prolineType></app-wo-order-info>
+          <app-wo-order-info #worderInfo [prolineCode]=prolineCode [prolineType]=prolineType></app-wo-order-info>
 
         </div>
 
@@ -51,7 +80,7 @@
 
       </div>
       <div nz-col nzSpan="16">
-        <app-yield-barline-v2 [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-barline-v2>
+        <app-yield-barline-v2 #barline [prolineCode]=prolineCode [prolineType]=prolineType></app-yield-barline-v2>
       </div>
       <div nz-col nzSpan="4" class="shiftInfo">
 

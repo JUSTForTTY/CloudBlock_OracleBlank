@@ -1,107 +1,107 @@
 <div style="margin-top: 5px;width: 100%;" class="success" [highlightType]="item.status" ryChangBg defaultColor="#192b53"
-        (click)="clickItem();">
+  (click)="clickItem();">
 
-        <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="7">
-            编号(#{{item.index}})
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="7">
+      编号(#{{item.index}})
+    </div>
+    <div nz-col nzSpan="17">
+      {{item.FBillNo}}
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+    <div nz-col nzSpan="7">
+      状态
+    </div>
+    <div nz-col nzSpan="17">
+      <nz-alert [nzType]="item.status" [nzMessage]="(item.FIsTransfer?'转交 ':'')+item.FState" nzShowIcon></nz-alert>
+    </div>
+  </div>
+  <div nz-row class="shiftInfo-content">
+
+    <nz-timeline>
+      <nz-timeline-item class="red" nzColor="red">
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            发起
           </div>
-          <div nz-col nzSpan="17">
-            {{item.FBillNo}}
+          <div nz-col nzSpan="19">
+            {{item.FCallUserName}} &nbsp;&nbsp;{{item.FCallDate}}
           </div>
         </div>
-        <div nz-row class="shiftInfo-content">
-          <div nz-col nzSpan="7">
-            状态
+        <div nz-row *ngIf="item.FLocation">
+          <div nz-col nzSpan="5">
+            位置
           </div>
-          <div nz-col nzSpan="17">
-            <nz-alert [nzType]="item.status" [nzMessage]="item.FState" nzShowIcon></nz-alert>
+          <div nz-col nzSpan="19">
+            {{item.FLocation}}
           </div>
         </div>
-        <div nz-row class="shiftInfo-content">
-
-          <nz-timeline>
-            <nz-timeline-item class="red" nzColor="red">
-              <div nz-row>
-                <div nz-col nzSpan="5">
-                  发起
-                </div>
-                <div nz-col nzSpan="19">
-                  {{item.FCallUserName}} &nbsp;&nbsp;{{item.FCallDate}}
-                </div>
-              </div>
-              <div nz-row *ngIf="item.FLocation">
-                <div nz-col nzSpan="5">
-                  位置
-                </div>
-                <div nz-col nzSpan="19">
-                  {{item.FLocation}}
-                </div>
-              </div>
-              <div nz-row>
-                <div nz-col nzSpan="5">
-                  原因
-                </div>
-                <div nz-col nzSpan="19">
-                  {{item.FReason}}
-                </div>
-              </div>
-              <div *ngIf="item.status==='error'">
-                <app-timer [date]="item.FCallDate"></app-timer>
-              </div>
-            </nz-timeline-item>
-            <nz-timeline-item class="yellow" nzColor="#c2af04" *ngIf="item.FResponseDate">
-              <div nz-row>
-                <div nz-col nzSpan="5">
-                  响应
-                </div>
-                <div nz-col nzSpan="19">
-                  <ng-container *ngIf="item.FRespDate<180">
-                    {{item.FRespUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
-                  </ng-container>
-                  <ng-container *ngIf="item.FRespDate>=180">
-                    {{item.FRespUserName}} &nbsp;&nbsp;{{item.FRespDate/60 |number:'1.0-1'}}小时
-                  </ng-container>
-                </div>
-              </div>
-              <div *ngIf="item.status==='warning'">
-                <app-timer [date]="item.FResponseDate"></app-timer>
-              </div>
-            </nz-timeline-item>
-            <nz-timeline-item class="green" nzColor="#52c41a" *ngIf="item.status==='success'">
-              <div nz-row>
-                <div nz-col nzSpan="5">
-                  维修
-                </div>
-                <div nz-col nzSpan="19">
-                  <ng-container>
-                    <ng-container *ngIf="item.FMaintDate<180">
-                      {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FMaintDate}}分钟
-                    </ng-container>
-                    <ng-container *ngIf="item.FMaintDate>=180">
-                      {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FMaintDate/60 |number:'1.0-1'}}小时
-                    </ng-container>
-                  </ng-container>
-
-                </div>
-
-              </div>
-            </nz-timeline-item>
-            <nz-timeline-item nzColor="red">
-              <div nz-row>
-                <div nz-col nzSpan="5">
-                  停线累计
-                </div>
-                <div nz-col nzSpan="19">
-                  <ng-container *ngIf="item.FStopLineDate<180">
-                    {{item.FStopLineDate}}分钟
-                  </ng-container>
-                  <ng-container *ngIf="item.FStopLineDate>=180">
-                    {{item.FStopLineDate/60 |number:'1.0-1'}}小时
-                  </ng-container>
-                </div>
-              </div>
-
-            </nz-timeline-item>
-          </nz-timeline>
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            原因
+          </div>
+          <div nz-col nzSpan="19">
+            {{item.FReason}}
+          </div>
         </div>
-      </div>
+        <div *ngIf="item.status==='error'">
+          <app-timer [date]="item.FCallDate"></app-timer>
+        </div>
+      </nz-timeline-item>
+      <nz-timeline-item class="yellow" nzColor="#c2af04" *ngIf="item.FResponseDate">
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            响应
+          </div>
+          <div nz-col nzSpan="19">
+            <ng-container *ngIf="item.FRespDate<180">
+              {{item.FRespUserName}} &nbsp;&nbsp;{{item.FRespDate}}分钟
+            </ng-container>
+            <ng-container *ngIf="item.FRespDate>=180">
+              {{item.FRespUserName}} &nbsp;&nbsp;{{item.FRespDate/60 |number:'1.0-1'}}小时
+            </ng-container>
+          </div>
+        </div>
+        <div *ngIf="item.status==='warning'">
+          <app-timer [date]="item.FResponseDate"></app-timer>
+        </div>
+      </nz-timeline-item>
+      <nz-timeline-item class="green" nzColor="#52c41a" *ngIf="item.status==='success'">
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            维修
+          </div>
+          <div nz-col nzSpan="19">
+            <ng-container>
+              <ng-container *ngIf="item.FMaintDate<180">
+                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FMaintDate}}分钟
+              </ng-container>
+              <ng-container *ngIf="item.FMaintDate>=180">
+                {{item.FMaintUserName}} &nbsp;&nbsp;{{item.FMaintDate/60 |number:'1.0-1'}}小时
+              </ng-container>
+            </ng-container>
+
+          </div>
+
+        </div>
+      </nz-timeline-item>
+      <nz-timeline-item nzColor="red">
+        <div nz-row>
+          <div nz-col nzSpan="5">
+            停线累计
+          </div>
+          <div nz-col nzSpan="19">
+            <ng-container *ngIf="item.FStopLineDate<180">
+              {{item.FStopLineDate}}分钟
+            </ng-container>
+            <ng-container *ngIf="item.FStopLineDate>=180">
+              {{item.FStopLineDate/60 |number:'1.0-1'}}小时
+            </ng-container>
+          </div>
+        </div>
+
+      </nz-timeline-item>
+    </nz-timeline>
+  </div>
+</div>

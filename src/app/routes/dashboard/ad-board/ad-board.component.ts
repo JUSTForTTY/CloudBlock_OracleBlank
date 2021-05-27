@@ -42,7 +42,7 @@ export class AdBoardComponent implements OnInit {
     this.rightTimer = setInterval(() => {
       index++;
       this.changePage(this.rightData, this.nzPageSize);
-      if (index % 3===0) {
+      if (index % 4===0) {
         this.rpsBoardService.adData.pageAvg = !this.rpsBoardService.adData.pageAvg;
       }
     }, 15 * 1000)

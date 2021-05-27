@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
+import { RpsBoardService } from '../rps-board/rps-board.service';
 const DataSet = require('@antv/data-set');
 
 const sourceData = [
@@ -159,7 +160,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
     marginRatio: 1 / 32,
   }];
   theme = require('assets/js/chartstheme.js');
-  constructor(private httpService: HttpService, private pageService: PageService) {
+  constructor(private httpService: HttpService, private pageService: PageService,private rpsBoardService:RpsBoardService) {
     this.timer = setTimeout(this.setData, 0);
   }
   setData = () => {
@@ -173,7 +174,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.getProlineData();
+    // this.getProlineData();
   }
 
   data = [];
@@ -184,7 +185,7 @@ export class YieldBarlineV2Component implements OnInit, OnDestroy {
     console.log("图-获取参数", this.prolineCode);
     console.log("图-获取参数", this.prolineType);
 
-    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((prolineData: any) => {
+    this.httpService.getHttp("/yieldDashboard/goodsBadsData/" + this.prolineCode +this.rpsBoardService.historyUrl+ "?prolineType=" + this.prolineType).subscribe((prolineData: any) => {
 
       console.log("图-产线报表-产线良率数据", prolineData)
       this.prolineGBsourceData = [];

@@ -1,9 +1,14 @@
 
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@env/environment';
 import { TitleService } from '@delon/theme';
+import { DatePipe } from '@angular/common';
+import { RpsBoardService } from '../rps-board/rps-board.service';
+import { YieldTableComponent } from "../yield-table/yield-table.component";
+import { WoOrderInfoComponent } from "../wo-order-info/wo-order-info.component";
+import { YieldBarlineV2Component } from "../yield-barline-v2/yield-barline-v2.component";
 
 const resource_url = environment.RESOURCE_SERVER_URL;
 @Component({
@@ -57,13 +62,82 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   pageSize = 6;
 
   nowTime = Date.now();
+  date = new Date()
+  dateMode: 'NightShift' | 'DayShift' = 'DayShift';
+  dateVisible = false;
+  @ViewChild('yieldTable') yieldTable: YieldTableComponent;
+  @ViewChild('worderInfo') worderInfo: WoOrderInfoComponent;
+  @ViewChild('barline') barline: YieldBarlineV2Component;
 
-  constructor(private httpService: HttpService, private pageService: PageService, private route: ActivatedRoute, private titleSrv: TitleService,) {
+  
+  
+
+  constructor(private httpService: HttpService,
+    public rpsBoardService: RpsBoardService, private datePipe: DatePipe, private pageService: PageService, private route: ActivatedRoute, private titleSrv: TitleService,) {
     this.timer = setTimeout(this.setData, 0);
     this.clocktimer = setTimeout(this.getClock, 0);
     //this.usertimer = setTimeout(this.getCurrentUserGroup, 0);
   }
+  changeMode(now = false) {
+    console.log('changeMode')
+    if (now) {
+      this.rpsBoardService.date = '';
+      this.rpsBoardService.dateMode = '';
+    } else {
+      const date = this.datePipe.transform(this.date, 'yyyy-MM-dd');
+      const mode = this.dateMode;
+      console.log('date', date, mode)
+      this.rpsBoardService.date = date;
+      this.rpsBoardService.dateMode = mode;
+    }
+    this.rpsBoardService.historyUrl = `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
 
+    this.dateVisible = false;
+    this.setData();
+    this.yieldTable.getWipData();
+    this.worderInfo.getWipData();
+    this.barline.setData();
+  }
+
+
+
+  isBack = false
+  ngOnInit() {
+    console.log('document.referrer', document.referrer)
+    if (document.referrer) {
+      // if(!document.referrer || (document.referrer  && (!document.referrer.includes('workshopCode=-1') && document.referrer.includes('v1?workshopCode'))) ){
+      //
+      this.isBack = true;
+    }
+    this.path = this.pageService.getPathByRoute(this.route);
+    //监听路径参数
+    this.pageService.setRouteParamsByRoute(this.route, this.path);
+    //初始化参数识别字串
+    this.queryParamStr = '';
+    for (const key in this.pageService.routeParams[this.path]) {
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
+    }
+    //  path 可不传
+    //  this.activatedRoute 需保证准确
+    this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
+
+    this.prolineType = this.pageService.getRouteParams(this.route, 'prolineType', this.path);
+    if (this.prolineType != "") {
+      if (this.prolineType == "smt") {
+        this.prolineName = this.prolineCode
+      } else if (this.prolineType == "be") {
+        this.prolineName = this.prolineCode
+      } else {
+        this.prolineName = this.prolineCode
+      }
+    } else {
+      this.prolineName = this.prolineCode
+    }
+    this.titleSrv.setTitle(this.prolineCode + '看板(' + this.prolineType + ')')
+
+  }
   setData = () => {
     if (this.timer) {
       clearTimeout(this.timer);
@@ -101,43 +175,6 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.usertimer = setTimeout(this.getCurrentUserGroup, 2 * 60 * 1000);
-  }
-  isBack=false
-  ngOnInit() {
-    console.log('document.referrer',document.referrer)
-    if(document.referrer){
-    // if(!document.referrer || (document.referrer  && (!document.referrer.includes('workshopCode=-1') && document.referrer.includes('v1?workshopCode'))) ){
-      //
-      this.isBack=true;
-    }
-    this.path = this.pageService.getPathByRoute(this.route);
-    //监听路径参数
-    this.pageService.setRouteParamsByRoute(this.route, this.path);
-    //初始化参数识别字串
-    this.queryParamStr = '';
-    for (const key in this.pageService.routeParams[this.path]) {
-      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-      }
-    }
-    //  path 可不传
-    //  this.activatedRoute 需保证准确
-    this.prolineCode = this.pageService.getRouteParams(this.route, 'prolineCode', this.path);
-
-    this.prolineType = this.pageService.getRouteParams(this.route, 'prolineType', this.path);
-    if (this.prolineType != "") {
-      if (this.prolineType == "smt") {
-        this.prolineName = this.prolineCode
-      } else if (this.prolineType == "be") {
-        this.prolineName = this.prolineCode
-      } else {
-        this.prolineName = this.prolineCode
-      }
-    } else {
-      this.prolineName = this.prolineCode
-    }
-    this.titleSrv.setTitle(this.prolineCode + '看板(' + this.prolineType + ')')
-
   }
 
   getYieldData() {
@@ -218,7 +255,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
 
   }
   getWoWipData() {
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + this.rpsBoardService.historyUrl + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
 
       console.log("在制工单检测", woWipData.data);
       if (woWipData.data.length > 0) {
@@ -238,7 +275,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   }
   getShiftData() {
 
-    this.httpService.getHttp("/yieldDashboard/shiftData/" + this.prolineCode).subscribe((shiftData: any) => {
+    this.httpService.getHttp("/yieldDashboard/shiftData/" + this.prolineCode + this.rpsBoardService.historyUrl).subscribe((shiftData: any) => {
 
       console.log("产线报表-产线班组数据", shiftData);
       this.userData_foreman = [];
@@ -304,8 +341,8 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     console.log("用户组数据", this.userGroupData);
 
   }
-  goBack(){
-          window.history.back();
+  goBack() {
+    window.history.back();
 
   }
 

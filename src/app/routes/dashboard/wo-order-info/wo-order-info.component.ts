@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
+import { RpsBoardService } from '../rps-board/rps-board.service';
 @Component({
   selector: 'app-wo-order-info',
   templateUrl: './wo-order-info.component.html',
@@ -28,7 +29,7 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
 
   woWipTableData = [];
 
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService,private rpsBoardService:RpsBoardService) {
     this.timer = setTimeout(this.setData, 0);
     this.wiptimer = setTimeout(this.getWipData, 0);
   }
@@ -75,12 +76,11 @@ export class WoOrderInfoComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
 
-    this.getWoWipData();
 
   }
 
   getWoWipData() {
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode +this.rpsBoardService.historyUrl+ "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
 
       this.woWipTableData = woWipData.data;
       console.log("产线报表-在制工单数据", this.woWipTableData)

@@ -1,5 +1,5 @@
-export function InitErrorData(CallInfos: ErrorInfo[], CallUserInfos: CallUserInfo[]):boolean {
-    let isError=false;
+export function InitErrorData(CallInfos: ErrorInfo[], CallUserInfos: CallUserInfo[]): boolean {
+    let isError = false;
     const errorData = groupByToJson(CallUserInfos, 'FBillNo')
     for (const iterator of CallInfos) {
         iterator.callUserInfo = errorData[iterator.FBillNo] || [];
@@ -70,8 +70,9 @@ export interface ErrorInfo {
     status?: string;
     sort?: number;
     callUserInfo?: CallUserInfo[]
-    FResponseDate?:any;
-    [key:string]:any
+    FResponseDate?: any;
+    FIsTransfer?: number;
+    [key: string]: any
 }
 export interface CallUserInfo {
     /** 姓名 */

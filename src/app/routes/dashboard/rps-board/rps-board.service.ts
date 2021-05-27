@@ -44,6 +44,7 @@ export class RpsBoardService {
   changePageTime = 15;
   date = ''
   dateMode: 'NightShift' | 'DayShift' | '' = ''
+  historyUrl='';
   pageChangeTime$: Subject<number> = new Subject();
   fullscreen$: Subject<boolean> = new Subject();
   changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop, force?: boolean }> = new Subject();

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
+import { RpsBoardService } from '../rps-board/rps-board.service';
 @Component({
   selector: 'app-yield-table',
   templateUrl: './yield-table.component.html',
@@ -20,7 +21,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
   woWipTableData = [];
 
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService,private rpsBoardService:RpsBoardService) {
     this.timer = setTimeout(this.setData, 0);
     this.wotimer = setTimeout(this.getWipData, 0);
   }
@@ -52,21 +53,18 @@ export class YieldTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-
-    this.getWoWipData();
-
   }
 
   waitTableData = [];
   woWipData = [];
   getWoWipData() {
     //在制
-    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
+    this.httpService.getHttp("/yieldDashboard/woWipData/" + this.prolineCode +this.rpsBoardService.historyUrl+ "?prolineType=" + this.prolineType).subscribe((woWipData: any) => {
       this.woWipData = woWipData.data;
 
       console.log("产线报表-工单在制数据", this.woWipTableData)
       //待排
-      this.httpService.getHttp("/yieldDashboard/woPlanData/" + this.prolineCode + "?prolineType=" + this.prolineType).subscribe((waitData: any) => {
+      this.httpService.getHttp("/yieldDashboard/woPlanData/" + this.prolineCode +this.rpsBoardService.historyUrl+ "?prolineType=" + this.prolineType).subscribe((waitData: any) => {
 
         console.log("产线报表-工单待排数据2", JSON.parse(JSON.stringify(waitData.data)))
         this.waitTableData = waitData.data;
@@ -75,6 +73,10 @@ export class YieldTableComponent implements OnInit, OnDestroy {
         this.woWipDataTransform();
       }, (err) => {
         console.log("看板数据-接口异常2");
+        this.waitTableData = [];
+        //组合数据
+        this.groupData();
+        this.woWipDataTransform();
 
       });
 
@@ -106,6 +108,7 @@ export class YieldTableComponent implements OnInit, OnDestroy {
       }
     }
     this.woWipTableData = [...this.waitTableData, ...this.woWipData]
+    console.log('groupData this.woWipTableData',this.woWipTableData)
   }
 
   woWipDataTransform() {

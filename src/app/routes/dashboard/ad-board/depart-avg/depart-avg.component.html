@@ -8,7 +8,7 @@
    
     <!-- <small class="text-sm font-weight-normal">共{{dataSet.length}}条工单</small> -->
   </div>
-  <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [theme]="theme">
+  <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [theme]="theme" [scale]="scale">
     <v-tooltip></v-tooltip>
     <v-axis></v-axis>
     <v-legend></v-legend>
@@ -25,3 +25,23 @@
   </v-guide>
   </v-chart>
 </div>
+<nz-table *ngIf="tabledata"  #middleTable nzSize="middle" [nzData]="tabledata" nzShowPagination="false">
+  <thead>
+    <tr>
+      <th>周</th>
+      <th  *ngFor="let head of tableHeader">{{head}}</th>
+    
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let weekData of middleTable.data" ryHighlight>
+      <td>{{ weekData.name }}</td>
+
+      <td  *ngFor="let head of tableHeader">
+        <span [ngClass]="{'warn': weekData[head]>lineNum && weekData[head]<=lineNum*2,'error':weekData[head]>lineNum*2}">
+          {{ weekData[head]?weekData[head]:0 }}
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

@@ -79,18 +79,60 @@ export class DepartAvgComponent implements OnInit {
   label = Label
   data;
   Fields: Set<string> = new Set();
+  tableHeader = [];
+  tabledata: any[];
   constructor(private http: HttpService, private rpsBoardService: RpsBoardService, private route: ActivatedRoute) { }
 
-  setWeek(weekIndex, weekNum, AbnormalInfo: AvgItem[],avg=true) {
+
+  ngOnInit() {
+    console.log('init')
+    if (this.type === EpageType.工段总时间 || this.type === EpageType.工段响应) this.FKind = 'Test';
+    else if (this.type === EpageType.工厂响应) this.FKind = '';
+    this.getRouteParam()
+    this.getSource().subscribe(
+      sourceData => {
+        let source
+        let fields
+        source = sourceData
+        console.log('set,getSource', this.Fields, source)
+        fields = Array.from(this.Fields);
+        const dv = new DataSet.View().source(source);
+        dv.transform({
+          type: 'fold',
+          fields: fields,
+          key: '部门',
+          value: '总数',
+        });
+        const data = dv.rows;
+        this.data = data;
+        this.tableHeader = dv.transforms[0].fields;
+        // this.tabledata = dv.origin;
+        console.log('datadatadata', dv)
+        this.text = {
+          position: 'start',
+          style: {
+            fill: '#fff',
+            fontSize: 15,
+            fontWeight: 'normal'
+          },
+          content: '合格' + this.lineNum,
+          offsetY: 8,
+          offsetX: -24
+        };
+      }
+    )
+
+  }
+  setWeek(weekIndex, weekNum, AbnormalInfo: AvgItem[], avg = true) {
     const weeks = new Set<number>();
     for (const iterator of AbnormalInfo) {
-      if(avg){
+      if (avg) {
         weeks.add(parseInt(iterator.WeekCount + ''))
-      }else{
+      } else {
         for (const key in iterator) {
           if (Object.prototype.hasOwnProperty.call(iterator, key)) {
             const element = iterator[key];
-            if(key.length<=2&& typeof element==='number'){
+            if (key.length <= 2 && typeof element === 'number') {
               weeks.add(parseInt(key + ''))
             }
           }
@@ -98,13 +140,13 @@ export class DepartAvgComponent implements OnInit {
       }
       if (weeks.size >= 4) break;
     }
-    const arr=Array.from(weeks).sort((a,b)=> a-b);
+    const arr = Array.from(weeks).sort((a, b) => a - b);
 
     for (let index = 0; index < arr.length; index++) {
-      weekIndex[arr[index]]=index;
-      weekNum['WEEK'+(index+1)]=arr[index];
+      weekIndex[arr[index]] = index;
+      weekNum['WEEK' + (index + 1)] = arr[index];
     }
-    console.log('setWeek',arr,weekIndex,weekNum)
+    console.log('setWeek', arr, weekIndex, weekNum)
 
 
   }
@@ -129,8 +171,10 @@ export class DepartAvgComponent implements OnInit {
         { name: 'WEEK3' },
         { name: 'WEEK4' }
       ]
+
       const url = 'http://172.16.8.28:8088/api/getAbInfoBySecOrDept';
       let factoryCode = FactoryCode[this.workShopCode];
+      if (this.type === EpageType.工厂响应) factoryCode = 'ALL';
 
       this.http.postHttpAllUrl(url, { FactoryCode: factoryCode, FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(
         (res: { data: { AbnormalInfo: AvgItem[], errorcode: number } }) => {
@@ -141,8 +185,9 @@ export class DepartAvgComponent implements OnInit {
             o.complete();
           }
           else {
+            // this.tabledata = data.AbnormalInfo;
             if (this.type >= 3) {
-              this.setWeek(weekIndex,weekNum,data.AbnormalInfo,false)
+              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, false)
               // num
               for (const item of data.AbnormalInfo) {
                 const desc = getDesc(item.Dept_Desc)
@@ -154,17 +199,45 @@ export class DepartAvgComponent implements OnInit {
                   }
                 }
               }
+
             } else {
-              this.setWeek(weekIndex,weekNum,data.AbnormalInfo,true)
+              this.tabledata = JSON.parse(JSON.stringify(sourceData));
+              this.height = 300;
+              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, true)
 
               // avg
               for (const iterator of data.AbnormalInfo) {
+
                 const index = weekIndex[iterator.WeekCount];
                 const desc = getDesc(iterator.Dept_Desc)
                 const timeAvg = (this.type === EpageType.部门响应时间 ? iterator.FRespDate : (this.type === EpageType.部门维修时间 ? iterator.FMainComDate : iterator.FStopDate))
                 sourceData[index][desc] = parseFloat(timeAvg + '')
+                this.tabledata[index][desc] = parseFloat(timeAvg + '');
+                if (this.lineNum) {
+                  if (sourceData[index][desc] > this.lineNum*2) {
+                    sourceData[index][desc] = this.lineNum * 2;
+                  }
+                }
                 this.Fields.add(desc);
+
               }
+              this.label = ['总数', function (val) {
+
+                return {
+                  position: 'middle',
+                  offset: 0,
+                  textStyle: {
+                    fill: '#fff',
+                    fontSize: 12,
+                    shadowBlur: 2,
+                    shadowColor: 'rgba(0, 0, 0, .45)'
+                  },
+                  formatter: function formatter(text) {
+                    return '';
+                  }
+                };
+              }]
+              this.tabledata=[...this.tabledata];
             }
 
             o.next(sourceData)
@@ -174,42 +247,6 @@ export class DepartAvgComponent implements OnInit {
         }
       )
     })
-
-  }
-  ngOnInit() {
-    console.log('init')
-    if (this.type === EpageType.工段总时间 || this.type === EpageType.工段响应) this.FKind = 'Test';
-    else if (this.type === EpageType.工厂响应) this.FKind = '';
-    this.getRouteParam()
-    this.getSource().subscribe(
-      sourceData => {
-        let source
-        let fields
-        source = sourceData
-        console.log('set,getSource', this.Fields, source)
-        fields = Array.from(this.Fields);
-        const dv = new DataSet.View().source(source);
-        dv.transform({
-          type: 'fold',
-          fields: fields,
-          key: '部门',
-          value: '总数',
-        });
-        const data = dv.rows;
-        this.data = data;
-        this.text = {
-          position: 'start',
-          style: {
-            fill: '#fff',
-            fontSize: 15,
-            fontWeight: 'normal'
-          },
-          content: '合格线' + this.lineNum,
-          offsetY: -3,
-          offsetX: -20
-        };
-      }
-    )
 
   }
 
@@ -236,12 +273,20 @@ export class DepartAvgComponent implements OnInit {
     const max = yScale.总数.max;
     if (max > this.lineNum) {
       const start = ((max - this.lineNum) / max) * 100
-      return ['0%', start + '%']
+      return ['-2%', start + '%']
     } else
       return []; // 位置信息
   };
 
+  // scale = {
+  //   tickCount:3
+  // };
+  scale = [{
+    dataKey: '总数',
 
+    // tickCount: 6,
+    // nice: false
+  }];
   // end:any=['30%', '50%'];
   end: any = (xScale, yScale) => {
     const max = yScale.总数.max;
@@ -272,6 +317,8 @@ export class DepartAvgComponent implements OnInit {
     const workShop = this.rpsBoardService.getRouteParam(this.route);
     this.workShopCode = workShop.workShopCode;
   }
+
+
 
 }
 

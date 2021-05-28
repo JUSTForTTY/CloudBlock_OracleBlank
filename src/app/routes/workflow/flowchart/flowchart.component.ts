@@ -223,7 +223,6 @@ export class FlowchartComponent implements OnInit, OnDestroy {
 
     //初始化代码
     this.baseInit();
-    this.getAllnode();
   }
   in_out_info: { [key: string]: string } = {};
   getAllnode() {
@@ -284,7 +283,7 @@ export class FlowchartComponent implements OnInit, OnDestroy {
     //初始化工作流
     this.workflowInit();
 
-
+    this.getAllnode();
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysWorkflowId": this.workflowId }).subscribe((data: any) => {
       this.workType = data.data[0].csysWorkflowType;
     });

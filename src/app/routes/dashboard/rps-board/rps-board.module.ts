@@ -4,6 +4,8 @@ import { RpsBoardComponent } from './rps-board.component';
 import { RpsBoardRoutingModule } from "./rps-board-routing.module";
 import { SharedModule } from '@shared/shared.module';
 import { RpsTableComponent } from './rps-table/rps-table.component';
+import { RpsTableComponentBack } from './rps-table-back/rps-table.component';
+
 // import { DomVisibleDirective } from "./dom-visible.directive";
 import { RpsBoardService } from "./rps-board.service";
 import { ErrorDetailComponent } from './error-detail/error-detail.component';
@@ -15,7 +17,7 @@ import { ErrorItemModule } from "./error-item/error-item.module";
 import { TimerModule } from "./timer/timer.module";
 import { EfficiencyDetailComponent } from './efficiency-detail/efficiency-detail.component';
 @NgModule({
-  declarations: [RpsBoardComponent, RpsTableComponent, ErrorDetailComponent, RpsBlockComponent, EfficiencyDetailComponent],
+  declarations: [RpsBoardComponent, RpsTableComponent, ErrorDetailComponent, RpsBlockComponent,RpsTableComponentBack, EfficiencyDetailComponent],
   imports: [
     CommonModule,
     RpsBoardRoutingModule,

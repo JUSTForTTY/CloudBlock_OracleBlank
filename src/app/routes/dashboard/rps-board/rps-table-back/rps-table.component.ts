@@ -8,11 +8,11 @@ import { Router } from '@angular/router';
 import { EfficiencyFormula } from "../datas";
 
 @Component({
-  selector: 'app-rps-table',
+  selector: 'app-rps-table-back',
   templateUrl: './rps-table.component.html',
   styleUrls: ['./rps-table.component.less']
 })
-export class RpsTableComponent implements OnInit, OnDestroy {
+export class RpsTableComponentBack implements OnInit, OnDestroy {
   @Input()
   data: Data[] = getTestData() || [];
   showData: Data[] = []
@@ -50,26 +50,21 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     'exception': '#f5222d',
     'active': '#c2af04'
   }
-  eErrorCode = EErrorCode;
-  efficiency: number = 0;
+  eErrorCode = EErrorCode
   formatOne = (percent: number) => `${percent}%`;
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
   showDeatil(data: Data) {
     console.log('showDeatil', data,)
-
+    
     this.effData = data.efficiencyFormula;
-    if (!this.effData) return;
-    this.effData.prolineCode = data.prolineCode;
+    if(!this.effData) return;
+    this.effData.prolineCode=data.prolineCode;
     this.isVisible = true;
 
   }
   ngOnInit() {
     let i = 0;
-    let effectiveOutput = 0;
-    let signTime = 0;
     for (const iterator of this.data) {
-      effectiveOutput += iterator.effectiveOutput;
-      signTime += iterator.signTime;
       // 模拟数据
       // const randomNum = Math.floor(Math.random() * 5) * (Math.random() < 0.5 ? -1 : 1);
       // iterator.planAchievementRate = iterator.planAchievementRate + randomNum;
@@ -108,13 +103,6 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       iterator.efficiencyStatus = this.getStatus('效率', iterator.efficiency);
       iterator.index = ++i;
     }
-    setTimeout(() => {
-      if (signTime) {
-        this.efficiency = effectiveOutput / signTime;
-        console.log('signTime',this.key,this.efficiency,effectiveOutput , signTime)
-      }
-    }, 100);
-    
     this.testVis = (this.key.includes('SMT'));
 
     this.getHeadData();
@@ -151,18 +139,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     )
   }
   changeSize() {
-    setTimeout(() => {
-      const divHeight = this.divBox.nativeElement.clientHeight;
-      const divWidth = this.divBox.nativeElement.clientWidth;
-
-      const pagesize = divWidth > 480 ? Math.floor((divHeight - 64) / 46 + 0.02) : Math.floor((divHeight - 64) / 65 + 0.02)
-      console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)
-      this.nzPageSize = pagesize;
-      this.newData = true;
-      this.initDatas();
-      this.changePage(this.data, this.otherData, this.nzPageSize, true);
-    }, 100);
-
+    const divHeight = this.divBox.nativeElement.clientHeight;
+    const pagesize = Math.floor((divHeight - 50) / 60 + 0.2)
+    this.nzPageSize = pagesize;
+    this.newData = true;
+    console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)
+    this.initDatas();
+    this.changePage(this.data, this.otherData, this.nzPageSize, true);
   }
   initDatas() {
     this.otherData = [...this.data];

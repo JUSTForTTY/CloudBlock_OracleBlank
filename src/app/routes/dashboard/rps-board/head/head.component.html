@@ -1,80 +1,45 @@
 <div nz-row>
   <!-- 头部 -->
-  <div nz-col nzXs="24" nzLg="6">
-    <div *ngIf="rpsMode">
-      <div style="margin-top: 3px; display: flex;flex-wrap: nowrap; align-items:center;">
-        <div>
-          <span style="color: #ffffff;font-size: 16px;">达成率：</span>
-          <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.complete.bad}}%↓</nz-tag>
-          <nz-tag nzColor="#c2af04">
-            {{rpsBoardService.standard.complete.bad}}%~{{rpsBoardService.standard.complete.good}}%
-          </nz-tag>
-          <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.complete.good}}%↑</nz-tag>
-        </div>
-        <div style="margin-left: 10px;">
-          <nz-select nzSize="small" [(ngModel)]="rpsBoardService.changePageTime"
-            (ngModelChange)="ngModelChange($event)">
-            <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
-            <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
-            <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
-          </nz-select>
-        </div>
-
-      </div>
-
-      <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
-        <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.yield.bad}}%↓</nz-tag>
-        <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.yield.bad}}%~{{rpsBoardService.standard.yield.good}}%
-        </nz-tag>
-        <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.yield.good}}%↑</nz-tag>
-      </div>
-      <div style="margin-top: 3px;"> <span style="color: #ffffff;font-size: 16px;">效　率：</span>
-        <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.efficiency.bad}}%↓</nz-tag>
-        <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.efficiency.bad}}%~{{rpsBoardService.standard.efficiency.good}}%
-        </nz-tag>
-        <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.efficiency.good}}%↑</nz-tag>
-      </div>
-    </div>
-
-
-
+  <div nz-col nzXs="24" nzLg="5">
+    <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
+      style="height: 55px;margin-top: 2px;">
+    <ng-template #elseBlock>
+      <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;margin-top: 2px;">
+    </ng-template>
 
   </div>
-  <div nz-col nzXs="24" nzLg="12">
+  <div nz-col nzXs="24" nzLg="14">
 
-    <h1 style="color:#1e91de;text-align: center" [style.font-size]="fontSizeTitle1+'px'">
-      <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
-        style="height: 55px;margin-top: 3px;">
-      <ng-template #elseBlock>
-        <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;">
-      </ng-template>
+    <div style="color:#1e91de;text-align: center;font-weight: 500;" [style.font-size]="fontSizeTitle1+'px'">
+      <span style="line-height: 1;cursor: pointer;"
+        (click)="showChange()">
+        {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
+      </span>
       {{title}}
-    </h1>
+    </div>
   </div>
-  <div nz-col nzXs="24" nzLg="6">
+  <div nz-col nzXs="24" nzLg="5">
     <div nz-row>
       <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
-        <span style="color:#1e91de;line-height: 1;cursor: pointer;" [style.font-size]="fontSizeTitle1+'px'"
-          (click)="showChange()">
-          {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
-        </span>
+
         <div style="display:flex;align-items: center;justify-content: flex-end;width: 100%;">
-         
+
           <nz-statistic *ngIf="!rpsBoardService.date" style="color:white" [nzValue]="nowTime|date:'yyyy-MM-dd HH:mm:ss'"
             [nzPrefix]="prefixTpl">
           </nz-statistic>
           <ng-template #prefixTpl><i nz-icon nzType="clock-circle" nzTheme="twotone"></i></ng-template>
 
           <!-- {{rpsBoardService.date}} -->
-          <nz-statistic *ngIf="rpsBoardService.date" style="color:white" [nzValue]="rpsBoardService.date+(rpsBoardService.dateMode==='DayShift'?' 白班':' 夜班')"
-            [nzPrefix]="prefixTpl">
+          <nz-statistic *ngIf="rpsBoardService.date" style="color:white"
+            [nzValue]="rpsBoardService.date+(rpsBoardService.dateMode==='DayShift'?' 白班':' 夜班')" [nzPrefix]="prefixTpl">
           </nz-statistic>
 
-          <button *ngIf="rpsMode;else adButton" nz-button nz-popover [nzContent]="contentTemplate" [(nzVisible)]="dateVisible"
-          style="margin-left: 10px;"
-          nzTrigger="click"><i nz-icon nzType="swap" nzTheme="outline"></i>历史</button>
+          <button *ngIf="rpsMode;else adButton" nz-button nz-popover [nzContent]="contentTemplate" nzPlacement="bottomRight"
+            [(nzVisible)]="dateVisible" style="margin-left: 10px;" nzTrigger="click"><i nz-icon nzType="swap"
+              nzTheme="outline"></i>历史</button>
           <ng-template #adButton>
-            <button  nz-button style="margin-left: 10px;"  nzType="primary" (click)="changeAD()"><i nz-icon nzType="swap" nzTheme="outline"></i>切换</button>
+            <button nz-button style="margin-left: 10px;" nzType="primary" (click)="changeAD()"><i nz-icon nzType="swap"
+                nzTheme="outline"></i>切换</button>
           </ng-template>
 
           <ng-template #contentTemplate>
@@ -86,7 +51,8 @@
                 <label nz-radio nzValue="DayShift">白班</label>
                 <label nz-radio nzValue="NightShift">夜班</label>
               </nz-radio-group><br>
-              <button nz-button style="margin-left: 8px;margin-top: 4px;" nzType="primary" (click)="changeMode()">查看历史</button>
+              <button nz-button style="margin-left: 8px;margin-top: 4px;" nzType="primary"
+                (click)="changeMode()">查看历史</button>
               <button nz-button style="margin-left: 8px;" (click)="changeMode(true)">返回实时</button>
 
               <br>

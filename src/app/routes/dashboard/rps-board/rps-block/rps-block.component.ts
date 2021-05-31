@@ -7,6 +7,7 @@ import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
 import { DatePipe } from '@angular/common';
+import { RpsTableComponent } from "../rps-table/rps-table.component";
 
 interface BigData{
   title: string;
@@ -22,23 +23,23 @@ const options: {
 }[] = [
     {
       key: 'SMT',
-      title: 'SMT达成率',
+      title: 'SMT',
       index: [0, 0]
     },
     {
       key: 'WAVE',
-      title: 'WAVE达成率',
+      title: 'WAVE',
       index: [0, 1]
     },
 
     {
       key: 'COATING',
-      title: 'COATING达成率',
+      title: 'COATING',
       index: [1, 0]
     },
     {
       key: 'ATP',
-      title: 'ATP达成率',
+      title: 'ATP',
       index: [1, 1]
     },
   ]
@@ -98,6 +99,15 @@ export class RpsBlockComponent implements OnInit {
 
 
   @ViewChild('errodHead') errodHead: ElementRef;
+  @ViewChild('tableATP') tableATP: RpsTableComponent;
+  @ViewChild('tableSMT') tableSMT: RpsTableComponent;
+
+  @ViewChild('tableWAVE') tableWAVE: RpsTableComponent;
+
+  @ViewChild('tableCOATING') tableCOATING: RpsTableComponent;
+
+
+  
 
   constructor(private http: HttpService, private route: ActivatedRoute,private datePipe:DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 

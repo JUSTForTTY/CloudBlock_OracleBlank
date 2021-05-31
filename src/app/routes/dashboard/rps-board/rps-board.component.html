@@ -2,29 +2,70 @@
   <app-rps-block [workShop]="workShop"></app-rps-block>
 </ng-container>
 <ng-container *ngIf="rpsBoardService.isFour">
-  <div class="chartContainer" style="padding-left: 10px; padding-right: 10px;">
+  <div class="chartContainer" style="padding-left: 8px; padding-right: 8px;">
 
-    <div nz-row style="height: 8%;">
+    <div nz-row style="height: 5%;">
       <!-- 头部 -->
       <app-head [workShop]="workShop"></app-head>
 
     </div>
-    <div nz-row style="height: 92%;" [nzGutter]="4">
+    <div nz-row style="height: 93%;" [nzGutter]="4">
       <ng-container *ngFor="let item of rpsBoardService.fourBlock |keyvalue">
         <div nz-col id="{{item.key}}" 
-          [nzSpan]="rpsBoardService.isFullscreen?24:12" [ngStyle]="{'height':(rpsBoardService.isFullscreen?100:50)+'%','display':!rpsBoardService.isFullscreen||item.value.sort===1?'block':'none'}"
-          style="border:0px solid #c1eb06; padding-right: 10px;">
+          [nzSpan]="12"
+          style="padding-right: 8px;height:50%">
           <!-- 1  -->
-          <div style="height: 100%;"  ryDomVisible (visible)="visible($event)">
+          <div style="height: 99.5%;"  ryDomVisible (visible)="visible($event)">
             <app-rps-block [workShop]="item.value" [isFourBlock]="true"></app-rps-block>
           </div>
         </div>
       </ng-container>
-
-
-
     </div>
-
+    <div   nz-row style="height: 1%;">
+      <div nz-col nzSpan="24">
+          <div style=" display: flex;flex-wrap: nowrap; align-items:center;justify-content: center;">
+            <div style="margin-right: 10px;">
+              <nz-select nzSize="small" [(ngModel)]="rpsBoardService.changePageTime"
+                (ngModelChange)="rpsBoardService.pageChangeTime$.next($event)">
+                <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
+                <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
+                <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
+              </nz-select>
+            </div>
+            <div>
+              <span style="color: #ffffff;font-size: 16px;">达成率：</span>
+              <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.complete.bad}}%↓</nz-tag>
+              <nz-tag nzColor="#c2af04">
+                {{rpsBoardService.standard.complete.bad}}%~{{rpsBoardService.standard.complete.good}}%
+              </nz-tag>
+              <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.complete.good}}%↑</nz-tag>
+            </div>
+            <!-- <div style="margin-left: 10px;">
+              <nz-select nzSize="small" [(ngModel)]="rpsBoardService.changePageTime"
+                (ngModelChange)="ngModelChange($event)">
+                <nz-option [nzValue]="15" nzLabel="15秒翻页"></nz-option>
+                <nz-option [nzValue]="30" nzLabel="30秒翻页"></nz-option>
+                <nz-option [nzValue]="60" nzLabel="60秒翻页"></nz-option>
+              </nz-select>
+            </div> -->
+            <div> <span style="color: #ffffff;font-size: 16px;">良品率：</span>
+              <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.yield.bad}}%↓</nz-tag>
+              <nz-tag nzColor="#c2af04">{{rpsBoardService.standard.yield.bad}}%~{{rpsBoardService.standard.yield.good}}%
+              </nz-tag>
+              <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.yield.good}}%↑</nz-tag>
+            </div>
+            <div> <span style="color: #ffffff;font-size: 16px;">效　率：</span>
+              <nz-tag nzColor="#f5222d">{{rpsBoardService.standard.efficiency.bad}}%↓</nz-tag>
+              <nz-tag nzColor="#c2af04">
+                {{rpsBoardService.standard.efficiency.bad}}%~{{rpsBoardService.standard.efficiency.good}}%
+              </nz-tag>
+              <nz-tag nzColor="#52c41a">{{rpsBoardService.standard.efficiency.good}}%↑</nz-tag>
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
 
 
   </div>

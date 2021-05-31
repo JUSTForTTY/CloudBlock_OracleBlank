@@ -1,7 +1,7 @@
 <div nz-row class="chartContainer" style="overflow-x: hidden;height: 100%;">
   <div nz-col [nzSpan]="24">
     <div nz-row>
-      <div nz-col nzSpan="4">
+      <div nz-col nzSpan="5">
 
         <div style="display:flex;align-items: center;width: 100%;">
 
@@ -36,17 +36,17 @@
         </div>
 
 
-        <button *ngIf="isBack" nz-button nzSize="large" (click)="goBack()"><i nz-icon type="left"></i>返回</button>
+        <button *ngIf="isBack" nz-button (click)="goBack()"><i nz-icon type="left"></i>返回</button>
 
       </div>
-      <div nz-col nzSpan="16">
+      <div nz-col nzSpan="14">
 
         <h1 style="color:#1e91de;text-align: center;font-size: 40px;">
           <img class="logo" src="./assets/img/logo-full.png">
           {{prolineName}} 产线看板
         </h1>
       </div>
-      <div nz-col nzSpan="4">
+      <div nz-col nzSpan="5">
         <div nz-row>
           <div nz-col nzSpan="12" class="proline-title">
             产线状态:

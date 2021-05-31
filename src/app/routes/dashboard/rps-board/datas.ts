@@ -21,7 +21,8 @@ export interface Data {
     errorMsg?: string;
     errorCode?: EErrorCode;
     [key: string]: any;
-
+    effectiveOutput?: number;
+    signTime?: number;
     efficiencyFormula?: EfficiencyFormula;
 
 }

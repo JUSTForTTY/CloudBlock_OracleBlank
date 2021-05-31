@@ -9,6 +9,7 @@ import { RpsBoardService } from '../rps-board/rps-board.service';
 import { YieldTableComponent } from "../yield-table/yield-table.component";
 import { WoOrderInfoComponent } from "../wo-order-info/wo-order-info.component";
 import { YieldBarlineV2Component } from "../yield-barline-v2/yield-barline-v2.component";
+import { ProlineErrormsgComponent } from "../proline-errormsg/proline-errormsg.component";
 
 const resource_url = environment.RESOURCE_SERVER_URL;
 @Component({
@@ -68,7 +69,9 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('yieldTable') yieldTable: YieldTableComponent;
   @ViewChild('worderInfo') worderInfo: WoOrderInfoComponent;
   @ViewChild('barline') barline: YieldBarlineV2Component;
+  @ViewChild('errormsg') errormsg: ProlineErrormsgComponent;
 
+  
   
   
 
@@ -97,6 +100,7 @@ export class YieldDashboardComponent implements OnInit, OnDestroy {
     this.yieldTable.getWipData();
     this.worderInfo.getWipData();
     this.barline.setData();
+    this.errormsg.setData();
   }
 
 

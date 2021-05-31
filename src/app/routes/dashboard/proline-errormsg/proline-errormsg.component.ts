@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpService, PageService } from 'ngx-block-core';
-import {  CallUserInfo, ErrorInfo, InitErrorData } from "../utils";
+import { RpsBoardService } from '../rps-board/rps-board.service';
+import { CallUserInfo, ErrorInfo, InitErrorData } from "../utils";
 
 @Component({
   selector: 'app-proline-errormsg',
@@ -41,7 +42,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       title: '产线异常信息 5'
     }
   ];
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService, private rpsBoardService: RpsBoardService) {
     this.timer = setTimeout(this.setData, 0);
     this.ertimer = setTimeout(this.setPageData, 0);
   }
@@ -59,10 +60,10 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
     if (this.ertimer) {
       clearTimeout(this.ertimer);
     }
-    console.log("分页检测：",this.nzPageIndex);
-    console.log("分页检测：",this.nzTotalPage);
-    console.log("分页检测：",this.prolineErrorResult);
-    if (this.nzPageIndex < this.nzTotalPage-1) {
+    console.log("分页检测：", this.nzPageIndex);
+    console.log("分页检测：", this.nzTotalPage);
+    console.log("分页检测：", this.prolineErrorResult);
+    if (this.nzPageIndex < this.nzTotalPage - 1) {
       this.nzPageIndex++;
       this.prolineErrorData = this.prolineErrorResult[this.nzPageIndex];
     } else {
@@ -82,7 +83,7 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
   getErrorData() {
 
     console.log("产线报表-异常查询")
-    this.httpService.getHttp("/yieldDashboard/errorData/" + this.prolineCode).subscribe((errorData: any) => {
+    this.httpService.getHttp("/yieldDashboard/errorData/" + this.prolineCode + this.rpsBoardService.historyUrl).subscribe((errorData: any) => {
 
       console.log("产线报表-异常信息产线", errorData);
       this.prolineErrorData = errorData.data;
@@ -94,19 +95,19 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       console.log("看板数据-接口异常");
 
     });
-      this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode='+this.prolineCode).subscribe(
-      data=>{
-        console.log('getErrorData '+this.prolineCode, data)
+    this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode=' + this.prolineCode).subscribe(
+      data => {
+        console.log('getErrorData ' + this.prolineCode, data)
         if (data.data.ErrorCode === 0) {
           this.rightData = data.data.CallInfo;
           // console.log('getErrorData', data.data.CallInfo)
 
           InitErrorData(this.rightData, data.data.CallUserInfo)
           console.log('errorData', this.rightData)
-          this.rightData=this.rightData.filter(data=> data.status!=='success')
+          this.rightData = this.rightData.filter(data => data.status !== 'success')
 
         } else {
-          this.rightData=[];
+          this.rightData = [];
 
         }
       }

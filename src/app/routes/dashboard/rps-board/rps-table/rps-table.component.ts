@@ -155,7 +155,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       const divHeight = this.divBox.nativeElement.clientHeight;
       const divWidth = this.divBox.nativeElement.clientWidth;
 
-      const pagesize = divWidth > 480 ? Math.floor((divHeight - 64) / 46 + 0.02) : Math.floor((divHeight - 64) / 65 + 0.02)
+      const pagesize = divWidth > 480 ? Math.floor((divHeight - 64) / 46 + 0.02) : Math.floor((divHeight - 64) / 75 + 0.02)
       console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)
       this.nzPageSize = pagesize;
       this.newData = true;

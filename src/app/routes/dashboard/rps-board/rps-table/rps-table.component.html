@@ -126,7 +126,9 @@
         <td  class="thcenter" style="font-size: 15px;" (click)="showDeatil(data)">
           <ng-container *ngIf="data.errorMsg">{{data.errorMsg}}</ng-container>
           <ng-container *ngIf="!data.errorMsg">
-            {{data.efficiency}}%
+            <span [ngClass]="{'efferror': data.errorCode==eErrorCode.error}">
+              {{data.efficiency}}%
+            </span>
           </ng-container>
         </td>
       </tr>

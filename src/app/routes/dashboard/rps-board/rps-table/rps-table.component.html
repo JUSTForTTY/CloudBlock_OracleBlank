@@ -5,6 +5,8 @@
     <thead>
       <tr>
         <th>线体：{{nzTotal}}</th>
+        <th class="thcenter">不良</th>
+        <th class="thcenter" colspan="2">良率</th>
         <th class="thcenter">
           <div style="display: flex; flex-direction: column; width: fit-content;margin: 0 auto;">
             <span style="border-bottom: 1px solid #fff;width: 100%;white-space: nowrap;">
@@ -16,8 +18,7 @@
           </div>
         </th>
         <th class="thcenter" colspan="2">达成率</th>
-        <th class="thcenter">不良</th>
-        <th class="thcenter" colspan="2">良率</th>
+       
         <!-- <th class="thcenter">达成率 达标:&nbsp;{{headData.completeOk}} 未达标:&nbsp;{{headData.completeBad}}</th> -->
         <!-- <th >线体:{{nzTotal}}</th> -->
         <!-- <th class="thcenter">良率 达标：{{headData.yieldOk}} 未达标：{{headData.yieldBad}}</th> -->
@@ -58,6 +59,15 @@
           <!-- <g2-gauge [title]="'核销率'" height="50" [percent]="60" ></g2-gauge> -->
 
         </td>
+        <td class="thcenter" (click)="jump(data)">{{data.badNums}}</td>
+
+        <td  (click)="jump(data)">
+          <nz-progress [nzPercent]="100" [nzShowInfo]="false"
+            [ngClass]="{'success': data.yieldStatus==='success','exception': data.yieldStatus=='exception','active': data.yieldStatus=='active'}"
+            nzType="circle" [nzFormat]="formatOne" [nzWidth]="24" [nzStrokeColor]="progressColor[data.yieldStatus]">
+          </nz-progress>
+        </td>
+        <td class="thcenter" (click)="jump(data)">{{data.yield}}%</td>
         <!-- <ng-container *ngIf="(data.isNull==='1'||data.isNull==='3')&& !data.planNums;else planNum">
           <span style="color: #f5222d;" >缺失</span>
         </ng-container> -->
@@ -93,15 +103,7 @@
         <td class="thcenter" (click)="jump(data)">{{data.planAchievementRate}}%</td>
 
         <!-- <td class="thcenter">{{data.goodNums}}</td> -->
-        <td class="thcenter" (click)="jump(data)">{{data.badNums}}</td>
-
-        <td  (click)="jump(data)">
-          <nz-progress [nzPercent]="100" [nzShowInfo]="false"
-            [ngClass]="{'success': data.yieldStatus==='success','exception': data.yieldStatus=='exception','active': data.yieldStatus=='active'}"
-            nzType="circle" [nzFormat]="formatOne" [nzWidth]="24" [nzStrokeColor]="progressColor[data.yieldStatus]">
-          </nz-progress>
-        </td>
-        <td class="thcenter" (click)="jump(data)">{{data.yield}}%</td>
+        
 
         <td class="thcenter" (click)="jump(data)">
 
@@ -115,15 +117,14 @@
           </div>
         </td>
 
-        <td  (click)="showDeatil(data)" style="cursor: pointer;" defaultColor="rgba(0, 0, 255, 0.1)"
-          ryHighlight>
+        <td  (click)="showDeatil(data)" style="cursor: pointer;">
 
           <nz-progress [nzPercent]="100"
             [ngClass]="{'error': data.errorCode==eErrorCode.error,'success': data.efficiencyStatus==='success','exception': data.efficiencyStatus=='exception','active': data.efficiencyStatus=='active'}"
             nzType="circle" [nzFormat]="formatOne" [nzWidth]="24" [nzShowInfo]="false"
             [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
         </td>
-        <td  class="thcenter" style="font-size: 15px;" (click)="showDeatil(data)">
+        <td  class="thcenter" style="font-size: 15px;cursor: pointer;" (click)="showDeatil(data)">
           <ng-container *ngIf="data.errorMsg">{{data.errorMsg}}</ng-container>
           <ng-container *ngIf="!data.errorMsg">
             <span [ngClass]="{'efferror': data.errorCode==eErrorCode.error}">

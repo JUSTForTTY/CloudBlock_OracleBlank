@@ -95,7 +95,14 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
       console.log("看板数据-接口异常");
 
     });
-    this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode=' + this.prolineCode).subscribe(
+    let http = this.httpService.getHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo?LineCode=' + this.prolineCode);
+    if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
+      http = this.httpService.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo/GetAbByLineDate', {
+        LineCode: this.prolineCode,
+        FDate: this.rpsBoardService.date
+      });
+    }
+    http.subscribe(
       data => {
         console.log('getErrorData ' + this.prolineCode, data)
         if (data.data.ErrorCode === 0) {
@@ -104,7 +111,11 @@ export class ProlineErrormsgComponent implements OnInit, OnDestroy {
 
           InitErrorData(this.rightData, data.data.CallUserInfo)
           console.log('errorData', this.rightData)
-          this.rightData = this.rightData.filter(data => data.status !== 'success')
+          if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
+
+          }else{
+            this.rightData = this.rightData.filter(data => data.status !== 'success')
+          }
 
         } else {
           this.rightData = [];

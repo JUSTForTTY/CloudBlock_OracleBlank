@@ -9,10 +9,10 @@ import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../uti
 import { DatePipe } from '@angular/common';
 import { RpsTableComponent } from "../rps-table/rps-table.component";
 
-interface BigData{
+interface BigData {
   title: string;
   data: Data[];
-  key:string;
+  key: string;
   isLoading?: boolean;
 }
 
@@ -63,21 +63,21 @@ export class RpsBlockComponent implements OnInit {
     "COATING"?: number,
     "SMT"?: number,
     "ATP"?: number
-  }={};
+  } = {};
   signSection2?: {
     "WAVE"?: number,
     "shiftType"?: "白班" | "夜班",
     "COATING"?: number,
     "SMT"?: number,
     "ATP"?: number
-  }={};
+  } = {};
   signSection3?: {
     "WAVE"?: number,
     "shiftType"?: "白班" | "夜班",
     "COATING"?: number,
     "SMT"?: number,
     "ATP"?: number
-  }={};
+  } = {};
 
   allData: BigData[][] = [];
   topData: BigData[] = [];
@@ -107,9 +107,9 @@ export class RpsBlockComponent implements OnInit {
   @ViewChild('tableCOATING') tableCOATING: RpsTableComponent;
 
 
-  
 
-  constructor(private http: HttpService, private route: ActivatedRoute,private datePipe:DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
+
+  constructor(private http: HttpService, private route: ActivatedRoute, private datePipe: DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
   subscription: Subscription;
@@ -160,6 +160,8 @@ export class RpsBlockComponent implements OnInit {
 
       if (data.obj.sort === this.workShop.sort || data.newObj.workShopCode === '-1') {
         this.changeData(data.newObj)
+      }else{
+        this.getErrorData();
       }
     })
 
@@ -193,11 +195,11 @@ export class RpsBlockComponent implements OnInit {
   }
 
   getErrorData() {
-    if (this.rpsBoardService.date) {
-      this.isError = false
-      this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
-      return;
-    }
+    // if (this.rpsBoardService.date) {
+    //   this.isError = false
+    //   this.rpsBoardService.clearAll(this.rightData, this.rightShow, this.rightOther)
+    //   return;
+    // }
     let factoryCode = FactoryCode[this.workShop.workShopCode];
     if (!factoryCode) factoryCode = this.workShop.workShopCode;
     if (factoryCode === '-1') factoryCode = '';
@@ -207,8 +209,14 @@ export class RpsBlockComponent implements OnInit {
     //     console.log('getErrorData SUZ15BE-1', data)
     //   }
     // )
-
-    this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getAbnormalInfo', { FactoryCode: factoryCode }).subscribe(
+    let url = 'http://172.16.8.28:8088/api/getAbnormalInfo';
+    const body = { FactoryCode: factoryCode }
+    if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
+      url += `/GetAbnormalByDate`;
+      body['FDate'] = this.rpsBoardService.date;
+    }
+    console.log('getErrorData', url, body)
+    this.http.postHttpAllUrl(url, body).subscribe(
       (data: {
         data: { CallInfo: ErrorInfo[], CallUserInfo: CallUserInfo[], ErrorCode: number, Msg?: string }
       }) => {
@@ -299,29 +307,29 @@ export class RpsBlockComponent implements OnInit {
     this.bottomData = [];
     this.allData = [];
     this.topData.push({
-      title: 'SMT达成率',
+      title: 'SMT',
       data: getTestData(),
-      key:'SMT',
+      key: 'SMT',
       isLoading: true
     })
     this.topData.push({
-      title: 'WAVE达成率',
+      title: 'WAVE',
       data: getTestData(),
-      key:'WAVE',
+      key: 'WAVE',
       isLoading: true
     })
 
     this.bottomData.push({
-      title: 'COATING达成率',
+      title: 'COATING',
       data: getTestData(),
-      key:'COATING',
+      key: 'COATING',
       isLoading: true
       // data:[]
     })
     this.bottomData.push({
-      title: 'ATP达成率',
+      title: 'ATP',
       data: getTestData(),
-      key:'ATP',
+      key: 'ATP',
       isLoading: true
     })
     this.allData.push(this.topData);
@@ -361,6 +369,64 @@ export class RpsBlockComponent implements OnInit {
     // }
     // this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
   }
+  totalData = {
+    onlineSign: 0,
+    kaoqin: 0,
+    signTime: 0,
+    effectiveOutput: 0,
+    onlineEfficiency: 0
+  }
+  getTotalData(mainData = false) {
+    return;
+    const type = ['WAVE', 'COATING', 'SMT', 'ATP']
+
+    let onlineSign = 0;
+    for (const key in this.signSection) {
+      if (Object.prototype.hasOwnProperty.call(this.signSection, key)) {
+        if (type.includes(key) && this.signSection[key]) {
+          onlineSign += this.signSection[key]
+        }
+      }
+    }
+    this.totalData.onlineSign = onlineSign;
+
+    let kaoqin = 0;
+    for (const key in this.signSection2) {
+      if (Object.prototype.hasOwnProperty.call(this.signSection2, key)) {
+        if (type.includes(key) && this.signSection2[key]) {
+          kaoqin += this.signSection2[key]
+        }
+      }
+    }
+    this.totalData.kaoqin = kaoqin;
+
+    if (mainData) {
+      // 签到工时
+      let signTime = 0;
+      /** 生产工时 */
+      let effectiveOutput = 0;
+      /** 在线总效率 */
+      try {
+        for (const oneDatas of this.allData) {
+          for (const bigData of oneDatas) {
+            for (const iterator of bigData.data) {
+              effectiveOutput += iterator.effectiveOutput;
+              signTime += iterator.signTime;
+            }
+          }
+        }
+      } catch (error) { }
+
+      if (signTime) {
+        this.totalData.onlineEfficiency = effectiveOutput / signTime;
+      }
+      this.totalData.effectiveOutput = effectiveOutput;
+      this.totalData.signTime = signTime;
+
+    }
+
+
+  }
   getAllData(errorCount = 0) {
     if (errorCount >= 3) return;
     let url = "/yieldDashboard/worksectionData/" + this.workShop.workShopCode;
@@ -368,42 +434,43 @@ export class RpsBlockComponent implements OnInit {
       url += `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
     }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
-      this.signSection =  {};
-      this.signSection2 =  {};
-      this.signSection3 =  {};
+    this.signSection = {};
+    this.signSection2 = {};
+    this.signSection3 = {};
 
-    
+
 
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
 
-      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp',{
-      "FDate":        this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-      "FShift": this.signSection.shiftType==='白班'?"DayShift":'NightShift',
-      "FactoryCode": this.workShop.workShopCode,
-      "Fkind": "0"
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', {
+        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+        "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
+        "FactoryCode": this.workShop.workShopCode,
+        "Fkind": "0"
       }).subscribe((data: any) => {
-        console.log('getkp0',data)
-        if(data.data && data.data.length){
+        console.log('getkp0', data)
+        if (data.data && data.data.length) {
           for (const iterator of data.data) {
-            this.signSection2[iterator['WORK_SHOP_CODE']]=iterator['HeadCount']
+            this.signSection2[iterator['WORK_SHOP_CODE']] = iterator['HeadCount']
+          }
+        }
+        this.getTotalData();
+      })
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', {
+        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+        "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
+        "FactoryCode": this.workShop.workShopCode,
+        "Fkind": "1"
+      }).subscribe((data: any) => {
+        console.log('getkp1', data)
+        if (data.data && data.data.length) {
+          for (const iterator of data.data) {
+            this.signSection3[iterator['WORK_SHOP_CODE']] = iterator['HeadCount']
           }
         }
       })
-      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp',{
-      "FDate":        this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-      "FShift": this.signSection.shiftType==='白班'?"DayShift":'NightShift',
-      "FactoryCode": this.workShop.workShopCode,
-      "Fkind": "1"
-      }).subscribe((data: any) => {
-        console.log('getkp1',data)
-        if(data.data && data.data.length){
-          for (const iterator of data.data) {
-            this.signSection3[iterator['WORK_SHOP_CODE']]=iterator['HeadCount']
-          }
-        }
-      })
-      
+
       for (const option of options) {
         console.log('data', option.key, data);
         const dataList = data.data[option.key];
@@ -437,6 +504,7 @@ export class RpsBlockComponent implements OnInit {
         this.rpsBoardService.standard.efficiency = data.data.efficiency
       }
 
+      this.getTotalData(true);
 
     },
       error => {

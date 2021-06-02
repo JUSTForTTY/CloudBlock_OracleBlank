@@ -160,7 +160,7 @@ export class RpsBlockComponent implements OnInit {
 
       if (data.obj.sort === this.workShop.sort || data.newObj.workShopCode === '-1') {
         this.changeData(data.newObj)
-      }else{
+      } else {
         this.getErrorData();
       }
     })
@@ -442,13 +442,25 @@ export class RpsBlockComponent implements OnInit {
 
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
-
-      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', {
+      const body2 = {
         "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
         "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
         "FactoryCode": this.workShop.workShopCode,
         "Fkind": "0"
-      }).subscribe((data: any) => {
+      }
+      const body3 = {
+        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+        "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
+        "FactoryCode": this.workShop.workShopCode,
+        "Fkind": "1"
+      }
+      if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
+        body2.FDate=this.rpsBoardService.date
+        body2.FShift=this.rpsBoardService.dateMode
+        body3.FDate=this.rpsBoardService.date
+        body3.FShift=this.rpsBoardService.dateMode
+      }
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body2).subscribe((data: any) => {
         console.log('getkp0', data)
         if (data.data && data.data.length) {
           for (const iterator of data.data) {
@@ -457,12 +469,8 @@ export class RpsBlockComponent implements OnInit {
         }
         this.getTotalData();
       })
-      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', {
-        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-        "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
-        "FactoryCode": this.workShop.workShopCode,
-        "Fkind": "1"
-      }).subscribe((data: any) => {
+      
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body3).subscribe((data: any) => {
         console.log('getkp1', data)
         if (data.data && data.data.length) {
           for (const iterator of data.data) {

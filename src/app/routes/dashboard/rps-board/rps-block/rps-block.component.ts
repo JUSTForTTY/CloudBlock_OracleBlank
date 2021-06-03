@@ -8,6 +8,7 @@ import { orderBy, slice, map, groupBy } from 'lodash';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
 import { DatePipe } from '@angular/common';
 import { RpsTableComponent } from "../rps-table/rps-table.component";
+import { addDays } from 'date-fns';
 
 interface BigData {
   title: string;
@@ -378,52 +379,6 @@ export class RpsBlockComponent implements OnInit {
   }
   getTotalData(mainData = false) {
     return;
-    const type = ['WAVE', 'COATING', 'SMT', 'ATP']
-
-    let onlineSign = 0;
-    for (const key in this.signSection) {
-      if (Object.prototype.hasOwnProperty.call(this.signSection, key)) {
-        if (type.includes(key) && this.signSection[key]) {
-          onlineSign += this.signSection[key]
-        }
-      }
-    }
-    this.totalData.onlineSign = onlineSign;
-
-    let kaoqin = 0;
-    for (const key in this.signSection2) {
-      if (Object.prototype.hasOwnProperty.call(this.signSection2, key)) {
-        if (type.includes(key) && this.signSection2[key]) {
-          kaoqin += this.signSection2[key]
-        }
-      }
-    }
-    this.totalData.kaoqin = kaoqin;
-
-    if (mainData) {
-      // 签到工时
-      let signTime = 0;
-      /** 生产工时 */
-      let effectiveOutput = 0;
-      /** 在线总效率 */
-      try {
-        for (const oneDatas of this.allData) {
-          for (const bigData of oneDatas) {
-            for (const iterator of bigData.data) {
-              effectiveOutput += iterator.effectiveOutput;
-              signTime += iterator.signTime;
-            }
-          }
-        }
-      } catch (error) { }
-
-      if (signTime) {
-        this.totalData.onlineEfficiency = effectiveOutput / signTime;
-      }
-      this.totalData.effectiveOutput = effectiveOutput;
-      this.totalData.signTime = signTime;
-
-    }
 
 
   }
@@ -442,23 +397,33 @@ export class RpsBlockComponent implements OnInit {
 
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
+      let nowDate = new Date();
+      // console.log('getAllData', nowDate.getHours(), nowDate.getMinutes(),nowDate.getDate())
+
+      if (this.signSection.shiftType === '夜班' && nowDate.getHours() < 9 && nowDate.getMinutes() <= 30) {
+        nowDate = addDays(nowDate, -1);
+      }
+      // console.log('getAllData', nowDate.getHours(), nowDate.getMinutes(),nowDate.getDate())
+
+      // console.log('getAllData', nowDate.getHours(), nowDate.getMinutes())
+      // nowDate.getHours
       const body2 = {
-        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+        "FDate": this.datePipe.transform(nowDate, 'yyyy-MM-dd'),
         "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
         "FactoryCode": this.workShop.workShopCode,
         "Fkind": "0"
       }
       const body3 = {
-        "FDate": this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+        "FDate": this.datePipe.transform(nowDate, 'yyyy-MM-dd'),
         "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
         "FactoryCode": this.workShop.workShopCode,
         "Fkind": "1"
       }
       if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
-        body2.FDate=this.rpsBoardService.date
-        body2.FShift=this.rpsBoardService.dateMode
-        body3.FDate=this.rpsBoardService.date
-        body3.FShift=this.rpsBoardService.dateMode
+        body2.FDate = this.rpsBoardService.date
+        body2.FShift = this.rpsBoardService.dateMode
+        body3.FDate = this.rpsBoardService.date
+        body3.FShift = this.rpsBoardService.dateMode
       }
       this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body2).subscribe((data: any) => {
         console.log('getkp0', data)
@@ -469,7 +434,7 @@ export class RpsBlockComponent implements OnInit {
         }
         this.getTotalData();
       })
-      
+
       this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body3).subscribe((data: any) => {
         console.log('getkp1', data)
         if (data.data && data.data.length) {

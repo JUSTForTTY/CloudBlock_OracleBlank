@@ -436,6 +436,7 @@ export class RolemanagerComponent implements OnInit {
     });
   }
   //打开用户组菜单弹出框
+  isMenuLoading=false;
   showModal(roleid, rolename): void {
     this.userMenuDemo = [];
     this.isVisible = true;
@@ -444,6 +445,7 @@ export class RolemanagerComponent implements OnInit {
     this.roleName = rolename;
   }
   getMenuList(roleid): void {
+    this.isMenuLoading=true;
     this.httpService.postHttp("/csysmenu/tree").subscribe((data: any) => {
       this.nodes = data.data;
       this.getdefaultCheckedKeys(roleid);
@@ -470,6 +472,8 @@ export class RolemanagerComponent implements OnInit {
       }
 
       this.defaultCheckedKeys = [...this.defaultCheckedKeys];
+      this.isMenuLoading=false;
+
     });
   }
 

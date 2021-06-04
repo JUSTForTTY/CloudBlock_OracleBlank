@@ -100,16 +100,17 @@
 
   <nz-modal nzWrapClassName="vertical-center-menu-modal" [(nzVisible)]="isVisible" nzTitle="菜单分配"
     (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
-
-    <nz-input-group [nzSuffix]="suffixIcon">
-      <input type="text" nz-input placeholder="搜索菜单" [(ngModel)]="searchValue">
-    </nz-input-group>
-    <ng-template #suffixIcon>
-      <i class="anticon anticon-search"></i>
-    </ng-template>
-    <nz-tree [nzData]="nodes" [nzCheckedKeys]="defaultCheckedKeys" [nzSearchValue]="searchValue" [nzCheckable]="true"
-      [nzShowLine]="true" (nzCheckBoxChange)="mouseAction('check',$event)">
-    </nz-tree>
+    <nz-spin [nzSpinning]="isMenuLoading">
+      <nz-input-group [nzSuffix]="suffixIcon">
+        <input type="text" nz-input placeholder="搜索菜单" [(ngModel)]="searchValue">
+      </nz-input-group>
+      <ng-template #suffixIcon>
+        <i class="anticon anticon-search"></i>
+      </ng-template>
+      <nz-tree [nzData]="nodes" [nzCheckedKeys]="defaultCheckedKeys" [nzSearchValue]="searchValue" [nzCheckable]="true"
+        [nzShowLine]="true" (nzCheckBoxChange)="mouseAction('check',$event)">
+      </nz-tree>
+    </nz-spin>
 
   </nz-modal>
 

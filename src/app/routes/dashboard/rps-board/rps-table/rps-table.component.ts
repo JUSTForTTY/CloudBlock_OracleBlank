@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Data, getTestData, EErrorCode } from "../datas";
+import { Data, getTestData, EErrorCode, SectionData } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf } from 'rxjs';
 import { RpsBoardService, WorkShop } from '../rps-board.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -52,6 +52,9 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   }
   eErrorCode = EErrorCode;
   efficiency: number = 0;
+  offlineEfficiency: number = 0;
+  @Input() sectionData: SectionData;
+
   formatOne = (percent: number) => `${percent}%`;
   constructor(private rpsBoardService: RpsBoardService, private router: Router,) { }
   showDeatil(data: Data) {
@@ -111,7 +114,10 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (signTime) {
         this.efficiency = effectiveOutput / signTime;
-        console.log('signTime',this.key,this.efficiency,effectiveOutput , signTime)
+        if(this.sectionData){
+          this.offlineEfficiency=(effectiveOutput+this.sectionData.stdSignOfflineTime) / signTime;
+        }
+        console.log('signTime',this.key,this.efficiency,this.offlineEfficiency,effectiveOutput , signTime)
       }
     }, 100);
     
@@ -155,7 +161,7 @@ export class RpsTableComponent implements OnInit, OnDestroy {
       const divHeight = this.divBox.nativeElement.clientHeight;
       const divWidth = this.divBox.nativeElement.clientWidth;
 
-      const pagesize = divWidth > 480 ? Math.floor((divHeight - 64) / 46 + 0.02) : Math.floor((divHeight - 64) / 75 + 0.02)
+      const pagesize = divWidth > 480 ? Math.floor((divHeight - 64) / 40 + 0.02) : Math.floor((divHeight - 64) / 69 + 0.02)
       console.log('smallTable', this.key, pagesize, this.divBox.nativeElement.clientHeight)
       this.nzPageSize = pagesize;
       this.newData = true;

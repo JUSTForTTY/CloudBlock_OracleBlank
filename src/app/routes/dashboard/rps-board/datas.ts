@@ -43,6 +43,25 @@ export interface EfficiencyFormula {
 export enum EErrorCode {
     success, error, null
 }
+export interface SectionData {
+    "signCountOffline"?: number,
+    "signCountAll"?: number,
+    "stdSignOfflineTime"?: number,
+    "sectionCode"?: string,
+    "signAllTime"?: number,
+    "kaoqin"?: number,
+    "paiban"?: number
+}
+export interface SignSection {
+    "WAVE"?: SectionData,
+    "shiftType"?: "白班" | "夜班",
+    "COATING"?: SectionData,
+    "SMT"?: SectionData,
+    "ATP"?: SectionData,
+    sectionData?: SectionData[]
+}
+
+export type WorkType = 'WAVE' | 'COATING' | 'SMT' | 'ATP'
 export interface UrlData {
     [key: string]: any;
     data: {
@@ -53,16 +72,11 @@ export interface UrlData {
         planAchievementRate: { bad: number; good: number },
         yield: { bad: number; good: number },
         efficiency: { bad: number; good: number },
-        signSection?: {
-            "WAVE": number,
-            "shiftType": "白班" | "夜班",
-            "COATING": number,
-            "SMT": number,
-            "ATP": number
-        },
+        signSection?: SignSection
     }
 
 }
+
 export function getDataByUrlData(data: Data): Data {
     return null;
 }

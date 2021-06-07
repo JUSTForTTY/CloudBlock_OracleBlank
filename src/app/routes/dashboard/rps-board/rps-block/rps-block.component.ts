@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { Data, getTestData, UrlData } from "../datas";
+import { Data, getTestData, UrlData, SignSection, WorkType } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
-import { RpsBoardService, FactoryCode, WorkShop } from '../rps-board.service';
+import { RpsBoardService, FactoryCode, WorkShop, TotalData } from '../rps-board.service';
 import { orderBy, slice, map, groupBy } from 'lodash';
 import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../utils";
 import { DatePipe } from '@angular/common';
@@ -15,33 +15,42 @@ interface BigData {
   data: Data[];
   key: string;
   isLoading?: boolean;
+  height?: number;
+  headHeight?: number;
+  efficiency?: number;
+  offlineEfficiency?: number;
 }
 
 const options: {
   key: string,
   title: string,
-  index: number[]
+  index: number[],
+  height: number,
 }[] = [
     {
       key: 'SMT',
       title: 'SMT',
-      index: [0, 0]
+      index: [0, 0],
+      height: 100
     },
     {
       key: 'WAVE',
       title: 'WAVE',
-      index: [0, 1]
+      index: [1, 0],
+      height: 50
     },
 
     {
       key: 'COATING',
       title: 'COATING',
-      index: [1, 0]
+      index: [1, 1],
+      height: 50
     },
     {
       key: 'ATP',
       title: 'ATP',
-      index: [1, 1]
+      index: [2, 0],
+      height: 50
     },
   ]
 @Component({
@@ -58,31 +67,30 @@ export class RpsBlockComponent implements OnInit {
   currentErrorInfo: ErrorInfo
   leftSpan = 20
   @Input() workShop: WorkShop
-  signSection?: {
-    "WAVE"?: number,
-    "shiftType"?: "白班" | "夜班",
-    "COATING"?: number,
-    "SMT"?: number,
-    "ATP"?: number
-  } = {};
-  signSection2?: {
-    "WAVE"?: number,
-    "shiftType"?: "白班" | "夜班",
-    "COATING"?: number,
-    "SMT"?: number,
-    "ATP"?: number
-  } = {};
-  signSection3?: {
-    "WAVE"?: number,
-    "shiftType"?: "白班" | "夜班",
-    "COATING"?: number,
-    "SMT"?: number,
-    "ATP"?: number
-  } = {};
+  signSection?: SignSection = {
+    "WAVE": {
+      kaoqin: 0,
+      paiban: 0,
+      signCountAll: 0
+    },
+    "COATING": {
+      kaoqin: 0,
+      paiban: 0,
+      signCountAll: 0
+    },
+    "SMT": {
+      kaoqin: 0,
+      paiban: 0,
+      signCountAll: 0
+    },
+    "ATP": {
+      kaoqin: 0,
+      paiban: 0,
+      signCountAll: 0
+    },
+  };
 
   allData: BigData[][] = [];
-  topData: BigData[] = [];
-  bottomData: BigData[] = [];
   fontSizeTitle1 = 42;//一级标题
   fontSizeTitle2 = 24;//二级标题
   tableSize: 'middle' | 'small' = 'middle';
@@ -100,12 +108,12 @@ export class RpsBlockComponent implements OnInit {
 
 
   @ViewChild('errodHead') errodHead: ElementRef;
-  @ViewChild('tableATP') tableATP: RpsTableComponent;
-  @ViewChild('tableSMT') tableSMT: RpsTableComponent;
+  // @ViewChild('tableATP') tableATP: RpsTableComponent;
+  // @ViewChild('tableSMT') tableSMT: RpsTableComponent;
 
-  @ViewChild('tableWAVE') tableWAVE: RpsTableComponent;
+  // @ViewChild('tableWAVE') tableWAVE: RpsTableComponent;
 
-  @ViewChild('tableCOATING') tableCOATING: RpsTableComponent;
+  // @ViewChild('tableCOATING') tableCOATING: RpsTableComponent;
 
 
 
@@ -304,45 +312,41 @@ export class RpsBlockComponent implements OnInit {
   }
   initData() {
     console.log('getAllData')
-    this.topData = [];
-    this.bottomData = [];
     this.allData = [];
-    this.topData.push({
+
+    this.allData.push([{
       title: 'SMT',
       data: getTestData(),
       key: 'SMT',
-      isLoading: true
-    })
-    this.topData.push({
+      isLoading: true,
+      height: 100,
+      headHeight: 9.5
+    }]);
+    this.allData.push([{
       title: 'WAVE',
       data: getTestData(),
       key: 'WAVE',
-      isLoading: true
-    })
-
-    this.bottomData.push({
+      isLoading: true,
+      height: 50,
+      headHeight: 19.5
+    }, {
       title: 'COATING',
       data: getTestData(),
       key: 'COATING',
-      isLoading: true
+      isLoading: true,
+      height: 50,
+      headHeight: 19.5
       // data:[]
-    })
-    this.bottomData.push({
+    }]);
+
+    this.allData.push([{
       title: 'ATP',
       data: getTestData(),
       key: 'ATP',
-      isLoading: true
-    })
-    this.allData.push(this.topData);
-    this.allData.push(this.bottomData);
-    // setTimeout(() => {
-    //   // 模拟数据
-    //   for (const iterator of this.allData) {
-    //     for (const data of iterator) {
-    //       data.isLoading = false;
-    //     }
-    //   }
-    // }, 1);
+      isLoading: true,
+      height: 100,
+      headHeight: 9.5
+    }]);
   }
   jump() {
     // f
@@ -370,15 +374,93 @@ export class RpsBlockComponent implements OnInit {
     // }
     // this.rpsBoardService.fullscreen$.next(this.rpsBoardService.isFullscreen);
   }
-  totalData = {
+  totalData: TotalData = {
     onlineSign: 0,
     kaoqin: 0,
     signTime: 0,
     effectiveOutput: 0,
-    onlineEfficiency: 0
+    onlineEfficiency: 0,
+    offlineEfficiency: 0,
+    stdSignOfflineTime: 0,
+    signCountOffline: 0
   }
   getTotalData(mainData = false) {
-    return;
+    const type = ['WAVE', 'COATING', 'SMT', 'ATP']
+
+    let onlineSign = 0;
+    let kaoqin = 0;
+    let stdSignOfflineTime = 0;
+    let signCountOffline = 0;
+    for (const key in this.signSection) {
+      if (Object.prototype.hasOwnProperty.call(this.signSection, key)) {
+        if (type.includes(key) && this.signSection[key]) {
+          const data = this.signSection[key as WorkType]
+          onlineSign += data.signCountAll
+          signCountOffline += data.signCountOffline;
+          stdSignOfflineTime += data.stdSignOfflineTime;
+          if (data.kaoqin) {
+            kaoqin += data.kaoqin
+          }
+
+        }
+      }
+    }
+    this.totalData.onlineSign = onlineSign;
+    this.totalData.kaoqin = kaoqin;
+    this.totalData.signCountOffline = signCountOffline;
+    if (mainData) {
+      // 签到工时
+      let signTime = 0;
+      /** 生产工时 */
+      let effectiveOutput = 0;
+      /** 在线总效率 */
+      try {
+        for (const oneDatas of this.allData) {
+          for (const bigData of oneDatas) {
+            for (const iterator of bigData.data) {
+              effectiveOutput += iterator.effectiveOutput;
+              signTime += iterator.signTime;
+            }
+          }
+        }
+      } catch (error) { }
+
+      if (signTime) {
+        this.totalData.onlineEfficiency = effectiveOutput / signTime;
+      }
+      this.totalData.stdSignOfflineTime = stdSignOfflineTime + signTime;
+      if (this.totalData.stdSignOfflineTime) {
+        this.totalData.offlineEfficiency = effectiveOutput / this.totalData.stdSignOfflineTime
+      }
+      this.totalData.effectiveOutput = effectiveOutput;
+      this.totalData.signTime = signTime;
+    }
+    this.workShop.totalData = this.totalData;
+    // 统计ALL
+    if (this.rpsBoardService.isFour) {
+      // this.rpsBoardService.totalData
+      const newTotalData = new TotalData();
+      for (const key in this.rpsBoardService.fourBlock) {
+        if (Object.prototype.hasOwnProperty.call(this.rpsBoardService.fourBlock, key)) {
+          const totalData = this.rpsBoardService.fourBlock[key].totalData;
+          if (totalData) {
+            newTotalData.kaoqin += totalData.kaoqin;
+            newTotalData.signTime += totalData.signTime;
+            newTotalData.effectiveOutput += totalData.effectiveOutput;
+            newTotalData.onlineSign += totalData.onlineSign;
+            newTotalData.signCountOffline += totalData.signCountOffline;
+            newTotalData.stdSignOfflineTime += totalData.stdSignOfflineTime;
+          }
+        }
+      }
+      if (newTotalData.signTime) {
+        newTotalData.onlineEfficiency = newTotalData.effectiveOutput / newTotalData.signTime;
+      }
+      if (newTotalData.stdSignOfflineTime) {
+        newTotalData.offlineEfficiency = newTotalData.effectiveOutput / newTotalData.stdSignOfflineTime
+      }
+      this.rpsBoardService.totalData = newTotalData;
+    }
 
 
   }
@@ -389,16 +471,40 @@ export class RpsBlockComponent implements OnInit {
       url += `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`
     }
     // this.http.getHttpAllUrl("http://172.18.3.202:8080/yieldDashboard/worksectionData/" + this.workShop.workShopCode).subscribe((data: UrlData) => {
-    this.signSection = {};
-    this.signSection2 = {};
-    this.signSection3 = {};
+    this.signSection = {
+      "WAVE": {
+        kaoqin: 0,
+        paiban: 0,
+        signCountAll: 0
+      },
+      "COATING": {
+        kaoqin: 0,
+        paiban: 0,
+        signCountAll: 0
+      },
+      "SMT": {
+        kaoqin: 0,
+        paiban: 0,
+        signCountAll: 0
+      },
+      "ATP": {
+        kaoqin: 0,
+        paiban: 0,
+        signCountAll: 0
+      },
+    };
 
 
 
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
+      if (this.signSection.sectionData) {
+        for (const iterator of this.signSection.sectionData) {
+          this.signSection[iterator.sectionCode] = iterator;
+        }
+      }
       let nowDate = new Date();
-      // console.log('getAllData', nowDate.getHours(), nowDate.getMinutes(),nowDate.getDate())
+      console.log('this.data', data, this.signSection)
 
       if (this.signSection.shiftType === '夜班' && nowDate.getHours() < 9 && nowDate.getMinutes() <= 30) {
         nowDate = addDays(nowDate, -1);
@@ -429,7 +535,9 @@ export class RpsBlockComponent implements OnInit {
         console.log('getkp0', data)
         if (data.data && data.data.length) {
           for (const iterator of data.data) {
-            this.signSection2[iterator['WORK_SHOP_CODE']] = iterator['HeadCount']
+            if (this.signSection[iterator['WORK_SHOP_CODE']]) {
+              this.signSection[iterator['WORK_SHOP_CODE']]['kaoqin'] = iterator['HeadCount']
+            }
           }
         }
         this.getTotalData();
@@ -439,7 +547,9 @@ export class RpsBlockComponent implements OnInit {
         console.log('getkp1', data)
         if (data.data && data.data.length) {
           for (const iterator of data.data) {
-            this.signSection3[iterator['WORK_SHOP_CODE']] = iterator['HeadCount']
+            if (this.signSection[iterator['WORK_SHOP_CODE']]) {
+              this.signSection[iterator['WORK_SHOP_CODE']]['paiban'] = iterator['HeadCount']
+            }
           }
         }
       })
@@ -447,23 +557,38 @@ export class RpsBlockComponent implements OnInit {
       for (const option of options) {
         console.log('data', option.key, data);
         const dataList = data.data[option.key];
+        let effectiveOutput = 0;
+        let signTime = 0;
+        const oneData = this.allData[option.index[0]][option.index[1]];
+        const sectionData = this.signSection[option.key];
         if (dataList) {
-          this.allData[option.index[0]][option.index[1]].isLoading = true;
-          this.allData[option.index[0]][option.index[1]].data = dataList
-          this.allData[option.index[0]][option.index[1]].title = option.title;
+          for (const iterator of dataList) {
+            effectiveOutput += iterator.effectiveOutput;
+            signTime += iterator.signTime;
+          }
+          if (signTime) {
+            oneData.efficiency = effectiveOutput / signTime;
+            if (sectionData) {
+              oneData.offlineEfficiency = (effectiveOutput) / (signTime + sectionData.stdSignOfflineTime);
+            }
+          }
+          oneData.isLoading = true;
+          oneData.data = dataList
+          oneData.title = option.title;
+
           setTimeout(() => {
             // 模拟数据
             if (dataList.length > 0)
-              this.allData[option.index[0]][option.index[1]].isLoading = false;
+              oneData.isLoading = false;
             else {
               // TODO 无数据
-              this.allData[option.index[0]][option.index[1]].isLoading = false;
+              oneData.isLoading = false;
             }
           }, 1);
         } else {
-          this.allData[option.index[0]][option.index[1]].data = [];
-          this.allData[option.index[0]][option.index[1]].title = option.title;
-          this.allData[option.index[0]][option.index[1]].isLoading = false;
+          oneData.data = [];
+          oneData.title = option.title;
+          oneData.isLoading = false;
 
         }
       }
@@ -476,8 +601,8 @@ export class RpsBlockComponent implements OnInit {
       if (data.data.efficiency) {
         this.rpsBoardService.standard.efficiency = data.data.efficiency
       }
-
       this.getTotalData(true);
+
 
     },
       error => {

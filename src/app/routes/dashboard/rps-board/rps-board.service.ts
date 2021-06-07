@@ -14,6 +14,16 @@ export const FactoryCode = {
   'SUZ21-1F': 'SUZ04',
   'SX-P6': 'SX-P6',
 }
+export class TotalData {
+  onlineSign: number = 0
+  kaoqin: number = 0
+  signTime: number = 0
+  effectiveOutput: number = 0
+  onlineEfficiency: number = 0
+  stdSignOfflineTime: number = 0
+  offlineEfficiency: number = 0;
+  signCountOffline: number = 0;
+}
 export interface WorkShop {
   createTime?: string
   createUser?: string
@@ -31,6 +41,7 @@ export interface WorkShop {
   isAdding?: boolean;
   sort?: number;
   oldSort?: number;
+  totalData?: TotalData;
 
 }
 export interface BlockData {
@@ -44,11 +55,21 @@ export class RpsBoardService {
   changePageTime = 15;
   date = ''
   dateMode: 'NightShift' | 'DayShift' | '' = ''
-  historyUrl='';
+  historyUrl = '';
   pageChangeTime$: Subject<number> = new Subject();
   fullscreen$: Subject<boolean> = new Subject();
   changeWorkShop$: Subject<{ obj: WorkShop, newObj: WorkShop, force?: boolean }> = new Subject();
+  totalData: TotalData = {
+    onlineSign: 0,
+    kaoqin: 0,
+    signTime: 0,
+    effectiveOutput: 0,
+    onlineEfficiency: 0,
+    stdSignOfflineTime: 0,
+    offlineEfficiency: 0,
+    signCountOffline: 0
 
+  }
   standard = {
     complete: {
       good: 95,
@@ -58,7 +79,7 @@ export class RpsBoardService {
       good: 90,
       bad: 85
     },
-    efficiency:{
+    efficiency: {
       good: 90,
       bad: 85
     }

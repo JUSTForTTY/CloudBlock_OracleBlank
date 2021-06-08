@@ -3,7 +3,6 @@
     <div nz-row [nzGutter]="24" class="pt-lg">
 
         <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="nzLg">
-test
 
             <!--工作流图形构建-->
             <nz-card [nzTitle]="workflowName" [nzBordered]="false" class="mb-lg" [nzExtra]="extraTemplate">
@@ -12,8 +11,8 @@ test
                     <ngx-graph class="chart-container" [layout]="layout" [view]="view" [center$]="center$"
                         minZoomLevel=0.3 maxZoomLevel=2 panningEnabled=false [layoutSettings]="layoutSettings"
                         [legend]="showLegend" [links]="hierarchialGraphSimple.links"
-                        [clusters]=hierarchialGraphSimple.clusters 
-                        [nodes]="hierarchialGraphSimple.nodes" [curve]="curve" (select)="clickNode($event)">
+                        [clusters]=hierarchialGraphSimple.clusters [nodes]="hierarchialGraphSimple.nodes"
+                        [curve]="curve" (select)="clickNode($event)">
 
                         <ng-template #defsTemplate>
                             <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4"
@@ -210,7 +209,24 @@ test
                                         [nzValue]="option.csysPotId">
                                     </nz-option>
                                 </nz-select>
-                       
+
+
+                                <div nz-row>
+                                    <div nz-col nzSpan="10">子流程：</div>
+                                    <div nz-col nzSpan="14">
+
+                                        <nz-select style=" margin-right:8px;" [formControlName]="control.subFlowControl"
+                                            [nzPlaceHolder]="'请选择子流程'" [nzShowSearch]="true" nzAllowClear>
+                                            <nz-option *ngFor="let option of childFlows" nzCustomContent
+                                                [nzLabel]="option.csysWorkflowName" [nzValue]="option.csysWorkflowId">
+                                                <span nz-tooltip nzTitle="{{option.csysWorkflowName}} {{option.csysWorkflowDesc}}">
+                                                    {{option.csysWorkflowName}}
+                                                </span>
+                                            </nz-option>
+                                        </nz-select>
+                                    </div>
+                                </div>
+
 
                                 <div nz-row>
                                     <div nz-col nzSpan="10">自动执行：</div>
@@ -322,7 +338,7 @@ test
                                                     </nz-tag>
                                                 </nz-collapse-panel>
                                             </nz-collapse>
-                                            
+
                                         </nz-form-control>
                                     </nz-form-item>
                                     <nz-form-item>
@@ -409,7 +425,24 @@ test
                                                     [nzLabel]="option.csysPotName" [nzValue]="option.csysPotId">
                                                 </nz-option>
                                             </nz-select>
-                                     
+                                            <div nz-row>
+                                                <div nz-col nzSpan="10">子流程：</div>
+                                                <div nz-col nzSpan="14">
+
+                                                    <nz-select style=" margin-right:8px;width:100%"
+                                                        [formControlName]="control.subFlowControl"
+                                                        [nzPlaceHolder]="'请选择子流程'" [nzShowSearch]="true" nzAllowClear>
+                                                        <nz-option *ngFor="let option of childFlows" nzCustomContent
+                                                            [nzLabel]="option.csysWorkflowName"
+                                                            [nzValue]="option.csysWorkflowId">
+                                                            <span nz-tooltip nzTitle="{{option.csysWorkflowName}} {{option.csysWorkflowDesc}}">
+                                                                {{option.csysWorkflowName}}
+                                                            </span>
+                                                        </nz-option>
+                                                    </nz-select>
+                                                </div>
+                                            </div>
+
                                             <div nz-row>
                                                 <div nz-col nzSpan="10">自动执行：</div>
                                                 <div nz-col nzSpan="8">
@@ -602,7 +635,7 @@ test
                 </tbody>
             </nz-table>
         </ng-container>
-       
+
         <ng-template #modalFooter>
             <button *ngIf="tableShow == 'addTable'" nz-button nzType="default" (click)="back()">返回</button>
             <button *ngIf="tableShow == 'setting'" nz-button nzType="default" (click)="conditionCancel()">取消</button>
@@ -755,7 +788,7 @@ test
                     <div nz-col nzSpan="16">
                         <form nz-form [formGroup]="timeForm" (ngSubmit)="_saveConfigure()">
                             <nz-form-item>
-                                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >起始工序</nz-form-label>
+                                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>起始工序</nz-form-label>
                                 <nz-form-control [nzSm]="14" [nzXs]="24">
                                     <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear
                                         nzPlaceHolder="请选择起始工序">
@@ -856,14 +889,14 @@ test
                 </tbody>
             </nz-table>
         </ng-container>
-       <!-- 首件信息 -->
+        <!-- 首件信息 -->
 
 
         <!--新增首件-->
         <ng-container *ngIf="shiftMade">
             <form nz-form [formGroup]="madeForm" (ngSubmit)="_saveConfigure()">
                 <nz-form-item>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >起始工序</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>起始工序</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                         <nz-select formControlName="potCurrentName" nzShowSearch nzAllowClear
                             nzPlaceHolder="请选择起始工序(只允许设置测试站)" (ngModelChange)="checkModeChange()">
@@ -874,7 +907,7 @@ test
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >目标工序</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>目标工序</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="16">
                         <nz-select formControlName="potPointName" nzShowSearch nzAllowClear
                             nzPlaceHolder="请选择目标工序(只允许设置测试站)" (ngModelChange)="checkModeChange()">

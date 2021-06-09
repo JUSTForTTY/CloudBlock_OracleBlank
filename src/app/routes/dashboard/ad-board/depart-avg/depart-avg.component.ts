@@ -123,7 +123,7 @@ export class DepartAvgComponent implements OnInit {
     )
 
   }
-  setWeek(weekIndex, weekNum, AbnormalInfo: AvgItem[], avg = true) {
+  setWeek(weekIndex, weekNum, AbnormalInfo: AvgItem[], avg = true, sourceData: { name: string }[]) {
     const weeks = new Set<number>();
     for (const iterator of AbnormalInfo) {
       if (avg) {
@@ -144,7 +144,10 @@ export class DepartAvgComponent implements OnInit {
 
     for (let index = 0; index < arr.length; index++) {
       weekIndex[arr[index]] = index;
-      weekNum['WEEK' + (index + 1)] = arr[index];
+      weekNum['WEEK' + (arr[index])] = arr[index];
+      if(sourceData[index]){
+        sourceData[index].name = 'WEEK' + (arr[index])
+      }
     }
     console.log('setWeek', arr, weekIndex, weekNum)
 
@@ -159,10 +162,10 @@ export class DepartAvgComponent implements OnInit {
         // '19': '3',
       }
       const weekNum = {
-        'WEEK1': '16',
-        'WEEK2': '17',
-        'WEEK3': '18',
-        'WEEK4': '19',
+        'WEEK16': '16',
+        'WEEK17': '17',
+        'WEEK18': '18',
+        'WEEK19': '19',
       }
 
       const sourceData = [
@@ -187,7 +190,7 @@ export class DepartAvgComponent implements OnInit {
           else {
             // this.tabledata = data.AbnormalInfo;
             if (this.type >= 3) {
-              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, false)
+              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, false, sourceData)
               // num
               for (const item of data.AbnormalInfo) {
                 const desc = getDesc(item.Dept_Desc)
@@ -201,9 +204,9 @@ export class DepartAvgComponent implements OnInit {
               }
 
             } else {
-              this.tabledata = JSON.parse(JSON.stringify(sourceData));
               this.height = 300;
-              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, true)
+              this.setWeek(weekIndex, weekNum, data.AbnormalInfo, true, sourceData)
+              this.tabledata = JSON.parse(JSON.stringify(sourceData));
 
               // avg
               for (const iterator of data.AbnormalInfo) {
@@ -214,7 +217,7 @@ export class DepartAvgComponent implements OnInit {
                 sourceData[index][desc] = parseFloat(timeAvg + '')
                 this.tabledata[index][desc] = parseFloat(timeAvg + '');
                 if (this.lineNum) {
-                  if (sourceData[index][desc] > this.lineNum*2) {
+                  if (sourceData[index][desc] > this.lineNum * 2) {
                     sourceData[index][desc] = this.lineNum * 2;
                   }
                 }
@@ -237,7 +240,7 @@ export class DepartAvgComponent implements OnInit {
                   }
                 };
               }]
-              this.tabledata=[...this.tabledata];
+              this.tabledata = [...this.tabledata];
             }
 
             o.next(sourceData)

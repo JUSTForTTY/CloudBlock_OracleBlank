@@ -7,7 +7,7 @@
     3.ATP产出工时计算方式： 产出工时=产出产品数量*大CT/3600
   </span>
   <hr>
- 
+
   <div nz-row class="shiftInfo-content">
     <div nz-col nzSpan="12">
       产线：{{data.prolineCode}}
@@ -41,7 +41,7 @@
           产品：{{pro.productCode}}
         </div>
         <div nz-col nzSpan="12">
-          产出： {{pro.produce}}
+          产出：{{pro.produce}}
         </div>
       </div>
       <div nz-row class="shiftInfo-content">
@@ -49,7 +49,7 @@
           工时：{{pro.effectiveOutput/3600 | number:'.3-4'}}（小时）
         </div>
         <div nz-col nzSpan="12">
-          标准人力： {{pro.stdHuman}}
+          标准人力：{{pro.stdHuman}}
         </div>
       </div>
       <div nz-row class="shiftInfo-content">
@@ -57,9 +57,19 @@
           UPH：{{pro.stdUph}}（标准小时产出）
         </div>
         <div nz-col nzSpan="12">
-          CT： {{pro.stdCt}}
+          合板数量：{{pro.quantity}}
         </div>
       </div>
+      <div nz-row class="shiftInfo-content">
+        <div nz-col nzSpan="12">
+
+          CT&nbsp;&nbsp;&nbsp;： {{pro.stdCt}}
+        </div>
+        <div nz-col nzSpan="12" *ngIf="pro.errorMsg" style="color: red;">
+          异常说明：{{pro.errorMsg}}
+        </div>
+      </div>
+
     </div>
 
   </ng-container>

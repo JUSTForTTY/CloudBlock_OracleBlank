@@ -36,9 +36,13 @@ export interface EfficiencyFormula {
         "stdUph": number,
         "stdHuman": number,
         "produce": number,
-        "stdCt": number
+        "stdCt": number,
+        quantity: string,
+        errorMsg?: string;
     }[];
     prolineCode: String;// line
+
+
 }
 export enum EErrorCode {
     success, error, null

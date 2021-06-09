@@ -3,22 +3,21 @@
   <div nz-col nzXs="24" nzLg="6">
     <div style="display: flex;align-items: center;">
       <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
-      style="height: 55px;margin-top: 2px;">
-    <ng-template #elseBlock>
-      <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;margin-top: 2px;">
-    </ng-template>
-    <span [style.font-size]="fontSizeTitle1+'px'" style="color: #f5222d;white-space: nowrap;">
-      保质、保量、高效！
-    </span>
+        style="height: 55px;margin-top: 2px;">
+      <ng-template #elseBlock>
+        <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;margin-top: 2px;">
+      </ng-template>
+      <span [style.font-size]="fontSizeTitle1+'px'" style="color: #f5222d;white-space: nowrap;">
+        保质、保量、高效！
+      </span>
     </div>
-    
-    
+
+
   </div>
   <div nz-col nzXs="24" nzLg="12">
 
     <div style="color:#1e91de;text-align: center;font-weight: 500;" [style.font-size]="fontSizeTitle1+'px'">
-      <span style="line-height: 1;cursor: pointer;"
-        (click)="showChange()">
+      <span style="line-height: 1;cursor: pointer;" (click)="showChange()">
         {{this.workShop.workShopCode==='-1'?'全厂':this.workShop.workShopCode}}
       </span>
       {{title}}
@@ -40,9 +39,12 @@
             [nzValue]="rpsBoardService.date+(rpsBoardService.dateMode==='DayShift'?' 白班':' 夜班')" [nzPrefix]="prefixTpl">
           </nz-statistic>
 
-          <button *ngIf="rpsMode;else adButton" nz-button nz-popover [nzContent]="contentTemplate" nzPlacement="bottomRight"
-            [(nzVisible)]="dateVisible" style="margin-left: 10px;" nzTrigger="click"><i nz-icon nzType="swap"
-              nzTheme="outline"></i>历史</button>
+          <button *ngIf="rpsMode;else adButton" nz-button nz-popover [nzContent]="contentTemplate"
+            nzPlacement="bottomRight" [(nzVisible)]="dateVisible" style="margin-left: 10px;" nzTrigger="click"><i
+              nz-icon nzType="swap" nzTheme="outline"></i>历史</button>
+          <button *ngIf="rpsMode && !rpsBoardService.isFour" nz-button nzType="primary"  style="margin-left: 5px;" (click)="doExport()">
+            <i nz-icon nzType="export" nzTheme="outline"></i>导出</button>
+
           <ng-template #adButton>
             <button nz-button style="margin-left: 10px;" nzType="primary" (click)="changeAD()"><i nz-icon nzType="swap"
                 nzTheme="outline"></i>切换</button>

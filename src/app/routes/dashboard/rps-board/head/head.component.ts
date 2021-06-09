@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 
@@ -18,6 +18,8 @@ export class HeadComponent implements OnInit, OnDestroy {
   @Input() title = '工段看板';
   @Input() rpsMode = true;
   @Input() url = "/fullscreen/dashboard/rpsboard/v1";
+  @Output() export = new EventEmitter<any>();
+
   nowTime = Date.now();
   isVisible = false;
   date = new Date()
@@ -28,6 +30,9 @@ export class HeadComponent implements OnInit, OnDestroy {
 
   ngModelChange(event) {
     this.rpsBoardService.pageChangeTime$.next(event);
+  }
+  doExport(){
+    this.export.emit();
   }
   constructor(public rpsBoardService: RpsBoardService, private router: Router, private datePipe: DatePipe) { }
 

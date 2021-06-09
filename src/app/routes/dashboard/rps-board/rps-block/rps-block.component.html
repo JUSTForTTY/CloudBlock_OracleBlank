@@ -1,7 +1,8 @@
 <div class="chartContainer" style="padding-left: 10px; padding-right: 10px;">
 
   <div nz-row [ngStyle]="{'height':(isFourBlock?4:6)+'%'}">
-    <app-head *ngIf="!isFourBlock" [workShop]="workShop"></app-head>
+    
+    <app-head *ngIf="!isFourBlock" [workShop]="workShop" (export)="export()"></app-head>
 
     <div nz-row *ngIf="isFourBlock">
       <div nz-col nzSpan="12" nzOffset="6" style="text-align: center;">
@@ -86,7 +87,7 @@
                 <th class="thcenter">离线总效率</th>
                 <th class="thcenter">在线签到工时</th>
                 <th class="thcenter">总签到工时</th>
-                <th class="thcenter">总生产工时</th>
+                <th class="thcenter">计件工时</th>
                 <th class="thcenter">考勤总人数</th>
                 <th class="thcenter">在线签到总人数</th>
                 <th class="thcenter">离线签到总人数</th>
@@ -96,9 +97,9 @@
               <tr ryHighlight>
                 <td class="thcenter">{{totalData.onlineEfficiency*100 | number:'.0-1'}}%</td>
                 <td class="thcenter">{{totalData.offlineEfficiency*100 | number:'.0-1'}}%</td>
-                <td class="thcenter">{{totalData.signTime/3600 | number:'.1-2'}}（小时）</td>
-                <td class="thcenter">{{totalData.stdSignOfflineTime/3600 | number:'.1-2'}}（小时）</td>
-                <td class="thcenter">{{totalData.effectiveOutput/3600 | number:'.1-2'}}（小时）</td>
+                <td class="thcenter">{{totalData.signTime/3600 | number:'.1-2'}}</td>
+                <td class="thcenter">{{totalData.stdSignOfflineTime/3600 | number:'.1-2'}}</td>
+                <td class="thcenter">{{totalData.effectiveOutput/3600 | number:'.1-2'}}</td>
 
                 <td class="thcenter">{{totalData.kaoqin}}</td>
                 <td class="thcenter">{{totalData.onlineSign}}</td>

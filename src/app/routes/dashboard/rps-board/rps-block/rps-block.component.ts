@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { Data, getTestData, UrlData, SignSection, WorkType } from "../datas";
+import { Data, getTestData, UrlData, SignSection, WorkType, EfficiencyFormulaProd } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +9,9 @@ import { groupByToJson, CallUserInfo, ErrorInfo, InitErrorData } from "../../uti
 import { DatePipe } from '@angular/common';
 import { RpsTableComponent } from "../rps-table/rps-table.component";
 import { addDays } from 'date-fns';
+import * as Excel from "exceljs/dist/exceljs.min.js";
+import * as fs from 'file-saver';
+import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 
 interface BigData {
   title: string;
@@ -19,6 +22,7 @@ interface BigData {
   headHeight?: number;
   efficiency?: number;
   offlineEfficiency?: number;
+  totalData?: TotalData
 }
 
 const options: {
@@ -102,6 +106,7 @@ export class RpsBlockComponent implements OnInit {
   private errorTimer;
   private rightTimer;
   countTimeTimer;
+  isAllLoading=false;
 
 
   @ViewChild('errorBox') errorBox: ElementRef;
@@ -118,7 +123,9 @@ export class RpsBlockComponent implements OnInit {
 
 
 
-  constructor(private http: HttpService, private route: ActivatedRoute, private datePipe: DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
+  constructor(private http: HttpService,
+    private msg:NzMessageService,
+     private route: ActivatedRoute, private datePipe: DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
   subscription: Subscription;
@@ -382,8 +389,10 @@ export class RpsBlockComponent implements OnInit {
     onlineEfficiency: 0,
     offlineEfficiency: 0,
     stdSignOfflineTime: 0,
-    signCountOffline: 0
+    signCountOffline: 0,
+    paiban: 0
   }
+
   getTotalData(mainData = false) {
     const type = ['WAVE', 'COATING', 'SMT', 'ATP']
 
@@ -495,7 +504,7 @@ export class RpsBlockComponent implements OnInit {
     };
 
 
-
+    this.isAllLoading=true;
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
       if (this.signSection.sectionData) {
@@ -560,12 +569,14 @@ export class RpsBlockComponent implements OnInit {
         let effectiveOutput = 0;
         let signTime = 0;
         const oneData = this.allData[option.index[0]][option.index[1]];
+        oneData.totalData = new TotalData();
         const sectionData = this.signSection[option.key];
         if (dataList) {
           for (const iterator of dataList) {
             effectiveOutput += iterator.effectiveOutput;
             signTime += iterator.signTime;
           }
+          oneData.totalData.effectiveOutput = effectiveOutput;
           if (signTime) {
             oneData.efficiency = effectiveOutput / signTime;
             if (sectionData) {
@@ -602,12 +613,14 @@ export class RpsBlockComponent implements OnInit {
         this.rpsBoardService.standard.efficiency = data.data.efficiency
       }
       this.getTotalData(true);
+      this.isAllLoading=false;
 
 
     },
       error => {
         console.error('getAllData', this.workShop.workShopCode)
         this.getAllData(errorCount + 1);
+        this.isAllLoading=false;
       })
     // SMT
 
@@ -676,8 +689,199 @@ export class RpsBlockComponent implements OnInit {
     this.currentErrorInfo = errorInfo;
     this.isVisibleErrorDetail = true;
   }
+
+  export() {
+    if(this.isAllLoading){
+      this.msg.error('请等待数据加载后再点击导出')
+      return;
+    }
+    console.log('this.totalData', this.totalData, this.signSection, this.allData)
+    const workbook = new Excel.Workbook();
+    const sheet1 = workbook.addWorksheet('汇总数据')
+    const sheet2 = workbook.addWorksheet('产线效率', { views: [{ state: 'frozen', ySplit: 1 }] })
+    const sheet3 = workbook.addWorksheet('产品工时', { views: [{ state: 'frozen', ySplit: 1 }] })
+    const sheet4 = workbook.addWorksheet('异常数据')
+
+    this.export1(sheet1);
+    this.export2(sheet2);
+    this.export3(sheet3);
+    this.export4(sheet4);
+    workbook.xlsx.writeBuffer().then((data) => {
+      let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      fs.saveAs(blob, '导出.xlsx');
+
+    })
+
+
+
+
+
+  }
+  export1(sheet1: any) {
+    sheet1.columns = [
+      { header: '类别', key: 'name', width: 8 },
+      { header: '在线效率', key: 'onlineEfficiency', width: 10, style: { numFmt: '0.00%' } },
+      { header: '离线效率', key: 'offlineEfficiency', width: 10, style: { numFmt: '0.00%' } },
+      { header: '在线签到工时', key: 'signTime', width: 12, style: { numFmt: '0.00' } },
+      { header: '总签到工时', key: 'stdSignOfflineTime', width: 10, style: { numFmt: '0.00' } },
+      { header: '计件工时', key: 'effectiveOutput', width: 10, style: { numFmt: '0.00' } },
+      { header: '排班人数', key: 'paiban', width: 10, },
+      { header: '考勤人数', key: 'kaoqin', width: 10, },
+      { header: '在线签到人数', key: 'onlineSign', width: 12, },
+      { header: '离线签到人数', key: 'signCountOffline', width: 12, },
+    ];
+    const sheet1Data: TotalData[] = [];
+    const totalData = JSON.parse(JSON.stringify(this.totalData));
+    totalData.paiban = 0;
+    for (const oneDatas of this.allData) {
+      for (const bigData of oneDatas) {
+        const key = bigData.key;
+        const item = new TotalData();
+        const data = this.signSection[key as WorkType];
+        item.name = key;
+        item.onlineSign = data.signCountAll;
+        item.kaoqin = data.kaoqin || 0;
+        item.paiban = data.paiban || 0;
+        item.signCountOffline = data.signCountOffline;
+        item.signTime = (data.signAllTime || 0) / 3600;
+        item.stdSignOfflineTime = (data.stdSignOfflineTime + data.signAllTime) / 3600;
+        item.effectiveOutput = (bigData.totalData.effectiveOutput || 0) / 3600;
+        if (item.signTime) {
+          item.onlineEfficiency = item.effectiveOutput / item.signTime;
+          if (item.stdSignOfflineTime) {
+            item.offlineEfficiency = item.effectiveOutput / item.stdSignOfflineTime;
+          }
+        }
+        totalData.paiban += item.paiban;
+        sheet1Data.push(item);
+      }
+    }
+    totalData.name = '全厂';
+    totalData.signTime /= 3600;
+    totalData.stdSignOfflineTime /= 3600;
+    totalData.effectiveOutput /= 3600;
+    sheet1Data.push(totalData);
+    sheet1.addRows(sheet1Data);
+  }
+  export2(sheet2) {
+    // 计算停线累计时间
+    const errorTimes: { [key: string]: number } = {}
+    for (const iterator of this.rightData) {
+
+      if (!errorTimes[iterator.FLocation]) {
+        errorTimes[iterator.FLocation] = 0;
+      }
+      errorTimes[iterator.FLocation] += iterator.FStopLineDate;
+    }
+    sheet2.columns = [
+      { header: '工厂', key: 'workShopCode', width: 10 },
+      { header: '工段', key: 'workType', width: 8 },
+      { header: '产线', key: 'prolineCode', width: 18 },
+      { header: '不良', key: 'badNums', width: 8 },
+      { header: '良率', key: 'yield', width: 10, style: { numFmt: '0.00%' } },
+      { header: '产出', key: 'goodNums', width: 8 },
+      { header: '计划', key: 'planNums', width: 8, },
+      { header: '达成率', key: 'planAchievementRate', width: 10, style: { numFmt: '0.00%' } },
+      { header: '计件工时', key: 'effectiveOutput', width: 10, style: { numFmt: '0.00' } },
+      { header: '签到人数', key: 'signWorker', width: 8, },
+      { header: '签到人员', key: 'signWorkerNames', width: 12, },
+      { header: '签到工时', key: 'signTime', width: 10, style: { numFmt: '0.00' } },
+      { header: '效率', key: 'efficiency', width: 10, style: { numFmt: '0.00%' } },
+      { header: '合计异常小时', key: 'errorTime', width: 12, style: { numFmt: '0.00' } },
+    ];
+    const sheetData: Data[] = [];
+    const allData: BigData[][] = JSON.parse(JSON.stringify(this.allData));
+    for (const oneDatas of allData) {
+      for (const bigData of oneDatas) {
+        for (const data of bigData.data) {
+          data.workShopCode = this.workShop.workShopCode;
+          data.workType = bigData.key;
+          data.signWorker = data.efficiencyFormula ? data.efficiencyFormula.signWorker : 0
+          data.effectiveOutput /= 3600;
+          data.signTime /= 3600;
+          data.yield /= 100;
+          data.planAchievementRate /= 100;
+          data.efficiency /= 100;
+          data.errorTime = (errorTimes[data.prolineCode] / 60) || null
+
+        }
+        sheetData.push(...bigData.data);
+      }
+    }
+
+    sheet2.addRows(sheetData);
+  }
+  export3(sheet3) {
+    sheet3.columns = [
+      { header: '产线', key: 'prolineCode', width: 18 },
+      { header: '产品', key: 'productCode', width: 18 },
+      { header: '产出', key: 'produce', width: 10 },
+      { header: '计件工时', key: 'effectiveOutput', width: 10, style: { numFmt: '0.00' } },
+      { header: '标准人力', key: 'stdHuman', width: 10 },
+      { header: 'UPH', key: 'stdUph', width: 10, style: { numFmt: '0.00' } },
+      { header: '合板数量', key: 'quantity', width: 10 },
+      { header: 'CT', key: 'stdCt', width: 10 },
+      { header: '工时异常原因', key: 'errorMsg', width: 12 },
+    ];
+    const sheetData: EfficiencyFormulaProd[] = [];
+    const allData: BigData[][] = JSON.parse(JSON.stringify(this.allData));
+    for (const oneDatas of allData) {
+      for (const bigData of oneDatas) {
+        for (const data of bigData.data) {
+          if (data.efficiencyFormula) {
+            for (const proData of data.efficiencyFormula.efficiencyFormulaProd) {
+              proData.prolineCode = data.prolineCode;
+              proData.effectiveOutput /= 3600;
+              proData.errorMsg = proData.errorMsg || '';
+              proData.quantity = parseInt((proData.quantity + '').trim())
+            }
+            sheetData.push(...data.efficiencyFormula.efficiencyFormulaProd);
+          }
+        }
+      }
+    }
+    sheet3.addRows(sheetData);
+  }
+  export4(sheet4) {
+    const head = [
+      { header: '产线', key: 'FLocation', width: 18 },
+      { header: '编号', key: 'FBillNo', width: 18 },
+      { header: '状态', key: 'FState', width: 10 },
+      { header: '原因', key: 'FReason', width: 20 },
+      { header: '累计停线', key: 'FStopLineDate', width: 10 },
+      { header: '发起人', key: 'FCallUserName', width: 10 },
+      { header: '发起时间', key: 'FCallDate', width: 20 },
+      { header: '响应人', key: 'FRespUserName', width: 8 },
+      { header: '响应时间', key: 'FRespDate', width: 8 },
+      { header: '维修人', key: 'FMaintUserName', width: 8 },
+      { header: '维修时间', key: 'FMaintDate', width: 8 },
+      // { header: '关闭时间', key: 'FMaintDate', width: 10 },
+      // { header: '呼叫人员', key: 'errorMsg', width: 12 },
+    ];
+    sheet4.columns = head;
+    // sheet4.autoFilter = 'A1:' + indexToColName(head.length - 1) + '1';
+
+    sheet4.addRows(this.rightData);
+    // this.rightData
+  }
 }
 
+function indexToColName(index: number): string {
+  if (index < 0) {
+    return null;
+  }
+  let num = 65;// A的Unicode码
+  let colName = "";
+  do {
+    if (colName.length > 0) {
+      index--;
+    }
+    let remainder = index % 26;
+    colName = String.fromCharCode(remainder + num) + colName;
+    index = parseInt(((index - remainder) / 26) + '');
+  } while (index > 0);
+  return colName;
+}
 
 // A0101: "牛连胜"
 // FBillNo: "C2104011254550007"

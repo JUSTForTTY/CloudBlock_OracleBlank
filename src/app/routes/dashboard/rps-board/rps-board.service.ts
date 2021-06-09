@@ -23,6 +23,8 @@ export class TotalData {
   stdSignOfflineTime: number = 0
   offlineEfficiency: number = 0;
   signCountOffline: number = 0;
+  paiban: number = 0;
+  name?: string;
 }
 export interface WorkShop {
   createTime?: string
@@ -67,8 +69,8 @@ export class RpsBoardService {
     onlineEfficiency: 0,
     stdSignOfflineTime: 0,
     offlineEfficiency: 0,
-    signCountOffline: 0
-
+    signCountOffline: 0,
+    paiban: 0
   }
   standard = {
     complete: {

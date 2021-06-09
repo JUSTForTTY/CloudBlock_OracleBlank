@@ -4,7 +4,7 @@
  * 3.无排产时颜色
  */
 export interface Data {
-    prolineCode: String;// line
+    prolineCode: string;// line
     planAchievementRate: number;//complete
     yield: number;
     goodNums?: number;
@@ -25,24 +25,33 @@ export interface Data {
     signTime?: number;
     efficiencyFormula?: EfficiencyFormula;
 
+    workShopCode?: string;
+    /** 工段 */
+    workType?: string;
+    signWorker?: number;
+    signWorkerNames?: string;
+    errorTime?: number;
+
 }
 export interface EfficiencyFormula {
     "efficiency": number,
     "signTime": number,
     "signWorker": number,
-    "efficiencyFormulaProd": {
-        "effectiveOutput": number,
-        "productCode": string,
-        "stdUph": number,
-        "stdHuman": number,
-        "produce": number,
-        "stdCt": number,
-        quantity: string,
-        errorMsg?: string;
-    }[];
-    prolineCode: String;// line
+    "efficiencyFormulaProd": EfficiencyFormulaProd[];
+    prolineCode: string;// line
 
 
+}
+export interface EfficiencyFormulaProd {
+    "effectiveOutput": number,
+    "productCode": string,
+    "stdUph": number,
+    "stdHuman": number,
+    "produce": number,
+    "stdCt": number,
+    "quantity": number,
+    "errorMsg"?: string;
+    "prolineCode"?:string;
 }
 export enum EErrorCode {
     success, error, null

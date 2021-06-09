@@ -106,7 +106,7 @@ export class RpsBlockComponent implements OnInit {
   private errorTimer;
   private rightTimer;
   countTimeTimer;
-  isAllLoading=false;
+  isAllLoading = false;
 
 
   @ViewChild('errorBox') errorBox: ElementRef;
@@ -124,8 +124,8 @@ export class RpsBlockComponent implements OnInit {
 
 
   constructor(private http: HttpService,
-    private msg:NzMessageService,
-     private route: ActivatedRoute, private datePipe: DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
+    private msg: NzMessageService,
+    private route: ActivatedRoute, private datePipe: DatePipe, private pageService: PageService, public rpsBoardService: RpsBoardService) {
 
   }
   subscription: Subscription;
@@ -473,6 +473,7 @@ export class RpsBlockComponent implements OnInit {
 
 
   }
+  banCidate = '';
   getAllData(errorCount = 0) {
     if (errorCount >= 3) return;
     let url = "/yieldDashboard/worksectionData/" + this.workShop.workShopCode;
@@ -504,7 +505,7 @@ export class RpsBlockComponent implements OnInit {
     };
 
 
-    this.isAllLoading=true;
+    this.isAllLoading = true;
     this.http.getHttp(url).subscribe((data: UrlData) => {
       this.signSection = data.data.signSection || {};
       if (this.signSection.sectionData) {
@@ -540,6 +541,7 @@ export class RpsBlockComponent implements OnInit {
         body3.FDate = this.rpsBoardService.date
         body3.FShift = this.rpsBoardService.dateMode
       }
+      this.banCidate = body2.FDate + '_' + body2.FShift
       this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body2).subscribe((data: any) => {
         console.log('getkp0', data)
         if (data.data && data.data.length) {
@@ -613,14 +615,14 @@ export class RpsBlockComponent implements OnInit {
         this.rpsBoardService.standard.efficiency = data.data.efficiency
       }
       this.getTotalData(true);
-      this.isAllLoading=false;
+      this.isAllLoading = false;
 
 
     },
       error => {
         console.error('getAllData', this.workShop.workShopCode)
         this.getAllData(errorCount + 1);
-        this.isAllLoading=false;
+        this.isAllLoading = false;
       })
     // SMT
 
@@ -691,7 +693,7 @@ export class RpsBlockComponent implements OnInit {
   }
 
   export() {
-    if(this.isAllLoading){
+    if (this.isAllLoading) {
       this.msg.error('请等待数据加载后再点击导出')
       return;
     }
@@ -708,7 +710,9 @@ export class RpsBlockComponent implements OnInit {
     this.export4(sheet4);
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      fs.saveAs(blob, '导出.xlsx');
+      let name = this.workShop.workShopCode+'工段看板_'+this.banCidate;
+
+      fs.saveAs(blob, name + '.xlsx');
 
     })
 

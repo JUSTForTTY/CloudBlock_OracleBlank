@@ -788,7 +788,7 @@ export class RpsBlockComponent implements OnInit {
       { header: '达成率', key: 'planAchievementRate', width: 10, style: { numFmt: '0.00%' } },
       { header: '计件工时', key: 'effectiveOutput', width: 10, style: { numFmt: '0.00' } },
       { header: '签到人数', key: 'signWorker', width: 8, },
-      { header: '签到人员', key: 'signWorkerNames', width: 12, },
+      { header: '签到人员', key: 'signWorkerName', width: 12, },
       { header: '签到工时', key: 'signTime', width: 10, style: { numFmt: '0.00' } },
       { header: '效率', key: 'efficiency', width: 10, style: { numFmt: '0.00%' } },
       { header: '合计异常小时', key: 'errorTime', width: 12, style: { numFmt: '0.00' } },
@@ -807,7 +807,7 @@ export class RpsBlockComponent implements OnInit {
           data.planAchievementRate /= 100;
           data.efficiency /= 100;
           data.errorTime = (errorTimes[data.prolineCode] / 60) || null
-
+          data.signWorkerName=data.efficiencyFormula.signWorkerName
         }
         sheetData.push(...bigData.data);
       }
@@ -832,7 +832,7 @@ export class RpsBlockComponent implements OnInit {
     for (const oneDatas of allData) {
       for (const bigData of oneDatas) {
         for (const data of bigData.data) {
-          if (data.efficiencyFormula) {
+          if (data.efficiencyFormula && data.efficiencyFormula.efficiencyFormulaProd) {
             for (const proData of data.efficiencyFormula.efficiencyFormulaProd) {
               proData.prolineCode = data.prolineCode;
               proData.effectiveOutput /= 3600;

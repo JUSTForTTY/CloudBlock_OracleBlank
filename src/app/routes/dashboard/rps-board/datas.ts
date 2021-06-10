@@ -29,7 +29,7 @@ export interface Data {
     /** 工段 */
     workType?: string;
     signWorker?: number;
-    signWorkerNames?: string;
+    signWorkerName?: string;
     errorTime?: number;
 
 }
@@ -38,8 +38,9 @@ export interface EfficiencyFormula {
     "signTime": number,
     "signWorker": number,
     "efficiencyFormulaProd": EfficiencyFormulaProd[];
-    prolineCode: string;// line
-
+    "prolineCode": string;// line
+    "signWorkerName": string;
+    "signWorkerCode": string;
 
 }
 export interface EfficiencyFormulaProd {
@@ -51,7 +52,7 @@ export interface EfficiencyFormulaProd {
     "stdCt": number,
     "quantity": number,
     "errorMsg"?: string;
-    "prolineCode"?:string;
+    "prolineCode"?: string;
 }
 export enum EErrorCode {
     success, error, null

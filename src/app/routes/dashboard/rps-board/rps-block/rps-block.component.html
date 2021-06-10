@@ -44,7 +44,8 @@
                     {{oneData.title}}
                   </span>
                 </div>
-                <div *ngIf="!isFourBlock">
+                <!-- *ngIf="!isFourBlock" -->
+                <div >
                   <div>
                     <span style="color:#1e91de;text-align: center;" [style.font-size]="fontSizeTitle2+'px'">
                       在线效率:&nbsp;{{(oneData?.efficiency*100 || 0) | number:'.0-1'}}%

@@ -11,7 +11,8 @@
     </div>
     <div nz-row style="height: 87%;" [nzGutter]="4">
       <ng-container *ngFor="let item of rpsBoardService.fourBlock |keyvalue">
-        <div nz-col id="{{item.key}}" [nzSpan]="12" style="padding-right: 8px;height:50%">
+        <div nz-col id="{{item.key}}" [nzSpan]="12" style="padding-right: 8px;height:50%"
+          [ngStyle]="{height: blockHeight+'%'}">
           <!-- 1  -->
           <div style="height: 99.5%;" ryDomVisible (visible)="visible($event)">
             <app-rps-block [workShop]="item.value" [isFourBlock]="true"></app-rps-block>
@@ -37,14 +38,14 @@
           <tbody>
             <tr ryHighlight>
               <td class="thcenter">{{rpsBoardService.totalData.onlineEfficiency*100 | number:'.0-1'}}%</td>
-                <td class="thcenter">{{rpsBoardService.totalData.offlineEfficiency*100 | number:'.0-1'}}%</td>
-                <td class="thcenter">{{rpsBoardService.totalData.signTime/3600 | number:'.1-2'}}（小时）</td>
-                <td class="thcenter">{{rpsBoardService.totalData.stdSignOfflineTime/3600 | number:'.1-2'}}（小时）</td>
-                <td class="thcenter">{{rpsBoardService.totalData.effectiveOutput/3600 | number:'.1-2'}}（小时）</td>
+              <td class="thcenter">{{rpsBoardService.totalData.offlineEfficiency*100 | number:'.0-1'}}%</td>
+              <td class="thcenter">{{rpsBoardService.totalData.signTime/3600 | number:'.1-2'}}（小时）</td>
+              <td class="thcenter">{{rpsBoardService.totalData.stdSignOfflineTime/3600 | number:'.1-2'}}（小时）</td>
+              <td class="thcenter">{{rpsBoardService.totalData.effectiveOutput/3600 | number:'.1-2'}}（小时）</td>
 
-                <td class="thcenter">{{rpsBoardService.totalData.kaoqin}}</td>
-                <td class="thcenter">{{rpsBoardService.totalData.onlineSign}}</td>
-                <td class="thcenter">{{rpsBoardService.totalData.signCountOffline}}</td>
+              <td class="thcenter">{{rpsBoardService.totalData.kaoqin}}</td>
+              <td class="thcenter">{{rpsBoardService.totalData.onlineSign}}</td>
+              <td class="thcenter">{{rpsBoardService.totalData.signCountOffline}}</td>
             </tr>
           </tbody>
         </nz-table>

@@ -434,13 +434,11 @@ export class RpsBlockComponent implements OnInit {
         }
       } catch (error) { }
 
-      if (signTime) {
-        this.totalData.onlineEfficiency = effectiveOutput / signTime;
-      }
+      this.totalData.onlineEfficiency = signTime ? effectiveOutput / signTime : 0;
+
       this.totalData.stdSignOfflineTime = stdSignOfflineTime + signTime;
-      if (this.totalData.stdSignOfflineTime) {
-        this.totalData.offlineEfficiency = effectiveOutput / this.totalData.stdSignOfflineTime
-      }
+      this.totalData.offlineEfficiency = this.totalData.stdSignOfflineTime ? effectiveOutput / this.totalData.stdSignOfflineTime : 0
+
       this.totalData.effectiveOutput = effectiveOutput;
       this.totalData.signTime = signTime;
     }
@@ -579,12 +577,10 @@ export class RpsBlockComponent implements OnInit {
             signTime += iterator.signTime;
           }
           oneData.totalData.effectiveOutput = effectiveOutput;
-          if (signTime) {
-            oneData.efficiency = effectiveOutput / signTime;
-            if (sectionData) {
-              oneData.offlineEfficiency = (effectiveOutput) / (signTime + sectionData.stdSignOfflineTime);
-            }
-          }
+          oneData.efficiency = signTime ? effectiveOutput / signTime : 0;
+          oneData.offlineEfficiency = sectionData ? (effectiveOutput) / (signTime + sectionData.stdSignOfflineTime) : 0;
+
+
           oneData.isLoading = true;
           oneData.data = dataList
           oneData.title = option.title;
@@ -710,7 +706,7 @@ export class RpsBlockComponent implements OnInit {
     this.export4(sheet4);
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      let name = this.workShop.workShopCode+'工段看板_'+this.banCidate;
+      let name = this.workShop.workShopCode + '工段看板_' + this.banCidate;
 
       fs.saveAs(blob, name + '.xlsx');
 
@@ -750,12 +746,9 @@ export class RpsBlockComponent implements OnInit {
         item.signTime = (data.signAllTime || 0) / 3600;
         item.stdSignOfflineTime = (data.stdSignOfflineTime + data.signAllTime) / 3600;
         item.effectiveOutput = (bigData.totalData.effectiveOutput || 0) / 3600;
-        if (item.signTime) {
-          item.onlineEfficiency = item.effectiveOutput / item.signTime;
-          if (item.stdSignOfflineTime) {
-            item.offlineEfficiency = item.effectiveOutput / item.stdSignOfflineTime;
-          }
-        }
+        item.onlineEfficiency = item.signTime ? item.effectiveOutput / item.signTime : 0;
+        item.offlineEfficiency = item.stdSignOfflineTime ? item.effectiveOutput / item.stdSignOfflineTime : 0;
+
         totalData.paiban += item.paiban;
         sheet1Data.push(item);
       }
@@ -807,7 +800,7 @@ export class RpsBlockComponent implements OnInit {
           data.planAchievementRate /= 100;
           data.efficiency /= 100;
           data.errorTime = (errorTimes[data.prolineCode] / 60) || null
-          data.signWorkerName=data.efficiencyFormula.signWorkerName
+          data.signWorkerName = data.efficiencyFormula.signWorkerName
         }
         sheetData.push(...bigData.data);
       }

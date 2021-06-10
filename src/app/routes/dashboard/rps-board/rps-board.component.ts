@@ -19,13 +19,13 @@ const DefaultTitle = ' RPS看板'
 })
 export class RpsBoardComponent implements OnInit {
 
-  constructor(private http: HttpService,
-    private titleSrv: TitleService,
-    private route: ActivatedRoute, private pageService: PageService, public rpsBoardService: RpsBoardService) {
+  constructor(protected http: HttpService,
+    protected route: ActivatedRoute,  public rpsBoardService: RpsBoardService) {
 
   }
   nzTimer
   subscription: Subscription;
+  blockHeight=50;
   ngOnInit() {
     this.rpsBoardService.isFour = false;
     this.rpsBoardService.isFullscreen = false;

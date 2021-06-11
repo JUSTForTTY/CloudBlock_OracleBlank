@@ -145,7 +145,7 @@ export class DepartAvgComponent implements OnInit {
     for (let index = 0; index < arr.length; index++) {
       weekIndex[arr[index]] = index;
       weekNum['WEEK' + (arr[index])] = arr[index];
-      if(sourceData[index]){
+      if (sourceData[index]) {
         sourceData[index].name = 'WEEK' + (arr[index])
       }
     }
@@ -177,6 +177,7 @@ export class DepartAvgComponent implements OnInit {
 
       const url = 'http://172.16.8.28:8088/api/getAbInfoBySecOrDept';
       let factoryCode = FactoryCode[this.workShopCode];
+      if (!factoryCode) factoryCode = this.workShopCode;
       if (this.type === EpageType.工厂响应) factoryCode = 'ALL';
 
       this.http.postHttpAllUrl(url, { FactoryCode: factoryCode, FKind: this.FKind, FWay: this.avg ? '1' : "0" }).subscribe(

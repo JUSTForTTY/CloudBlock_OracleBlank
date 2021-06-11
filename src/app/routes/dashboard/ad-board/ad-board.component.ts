@@ -69,6 +69,7 @@ export class AdBoardComponent implements OnInit {
     //   }
     // )
     let factoryCode = FactoryCode[this.workshopCode];
+    if (!factoryCode) factoryCode = this.workshopCode;
     if (factoryCode === '-1') factoryCode = '';
     console.log('getAbnormalInfo do', factoryCode)
 

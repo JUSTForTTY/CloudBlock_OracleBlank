@@ -48,7 +48,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
   progressColor = {
     'success': '#52c41a',
     'exception': '#f5222d',
-    'active': '#c2af04'
+    'active': '#c2af04',
+    'none':'#ccc'
   }
   eErrorCode = EErrorCode;
   efficiency: number = 0;
@@ -114,13 +115,13 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (signTime) {
         this.efficiency = effectiveOutput / signTime;
-        if(this.sectionData){
-          this.offlineEfficiency=(effectiveOutput+this.sectionData.stdSignOfflineTime) / signTime;
+        if (this.sectionData) {
+          this.offlineEfficiency = (effectiveOutput + this.sectionData.stdSignOfflineTime) / signTime;
         }
-        console.log('signTime',this.key,this.efficiency,this.offlineEfficiency,effectiveOutput , signTime)
+        console.log('signTime', this.key, this.efficiency, this.offlineEfficiency, effectiveOutput, signTime)
       }
     }, 100);
-    
+
     this.testVis = (this.key.includes('SMT'));
 
     this.getHeadData();
@@ -203,7 +204,15 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
     this.nzTotal = this.data.length;
     for (const iterator of this.data) {
-      if (iterator.isNull === '0') continue;
+      if (iterator.isNull === '0' || iterator.isNull==='2') {
+        // 无排产
+
+        iterator.completeStatus='none';
+        iterator.efficiencyStatus='none';
+        iterator.yieldStatus='none';
+
+        continue;
+      }
       if (iterator.completeStatus === 'success') {
         this.headData.completeOk++;
       } else {

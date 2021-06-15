@@ -63,7 +63,7 @@
 
         <td  (click)="jump(data)">
           <nz-progress [nzPercent]="100" [nzShowInfo]="false"
-            [ngClass]="{'success': data.yieldStatus==='success','exception': data.yieldStatus=='exception','active': data.yieldStatus=='active'}"
+            [ngClass]="data.yieldStatus"
             nzType="circle" [nzFormat]="formatOne" [nzWidth]="24" [nzStrokeColor]="progressColor[data.yieldStatus]">
           </nz-progress>
         </td>
@@ -83,7 +83,7 @@
         </td>
         <td (click)="jump(data)">
           <nz-progress [nzPercent]="100" [nzShowInfo]="false" nzType="circle" [nzFormat]="formatOne" [nzWidth]="24"
-            [ngClass]="{'success': data.completeStatus==='success','exception': data.completeStatus=='exception','active': data.completeStatus=='active'}"
+            [ngClass]="data.completeStatus"
             [nzStrokeColor]="progressColor[data.completeStatus]"></nz-progress>
         </td>
         <!-- <td class="thcenter" (click)="showDeatil(data)" style="cursor: pointer;" defaultColor="rgba(0, 0, 255, 0.1)"
@@ -120,7 +120,7 @@
         <td  (click)="showDeatil(data)" style="cursor: pointer;">
 
           <nz-progress [nzPercent]="100"
-            [ngClass]="{'error': data.errorCode==eErrorCode.error,'success': data.efficiencyStatus==='success','exception': data.efficiencyStatus=='exception','active': data.efficiencyStatus=='active'}"
+            [ngClass]="{'error': data.errorCode==eErrorCode.error,'success': data.efficiencyStatus==='success','exception': data.efficiencyStatus=='exception','active': data.efficiencyStatus=='active','none': data.efficiencyStatus=='none'}"
             nzType="circle" [nzFormat]="formatOne" [nzWidth]="24" [nzShowInfo]="false"
             [nzStrokeColor]="progressColor[data.efficiencyStatus]"></nz-progress>
         </td>

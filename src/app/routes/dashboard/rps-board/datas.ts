@@ -10,14 +10,14 @@ export interface Data {
     goodNums?: number;
     badNums?: number;
     planError?: string;
-    completeStatus?: 'success' | 'exception' | 'active';
-    yieldStatus?: 'success' | 'exception' | 'active';
+    completeStatus?: 'success' | 'exception' | 'active' | 'none';
+    yieldStatus?: 'success' | 'exception' | 'active' | 'none';
     planNums?: number;
     /** 0-无排产 1-正常 3-试产 2-保养 */
     isNull?: '0' | '1' | '2' | '3';
     index?: number;
     efficiency?: number;
-    efficiencyStatus?: 'success' | 'exception' | 'active';
+    efficiencyStatus?: 'success' | 'exception' | 'active' | 'none';
     errorMsg?: string;
     errorCode?: EErrorCode;
     [key: string]: any;

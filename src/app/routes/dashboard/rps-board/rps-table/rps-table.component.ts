@@ -204,7 +204,8 @@ export class RpsTableComponent implements OnInit, OnDestroy {
     }
     this.nzTotal = this.data.length;
     for (const iterator of this.data) {
-      if (iterator.isNull === '0' || iterator.isNull==='2') {
+      if (iterator.isNull === '0' || iterator.isNull==='2' ||
+      ((iterator.isNull==='1'||iterator.isNull==='3')&&!iterator.planNums&& !iterator.goodNums)) {
         // 无排产
 
         iterator.completeStatus='none';

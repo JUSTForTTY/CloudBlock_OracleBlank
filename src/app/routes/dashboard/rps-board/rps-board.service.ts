@@ -86,6 +86,7 @@ export class RpsBoardService {
       bad: 85
     }
   }
+  showLR: boolean = false;
   fourBlock: BlockData = {
     'SUZ01': {
       workShopCode: 'SUZ15-1F',

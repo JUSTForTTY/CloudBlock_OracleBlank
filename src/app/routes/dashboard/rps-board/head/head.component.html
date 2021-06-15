@@ -1,11 +1,11 @@
 <div nz-row>
   <!-- 头部 -->
-  <div nz-col nzXs="24" nzLg="6">
+  <div nz-col nzXs="24" nzLg="7">
     <div style="display: flex;align-items: center;">
-      <img *ngIf="fontSizeTitle1<35;else elseBlock" class="logo" src="./assets/img/logo-full.png"
+      <img *ngIf="fontSizeTitle1<40;else elseBlock" class="logo" src="./assets/img/logo-full.png"
         style="height: 55px;margin-top: 2px;">
       <ng-template #elseBlock>
-        <img class="logo" src="./assets/img/logo-full.png" style="height: 65px;margin-top: 2px;">
+        <img class="logo" src="./assets/img/logo-full.png" style="height: 96px;margin-top: 2px;">
       </ng-template>
       <span [style.font-size]="fontSizeTitle1+'px'" style="color: #f5222d;white-space: nowrap;">
         保质、保量、高效！
@@ -14,7 +14,7 @@
 
 
   </div>
-  <div nz-col nzXs="24" nzLg="12">
+  <div nz-col nzXs="24" nzLg="10">
 
     <div style="color:#1e91de;text-align: center;font-weight: 500;" [style.font-size]="fontSizeTitle1+'px'">
       <span style="line-height: 1;cursor: pointer;" (click)="showChange()">
@@ -23,7 +23,7 @@
       {{title}}
     </div>
   </div>
-  <div nz-col nzXs="24" nzLg="6">
+  <div nz-col nzXs="24" nzLg="7">
     <div nz-row>
       <div nz-col nzXs="24" nzLg="24" style="text-align: right;">
 

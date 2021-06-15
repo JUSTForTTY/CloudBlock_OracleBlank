@@ -1,7 +1,7 @@
 <div class="chartContainer" style="padding-left: 10px; padding-right: 10px;">
 
   <div nz-row [ngStyle]="{'height':(isFourBlock?4:6)+'%'}">
-    
+
     <app-head *ngIf="!isFourBlock" [workShop]="workShop" (export)="export()"></app-head>
 
     <div nz-row *ngIf="isFourBlock">
@@ -26,7 +26,8 @@
   </div>
   <div nz-row [nzGutter]="4" [ngStyle]="{'height':(isFourBlock?95:93)+'%'}">
     <div nz-col [nzSpan]="(rightData.length>0 || rpsBoardService.isFour) ?21:23" style="height: 100%;">
-      <div nz-row [nzGutter]="8" style="color: aliceblue;height:90.5%; border:0px solid #c1eb06;padding-top: 5px;">
+      <div nz-row [nzGutter]="8" style="color: aliceblue;border:0px solid #c1eb06;padding-top: 5px;"
+        [ngStyle]="{'height': (90.5+(rpsBoardService.showLR&&isFourBlock?9:0))+'%'}">
         <!-- 上层  -->
         <div nz-col nzXs="24" nzLg="8" style="height: 100%;border:0px solid #c1eb06; padding-right: 10px;"
           *ngFor="let data of allData">
@@ -45,7 +46,7 @@
                   </span>
                 </div>
                 <!-- *ngIf="!isFourBlock" -->
-                <div >
+                <div>
                   <div>
                     <span style="color:#1e91de;text-align: center;" [style.font-size]="fontSizeTitle2+'px'">
                       在线效率:&nbsp;{{(oneData?.efficiency*100 || 0) | number:'.0-1'}}%
@@ -59,10 +60,10 @@
                 </div>
               </div>
 
-              <div  [ngStyle]="{'height': (100-oneData.headHeight)+'%'}">
+              <div [ngStyle]="{'height': (100-oneData.headHeight)+'%'}">
                 <nz-spin *ngIf="oneData.isLoading" [nzSpinning]="oneData.isLoading"></nz-spin>
                 <app-rps-table *ngIf="!oneData.isLoading" [data]="oneData.data" [tableSize]="tableSize"
-                  [sectionData]="signSection[oneData.key]"  [workShop]="workShop" [key]="oneData.title">
+                  [sectionData]="signSection[oneData.key]" [workShop]="workShop" [key]="oneData.title">
                 </app-rps-table>
 
               </div>
@@ -79,35 +80,10 @@
 
 
       </div>
-      <div style="display: flex;height: 9.5%;align-items: center;justify-content: center;">
+      <div style="display: flex;height: 9.5%;align-items: center;justify-content: center;"
+        *ngIf="!(rpsBoardService.showLR&&isFourBlock)">
         <div>
-          <nz-table #middleTable nzTemplateMode nzSize="middle" nzBordered nzShowPagination="false">
-            <thead>
-              <tr>
-                <th class="thcenter">在线总效率</th>
-                <th class="thcenter">离线总效率</th>
-                <th class="thcenter">在线签到工时</th>
-                <th class="thcenter">总签到工时</th>
-                <th class="thcenter">计件工时</th>
-                <th class="thcenter">考勤总人数</th>
-                <th class="thcenter">在线签到总人数</th>
-                <th class="thcenter">离线签到总人数</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ryHighlight>
-                <td class="thcenter">{{totalData.onlineEfficiency*100 | number:'.0-1'}}%</td>
-                <td class="thcenter">{{totalData.offlineEfficiency*100 | number:'.0-1'}}%</td>
-                <td class="thcenter">{{totalData.signTime/3600 | number:'.1-2'}}</td>
-                <td class="thcenter">{{totalData.stdSignOfflineTime/3600 | number:'.1-2'}}</td>
-                <td class="thcenter">{{totalData.effectiveOutput/3600 | number:'.1-2'}}</td>
-
-                <td class="thcenter">{{totalData.kaoqin}}</td>
-                <td class="thcenter">{{totalData.onlineSign}}</td>
-                <td class="thcenter">{{totalData.signCountOffline}}</td>
-              </tr>
-            </tbody>
-          </nz-table>
+          <app-total-table [totalData]="totalData"></app-total-table>
         </div>
         <div *ngIf="!isFourBlock"
           style=" display: flex;flex-wrap: nowrap;flex-direction: column; justify-content: center;margin-left: 10px;">

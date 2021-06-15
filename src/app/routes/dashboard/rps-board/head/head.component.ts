@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./head.component.less']
 })
 export class HeadComponent implements OnInit, OnDestroy {
-  fontSizeTitle1 = 42;//一级标题
-  fontSizeTitle2 = 24;//二级标题
+  fontSizeTitle1 = 36;//一级标题
+  fontSizeTitle2 = 18;//二级标题
   @Input() workShop: WorkShop
   @Input() title = '工段看板';
   @Input() rpsMode = true;
@@ -37,9 +37,12 @@ export class HeadComponent implements OnInit, OnDestroy {
   constructor(public rpsBoardService: RpsBoardService, private router: Router, private datePipe: DatePipe) { }
 
   ngOnInit() {
-    if (window.screen.height <= 900) {
-      this.fontSizeTitle1 = 32;//一级标题
-      this.fontSizeTitle2 = 18;//二级标题
+    // if (window.screen.height <= 900) {
+      
+    // }
+    if(this.rpsBoardService.isFour){
+      this.fontSizeTitle1 = 68;//一级标题
+      this.fontSizeTitle2 = 36;//二级标题
     }
     this.nowTimeTimer = setInterval(() => this.nowTime = Date.now(), 1000)
 

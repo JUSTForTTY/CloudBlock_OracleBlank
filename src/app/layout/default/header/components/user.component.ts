@@ -362,6 +362,7 @@ export class HeaderUserComponent implements OnInit {
       if (this.userService.getCurrentUser()['csysUserMeno'] === "1") {
 
         const csysUserPwdModifyTime = this.userService.getCurrentUser()['csysUserPwdModifyTime'];
+        if(!csysUserPwdModifyTime) return;
 
         this.httpService.postHttp('/csyscodemaster/condition', { "csysCodemasterType": "pwdModifyTime" }).subscribe(
           data => {

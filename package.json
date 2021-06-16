@@ -79,6 +79,7 @@
     "ngx-ueditor": "^2.1.3",
     "node-sass": "^5.0.0",
     "pdfjs-dist": "2.2.228",
+    "@types/pdfjs-dist": "2.1.7",
     "qrious": "^4.0.2",
     "rxjs": "~6.3.3",
     "rxjs-compat": "~6.3.3",

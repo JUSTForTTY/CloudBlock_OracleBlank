@@ -18,7 +18,7 @@
           <input type="text" nz-input (keyup.enter)="serchWorkFlow(1)" placeholder="公共工序名称" [(ngModel)]="searchContent">
         </nz-input-group>
         <ng-template #suffixButton>
-          <button nz-button nzType="primary" nzSearch   (click)="serchWorkFlow(1)">查询</button>
+          <button nz-button nzType="primary" nzSearch (click)="serchWorkFlow(1)">查询</button>
         </ng-template>
 
       </div>
@@ -30,7 +30,8 @@
       <i class="anticon anticon-plus"></i>
       <span>添加</span>
     </button>
-    <nz-list [nzDataSource]="data" nzSize="small" [nzLoading]="loading" [nzRenderItem]="item" [nzPagination]="pagination">
+    <nz-list [nzDataSource]="data" nzSize="small" [nzLoading]="loading" [nzRenderItem]="item"
+      [nzPagination]="pagination">
       <ng-template #item let-item>
         <nz-list-item [nzContent]="nzContent" [nzActions]="[edit, op]">
           <ng-template #edit>
@@ -130,14 +131,14 @@
     </nz-list>
   </nz-card>
 
-  <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title"
+  <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="isVisible" [nzTitle]="title" nzWidth="600"
     (nzOnCancel)="handleCancel()" (nzOnOk)="saveWorkFlow()" [nzFooter]="modalFooter">
     <nz-spin [nzSpinning]="spinning">
       <form nz-form [formGroup]="form">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="workFlowName">公共工序名称</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" form="" [nzValidateStatus]="form.get('workFlowName')">
-            <input nz-input formControlName="workFlowName" id="workFlowName"  placeholder="请输入公共工序名称">
+            <input nz-input formControlName="workFlowName" id="workFlowName" placeholder="请输入公共工序名称">
             <nz-form-explain *ngIf="form.get('workFlowName').dirty && form.get('workFlowName').errors">请输入公共工序名称
             </nz-form-explain>
           </nz-form-control>
@@ -179,9 +180,9 @@
               <nz-option *ngFor="let item of groupData" [nzValue]="item.csysPageGroupCode"
                 [nzLabel]="item.csysPageGroupDesc">
               </nz-option>
-            </nz-select>   
+            </nz-select>
           </nz-form-control>
-          
+
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="workFlowResource" nzShowSearch>工序资源</nz-form-label>
@@ -202,9 +203,30 @@
 
         </nz-form-item>
         <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="csysPotPublicBadType">类型</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-radio-group nzButtonStyle="solid" formControlName="csysPotPublicBadType">
+              <label nz-radio-button nzValue="">普通</label>
+              <label nz-radio-button nzValue="0">DEBUG</label>
+              <label nz-radio-button nzValue="1">REWORK</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="csysPotPublicIsHasBadEntity">是否需要不良录入</nz-form-label>
+          <nz-form-control [nzSm]="18" [nzXs]="24">
+            <nz-radio-group nzButtonStyle="solid" formControlName="csysPotPublicIsHasBadEntity">
+              <label nz-radio-button nzValue="0">不需要</label>
+              <label nz-radio-button nzValue="1">需要</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="isNeedOnRepair">是否支持在线维修</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">   
-            <nz-select nzPlaceHolder="是否支持在线维修" formControlName="isNeedOnRepair"  nzShowSearch nzAllowClear>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-select nzPlaceHolder="是否支持在线维修" formControlName="isNeedOnRepair" nzShowSearch nzAllowClear>
               <nz-option nzLabel="支持" nzValue="1">
               </nz-option>
               <nz-option nzLabel="不支持" nzValue="0">

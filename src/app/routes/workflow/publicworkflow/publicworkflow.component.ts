@@ -103,7 +103,9 @@ export class PublicworkflowComponent implements OnInit {
       workFlowPage: [null, [Validators.required]],
       workFlowResource: [null],
       workFlowDesc: [null],
-      isNeedOnRepair: ["0"]
+      isNeedOnRepair: ["0"],
+      csysPotPublicBadType: [''],
+      csysPotPublicIsHasBadEntity: ['0']
     });
   }
 
@@ -171,8 +173,8 @@ export class PublicworkflowComponent implements OnInit {
 
 
   //新增保存途程
-  insertWorkFlow(): void { 
-    this.form.patchValue({workFlowName: this.trimValue(this.form.controls.workFlowName.value)});
+  insertWorkFlow(): void {
+    this.form.patchValue({ workFlowName: this.trimValue(this.form.controls.workFlowName.value) });
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
       this.form.controls[i].updateValueAndValidity();
@@ -185,7 +187,9 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
       "csysPotDataGroup": this.form.controls.workDataGroup.value,
-      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value
+      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value,
+      csysPotPublicBadType: this.form.controls.csysPotPublicBadType.value,
+      csysPotPublicIsHasBadEntity: this.form.controls.csysPotPublicIsHasBadEntity.value,
     }
     this.httpService.postHttp(this.workflowUrl + "/condition", { "csysPotPublicName": this.form.controls.workFlowName.value }).subscribe((wdata: any) => {
       if (wdata.data.length > 0) {
@@ -277,7 +281,9 @@ export class PublicworkflowComponent implements OnInit {
             workDataGroup: [data.csysPotDataGroup],
             workFlowResource: [potrs],
             workFlowPage: [potPage, [Validators.required]],
-            isNeedOnRepair: [data.csysPotPublicReIsonrepair]
+            isNeedOnRepair: [data.csysPotPublicReIsonrepair],
+            csysPotPublicBadType: [data.csysPotPublicBadType],
+            csysPotPublicIsHasBadEntity: [data.csysPotPublicIsHasBadEntity]
           });
           this.form.updateValueAndValidity()
           this.spinning = false;
@@ -288,7 +294,7 @@ export class PublicworkflowComponent implements OnInit {
 
   //编辑保存途程
   editWorkflow(): void {
-    this.form.patchValue({workFlowName: this.trimValue(this.form.controls.workFlowName.value)});
+    this.form.patchValue({ workFlowName: this.trimValue(this.form.controls.workFlowName.value) });
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
       this.form.controls[i].updateValueAndValidity();
@@ -307,7 +313,9 @@ export class PublicworkflowComponent implements OnInit {
       "csysPotStyleId": this.form.controls.workFlowStyle.value,
       "csysPotGroupId": this.form.controls.workFlowGroup.value,
       "csysPotDataGroup": this.form.value.workDataGroup,
-      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value
+      "csysPotPublicReIsonrepair": this.form.controls.isNeedOnRepair.value,
+      csysPotPublicBadType: this.form.controls.csysPotPublicBadType.value,
+      csysPotPublicIsHasBadEntity: this.form.controls.csysPotPublicIsHasBadEntity.value,
     }
     //console.log("123", params);
     //编辑保存途程
@@ -663,7 +671,7 @@ export class PublicworkflowComponent implements OnInit {
     })
   }
   trimValue(str) {
-     
+
     return str.replace(/(^\s*)|(\s*$)/g, "");
 
   }

@@ -195,6 +195,10 @@ export class HeaderUserComponent implements OnInit {
       this.msg.error("密码不能为空");
       return;
     }
+    if(this.password1 === this.oldPassword1){
+      this.msg.error("新旧密码不能相同!");
+      return;
+    }
     if (this.password1 != this.password2) {
       this.msg.error("密码不相同请重新输入!");
       return;

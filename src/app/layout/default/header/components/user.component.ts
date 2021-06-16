@@ -1,5 +1,5 @@
-import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck } from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck,ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
@@ -13,6 +13,7 @@ const server_name = environment.SERVER_NAME
 @Component({
   selector: 'header-user',
   template: `
+  <!-- {{isVisible}} -->
   <nz-dropdown nzPlacement="bottomRight">
     <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
     <nz-avatar *ngIf="userService.getCurrentUser()['csysUserHeadimage'] == ''" nzSize="default" [nzText]="userService.getCurrentUser()['csysUserRealname']" style="background-color:#87d068;" class="mr-sm"></nz-avatar>
@@ -32,7 +33,8 @@ const server_name = environment.SERVER_NAME
       </div>
     </div>
   </nz-dropdown>
-  <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzClosable]="!tabView"
+  [nzMaskClosable]="false" [nzCancelText]="tabView?null:'取消'">
   <div *ngIf="!tabView" nz-row>
     <div nz-col nzSpan="8"></div>
     <div nz-col nzSpan="8">
@@ -88,6 +90,7 @@ export class HeaderUserComponent implements OnInit {
     private reuseTabService: ReuseTabService,
     private msg: NzMessageService,
     private httpService: HttpService,
+    private cdr:ChangeDetectorRef,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
   refreshtoken;
@@ -100,15 +103,15 @@ export class HeaderUserComponent implements OnInit {
   // }
   ngOnInit() {
     this.activeRouter.queryParams.subscribe(queryParams => {
-      if(queryParams['refreshtoken']) this.refreshtoken = queryParams['refreshtoken'];   
+      if (queryParams['refreshtoken']) this.refreshtoken = queryParams['refreshtoken'];
     });
-    if(typeof this.refreshtoken!="undefined"){
-      console.log("原始数据检测",this.refreshtoken)
+    if (typeof this.refreshtoken != "undefined") {
+      console.log("原始数据检测", this.refreshtoken)
       window.localStorage['jwtRefreshToken' + server_name] = this.refreshtoken;
-    } 
+    }
     this.userService.populate();
 
-    
+
     //检测用户是否为初始化状态，如果是则需要修改密码
     this.getUserStatus();
 
@@ -203,7 +206,7 @@ export class HeaderUserComponent implements OnInit {
       let pData = {
         "csysUserId": this.userid,
         "csysUserPassword": this.password1,
-        "csysUserMeno":"1"
+        "csysUserMeno": "1"
       }
       this.httpService.putHttp("/csysuser", pData).subscribe((data: any) => {
         this.msg.success("修改成功");
@@ -230,12 +233,13 @@ export class HeaderUserComponent implements OnInit {
 
   }
   resetPassword(): void {
-    this.tabView = true;
-    this.isVisible = true;
     this.nzTitle = "您的账户存在安全问题，请及时修改密码！";
     this.userid = this.userService.getCurrentUser()['csysUserId'];
     this.oldPassword1 = this.userService.getCurrentUser()['csysUserPassword'];
     this.handImg = this.userService.cyhttp + this.userService.getCurrentUser()['csysUserHeadimage'];
+    this.tabView = true;
+    this.isVisible = true;
+    console.log('getCurrentUser open')
 
   }
   confirm(): void {
@@ -349,12 +353,30 @@ export class HeaderUserComponent implements OnInit {
 
   getUserStatus() {
 
-    if(null!=this.userService.getCurrentUser()){
-      if (this.userService.getCurrentUser()['csysUserMeno'] == "0") {
-        this.resetPassword();
+    if (null != this.userService.getCurrentUser()) {
+      console.log('getCurrentUser', this.userService.getCurrentUser())
+      if (this.userService.getCurrentUser()['csysUserMeno'] === "1") {
+
+        const csysUserPwdModifyTime = this.userService.getCurrentUser()['csysUserPwdModifyTime'];
+
+        this.httpService.postHttp('/csyscodemaster/condition', { "csysCodemasterType": "pwdModifyTime" }).subscribe(
+          data => {
+            const csysCodemasterCode = data.data[0].csysCodemasterCode;
+            const day = parseInt((csysCodemasterCode + '').trim());
+            const diffDay = differenceInDays(new Date(), new Date(csysUserPwdModifyTime));
+            console.log('getCurrentUser diffDay', diffDay,day)
+            if (diffDay >= day) {
+              this.resetPassword();
+              this.cdr.markForCheck();
+            }
+
+          }
+        )
+
       }
     }
-    
+
 
   }
 }
+import { differenceInDays } from 'date-fns';

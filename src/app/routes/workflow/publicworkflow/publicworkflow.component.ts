@@ -675,5 +675,15 @@ export class PublicworkflowComponent implements OnInit {
     return str.replace(/(^\s*)|(\s*$)/g, "");
 
   }
+
+  badchange(type: 'csysPotPublicIsHasBadEntity' | 'isNeedOnRepair') {
+    const isNeedOnRepair = this.form.controls.isNeedOnRepair.value
+    const csysPotPublicIsHasBadEntity = this.form.controls.csysPotPublicIsHasBadEntity.value
+    if (type === 'csysPotPublicIsHasBadEntity' && csysPotPublicIsHasBadEntity === '1') {
+      this.form.controls.isNeedOnRepair.patchValue('0')
+    } else if (type === 'isNeedOnRepair' && isNeedOnRepair === '1') {
+      this.form.controls.csysPotPublicIsHasBadEntity.patchValue('0')
+    }
+  }
 }
 

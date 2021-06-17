@@ -56,8 +56,8 @@
                       <div class="gutter-box">
                         防呆组
                         <p lines="1" style="width: 100px;" class="text-truncate" nz-tooltip
-                          [nzTitle]="item.group.csysPotGroupName">
-                          {{item.group.csysPotGroupName}}
+                          [nzTitle]="item.group?.csysPotGroupName">
+                          {{item.group?.csysPotGroupName}}
                         </p>
                       </div>
                     </div>
@@ -69,11 +69,11 @@
                             <ng-template #titleTemplate>
                               <span>颜色:</span>
                               <nz-avatar [nzShape]="'square'" [nzSize]="'small'"
-                                [ngStyle]="{'background-color':item.style.csysPotStyleColor}"></nz-avatar>
+                                [ngStyle]="{'background-color':item.style?.csysPotStyleColor}"></nz-avatar>
                               <span style="margin-left:9px"> 形状:</span>
-                              {{item.style.csysPotStyleDesc}}
+                              {{item.style?.csysPotStyleDesc}}
                             </ng-template>
-                            {{item.style.csysPotStyleName}}
+                            {{item.style?.csysPotStyleName}}
                           </p>
                         </div>
                       </div>
@@ -215,7 +215,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="csysPotPublicIsHasBadEntity">是否需要不良录入</nz-form-label>
           <nz-form-control [nzSm]="18" [nzXs]="24">
-            <nz-radio-group nzButtonStyle="solid" formControlName="csysPotPublicIsHasBadEntity">
+            <nz-radio-group nzButtonStyle="solid" formControlName="csysPotPublicIsHasBadEntity" (ngModelChange)="badchange('csysPotPublicIsHasBadEntity')">
               <label nz-radio-button nzValue="0">不需要</label>
               <label nz-radio-button nzValue="1">需要</label>
             </nz-radio-group>
@@ -226,7 +226,7 @@
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="isNeedOnRepair">是否支持在线维修</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select nzPlaceHolder="是否支持在线维修" formControlName="isNeedOnRepair" nzShowSearch nzAllowClear>
+            <nz-select nzPlaceHolder="是否支持在线维修" formControlName="isNeedOnRepair" nzShowSearch nzAllowClear (ngModelChange)="badchange('isNeedOnRepair')">
               <nz-option nzLabel="支持" nzValue="1">
               </nz-option>
               <nz-option nzLabel="不支持" nzValue="0">

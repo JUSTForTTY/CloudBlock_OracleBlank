@@ -34,7 +34,7 @@ const server_name = environment.SERVER_NAME
     </div>
   </nz-dropdown>
   <nz-modal [(nzVisible)]="isVisible" [nzTitle]="nzTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzClosable]="!tabView"
-  [nzMaskClosable]="false" [nzCancelText]="tabView?null:'取消'">
+  [nzMaskClosable]="false" [nzCancelText]="tabView?null:'取消'" [nzKeyboard]="false">
   <div *ngIf="!tabView" nz-row>
     <div nz-col nzSpan="8"></div>
     <div nz-col nzSpan="8">

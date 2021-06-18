@@ -160,8 +160,8 @@
       <div *ngIf="workShop.kqPerson" style="height: fit-content;" #personBox>
         <div nz-row class="shiftInfo-title" #errodHead nzType="flex" nzAlign="middle"
           style="color: red;background:none;">
-          <div nz-col nzSpan="12" nzOffset="6">
-            未签到人员
+          <div nz-col nzSpan="16" nzOffset="4">
+            未签到人员({{workShop.kqPerson.length}})
           </div>
         </div>
         <div class="shiftInfo-content">

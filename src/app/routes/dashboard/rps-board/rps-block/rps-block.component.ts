@@ -741,10 +741,18 @@ export class RpsBlockComponent implements OnInit {
     const sheet3 = workbook.addWorksheet('产品工时', { views: [{ state: 'frozen', ySplit: 1 }] })
     const sheet4 = workbook.addWorksheet('异常数据')
 
+
     this.export1(sheet1);
     this.export2(sheet2);
     this.export3(sheet3);
     this.export4(sheet4);
+    const sheet5 = workbook.addWorksheet('考勤未签到人员')
+    sheet5.columns = [
+      { header: '工号', key: 'EmpNo', width: 10 },
+      { header: '姓名', key: 'UserName', width: 10 },
+      { header: '工段', key: 'WORK_SHOP_CODE', width: 8 },
+    ];
+    sheet5.addRows(this.workShop.kqPerson);
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       let name = this.workShop.workShopCode + '工段看板_' + this.banCidate;

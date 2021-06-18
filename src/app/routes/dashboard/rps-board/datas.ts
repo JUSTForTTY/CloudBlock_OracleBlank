@@ -33,6 +33,12 @@ export interface Data {
     errorTime?: number;
 
 }
+export interface KqPerson {
+    "FactoryCode": string,
+    "WORK_SHOP_CODE": string,
+    "EmpNo": string,
+    "UserName": string
+}
 export interface EfficiencyFormula {
     "efficiency": number,
     "signTime": number,
@@ -73,6 +79,9 @@ export interface SignSection {
     "SMT"?: SectionData,
     "ATP"?: SectionData,
     sectionData?: SectionData[]
+    signAllWorker?: {
+        [wordId: string]: string
+    }[]
 }
 
 export type WorkType = 'WAVE' | 'COATING' | 'SMT' | 'ATP'

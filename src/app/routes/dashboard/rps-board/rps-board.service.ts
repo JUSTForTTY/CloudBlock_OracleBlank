@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
 import { TitleService } from '@delon/theme';
+import { KqPerson } from './datas';
 
 export const FactoryCode = {
   'SUZ15-1F': 'SUZ01',
@@ -44,6 +45,7 @@ export interface WorkShop {
   sort?: number;
   oldSort?: number;
   totalData?: TotalData;
+  kqPerson?: KqPerson[]
 
 }
 export interface BlockData {

@@ -25,7 +25,7 @@
 
   </div>
   <div nz-row [nzGutter]="4" [ngStyle]="{'height':(isFourBlock?95:93)+'%'}">
-    <div nz-col [nzSpan]="(rightData.length>0 || rpsBoardService.isFour) ?21:23" style="height: 100%;">
+    <div nz-col [nzSpan]="21" style="height: 100%;">
       <div nz-row [nzGutter]="8" style="color: aliceblue;border:0px solid #c1eb06;padding-top: 5px;"
         [ngStyle]="{'height': (90.5+(rpsBoardService.showLR&&isFourBlock?9:0))+'%'}">
         <!-- 上层  -->
@@ -130,29 +130,47 @@
       </div>
 
     </div>
-    <div nz-col [nzSpan]="(rightData.length>0 || rpsBoardService.isFour)?3:1" style="height: 100%;" #errorBox>
-      <div nz-row class="shiftInfo-title" style="margin-top: 5px;" #errodHead nzType="flex" nzAlign="middle">
+    <div nz-col [nzSpan]="3" style="height: 100%;display: flex;
+    flex-direction:column;" #errorBox>
+      <div  style="flex: 1;height: auto;">
 
-        <div nz-col nzSpan="6" *ngIf="rightData.length>0">
-          <i nz-icon [ngStyle]="{'font-size':errorIconSize+'px'}"
-            [ngClass]="{'errorIcon': isError,'successIcon':!isError}">
-            <svg>
-              <path
-                d="M518.827 150.187c20.48 0 37.546-17.067 37.546-37.547V37.547C556.373 17.067 539.307 0 518.827 0S481.28 17.067 481.28 37.547v75.093c0 20.48 17.067 37.547 37.547 37.547z m283.306 75.093l51.2-51.2c13.654-13.653 13.654-37.547 0-51.2-13.653-13.653-37.546-13.653-51.2 0l-51.2 51.2c-13.653 13.653-13.653 37.547 0 51.2 13.654 17.067 37.547 17.067 51.2 0z m-563.2 0c13.654 13.653 37.547 13.653 51.2 0 17.067-13.653 17.067-37.547 3.414-51.2l-54.614-51.2c-13.653-13.653-37.546-13.653-51.2 0-13.653 13.653-13.653 37.547 0 51.2l51.2 51.2zM47.787 467.627h75.093c20.48 0 37.547-17.067 37.547-37.547 0-20.48-17.067-37.547-37.547-37.547H47.787c-20.48 0-37.547 17.067-37.547 37.547 0 20.48 17.067 37.547 37.547 37.547z m863.573 0h75.093c20.48 0 37.547-17.067 37.547-37.547 0-20.48-17.067-37.547-37.547-37.547H911.36c-20.48 0-37.547 17.067-37.547 37.547 0 20.48 17.067 37.547 37.547 37.547zM986.453 901.12H819.2V525.653c0-163.84-136.533-300.373-300.373-300.373S218.453 361.813 218.453 525.653V901.12H47.787c-20.48 0-37.547 17.067-37.547 37.547s17.067 37.546 37.547 37.546h938.666c20.48 0 37.547-17.066 37.547-37.546s-17.067-37.547-37.547-37.547zM518.827 447.147L634.88 645.12l-119.467 13.653 20.48 150.187-133.12-194.56 122.88-17.067-6.826-150.186z">
-              </path>
-            </svg>
-          </i>
-        </div>
-        <div nz-col nzSpan="12" [nzOffset]="isError?0:6">
-          异常信息({{rightData.length}})
-        </div>
+        <div nz-row class="shiftInfo-title" style="margin-top: 5px;" #errodHead nzType="flex" nzAlign="middle">
 
+          <div nz-col nzSpan="6" *ngIf="rightData.length>0">
+            <i nz-icon [ngStyle]="{'font-size':errorIconSize+'px'}"
+              [ngClass]="{'errorIcon': isError,'successIcon':!isError}">
+              <svg>
+                <path
+                  d="M518.827 150.187c20.48 0 37.546-17.067 37.546-37.547V37.547C556.373 17.067 539.307 0 518.827 0S481.28 17.067 481.28 37.547v75.093c0 20.48 17.067 37.547 37.547 37.547z m283.306 75.093l51.2-51.2c13.654-13.653 13.654-37.547 0-51.2-13.653-13.653-37.546-13.653-51.2 0l-51.2 51.2c-13.653 13.653-13.653 37.547 0 51.2 13.654 17.067 37.547 17.067 51.2 0z m-563.2 0c13.654 13.653 37.547 13.653 51.2 0 17.067-13.653 17.067-37.547 3.414-51.2l-54.614-51.2c-13.653-13.653-37.546-13.653-51.2 0-13.653 13.653-13.653 37.547 0 51.2l51.2 51.2zM47.787 467.627h75.093c20.48 0 37.547-17.067 37.547-37.547 0-20.48-17.067-37.547-37.547-37.547H47.787c-20.48 0-37.547 17.067-37.547 37.547 0 20.48 17.067 37.547 37.547 37.547z m863.573 0h75.093c20.48 0 37.547-17.067 37.547-37.547 0-20.48-17.067-37.547-37.547-37.547H911.36c-20.48 0-37.547 17.067-37.547 37.547 0 20.48 17.067 37.547 37.547 37.547zM986.453 901.12H819.2V525.653c0-163.84-136.533-300.373-300.373-300.373S218.453 361.813 218.453 525.653V901.12H47.787c-20.48 0-37.547 17.067-37.547 37.547s17.067 37.546 37.547 37.546h938.666c20.48 0 37.547-17.066 37.547-37.546s-17.067-37.547-37.547-37.547zM518.827 447.147L634.88 645.12l-119.467 13.653 20.48 150.187-133.12-194.56 122.88-17.067-6.826-150.186z">
+                </path>
+              </svg>
+            </i>
+          </div>
+          <div nz-col nzSpan="12" [nzOffset]="isError?0:6">
+            异常信息({{rightData.length}})
+          </div>
+
+        </div>
+        <ng-container *ngFor="let item of rightShow;index as i">
+          <app-error-item [item]="item" ryDomVisible (visible)="visible($event,item,i)"
+            (showErrorDetail)="showErrorDetail($event);"></app-error-item>
+
+        </ng-container>
       </div>
-      <ng-container *ngFor="let item of rightShow;index as i">
-        <app-error-item [item]="item" ryDomVisible (visible)="visible($event,item,i)"
-          (showErrorDetail)="showErrorDetail($event);"></app-error-item>
+      <div *ngIf="workShop.kqPerson" style="height: fit-content;" #personBox>
+        <div nz-row class="shiftInfo-title" #errodHead nzType="flex" nzAlign="middle"
+          style="color: red;background:none;">
+          <div nz-col nzSpan="12" nzOffset="6">
+            未签到人员
+          </div>
+        </div>
+        <div class="shiftInfo-content">
+          <span *ngFor="let person of workShop.kqPerson">
+            {{person.UserName}}&nbsp;
+          </span>
+        </div>
+      </div>
 
-      </ng-container>
 
     </div>
   </div>

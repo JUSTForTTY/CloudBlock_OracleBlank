@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { Data, getTestData, UrlData, SignSection, WorkType, EfficiencyFormulaProd } from "../datas";
+import { Data, getTestData, UrlData, SignSection, WorkType, EfficiencyFormulaProd, KqPerson } from "../datas";
 import { fromEvent as observableFromEvent, of as observableOf, Subscriber, Subscription } from 'rxjs';
 import { HttpService, PageService } from 'ngx-block-core';
 import { ActivatedRoute } from '@angular/router';
@@ -22,7 +22,7 @@ interface BigData {
   headHeight?: number;
   efficiency?: number;
   offlineEfficiency?: number;
-  totalData?: TotalData
+  totalData?: TotalData;
 }
 
 const options: {
@@ -110,6 +110,8 @@ export class RpsBlockComponent implements OnInit {
 
 
   @ViewChild('errorBox') errorBox: ElementRef;
+  @ViewChild('personBox') personBox: ElementRef;
+
 
 
   @ViewChild('errodHead') errodHead: ElementRef;
@@ -199,6 +201,8 @@ export class RpsBlockComponent implements OnInit {
   changeData(newWorkShop: WorkShop) {
     if (newWorkShop.workShopCode !== '-1') {
       this.workShop.workShopCode = newWorkShop.workShopCode;
+      this.workShop.totalData = new TotalData();
+      this.workShop.kqPerson = null;
     }
     for (const lineData of this.allData) {
 
@@ -261,10 +265,13 @@ export class RpsBlockComponent implements OnInit {
 
   }
   changeSize() {
-    const errorListHeight = this.errorBox.nativeElement.clientHeight - this.errodHead.nativeElement.clientHeight
+    const rightHeight = this.errorBox.nativeElement.clientHeight
+    const personHeight = this.personBox ? this.personBox.nativeElement.clientHeight : 0
+
+    const errorListHeight = rightHeight - this.errodHead.nativeElement.clientHeight - personHeight
     console.log('errorBox', this.errorBox.nativeElement.clientHeight, this.errodHead.nativeElement.clientHeight, errorListHeight)
 
-    const pagesize = Math.floor(errorListHeight / (250 + 5) + 0.05)
+    const pagesize = Math.floor(errorListHeight / (245 + 5) + 0.05)
     this.nzPageSize = pagesize;
     console.log('changeSize', this.nzPageSize, this.workShop, this.allData)
     this.changePage(this.rightData, this.nzPageSize, true);
@@ -533,11 +540,18 @@ export class RpsBlockComponent implements OnInit {
         "FactoryCode": this.workShop.workShopCode,
         "Fkind": "1"
       }
+      const body4 = {
+        "FDate": this.datePipe.transform(nowDate, 'yyyy-MM-dd'),
+        "FShift": this.signSection.shiftType === '白班' ? "DayShift" : 'NightShift',
+        "FactoryCode": this.workShop.workShopCode,
+      }
       if (this.rpsBoardService.date && this.rpsBoardService.dateMode) {
         body2.FDate = this.rpsBoardService.date
         body2.FShift = this.rpsBoardService.dateMode
         body3.FDate = this.rpsBoardService.date
         body3.FShift = this.rpsBoardService.dateMode
+        body4.FDate = this.rpsBoardService.date
+        body4.FShift = this.rpsBoardService.dateMode
       }
       this.banCidate = body2.FDate + '_' + body2.FShift
       this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp', body2).subscribe((data: any) => {
@@ -560,6 +574,32 @@ export class RpsBlockComponent implements OnInit {
               this.signSection[iterator['WORK_SHOP_CODE']]['paiban'] = iterator['HeadCount']
             }
           }
+        }
+      })
+      // 获取考勤人
+      this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp/GetkqPerson', body4).subscribe((data: { msg: string, data: KqPerson[] }) => {
+        if (data.data && this.signSection.signAllWorker) {
+          const persons = data.data.filter(item => item.WORK_SHOP_CODE !== 'ALL')
+          const signPersons = {};
+          console.log('GetkqPerson', data, persons, this.signSection.signAllWorker)
+          for (const iterator of this.signSection.signAllWorker) {
+            for (const key in iterator) {
+              if (Object.prototype.hasOwnProperty.call(iterator, key)) {
+                signPersons[key] = iterator[key];
+              }
+            }
+          }
+          this.workShop.kqPerson = [];
+          for (const iterator of persons) {
+            if (!signPersons[iterator.EmpNo]) {
+              this.workShop.kqPerson.push(iterator);
+            }
+          }
+          setTimeout(() => {
+            this.changeSize()
+          }, 100);
+          console.log('GetkqPerson2', signPersons, this.workShop.kqPerson)
+
         }
       })
 

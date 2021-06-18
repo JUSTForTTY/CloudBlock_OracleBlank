@@ -580,6 +580,7 @@ export class RpsBlockComponent implements OnInit {
       this.http.postHttpAllUrl('http://172.16.8.28:8088/api/getkp/GetkqPerson', body4).subscribe((data: { msg: string, data: KqPerson[] }) => {
         if (data.data && this.signSection.signAllWorker) {
           const persons = data.data.filter(item => item.WORK_SHOP_CODE !== 'ALL')
+          this.signSection.kqPerson = data.data;
           const signPersons = {};
           console.log('GetkqPerson', data, persons, this.signSection.signAllWorker)
           for (const iterator of this.signSection.signAllWorker) {
@@ -753,6 +754,33 @@ export class RpsBlockComponent implements OnInit {
     })
 
 
+    // const workbook2 = new Excel.Workbook();
+    // const sheet21 = workbook2.addWorksheet('sheet21', { views: [{ state: 'frozen', ySplit: 1 }] })
+    // sheet21.columns = [
+    //   { header: '工号', key: 'id', width: 8 },
+    //   { header: '姓名', key: 'name', width: 10 },
+    // ];
+    // for (const iterator of this.signSection.signAllWorker) {
+    //   for (const key in iterator) {
+    //     if (Object.prototype.hasOwnProperty.call(iterator, key)) {
+    //       iterator.id = key
+    //       iterator.name = iterator[key]
+    //     }
+    //   }
+    // }
+    // sheet21.addRows(this.signSection.signAllWorker);
+    // const sheet22 = workbook2.addWorksheet('sheet22', { views: [{ state: 'frozen', ySplit: 1 }] })
+    // sheet22.columns = [
+    //   { header: '工号', key: 'EmpNo', width: 8 },
+    //   { header: '姓名', key: 'UserName', width: 10 },
+    //   { header: '类别', key: 'WORK_SHOP_CODE', width: 8 },
+    // ];
+    // sheet22.addRows(this.signSection.kqPerson);
+    // workbook2.xlsx.writeBuffer().then((data) => {
+    //   let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //   let name = this.workShop.workShopCode + '签到';
+    //   fs.saveAs(blob, name + '.xlsx');
+    // })
 
 
 

@@ -82,6 +82,7 @@ export interface SignSection {
     signAllWorker?: {
         [wordId: string]: string
     }[]
+    kqPerson?: KqPerson[]
 }
 
 export type WorkType = 'WAVE' | 'COATING' | 'SMT' | 'ATP'

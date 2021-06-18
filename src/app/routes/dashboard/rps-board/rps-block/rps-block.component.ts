@@ -840,7 +840,7 @@ export class RpsBlockComponent implements OnInit {
           data.planAchievementRate /= 100;
           data.efficiency /= 100;
           data.errorTime = (errorTimes[data.prolineCode] / 60) || null
-          data.signWorkerName = data.efficiencyFormula.signWorkerName
+          data.signWorkerName = data.efficiencyFormula ? data.efficiencyFormula.signWorkerName : ''
         }
         sheetData.push(...bigData.data);
       }

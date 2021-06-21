@@ -582,14 +582,26 @@ export class RpsBlockComponent implements OnInit {
           const persons = data.data.filter(item => item.WORK_SHOP_CODE !== 'ALL')
           this.signSection.kqPerson = data.data;
           const signPersons = {};
+          const kpPersons = {};
           console.log('GetkqPerson', data, persons, this.signSection.signAllWorker)
+          for (const iterator of persons) {
+            kpPersons[iterator.EmpNo] = iterator;
+          }
+          this.workShop.signPerson = [];
           for (const iterator of this.signSection.signAllWorker) {
             for (const key in iterator) {
               if (Object.prototype.hasOwnProperty.call(iterator, key)) {
                 signPersons[key] = iterator[key];
+                if (!kpPersons[key]) {
+                  this.workShop.signPerson.push({
+                    EmpNo: key,
+                    UserName: iterator[key],
+                  })
+                }
               }
             }
           }
+
           this.workShop.kqPerson = [];
           for (const iterator of persons) {
             if (!signPersons[iterator.EmpNo]) {
@@ -751,9 +763,18 @@ export class RpsBlockComponent implements OnInit {
       sheet5.columns = [
         { header: '工号', key: 'EmpNo', width: 10 },
         { header: '姓名', key: 'UserName', width: 10 },
-        { header: '工段', key: 'WORK_SHOP_CODE', width: 8 },
+        // { header: '工段', key: 'WORK_SHOP_CODE', width: 8 },
       ];
       sheet5.addRows(this.workShop.kqPerson);
+    }
+    if (this.workShop.signPerson) {
+      const sheet6 = workbook.addWorksheet('签到无考勤人员')
+      sheet6.columns = [
+        { header: '工号', key: 'EmpNo', width: 10 },
+        { header: '姓名', key: 'UserName', width: 10 },
+        // { header: '工段', key: 'WORK_SHOP_CODE', width: 8 },
+      ];
+      sheet6.addRows(this.workShop.signPerson);
     }
 
     workbook.xlsx.writeBuffer().then((data) => {

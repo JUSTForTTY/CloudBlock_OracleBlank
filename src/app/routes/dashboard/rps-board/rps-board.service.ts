@@ -46,6 +46,8 @@ export interface WorkShop {
   oldSort?: number;
   totalData?: TotalData;
   kqPerson?: KqPerson[]
+  signPerson?: KqPerson[]
+
 
 }
 export interface BlockData {

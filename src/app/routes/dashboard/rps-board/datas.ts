@@ -34,8 +34,8 @@ export interface Data {
 
 }
 export interface KqPerson {
-    "FactoryCode": string,
-    "WORK_SHOP_CODE": string,
+    "FactoryCode"?: string,
+    "WORK_SHOP_CODE"?: string,
     "EmpNo": string,
     "UserName": string
 }

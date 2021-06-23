@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck,ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, DoCheck, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { SettingsService } from '@delon/theme';
@@ -90,7 +90,7 @@ export class HeaderUserComponent implements OnInit {
     private reuseTabService: ReuseTabService,
     private msg: NzMessageService,
     private httpService: HttpService,
-    private cdr:ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     @Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
   ) { }
   refreshtoken;
@@ -195,7 +195,8 @@ export class HeaderUserComponent implements OnInit {
       this.msg.error("密码不能为空");
       return;
     }
-    if(this.password1 === this.oldPassword1){
+    console.log('password1', this.password1, this.oldPassword)
+    if (this.password1 === this.oldPassword) {
       this.msg.error("新旧密码不能相同!");
       return;
     }
@@ -359,17 +360,17 @@ export class HeaderUserComponent implements OnInit {
 
     if (null != this.userService.getCurrentUser()) {
       console.log('getCurrentUser', this.userService.getCurrentUser())
-      if (this.userService.getCurrentUser()['csysUserMeno'] === "1") {
+      if (this.userService.getCurrentUser()['csysUserMeno'] === "1" && this.userService.getCurrentUser()['csysUserAccountAuthority'] === '1') {
 
         const csysUserPwdModifyTime = this.userService.getCurrentUser()['csysUserPwdModifyTime'];
-        if(!csysUserPwdModifyTime) return;
+        if (!csysUserPwdModifyTime) return;
 
         this.httpService.postHttp('/csyscodemaster/condition', { "csysCodemasterType": "pwdModifyTime" }).subscribe(
           data => {
             const csysCodemasterCode = data.data[0].csysCodemasterCode;
             const day = parseInt((csysCodemasterCode + '').trim());
             const diffDay = differenceInDays(new Date(), new Date(csysUserPwdModifyTime));
-            console.log('getCurrentUser diffDay', diffDay,day)
+            console.log('getCurrentUser diffDay', diffDay, day)
             if (diffDay >= day) {
               this.resetPassword();
               this.cdr.markForCheck();

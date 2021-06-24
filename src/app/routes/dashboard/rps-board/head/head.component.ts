@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { HttpService, PageService } from 'ngx-block-core';
 
 
 
@@ -31,16 +32,16 @@ export class HeadComponent implements OnInit, OnDestroy {
   ngModelChange(event) {
     this.rpsBoardService.pageChangeTime$.next(event);
   }
-  doExport(){
+  doExport() {
     this.export.emit();
   }
-  constructor(public rpsBoardService: RpsBoardService, private router: Router, private datePipe: DatePipe) { }
+  constructor(public rpsBoardService: RpsBoardService, private http: HttpService, private router: Router, private datePipe: DatePipe) { }
 
   ngOnInit() {
     // if (window.screen.height <= 900) {
-      
+
     // }
-    if(this.rpsBoardService.isFour){
+    if (this.rpsBoardService.isFour) {
       this.fontSizeTitle1 = 68;//一级标题
       this.fontSizeTitle2 = 36;//二级标题
     }
@@ -63,7 +64,7 @@ export class HeadComponent implements OnInit, OnDestroy {
   }
   change(workShop: WorkShop, force = false) {
     console.log('change changeWorkShop', this.workShop, workShop)
-    if(this.rpsMode){
+    if (this.rpsMode) {
       if (this.workShop.workShopCode === workShop.workShopCode && !force) return;
       this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
       // return;
@@ -78,13 +79,13 @@ export class HeadComponent implements OnInit, OnDestroy {
         force: force
       })
       this.isVisible = false;
-    }else{
+    } else {
       this.router.navigate([this.url], { queryParams: { workshopCode: workShop.workShopCode } })
       setTimeout(() => {
         location.reload();
       }, 50);
     }
-    
+
 
   }
   changeMode(now = false) {
@@ -99,14 +100,27 @@ export class HeadComponent implements OnInit, OnDestroy {
       this.rpsBoardService.date = date;
       this.rpsBoardService.dateMode = mode;
     }
-    this.rpsBoardService.historyUrl=`/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`;
+    this.rpsBoardService.historyUrl = `/${this.rpsBoardService.dateMode}/${this.rpsBoardService.date}`;
     this.dateVisible = false;
     this.change(this.workShop, true)
   }
 
-  changeAD(){
+  changeAD() {
     console.log('changeAD')
-    this.rpsBoardService.adData.pageAvg=!this.rpsBoardService.adData.pageAvg
+    this.rpsBoardService.adData.pageAvg = !this.rpsBoardService.adData.pageAvg
   }
+  doExportAd() {
+    this.http.postHttpAllUrl("http://172.16.8.28:8088/api/getAbInfoBySecOrDept/DownLoadAbFiles", {
+      "FactoryCode": this.workShop.workShopCode
+    }).subscribe((data: any) => {
+      console.log('doExportAd', data)
+      if (data.data && data.data.Excelurl) {
+        window.open(data.data.Excelurl);
+      } else {
+      }
 
+    })
+
+
+  }
 }

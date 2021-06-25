@@ -52,7 +52,7 @@ export class RolemanagerComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-   
+
     //this.getRoleList(1);
     this.form = this.fb.group({
       name: [null, [Validators.required]],
@@ -64,9 +64,9 @@ export class RolemanagerComponent implements OnInit {
     //初始化参数识别字串
     this.queryParamStr = '';
     for (const key in this.pageService.routeParams[this.path]) {
-        if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
-            this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
-        }
+      if (this.pageService.routeParams[this.path].hasOwnProperty(key)) {
+        this.queryParamStr = this.queryParamStr + this.pageService.routeParams[this.path][key];
+      }
     }
     //初始化代码
     this.baseInit();
@@ -105,7 +105,7 @@ export class RolemanagerComponent implements OnInit {
   }
   //编辑用户组
   editRole(id, name, desc): void {
-    if(id == "LHCsysRole20190906053257869000029"){
+    if (id == "LHCsysRole20190906053257869000029") {
       this.msg.error("系统组禁止编辑!");
       return;
     }
@@ -120,7 +120,7 @@ export class RolemanagerComponent implements OnInit {
   }
   //删除用户组
   deleteRole(id): void {
-    if(id == "LHCsysRole20190906053257869000029"){
+    if (id == "LHCsysRole20190906053257869000029") {
       this.msg.error("系统组禁止删除!");
       return;
     }
@@ -130,7 +130,7 @@ export class RolemanagerComponent implements OnInit {
           "csysRoleId": id,
           "csysRoleIsDelete": "1"
         }
-        console.log("role",delRole)
+        console.log("role", delRole)
         this.httpService.putHttp("csysrole", delRole).subscribe((data: any) => {
           //判断当前页是否还有数据，没有返回上一步
           if (this.roleList.length == 1 && this.pagenum > 5) {
@@ -183,9 +183,15 @@ export class RolemanagerComponent implements OnInit {
         }
         //  this._logger.info("试试", userMenuId);
         for (const key in userMenuId) {
-          this.httpService.deleteHttp("csysmenuauth/" + userMenuId[key]).subscribe((data: any) => {
-            // this._logger.info("试试", userMenuId[key]);
+          // this.httpService.deleteHttp("csysmenuauth/" + userMenuId[key]).subscribe((data: any) => {
+          //   // this._logger.info("试试", userMenuId[key]);
+          // });
+          this.httpService.putHttp("csysmenuauth", {
+            csysMenuAuthId: userMenuId[key],
+            csysMenuAuthIsDelete: 1
+          }).subscribe((data: any) => {
           });
+
         }
       });
       for (let i = 0; i < this.userMenuDemo.length; i++) {
@@ -436,7 +442,7 @@ export class RolemanagerComponent implements OnInit {
     });
   }
   //打开用户组菜单弹出框
-  isMenuLoading=false;
+  isMenuLoading = false;
   showModal(roleid, rolename): void {
     this.userMenuDemo = [];
     this.isVisible = true;
@@ -445,7 +451,7 @@ export class RolemanagerComponent implements OnInit {
     this.roleName = rolename;
   }
   getMenuList(roleid): void {
-    this.isMenuLoading=true;
+    this.isMenuLoading = true;
     this.httpService.postHttp("/csysmenu/tree").subscribe((data: any) => {
       this.nodes = data.data;
       this.getdefaultCheckedKeys(roleid);
@@ -472,7 +478,7 @@ export class RolemanagerComponent implements OnInit {
       }
 
       this.defaultCheckedKeys = [...this.defaultCheckedKeys];
-      this.isMenuLoading=false;
+      this.isMenuLoading = false;
 
     });
   }
